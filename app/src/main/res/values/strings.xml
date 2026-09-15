@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">XP-SPEAK</string>
+    <!-- Navigation labels -->
+    <string name="nav_auth">Auth</string>
+    <string name="nav_chat">Chat</string>
+    <string name="nav_lessons">Lecciones</string>
+    <string name="nav_games">Juegos</string>
+    <string name="nav_progress">Progreso</string>
+    <string name="nav_account">Cuenta</string>
+</resources>
