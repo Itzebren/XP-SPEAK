@@ -35,8 +35,8 @@ private data class BottomTab(val route: String, val label: String, val icon: Ima
 private val bottomTabs = listOf(
     BottomTab(Routes.CHAT, "Chat", Icons.Filled.Chat),
     BottomTab(Routes.LESSONS, "Lecciones", Icons.Filled.MenuBook),
-    BottomTab(Routes.GAMES, "Juegos", Icons.Filled.EmojiEvents),
     BottomTab(Routes.PROGRESS, "Progreso", Icons.Filled.Home),
+    BottomTab(Routes.GAMES, "Juegos", Icons.Filled.EmojiEvents),
     BottomTab(Routes.ACCOUNT, "Cuenta", Icons.Filled.AccountCircle),
 )
 
