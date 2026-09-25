@@ -22,7 +22,9 @@ object DatabaseModule {
             context,
             AppDatabase::class.java,
             "xpspeak.db"
-        ).build()
+        )
+        .fallbackToDestructiveMigration()
+        .build()
 
     @Provides
     fun provideUsuarioDao(db: AppDatabase): UsuarioDao = db.usuarioDao()

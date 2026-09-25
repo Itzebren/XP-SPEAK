@@ -25,6 +25,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xpspeak.app.feature.account.ui.AccountScreen
 import com.xpspeak.app.feature.auth.ui.AuthScreen
+import com.xpspeak.app.feature.auth.ui.RecuperarAccesoScreen
+import com.xpspeak.app.feature.auth.ui.SeleccionarNivelScreen
 import com.xpspeak.app.feature.chat.ui.ChatScreen
 import com.xpspeak.app.feature.games.ui.GamesScreen
 import com.xpspeak.app.feature.lessons.ui.LessonsScreen
@@ -53,7 +55,9 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
     Scaffold(
         bottomBar = {
             // La barra inferior no se muestra en la pantalla de Auth
-            val hideBottomBar = currentRoute?.hierarchy?.any { it.route == Routes.AUTH } == true
+            val hideBottomBar = currentRoute?.hierarchy?.any {
+                it.route == Routes.AUTH || it.route == Routes.SELECCIONAR_NIVEL || it.route == Routes.RECUPERAR_ACCESO
+            } == true
             if (!hideBottomBar) {
                 NavigationBar {
                     bottomTabs.forEach { tab ->
@@ -80,9 +84,31 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Routes.AUTH) {
-                AuthScreen(onAuthSuccess = {
+                AuthScreen(
+                    onAuthSuccess = {
+                        navController.navigate(Routes.CHAT) {
+                            popUpTo(Routes.AUTH) { inclusive = true }
+                        }
+                    },
+                    onNecesitaNivel = {
+                        navController.navigate(Routes.SELECCIONAR_NIVEL) {
+                            popUpTo(Routes.AUTH) { inclusive = true }
+                        }
+                    },
+                    onOlvideContrasena = {
+                        navController.navigate(Routes.RECUPERAR_ACCESO)
+                    }
+                )
+            }
+            composable(Routes.RECUPERAR_ACCESO) {
+                RecuperarAccesoScreen(onCompletado = {
+                    navController.popBackStack()
+                })
+            }
+            composable(Routes.SELECCIONAR_NIVEL) {
+                SeleccionarNivelScreen(onNivelSeleccionado = {
                     navController.navigate(Routes.CHAT) {
-                        popUpTo(Routes.AUTH) { inclusive = true }
+                        popUpTo(Routes.SELECCIONAR_NIVEL) { inclusive = true }
                     }
                 })
             }

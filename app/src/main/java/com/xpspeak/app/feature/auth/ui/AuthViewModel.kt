@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.xpspeak.app.feature.auth.data.AuthRepository
+import com.xpspeak.app.feature.auth.data.PerfilRepository
 import com.xpspeak.app.feature.auth.domain.PasswordValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 enum class AuthMode { LOGIN, REGISTRO }
+enum class DestinoPostAuth { NINGUNO, SELECCIONAR_NIVEL, HOME }
 
 data class AuthUiState(
     val modo: AuthMode = AuthMode.LOGIN,
@@ -24,12 +26,13 @@ data class AuthUiState(
     val confirmarPassword: String = "",
     val cargando: Boolean = false,
     val error: String? = null,
-    val exito: Boolean = false
+    val destino: DestinoPostAuth = DestinoPostAuth.NINGUNO
 )
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val perfilRepository: PerfilRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AuthUiState())
@@ -74,14 +77,16 @@ class AuthViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(cargando = true, error = null)
 
             val resultado = if (estado.modo == AuthMode.REGISTRO) {
-                repository.registrar(estado.correo, estado.password)
+                authRepository.registrar(estado.correo, estado.password)
             } else {
-                repository.iniciarSesion(estado.correo, estado.password)
+                authRepository.iniciarSesion(estado.correo, estado.password)
             }
 
             resultado
-                .onSuccess {
-                    _uiState.value = _uiState.value.copy(cargando = false, exito = true)
+                .onSuccess { usuario ->
+                    val tienePerfil = perfilRepository.existePerfil(usuario.uid)
+                    val destino = if (tienePerfil) DestinoPostAuth.HOME else DestinoPostAuth.SELECCIONAR_NIVEL
+                    _uiState.value = _uiState.value.copy(cargando = false, destino = destino)
                 }
                 .onFailure { excepcion ->
                     _uiState.value = _uiState.value.copy(cargando = false, error = mapearError(excepcion))

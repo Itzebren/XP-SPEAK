@@ -23,12 +23,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun AuthScreen(
     onAuthSuccess: () -> Unit,
+    onNecesitaNivel: () -> Unit,
+    onOlvideContrasena: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(uiState.exito) {
-        if (uiState.exito) onAuthSuccess()
+    LaunchedEffect(uiState.destino) {
+        when (uiState.destino) {
+            DestinoPostAuth.SELECCIONAR_NIVEL -> onNecesitaNivel()
+            DestinoPostAuth.HOME -> onAuthSuccess()
+            DestinoPostAuth.NINGUNO -> Unit
+        }
     }
 
     Column(
@@ -81,6 +87,12 @@ fun AuthScreen(
                 if (uiState.modo == AuthMode.LOGIN) "¿No tienes cuenta? Regístrate"
                 else "¿Ya tienes cuenta? Inicia sesión"
             )
+        }
+
+        if (uiState.modo == AuthMode.LOGIN) {
+            TextButton(onClick = onOlvideContrasena) {
+                Text("¿Olvidaste tu contraseña?")
+            }
         }
 
         if (uiState.cargando) {
