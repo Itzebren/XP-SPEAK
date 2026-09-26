@@ -6,7 +6,10 @@ object Routes {
     const val RECUPERAR_ACCESO = "recuperar_acceso"
     const val CHAT = "chat"
     const val LESSONS = "lessons"
+    const val LECCION = "lessons/{id}"
     const val GAMES = "games"
     const val PROGRESS = "progress"
     const val ACCOUNT = "account"
+
+    fun leccion(id: String) = "lessons/$id"
 }

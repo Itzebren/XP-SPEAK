@@ -29,6 +29,7 @@ import com.xpspeak.app.feature.auth.ui.RecuperarAccesoScreen
 import com.xpspeak.app.feature.auth.ui.SeleccionarNivelScreen
 import com.xpspeak.app.feature.chat.ui.ChatScreen
 import com.xpspeak.app.feature.games.ui.GamesScreen
+import com.xpspeak.app.feature.lessons.ui.LeccionScreen
 import com.xpspeak.app.feature.lessons.ui.LessonsScreen
 import com.xpspeak.app.feature.progress.ui.ProgressScreen
 
@@ -113,7 +114,12 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
                 })
             }
             composable(Routes.CHAT) { ChatScreen() }
-            composable(Routes.LESSONS) { LessonsScreen() }
+            composable(Routes.LESSONS) {
+                LessonsScreen(onAbrirLeccion = { id -> navController.navigate(Routes.leccion(id)) })
+            }
+            composable(Routes.LECCION) {
+                LeccionScreen(onVolver = { navController.popBackStack() })
+            }
             composable(Routes.GAMES) { GamesScreen() }
             composable(Routes.PROGRESS) { ProgressScreen() }
             composable(Routes.ACCOUNT) { AccountScreen() }

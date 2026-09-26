@@ -1,6 +1,8 @@
 package com.xpspeak.app.core.di
 
+import com.xpspeak.app.BuildConfig
 import com.xpspeak.app.feature.auth.data.RecuperacionApi
+import com.xpspeak.app.feature.lessons.data.LeccionesApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -9,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 private const val BASE_URL_RECUPERACION = "https://xp-speak-auth-backend.vercel.app/"
@@ -41,4 +44,23 @@ object NetworkModule {
     @Singleton
     fun provideRecuperacionApi(retrofit: Retrofit): RecuperacionApi =
         retrofit.create(RecuperacionApi::class.java)
+
+    /**
+     * Lecciones usa su propia base URL: en debug apunta al backend local
+     * (BuildConfig.LECCIONES_BASE_URL) para probar sin desplegar.
+     */
+    @Provides
+    @Singleton
+    @Named("lecciones")
+    fun provideLeccionesRetrofit(client: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.LECCIONES_BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideLeccionesApi(@Named("lecciones") retrofit: Retrofit): LeccionesApi =
+        retrofit.create(LeccionesApi::class.java)
 }
