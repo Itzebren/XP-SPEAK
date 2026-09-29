@@ -21,6 +21,8 @@ data class LessonsUiState(
     val sinConexion: Boolean = false,
     /** Intentos calificados sin conexión que aún no llegan al servidor. */
     val intentosPendientes: Int = 0,
+    /** Conceptos que SM-2 marca para repasar hoy (RF-13). */
+    val repasoPendiente: Int = 0,
     val error: String? = null
 )
 
@@ -54,6 +56,9 @@ class LessonsViewModel @Inject constructor(
 
             repository.conceptosDebiles().onSuccess { dto ->
                 _uiState.value = _uiState.value.copy(conceptosDebiles = dto.conceptos)
+            }
+            repository.sesionRepaso().onSuccess { sesion ->
+                _uiState.value = _uiState.value.copy(repasoPendiente = sesion.totalVencidos)
             }
             // En segundo plano: deja descargadas las lecciones del nivel para usarlas sin conexión.
             repository.sincronizarContenido()

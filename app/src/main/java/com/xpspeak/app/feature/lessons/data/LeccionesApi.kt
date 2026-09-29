@@ -43,6 +43,18 @@ interface LeccionesApi {
         @Body request: AvanceRequest
     ): Response<AvanceResponse>
 
+    @GET("api/srs/session")
+    suspend fun sesionRepaso(
+        @Header("Authorization") auth: String,
+        @Query("level") nivel: String
+    ): Response<SesionRepasoDto>
+
+    @POST("api/srs/session")
+    suspend fun enviarRepaso(
+        @Header("Authorization") auth: String,
+        @Body request: RepasoRequest
+    ): Response<RepasoResponse>
+
     @GET("api/srs/review")
     suspend fun conceptosDebiles(
         @Header("Authorization") auth: String,

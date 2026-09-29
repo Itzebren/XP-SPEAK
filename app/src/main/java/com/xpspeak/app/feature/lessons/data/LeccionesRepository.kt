@@ -117,6 +117,20 @@ class LeccionesRepository @Inject constructor(
     suspend fun conceptosDebiles(): Result<ConceptosDebilesDto> =
         llamar { api.conceptosDebiles(it, nivelDelUsuario()) }
 
+    /** RF-13: ejercicios de los conceptos que SM-2 marca para hoy. Requiere conexión. */
+    suspend fun sesionRepaso(): Result<SesionRepasoDto> =
+        llamar { api.sesionRepaso(it, nivelDelUsuario()) }.recoverCatching { error ->
+            throw if (esSinConexion(error)) Exception("Necesitas conexión para repasar.") else error
+        }
+
+    /** Igual que en las lecciones, el attempt_id evita aplicar dos veces el mismo repaso. */
+    suspend fun enviarRepaso(attemptId: String, respuestas: Map<String, RespuestaUsuario>): Result<RepasoResponse> =
+        llamar {
+            api.enviarRepaso(it, RepasoRequest(attemptId, respuestas.map { (id, respuesta) -> respuesta.aDto(id) }))
+        }.recoverCatching { error ->
+            throw if (esSinConexion(error)) Exception("Sin conexión. Intenta enviar de nuevo cuando tengas red.") else error
+        }
+
     /**
      * `attemptId` lo genera la pantalla una vez por intento: si el usuario
      * reintenta el envío tras un error, el servidor lo reconoce y no duplica XP (§6.2).

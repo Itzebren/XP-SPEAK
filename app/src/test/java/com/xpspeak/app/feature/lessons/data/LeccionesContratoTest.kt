@@ -57,6 +57,30 @@ class LeccionesContratoTest {
     }
 
     @Test
+    fun `lee la sesion de repaso y el resultado con la reprogramacion de SM-2`() {
+        val sesion = gson.fromJson(
+            """{"total_vencidos":12,"proxima_revision":null,"items":[
+              {"id":"a1-saludos-presentaciones:q6:1","tipo":"opcion_multiple","concepto_id":"voc.saludos.goodbye",
+               "enunciado":"¿Qué significa \"Goodbye!\"?","opciones":["¡Adiós!","¡Hola!"],"respuesta_correcta":0,
+               "concepto":{"concepto_id":"voc.saludos.goodbye","en":"Goodbye!","es":"¡Adiós!","titulo":null,
+                           "fallos":1,"tasa_error":1}}]}""",
+            SesionRepasoDto::class.java
+        )
+        assertEquals(12, sesion.totalVencidos)
+        assertNull(sesion.proximaRevision)
+        assertEquals("Goodbye!", sesion.items[0].concepto!!.en)
+        assertEquals("voc.saludos.goodbye", sesion.items[0].conceptoId)
+
+        val resultado = gson.fromJson(
+            """{"puntaje":1,"correctas":1,"total":1,"feedback":[{"id":"x","correcta":true}],"repetido":false,
+               "conceptos":[{"concepto_id":"voc.saludos.goodbye","acierto":true,"intervalo":6,"proxima_revision":1790000000000}]}""",
+            RepasoResponse::class.java
+        )
+        assertEquals(6, resultado.conceptos[0].intervalo)
+        assertEquals(1790000000000L, resultado.conceptos[0].proximaRevision)
+    }
+
+    @Test
     fun `cada tipo de respuesta se envia con el formato que espera el servidor`() {
         val request = IntentoRequest(
             attemptId = "b1f2c3d4-0000-4000-8000-000000000000",

@@ -81,7 +81,9 @@ data class ItemDto(
     /** Int (opción múltiple) o String (completar). */
     @SerializedName("respuesta_correcta") val respuestaCorrecta: JsonElement? = null,
     val acepta: List<String>? = null,
-    @SerializedName("feedback_error") val feedbackError: String? = null
+    @SerializedName("feedback_error") val feedbackError: String? = null,
+    /** Solo en la sesión de repaso: el concepto que repasa este ejercicio. */
+    val concepto: ConceptoDebilDto? = null
 )
 
 data class ParDto(
@@ -143,6 +145,37 @@ data class ConceptoDebilDto(
     val titulo: String?,
     val fallos: Int,
     @SerializedName("tasa_error") val tasaError: Double
+)
+
+// Sesión de repaso — GET/POST /api/srs/session (SM-2, RF-13)
+data class SesionRepasoDto(
+    @SerializedName("total_vencidos") val totalVencidos: Int,
+    /** Cuándo vuelve a haber repaso (ms epoch) si hoy no toca nada. */
+    @SerializedName("proxima_revision") val proximaRevision: Long?,
+    /** Un ejercicio por concepto; su id es "<lección>:<ítem>[:<par>]". */
+    val items: List<ItemDto>
+)
+
+data class RepasoRequest(
+    @SerializedName("attempt_id") val attemptId: String,
+    val respuestas: List<RespuestaDto>
+)
+
+data class RepasoResponse(
+    val puntaje: Double,
+    val correctas: Int,
+    val total: Int,
+    val feedback: List<FeedbackDto>,
+    val conceptos: List<ConceptoReprogramadoDto>,
+    val repetido: Boolean
+)
+
+data class ConceptoReprogramadoDto(
+    @SerializedName("concepto_id") val conceptoId: String,
+    val acierto: Boolean,
+    /** Días hasta el siguiente repaso según SM-2. */
+    val intervalo: Int,
+    @SerializedName("proxima_revision") val proximaRevision: Long
 )
 
 data class ErrorDto(val error: String?, val codigo: String?)

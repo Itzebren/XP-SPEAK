@@ -31,6 +31,7 @@ import com.xpspeak.app.feature.chat.ui.ChatScreen
 import com.xpspeak.app.feature.games.ui.GamesScreen
 import com.xpspeak.app.feature.lessons.ui.LeccionScreen
 import com.xpspeak.app.feature.lessons.ui.LessonsScreen
+import com.xpspeak.app.feature.lessons.ui.RepasoScreen
 import com.xpspeak.app.feature.progress.ui.ProgressScreen
 
 private data class BottomTab(val route: String, val label: String, val icon: ImageVector)
@@ -115,7 +116,13 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
             }
             composable(Routes.CHAT) { ChatScreen() }
             composable(Routes.LESSONS) {
-                LessonsScreen(onAbrirLeccion = { id -> navController.navigate(Routes.leccion(id)) })
+                LessonsScreen(
+                    onAbrirLeccion = { id -> navController.navigate(Routes.leccion(id)) },
+                    onAbrirRepaso = { navController.navigate(Routes.REPASO) }
+                )
+            }
+            composable(Routes.REPASO) {
+                RepasoScreen(onVolver = { navController.popBackStack() })
             }
             composable(Routes.LECCION) {
                 LeccionScreen(onVolver = { navController.popBackStack() })

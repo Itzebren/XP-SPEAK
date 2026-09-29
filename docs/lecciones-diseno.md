@@ -577,4 +577,38 @@ Cliente Android (fuera del corte vertical original, ya implementado):
       con el mismo `attempt_id` (RN-12, §6.2).
 - [x] El XP que confirma el servidor se suma al perfil local (RF-14).
 - [ ] Audio TTS de vocabulario y diálogos (se hace junto con el chat de voz).
-- [ ] Sesión de repaso SRS con SM-2 (siguiente iteración, ver §10.7).
+- [x] Sesión de repaso SRS con SM-2 (RF-13/RN-07, ver §12).
+
+---
+
+## 12. Sesión de repaso SRS (SM-2)
+
+Resuelve la decisión abierta §10.7.
+
+- **Algoritmo:** SM-2 por concepto (`lib/lecciones/sm2.js`). Al acertar, el
+  intervalo pasa de 1 a 6 días y después se multiplica por la facilidad
+  (`ease`, 2.5 al inicio, mínimo 1.3). Al fallar vuelve a 1 día y la facilidad
+  baja. Se guardan `intervalo`, `ease`, `repeticiones` y `proxima_revision`
+  en `srs_conceptos`.
+- **Calidad de la respuesta:** los ejercicios se califican solos, así que en lugar
+  de botones "fácil/bueno/difícil" (TT §2.6.2) la calidad sale del resultado:
+  acierto = 4, fallo = 1. Si el concepto se falló al menos una vez en ese
+  intento, cuenta como fallo.
+- **Qué alimenta el SRS:** las evaluaciones de las lecciones y las sesiones de
+  repaso. Acertar antes de la fecha (p. ej. repetir la lección el mismo día) no
+  alarga el intervalo; fallar siempre lo reinicia.
+- **Sesión (`GET /api/srs/session`):** hasta 10 conceptos vencidos, primero
+  los de mayor tasa de error (RN-07). Cada uno usa un ítem real de alguna
+  evaluación; un par de "emparejar" se pregunta como opción múltiple con los
+  demás pares como distractores. Si hoy no toca nada, responde cuándo es el
+  próximo repaso.
+- **Respuestas (`POST /api/srs/session`):** el servidor recalifica, reprograma
+  cada concepto y responde en cuántos días vuelve. Es idempotente por
+  `attempt_id`. No da XP, para que no se pueda farmear, pero registra
+  `repaso_completado` en `eventos_actividad` para la racha (RN-08).
+- **Android:** en Lecciones aparece "Repaso de hoy" arriba del catálogo cuando
+  hay conceptos vencidos. El repaso requiere conexión; las lecciones siguen
+  funcionando sin ella.
+- **Pendiente:** RN-07 también pide priorizar el repaso "antes de permitir el
+  avance a nuevos temas". Hoy solo se sugiere (la tarjeta va primero), no se
+  bloquea el avance. Tampoco se usa la latencia de respuesta (TT §2.6.2).

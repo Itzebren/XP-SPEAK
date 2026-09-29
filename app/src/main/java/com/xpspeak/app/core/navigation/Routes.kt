@@ -7,6 +7,7 @@ object Routes {
     const val CHAT = "chat"
     const val LESSONS = "lessons"
     const val LECCION = "lessons/{id}"
+    const val REPASO = "repaso"
     const val GAMES = "games"
     const val PROGRESS = "progress"
     const val ACCOUNT = "account"

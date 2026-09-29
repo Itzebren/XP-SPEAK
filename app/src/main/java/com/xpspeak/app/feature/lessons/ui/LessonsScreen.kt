@@ -32,6 +32,7 @@ import com.xpspeak.app.feature.lessons.data.LeccionResumenDto
 @Composable
 fun LessonsScreen(
     onAbrirLeccion: (String) -> Unit,
+    onAbrirRepaso: () -> Unit,
     viewModel: LessonsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -78,6 +79,21 @@ fun LessonsScreen(
                     "${uiState.intentosPendientes} evaluación(es) por enviar: se sincronizan al volver la conexión.",
                     style = MaterialTheme.typography.bodySmall
                 )
+            }
+        }
+
+        // RN-07: el repaso va antes que las lecciones nuevas.
+        if (uiState.repasoPendiente > 0) {
+            item {
+                Card(onClick = onAbrirRepaso, modifier = Modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("🔁 Repaso de hoy", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            "${uiState.repasoPendiente} concepto(s) por repasar",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
             }
         }
 
