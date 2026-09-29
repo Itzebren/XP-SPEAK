@@ -24,6 +24,7 @@ android {
 
     buildTypes {
         debug {
+            isCrunchPngs = false
             // Backend de Lecciones corriendo en la Mac (npm run dev:app en xp-speak-auth-backend).
             // Se usa localhost + `adb reverse tcp:3000 tcp:3000` (emulador o teléfono físico):
             // con targetSdk 37 Android bloquea a las apps las IPs de red local como 10.0.2.2.
@@ -45,6 +46,12 @@ android {
         compose = true
         buildConfig = true
     }
+}
+
+ksp {
+    arg("dagger.fastInit", "enabled")
+    arg("dagger.formatGeneratedSource", "disabled")
+    arg("room.generateKotlin", "true")
 }
 
 dependencies {

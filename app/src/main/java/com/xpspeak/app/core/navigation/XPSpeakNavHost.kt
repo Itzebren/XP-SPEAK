@@ -122,7 +122,15 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
             }
             composable(Routes.GAMES) { GamesScreen() }
             composable(Routes.PROGRESS) { ProgressScreen() }
-            composable(Routes.ACCOUNT) { AccountScreen() }
+            composable(Routes.ACCOUNT) {
+                AccountScreen(
+                    onCerrarSesion = {
+                        navController.navigate(Routes.AUTH) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+            }
         }
     }
 }

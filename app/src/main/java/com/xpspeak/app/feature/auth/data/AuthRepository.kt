@@ -9,21 +9,28 @@ import javax.inject.Inject
  * RF-01 (Registro) y RF-02 (Login) vía Firebase Authentication.
  * La app nunca almacena ni maneja contraseñas directamente.
  */
-class AuthRepository @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+open class AuthRepository @Inject constructor(
+    private val firebaseAuth: FirebaseAuth?
 ) {
-    val usuarioActual: FirebaseUser?
-        get() = firebaseAuth.currentUser
+    // Constructor secundario protegido para pruebas unitarias sin Dagger
+    protected constructor() : this(null)
 
-    suspend fun registrar(correo: String, password: String): Result<FirebaseUser> = runCatching {
-        val resultado = firebaseAuth.createUserWithEmailAndPassword(correo, password).await()
+    open val usuarioActual: FirebaseUser?
+        get() = firebaseAuth?.currentUser
+
+    open suspend fun registrar(correo: String, password: String): Result<FirebaseUser> = runCatching {
+        val auth = requireNotNull(firebaseAuth) { "FirebaseAuth no está inicializado" }
+        val resultado = auth.createUserWithEmailAndPassword(correo, password).await()
         resultado.user ?: throw IllegalStateException("No se pudo crear el usuario")
     }
 
-    suspend fun iniciarSesion(correo: String, password: String): Result<FirebaseUser> = runCatching {
-        val resultado = firebaseAuth.signInWithEmailAndPassword(correo, password).await()
+    open suspend fun iniciarSesion(correo: String, password: String): Result<FirebaseUser> = runCatching {
+        val auth = requireNotNull(firebaseAuth) { "FirebaseAuth no está inicializado" }
+        val resultado = auth.signInWithEmailAndPassword(correo, password).await()
         resultado.user ?: throw IllegalStateException("No se pudo iniciar sesión")
     }
 
-    fun cerrarSesion() = firebaseAuth.signOut()
+    open fun cerrarSesion() {
+        firebaseAuth?.signOut()
+    }
 }
