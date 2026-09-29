@@ -81,6 +81,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    // WorkManager (envía los intentos pendientes al volver la conexión)
+    implementation(libs.androidx.work.runtime.ktx)
+
     // OkHttp (red base - módulo NetworkModule)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)

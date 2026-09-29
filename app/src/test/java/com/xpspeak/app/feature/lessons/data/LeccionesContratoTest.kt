@@ -44,6 +44,19 @@ class LeccionesContratoTest {
     }
 
     @Test
+    fun `la leccion guardada en cache conserva la clave de respuestas`() {
+        val json = """{"id":"q1","tipo":"completar","concepto_id":"gram.be","enunciado":"I ___ Ana.",""" +
+            """"respuesta_correcta":"am","acepta":["am"],"feedback_error":"Con 'I' va 'am'."}"""
+        // Así se guarda y se vuelve a leer en Room (LeccionCacheEntity.json).
+        val item = gson.fromJson(gson.toJson(gson.fromJson(json, ItemDto::class.java)), ItemDto::class.java)
+
+        assertEquals("am", item.respuestaCorrecta!!.asString)
+        assertEquals(listOf("am"), item.acepta)
+        assertEquals("gram.be", item.conceptoId)
+        assertEquals("Con 'I' va 'am'.", item.feedbackError)
+    }
+
+    @Test
     fun `cada tipo de respuesta se envia con el formato que espera el servidor`() {
         val request = IntentoRequest(
             attemptId = "b1f2c3d4-0000-4000-8000-000000000000",

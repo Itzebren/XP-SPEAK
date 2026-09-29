@@ -14,6 +14,7 @@ class AccountViewModelTest {
     private class FakeUsuarioDao : UsuarioDao {
         override suspend fun guardar(usuario: UsuarioEntity) {}
         override suspend fun buscarPorUid(uid: String): UsuarioEntity? = null
+        override suspend fun sumarXp(uid: String, xp: Int) {}
         override fun observarUsuario(uid: String): Flow<UsuarioEntity?> = flowOf(null)
     }
 

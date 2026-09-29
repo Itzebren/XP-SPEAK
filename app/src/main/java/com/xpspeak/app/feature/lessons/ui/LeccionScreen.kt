@@ -25,7 +25,8 @@ import com.xpspeak.app.feature.lessons.ui.components.SeccionTeoria
 
 /**
  * CU-06: teoría de la lección + evaluación corta. La calificación la hace el
- * servidor (autoritativa) y aquí solo se muestra el resultado.
+ * servidor (autoritativa); sin conexión se califica en el teléfono y el
+ * intento se envía después (§6.2).
  */
 @Composable
 fun LeccionScreen(
@@ -70,7 +71,12 @@ fun LeccionScreen(
         }
 
         if (resultado != null) {
-            ResultadoIntento(resultado, onReintentar = viewModel::reintentar, onVolver = onVolver)
+            ResultadoIntento(
+                resultado,
+                pendiente = uiState.pendiente,
+                onReintentar = viewModel::reintentar,
+                onVolver = onVolver
+            )
         } else {
             Button(
                 onClick = viewModel::enviar,

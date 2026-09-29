@@ -15,6 +15,10 @@ interface UsuarioDao {
     @Query("SELECT * FROM usuarios WHERE uid = :uid LIMIT 1")
     suspend fun buscarPorUid(uid: String): UsuarioEntity?
 
+    /** RF-14: XP que confirma el servidor al aprobar una lección. */
+    @Query("UPDATE usuarios SET xp = xp + :xp WHERE uid = :uid")
+    suspend fun sumarXp(uid: String, xp: Int)
+
     @Query("SELECT * FROM usuarios WHERE uid = :uid")
     fun observarUsuario(uid: String): Flow<UsuarioEntity?>
 }

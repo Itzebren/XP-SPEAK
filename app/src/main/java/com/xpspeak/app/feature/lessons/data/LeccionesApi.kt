@@ -10,7 +10,8 @@ import retrofit2.http.Query
 
 /**
  * Endpoints del módulo de Lecciones en xp-speak-auth-backend
- * (docs/lecciones-diseno.md §6). Todos exigen el ID token de Firebase.
+ * (docs/lecciones-diseno.md §6). Todos exigen el ID token de Firebase, menos el
+ * manifiesto, que es público.
  */
 interface LeccionesApi {
     @GET("api/lessons")
@@ -18,6 +19,9 @@ interface LeccionesApi {
         @Header("Authorization") auth: String,
         @Query("level") nivel: String
     ): Response<CatalogoDto>
+
+    @GET("api/lessons/manifest")
+    suspend fun manifiesto(): Response<ManifiestoDto>
 
     @GET("api/lessons/{id}")
     suspend fun leccion(

@@ -3,6 +3,7 @@ package com.xpspeak.app.feature.lessons.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xpspeak.app.feature.lessons.data.EnvioIntento
 import com.xpspeak.app.feature.lessons.data.IntentoResponse
 import com.xpspeak.app.feature.lessons.data.LeccionDto
 import com.xpspeak.app.feature.lessons.data.LeccionesRepository
@@ -12,14 +13,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 data class LeccionUiState(
     val cargando: Boolean = true,
     val leccion: LeccionDto? = null,
     val respuestas: Map<String, RespuestaUsuario> = emptyMap(), // id del ítem → respuesta
+    /** Un id por intento: si se reintenta el envío tras un error, el servidor no duplica XP (§6.2). */
+    val attemptId: String = UUID.randomUUID().toString(),
     val enviando: Boolean = false,
     val resultado: IntentoResponse? = null,
+    /** Calificado en el teléfono sin conexión; el XP se confirma al sincronizar. */
+    val pendiente: Boolean = false,
     val error: String? = null
 )
 
@@ -53,15 +59,26 @@ class LeccionViewModel @Inject constructor(
     }
 
     fun reintentar() {
-        _uiState.value = _uiState.value.copy(respuestas = emptyMap(), resultado = null, error = null)
+        _uiState.value = _uiState.value.copy(
+            respuestas = emptyMap(),
+            attemptId = UUID.randomUUID().toString(),
+            resultado = null,
+            pendiente = false,
+            error = null
+        )
     }
 
     fun enviar() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(enviando = true, error = null)
-            repository.enviarIntento(leccionId, _uiState.value.respuestas)
-                .onSuccess { resultado ->
-                    _uiState.value = _uiState.value.copy(enviando = false, resultado = resultado)
+            val estado = _uiState.value
+            repository.enviarIntento(leccionId, estado.attemptId, estado.respuestas)
+                .onSuccess { envio ->
+                    _uiState.value = _uiState.value.copy(
+                        enviando = false,
+                        resultado = envio.resultado,
+                        pendiente = envio is EnvioIntento.Pendiente
+                    )
                 }
                 .onFailure { excepcion ->
                     _uiState.value = _uiState.value.copy(enviando = false, error = excepcion.message)

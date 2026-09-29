@@ -555,13 +555,26 @@ Conecta con la factibilidad legal del proyecto (3.6.4 del Documento Técnico):
 
 Se considera terminado el corte vertical cuando:
 
-- [ ] 3 lecciones A1 en JSON pasan el linter de contenido (§4.5).
-- [ ] `GET /lessons`, `/lessons/:id`, `/lessons/manifest` responden con el
+- [x] 3 lecciones A1 en JSON pasan el linter de contenido (§4.5).
+      *(Hay 24: temario A1 y A2 completo; `npm run lint:content` las valida.)*
+- [x] `GET /lessons`, `/lessons/:id`, `/lessons/manifest` responden con el
       contrato de §6 y filtran por nivel/desbloqueo (RN-02, RN-06).
-- [ ] `POST /lessons/:id/attempt` califica, aplica 70%, otorga XP atómico e
+- [x] `POST /lessons/:id/attempt` califica, aplica 70%, otorga XP atómico e
       idempotente, desbloquea la siguiente y registra `srs_conceptos` (RN-06/09, §6.2).
-- [ ] `GET /srs/review` devuelve los conceptos débiles del usuario.
-- [ ] Colección de pruebas recorre el flujo feliz y los casos borde (bloqueada,
+- [x] `GET /srs/review` devuelve los conceptos débiles del usuario.
+- [x] Colección de pruebas recorre el flujo feliz y los casos borde (bloqueada,
       reprobada, reintento idempotente).
-- [ ] Endpoints verifican token de Firebase y devuelven errores según §6.3.
-```
+      *(`npm test` y `npm run test:emulador` en el backend; `scripts/probar-lecciones.sh`.)*
+- [x] Endpoints verifican token de Firebase y devuelven errores según §6.3.
+
+Cliente Android (fuera del corte vertical original, ya implementado):
+
+- [x] Catálogo, lección y evaluación consumiendo el backend.
+- [x] Caché offline en Room: lecciones del nivel (refrescadas con el manifiesto)
+      y último catálogo por usuario (RN-11/RNF-08).
+- [x] Calificación local sin conexión (`CalificadorLocal`, espejo de
+      `calificador.js`) y outbox de intentos que envía WorkManager al volver la red,
+      con el mismo `attempt_id` (RN-12, §6.2).
+- [x] El XP que confirma el servidor se suma al perfil local (RF-14).
+- [ ] Audio TTS de vocabulario y diálogos (se hace junto con el chat de voz).
+- [ ] Sesión de repaso SRS con SM-2 (siguiente iteración, ver §10.7).

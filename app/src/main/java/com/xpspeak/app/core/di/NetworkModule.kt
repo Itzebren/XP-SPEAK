@@ -23,8 +23,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
+        // Solo en debug, y sin el token: el header Authorization lleva la sesión del usuario.
         val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+            redactHeader("Authorization")
         }
         return OkHttpClient.Builder()
             .addInterceptor(logging)

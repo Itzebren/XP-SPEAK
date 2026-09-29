@@ -1,5 +1,6 @@
 package com.xpspeak.app.feature.lessons.data
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 // Valores que manda el backend. Gson deja en null un valor desconocido,
@@ -70,15 +71,33 @@ data class ItemDto(
     val en: String?,
     val es: String?,
     val nota: String?,
-    // evaluación
+    // evaluación. La clave de respuestas viene en el JSON para calificar sin conexión (§6.2).
     val id: String?,
     val tipo: TipoEjercicio?,
     val enunciado: String?,
     val opciones: List<String>?,
-    val pares: List<ParDto>?
+    val pares: List<ParDto>?,
+    @SerializedName("concepto_id") val conceptoId: String? = null,
+    /** Int (opción múltiple) o String (completar). */
+    @SerializedName("respuesta_correcta") val respuestaCorrecta: JsonElement? = null,
+    val acepta: List<String>? = null,
+    @SerializedName("feedback_error") val feedbackError: String? = null
 )
 
-data class ParDto(val izq: String, val der: String)
+data class ParDto(
+    val izq: String,
+    val der: String,
+    @SerializedName("concepto_id") val conceptoId: String? = null
+)
+
+// Manifiesto — GET /api/lessons/manifest (público). Dice qué versión de cada
+// lección hay en el servidor para refrescar solo lo que cambió en la caché.
+data class ManifiestoDto(
+    @SerializedName("version_contenido") val versionContenido: String,
+    val niveles: Map<String, List<EntradaManifiestoDto>>
+)
+
+data class EntradaManifiestoDto(val id: String, val version: Int)
 
 // Intento — POST /api/lessons/:id/attempt
 data class IntentoRequest(

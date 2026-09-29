@@ -17,6 +17,10 @@ data class LessonsUiState(
     val nivel: String = "",
     val lecciones: List<LeccionResumenDto> = emptyList(),
     val conceptosDebiles: List<ConceptoDebilDto> = emptyList(),
+    /** El catálogo es el último guardado: no hay conexión con el servidor. */
+    val sinConexion: Boolean = false,
+    /** Intentos calificados sin conexión que aún no llegan al servidor. */
+    val intentosPendientes: Int = 0,
     val error: String? = null
 )
 
@@ -32,20 +36,27 @@ class LessonsViewModel @Inject constructor(
     fun cargar() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(cargando = true, error = null)
-            repository.catalogo()
+            val catalogo = repository.catalogo()
                 .onSuccess { catalogo ->
                     _uiState.value = _uiState.value.copy(
                         cargando = false,
-                        nivel = catalogo.nivel,
-                        lecciones = catalogo.lecciones
+                        nivel = catalogo.dto.nivel,
+                        lecciones = catalogo.dto.lecciones,
+                        sinConexion = catalogo.sinConexion,
+                        intentosPendientes = catalogo.intentosPendientes
                     )
                 }
                 .onFailure { excepcion ->
                     _uiState.value = _uiState.value.copy(cargando = false, error = excepcion.message)
                 }
+                .getOrNull()
+            if (catalogo == null || catalogo.sinConexion) return@launch
+
             repository.conceptosDebiles().onSuccess { dto ->
                 _uiState.value = _uiState.value.copy(conceptosDebiles = dto.conceptos)
             }
+            // En segundo plano: deja descargadas las lecciones del nivel para usarlas sin conexión.
+            repository.sincronizarContenido()
         }
     }
 }

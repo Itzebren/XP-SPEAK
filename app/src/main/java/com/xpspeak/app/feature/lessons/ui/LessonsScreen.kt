@@ -64,6 +64,23 @@ fun LessonsScreen(
             item { Text(error, color = MaterialTheme.colorScheme.error) }
         }
 
+        if (uiState.sinConexion) {
+            item {
+                Text(
+                    "Sin conexión: ves tu último progreso guardado. Las lecciones descargadas funcionan igual.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+        if (uiState.intentosPendientes > 0) {
+            item {
+                Text(
+                    "${uiState.intentosPendientes} evaluación(es) por enviar: se sincronizan al volver la conexión.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+
         items(uiState.lecciones, key = { it.id }) { leccion ->
             TarjetaLeccion(leccion, onClick = { onAbrirLeccion(leccion.id) })
         }

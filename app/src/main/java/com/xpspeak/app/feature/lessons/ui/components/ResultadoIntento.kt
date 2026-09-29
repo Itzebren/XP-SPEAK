@@ -17,7 +17,12 @@ import com.xpspeak.app.feature.lessons.data.IntentoResponse
 
 /** Resultado de la evaluación: puntaje, XP (RF-14), desbloqueo (RN-06) y conceptos a reforzar. */
 @Composable
-fun ResultadoIntento(resultado: IntentoResponse, onReintentar: () -> Unit, onVolver: () -> Unit) {
+fun ResultadoIntento(
+    resultado: IntentoResponse,
+    pendiente: Boolean,
+    onReintentar: () -> Unit,
+    onVolver: () -> Unit
+) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
@@ -25,7 +30,15 @@ fun ResultadoIntento(resultado: IntentoResponse, onReintentar: () -> Unit, onVol
                 style = MaterialTheme.typography.titleLarge
             )
             Text("Puntaje: ${(resultado.puntaje * 100).toInt()}% (${resultado.correctas}/${resultado.total})")
-            Text("XP ganado: ${resultado.xpGanado}")
+            if (pendiente) {
+                // El XP y el desbloqueo los decide el servidor al recibir el intento.
+                Text(
+                    "Sin conexión: tu evaluación se enviará al reconectarte y ahí se sumará tu XP.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            } else {
+                Text("XP ganado: ${resultado.xpGanado}")
+            }
             resultado.desbloqueadaSiguiente?.let { Text("🔓 Desbloqueaste: $it") }
             if (resultado.conceptosDebiles.isNotEmpty()) {
                 Text("Conceptos a reforzar: ${resultado.conceptosDebiles.joinToString()}")
