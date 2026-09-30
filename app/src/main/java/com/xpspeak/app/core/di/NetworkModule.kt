@@ -2,6 +2,7 @@ package com.xpspeak.app.core.di
 
 import com.xpspeak.app.BuildConfig
 import com.xpspeak.app.feature.auth.data.RecuperacionApi
+import com.xpspeak.app.feature.chat.data.ChatApi
 import com.xpspeak.app.feature.lessons.data.LeccionesApi
 import dagger.Module
 import dagger.Provides
@@ -65,4 +66,9 @@ object NetworkModule {
     @Singleton
     fun provideLeccionesApi(@Named("lecciones") retrofit: Retrofit): LeccionesApi =
         retrofit.create(LeccionesApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideChatApi(retrofit: Retrofit): ChatApi =
+        retrofit.create(ChatApi::class.java)
 }
