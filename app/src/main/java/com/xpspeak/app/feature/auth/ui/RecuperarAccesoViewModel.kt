@@ -32,12 +32,13 @@ class RecuperarAccesoViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(RecuperarUiState())
     val uiState: StateFlow<RecuperarUiState> = _uiState.asStateFlow()
 
+    // Ni el correo ni el código llevan espacios (ver AuthViewModel.onCorreoChange).
     fun onCorreoChange(valor: String) {
-        _uiState.value = _uiState.value.copy(correo = valor, error = null)
+        _uiState.value = _uiState.value.copy(correo = valor.filterNot { it.isWhitespace() }, error = null)
     }
 
     fun onCodigoChange(valor: String) {
-        _uiState.value = _uiState.value.copy(codigo = valor, error = null)
+        _uiState.value = _uiState.value.copy(codigo = valor.filterNot { it.isWhitespace() }, error = null)
     }
 
     fun onNuevaPasswordChange(valor: String) {

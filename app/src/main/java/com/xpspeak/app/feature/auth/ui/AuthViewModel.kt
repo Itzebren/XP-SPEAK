@@ -42,8 +42,10 @@ class AuthViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(modo = modo, error = null)
     }
 
+    // Un correo nunca lleva espacios: se quitan también el Tab o salto de línea
+    // que mete el teclado físico al pasar de un campo a otro.
     fun onCorreoChange(valor: String) {
-        _uiState.value = _uiState.value.copy(correo = valor, error = null)
+        _uiState.value = _uiState.value.copy(correo = valor.filterNot { it.isWhitespace() }, error = null)
     }
 
     fun onPasswordChange(valor: String) {
