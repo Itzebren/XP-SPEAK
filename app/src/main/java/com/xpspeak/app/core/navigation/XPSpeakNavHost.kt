@@ -28,7 +28,9 @@ import com.xpspeak.app.feature.auth.ui.AuthScreen
 import com.xpspeak.app.feature.auth.ui.RecuperarAccesoScreen
 import com.xpspeak.app.feature.auth.ui.SeleccionarNivelScreen
 import com.xpspeak.app.feature.chat.ui.ChatScreen
+import com.xpspeak.app.feature.games.domain.Minijuego
 import com.xpspeak.app.feature.games.ui.GamesScreen
+import com.xpspeak.app.feature.games.ui.MinijuegoScreen
 import com.xpspeak.app.feature.lessons.ui.LeccionScreen
 import com.xpspeak.app.feature.lessons.ui.LessonsScreen
 import com.xpspeak.app.feature.lessons.ui.RepasoScreen
@@ -64,7 +66,10 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
                 NavigationBar {
                     bottomTabs.forEach { tab ->
                         NavigationBarItem(
-                            selected = currentRoute?.hierarchy?.any { it.route == tab.route } == true,
+                            // También resalta la pestaña en sus pantallas hijas (p. ej. games/{id})
+                            selected = currentRoute?.hierarchy?.any {
+                                it.route == tab.route || it.route?.startsWith("${tab.route}/") == true
+                            } == true,
                             onClick = {
                                 navController.navigate(tab.route) {
                                     popUpTo(navController.graph.findStartDestination().id) { saveState = true }
@@ -127,7 +132,15 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
             composable(Routes.LECCION) {
                 LeccionScreen(onVolver = { navController.popBackStack() })
             }
-            composable(Routes.GAMES) { GamesScreen() }
+            composable(Routes.GAMES) {
+                GamesScreen(onAbrirJuego = { juego -> navController.navigate(Routes.minijuego(juego.id)) })
+            }
+            composable(Routes.MINIJUEGO) { entry ->
+                MinijuegoScreen(
+                    juego = Minijuego.porId(entry.arguments?.getString("id")),
+                    onVolver = { navController.popBackStack() }
+                )
+            }
             composable(Routes.PROGRESS) { ProgressScreen() }
             composable(Routes.ACCOUNT) {
                 AccountScreen(

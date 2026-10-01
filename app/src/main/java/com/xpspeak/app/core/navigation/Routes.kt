@@ -9,8 +9,10 @@ object Routes {
     const val LECCION = "lessons/{id}"
     const val REPASO = "repaso"
     const val GAMES = "games"
+    const val MINIJUEGO = "games/{id}"
     const val PROGRESS = "progress"
     const val ACCOUNT = "account"
 
     fun leccion(id: String) = "lessons/$id"
+    fun minijuego(id: String) = "games/$id"
 }
