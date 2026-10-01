@@ -1,0 +1,136 @@
+{
+  "id": "a1-saludos-presentaciones",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "Saludos y presentaciones",
+  "orden": 1,
+  "prerequisito_id": null,
+  "xp_recompensa": 50,
+  "can_do": [
+    "Puedo saludar y despedirme de forma sencilla.",
+    "Puedo presentarme y presentar a alguien."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Relaciones con otras personas; Identificación personal.",
+      "MCER, Conversación, A1 (p. 77): «Se presenta y utiliza saludos y expresiones de despedida básicos. Pregunta cómo están las personas y expresa sus reacciones ante las noticias.»",
+      "MCER, Cuadro 1 (escala global), A1 (p. 26): «Puede presentarse a sí mismo y a otros, pedir y dar información personal básica sobre su domicilio, sus pertenencias y las personas que conoce.»",
+      "MCER, Adecuación sociolingüística, A1 (p. 119): «Establece contactos sociales básicos utilizando las fórmulas de cortesía más sencillas y cotidianas relativas a saludos, despedidas y presentaciones, y utiliza expresiones del tipo «por favor», «gracias», «lo siento», etc.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Vocabulario seleccionado de las listas; ejemplos, diálogo y ejercicios redactados originalmente para XP-SPEAK. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¡Aprende a saludar en inglés!",
+      "cuerpo": "En esta lección aprenderás a saludar, despedirte y presentarte. También verás el verbo 'to be' (am/is/are), que usarás en casi todas tus primeras frases."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Saludos y despedidas",
+      "items": [
+        { "concepto_id": "voc.saludos.hello", "en": "Hello!", "es": "¡Hola!", "audio": "tts:Hello!", "nota": "Sirve en cualquier situación." },
+        { "concepto_id": "voc.saludos.hi", "en": "Hi!", "es": "¡Hola! (informal)", "audio": "tts:Hi!", "nota": "Con amigos y familia." },
+        { "concepto_id": "voc.saludos.good_morning", "en": "Good morning!", "es": "¡Buenos días!", "audio": "tts:Good morning!" },
+        { "concepto_id": "voc.saludos.good_afternoon", "en": "Good afternoon!", "es": "¡Buenas tardes!", "audio": "tts:Good afternoon!" },
+        { "concepto_id": "voc.saludos.good_evening", "en": "Good evening!", "es": "¡Buenas noches! (al llegar)", "audio": "tts:Good evening!", "nota": "'Good night' se usa solo para despedirse o ir a dormir." },
+        { "concepto_id": "voc.saludos.goodbye", "en": "Goodbye!", "es": "¡Adiós!", "audio": "tts:Goodbye!" },
+        { "concepto_id": "voc.saludos.see_you_later", "en": "See you later!", "es": "¡Nos vemos luego!", "audio": "tts:See you later!" },
+        { "concepto_id": "voc.saludos.how_are_you", "en": "How are you?", "es": "¿Cómo estás?", "audio": "tts:How are you?" },
+        { "concepto_id": "voc.saludos.fine_thank_you", "en": "I'm fine, thank you.", "es": "Estoy bien, gracias.", "audio": "tts:I'm fine, thank you." },
+        { "concepto_id": "voc.saludos.my_name_is", "en": "My name is…", "es": "Me llamo…", "audio": "tts:My name is Laura." },
+        { "concepto_id": "voc.saludos.nice_to_meet_you", "en": "Nice to meet you!", "es": "¡Mucho gusto!", "audio": "tts:Nice to meet you!" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.subject_pronouns",
+      "titulo": "Pronombres personales (I, you, he, she…)",
+      "explicacion": "Los pronombres sustituyen al nombre de la persona: I (yo), you (tú/usted/ustedes), he (él), she (ella), it (eso), we (nosotros), they (ellos/ellas). En inglés el pronombre casi nunca se omite.",
+      "ejemplos": ["I am Carlos.", "She is my sister.", "We are in the park."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.verb_to_be_present",
+      "titulo": "Verbo to be (am / is / are)",
+      "explicacion": "Usamos 'am' con I, 'is' con he/she/it (y con un sustantivo singular como 'my name'), y 'are' con you/we/they. En conversación se contrae: I'm, you're, he's, she's.",
+      "ejemplos": ["I am a new student.", "My name is Laura.", "You are very kind.", "They're from Puebla."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Primer día en clase",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Laura", "en": "Good morning! My name is Laura.", "es": "¡Buenos días! Me llamo Laura." },
+        { "hablante": "Diego", "en": "Hi, Laura! I'm Diego. Nice to meet you!", "es": "¡Hola, Laura! Soy Diego. ¡Mucho gusto!" },
+        { "hablante": "Laura", "en": "Nice to meet you too. How are you?", "es": "Mucho gusto también. ¿Cómo estás?" },
+        { "hablante": "Diego", "en": "I'm fine, thank you. This is Ana. She is my friend.", "es": "Bien, gracias. Ella es Ana. Es mi amiga." },
+        { "hablante": "Ana", "en": "Hello, Laura! See you later!", "es": "¡Hola, Laura! ¡Nos vemos luego!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.saludos.good_morning",
+          "enunciado": "Son las 9:00 a. m. ¿Cómo saludas en inglés?",
+          "opciones": ["Good night!", "Good morning!", "Goodbye!"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Good morning!' se usa por la mañana; 'Good night!' es para despedirse de noche."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.verb_to_be_present",
+          "enunciado": "My name ___ Laura.",
+          "respuesta_correcta": "is",
+          "acepta": ["is"],
+          "feedback_error": "'My name' es singular (3ª persona), así que usamos 'is'."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.verb_to_be_present",
+          "enunciado": "I ___ a new student.",
+          "respuesta_correcta": "am",
+          "acepta": ["am"],
+          "feedback_error": "Con 'I' siempre usamos 'am'."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.subject_pronouns",
+          "enunciado": "Ana es mi amiga. ___ is my friend.",
+          "opciones": ["He", "She", "They", "I"],
+          "respuesta_correcta": 1,
+          "feedback_error": "Para una mujer usamos 'she'."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.saludos.nice_to_meet_you",
+          "enunciado": "Conoces a alguien por primera vez. ¿Qué dices?",
+          "opciones": ["See you later!", "Nice to meet you!", "Good evening!"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Nice to meet you!' equivale a '¡Mucho gusto!'."
+        },
+        {
+          "id": "q6",
+          "tipo": "emparejar",
+          "enunciado": "Une cada expresión con su significado.",
+          "pares": [
+            { "concepto_id": "voc.saludos.hello", "izq": "Hello!", "der": "¡Hola!" },
+            { "concepto_id": "voc.saludos.goodbye", "izq": "Goodbye!", "der": "¡Adiós!" },
+            { "concepto_id": "voc.saludos.how_are_you", "izq": "How are you?", "der": "¿Cómo estás?" },
+            { "concepto_id": "voc.saludos.see_you_later", "izq": "See you later!", "der": "¡Nos vemos luego!" }
+          ],
+          "feedback_error": "Repasa la tabla de saludos y despedidas."
+        }
+      ]
+    }
+  ]
+}

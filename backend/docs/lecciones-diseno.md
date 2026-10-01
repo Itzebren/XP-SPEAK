@@ -2,12 +2,38 @@
 
 > Backend de contenido (Node/Vercel) · Rama `feature/lecciones`
 > Trabajo Terminal 2026-B162 · Documento de diseño previo a la implementación
-> Estado: **borrador v1** para revisión del equipo
+> Estado: **v4 — temario completo A1/A2, revisado frente al MCER** (actualizado 2026-09-29)
 
 Este documento define la lógica, el alcance y la mejor forma de implementar el
-apartado de **Lecciones** de XP-SPEAK, antes de escribir código. Se apoya en el
-Documento Técnico del proyecto (RF/RN/CU) y en fuentes autorizadas del MCER
-(ver §9. Fuentes).
+apartado de **Lecciones** de XP-SPEAK. Se escribió antes del código y se
+actualizó después para reflejar lo implementado. Se apoya en el Documento
+Técnico del proyecto (RF/RN/CU) y en fuentes autorizadas del MCER (ver §9).
+
+> **Fuente única del contenido: el MCER.** La revisión de todo lo planteado
+> frente al MCER está en [`revision-mcer.md`](revision-mcer.md).
+>
+> **¿Vas a escribir lecciones?** Usa la
+> [Guía de autoría](guia-autoria-lecciones.md): plan curricular A1/A2, reglas
+> de tamaño y XP, estilo, validaciones y plantilla. Este documento explica el
+> diseño; la guía explica cómo producir el contenido.
+
+## 0. Estado actual de la implementación
+
+| Pieza | Estado | Dónde |
+|---|---|---|
+| Esquema de contenido + linter | ✅ | `content/schema/`, `scripts/lint-content.js` |
+| 3 lecciones A1 (corte vertical, §7) | ✅ | `content/lessons/` |
+| Temario completo: 12 lecciones A1 + 12 A2 | ✅ | `content/lessons/`, plan en la guía de autoría §2 |
+| Revisión frente al MCER (RN-03 por nivel) + regla del linter | ✅ | `docs/revision-mcer.md`, regla `fuentesMcer` |
+| Endpoints (§6) con token, errores, ETag, rate limiting | ✅ | `api/lessons/`, `api/srs/` |
+| Calificación en servidor, XP atómico e idempotente, desbloqueo | ✅ | `lib/lecciones/` |
+| Registro por concepto y conceptos débiles (base SRS) | ✅ | `srs_conceptos`, `GET /api/srs/review` |
+| Pruebas: unitarias, API y emuladores | ✅ | `test/`, `scripts/probar-lecciones.sh` |
+| UI Android (catálogo, teoría, evaluación, resultado) | ✅ | `XP-SPEAK/app/.../feature/lessons/` |
+| **Caché offline en Room** (§3, RN-11) | ❌ pendiente | Android pide todo al servidor en cada pantalla |
+| **Calificación local + outbox** (§6.2) | ❌ pendiente | Hoy solo califica el servidor |
+| **Algoritmo SM-2** (intervalos) | ❌ pendiente (fuera de alcance, §2.2) | — |
+| **CI** que corra el linter antes de desplegar (§4.5) | ❌ pendiente | Hoy se corre a mano |
 
 ---
 
@@ -17,7 +43,7 @@ Documento Técnico del proyecto (RF/RN/CU) y en fuentes autorizadas del MCER
 |---|----------|----------|
 | 1 | ¿Dónde vive el trabajo? | **Backend de contenido** (este repo Node/Vercel) que sirve catálogo + contenido y sincroniza progreso; Android lo consume y cachea. |
 | 2 | Alcance de esta iteración | **Contenido + evaluación corta (umbral 70%) + registrar desempeño para alimentar el SRS.** No se implementa aún el algoritmo SRS completo. |
-| 3 | Origen del contenido | **Curado de listas CEFR oficiales/abiertas + autoría propia** (Cambridge A2 Key, Oxford 3000/5000, English Vocabulary Profile). |
+| 3 | Origen del contenido | **Autoría propia acotada por el MCER**, fuente única: temas del MCER §4.2 y can-do respaldados por descriptores del nivel (ver [`revision-mcer.md`](revision-mcer.md)). |
 | 4 | Cobertura | **Corte vertical de 2–3 temas A1** atravesando todo el flujo (contenido → evaluación → XP → engancha SRS), para validar la arquitectura antes de escalar. |
 
 ---
@@ -50,7 +76,7 @@ Documento Técnico del proyecto (RF/RN/CU) y en fuentes autorizadas del MCER
 | **RF-13** Algoritmo SRS | Se registra desempeño por concepto (base del SRS). Algoritmo, iteración siguiente. |
 | **RF-14** Recompensas | XP calculado al completar (atómico). |
 | **RN-02** Nivelación obligatoria | Catálogo filtrado por nivel del perfil (A1/A2). |
-| **RN-03** Filtro MCER | Contenido **curado** de listas CEFR ⇒ cumplimiento por diseño, no por generación libre. |
+| **RN-03** Filtro MCER | Contenido escrito por el equipo (no generado) y **por nivel**: cada lección cita en `autoria.fuentes` los descriptores del MCER de su nivel que respaldan sus can-do; el linter lo exige. |
 | **RN-06** Validación de avance | Umbral **≥70%** para aprobar y desbloquear (`prerequisito_id`). |
 | **RN-07** Lógica SRS | Conceptos con alta tasa de error se marcan como "débiles" y se priorizan. |
 | **RN-08** Criterio de racha | El intento aprobado emite un evento "actividad válida" (interfaz con módulo racha). |
@@ -76,6 +102,9 @@ El PDF exige que los recursos residan **localmente** (RN-11/RNF-08). Elegir un
                                      └── Firestore ────────┘
                                          (progreso + estado SRS por usuario)
 ```
+
+> **Estado:** el backend (manifiesto con versiones, ETag/304) está listo para
+> esto, pero Android **todavía no cachea** en Room (§0).
 
 - **El backend es la fuente de verdad y el punto de autoría/actualización.**
 - **Android descarga el contenido una vez y lo cachea en Room.** A partir de ahí
@@ -137,6 +166,11 @@ el SRS sabe qué **concepto** está débil, no solo qué lección.
     "Puedo saludar y despedirme de forma sencilla.",
     "Puedo presentarme y presentar a alguien."
   ],
+  "autoria": {                           // interno (§8.5): no se envía a la app
+    "fuentes": ["MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Relaciones con otras personas.",
+                "MCER, Conversación, A1 (p. 77): «Se presenta y utiliza saludos y expresiones de despedida básicos…»"],
+    "notas": "Ejemplos y ejercicios originales."
+  },
   "secciones": [
     {
       "tipo": "introduccion",
@@ -145,11 +179,12 @@ el SRS sabe qué **concepto** está débil, no solo qué lección.
     },
     {
       "tipo": "vocabulario",
+      "titulo": "Saludos",
       "items": [
-        { "concepto_id": "voc.hello", "en": "Hello!", "es": "¡Hola!", "audio": "tts:Hello", "nota": "neutro" },
-        { "concepto_id": "voc.hi", "en": "Hi!", "es": "¡Hola! (informal)", "audio": "tts:Hi" },
-        { "concepto_id": "voc.good_morning", "en": "Good morning!", "es": "¡Buenos días!", "audio": "tts:Good morning" },
-        { "concepto_id": "voc.my_name_is", "en": "My name is…", "es": "Me llamo…", "audio": "tts:My name is" }
+        { "concepto_id": "voc.saludos.hello", "en": "Hello!", "es": "¡Hola!", "audio": "tts:Hello", "nota": "neutro" },
+        { "concepto_id": "voc.saludos.hi", "en": "Hi!", "es": "¡Hola! (informal)", "audio": "tts:Hi" },
+        { "concepto_id": "voc.saludos.good_morning", "en": "Good morning!", "es": "¡Buenos días!", "audio": "tts:Good morning" },
+        { "concepto_id": "voc.saludos.my_name_is", "en": "My name is…", "es": "Me llamo…", "audio": "tts:My name is" }
       ]
     },
     {
@@ -174,7 +209,7 @@ el SRS sabe qué **concepto** está débil, no solo qué lección.
         {
           "id": "q1",
           "tipo": "opcion_multiple",
-          "concepto_id": "voc.good_morning",
+          "concepto_id": "voc.saludos.good_morning",
           "enunciado": "¿Cómo dices '¡Buenos días!' en inglés?",
           "opciones": ["Good night!", "Good morning!", "Goodbye!"],
           "respuesta_correcta": 1,
@@ -192,9 +227,11 @@ el SRS sabe qué **concepto** está débil, no solo qué lección.
         {
           "id": "q3",
           "tipo": "emparejar",
+          "enunciado": "Une cada saludo con su significado.",
+          "feedback_error": "Repasa la tabla de saludos.",
           "pares": [
-            { "concepto_id": "voc.hello", "izq": "Hello!", "der": "¡Hola!" },
-            { "concepto_id": "voc.good_morning", "izq": "Good morning!", "der": "¡Buenos días!" }
+            { "concepto_id": "voc.saludos.hello", "izq": "Hello!", "der": "¡Hola!" },
+            { "concepto_id": "voc.saludos.good_morning", "izq": "Good morning!", "der": "¡Buenos días!" }
           ]
         }
       ]
@@ -248,9 +285,16 @@ automática** antes de servirse (mitiga R03/R08 del análisis de riesgos):
   4. `prerequisito_id` apunta a una lección existente y **no forma ciclos**.
   5. `xp_recompensa`, `nivel_mcer`, `umbral_aprobacion` presentes y en rango.
   6. Todo `voc`/`gram` de la evaluación fue **introducido antes** en la lección
-     (no se evalúa lo que no se enseñó).
+     o en su cadena de prerequisitos (no se evalúa lo que no se enseñó).
 
-El linter corre en CI antes de desplegar y como *pre-commit* opcional.
+  Implementadas además: el archivo se llama `<id>.json`; la introducción va
+  primero y hay exactamente una evaluación, al final; `orden` único por nivel;
+  opciones, `izq` y `der` sin repetir; `acepta` incluye la respuesta correcta.
+  La lista completa y actualizada está en la
+  [Guía de autoría §7](guia-autoria-lecciones.md#7-validaciones).
+
+Se corre con `npm run lint:content` y como parte de `npm test`. **Pendiente:**
+correrlo en CI antes de desplegar (hoy no hay CI; ver §0).
 
 ---
 
@@ -262,15 +306,17 @@ SRS. Sin esos, RF-13/RN-07 no son implementables. Refinamiento propuesto:
 
 ### 5.1 Contenido (archivos JSON versionados, no BD)
 - `content/lessons/<id>.json` — una lección (esquema §4.2).
-- `content/manifest.json` — índice: por nivel, lista de `{id, version, orden,
-  prerequisito_id, titulo, xp_recompensa}`. Es lo que Android consulta para
+- **Manifiesto:** índice por nivel con `{id, version, orden, prerequisito_id,
+  titulo, xp_recompensa}` y un hash `version_contenido`. No es un archivo: el
+  servidor lo **calcula** al cargar las lecciones (`lib/lecciones/contenido.js`)
+  y lo sirve en `GET /api/lessons/manifest`. Es lo que Android consultará para
   saber qué cachear/refrescar.
 
 ### 5.2 Colecciones Firestore (estado por usuario)
 
 **`progreso_lecciones`** (doc id: `<uid>_<leccion_id>`)
 ```
-uid, leccion_id, estado ('bloqueada'|'disponible'|'completada'),
+uid, leccion_id, estado ('en_progreso'|'reprobada'|'completada'),
 mejor_puntaje (0..1), ultimo_puntaje, intentos, aprobada (bool),
 xp_otorgado (bool), fecha_actualizacion
 ```
@@ -312,7 +358,9 @@ marca `completada`, se desbloquea la siguiente y se otorga XP **una sola vez**
   (CU-06 A3 sugiere repetir). No otorga XP hasta aprobar.
 - Una lección `completada` **sigue siendo reabrible** para repasar; un reintento
   posterior actualiza `mejor_puntaje` pero **no vuelve a dar XP** (RN-09).
-- El campo `estado` en `progreso_lecciones` refleja este autómata.
+- El campo `estado` en `progreso_lecciones` refleja este autómata. `bloqueada`
+  y `disponible` **no se guardan**: se derivan del progreso del prerequisito,
+  así nunca quedan desincronizados (`lib/lecciones/estado.js`).
 
 ---
 
@@ -382,6 +430,10 @@ verificado en servidor; **no** se confía en un `uid` enviado por el cliente).
 
 ### 6.2 Calificación offline + sincronización idempotente
 
+> **Estado:** la parte de servidor (recalificación, `attempt_id` idempotente)
+> está implementada; la calificación local y el outbox en Android están
+> pendientes (§0).
+
 Tensión a resolver: el PDF exige **funcionar sin conexión** (RN-11, RN-12,
 RNF-08), pero "backend de contenido" sugiere calificar en servidor. Se resuelve
 con un modelo de **doble calificación**:
@@ -448,167 +500,160 @@ forman una secuencia natural con prerequisitos:
 | 3 | **Números y la hora** | Contar; decir la hora | numbers 0–20, o'clock, time, hour | *there is/are*; preguntas *how many* | Lección 2 |
 
 **Entregables del corte vertical:**
-1. `content/lessons/` con las 3 lecciones en JSON (§4.2) + `manifest.json`.
+1. `content/lessons/` con las 3 lecciones en JSON (§4.2); el manifiesto se
+   calcula a partir de ellas (§5.1).
 2. Endpoints `GET /lessons`, `GET /lessons/:id`, `GET /manifest`,
    `POST /lessons/:id/attempt`, `GET /srs/review`.
 3. Colecciones Firestore `progreso_lecciones` y `srs_conceptos` funcionando.
 4. Colección de pruebas (curl/Postman) que recorra: catálogo → contenido →
    intento aprobado → desbloqueo → intento reprobado → conceptos débiles.
 
-Validado el flujo, escalar a los ~8–12 temas A1 restantes y luego A2 es
-**replicar contenido**, no rediseñar arquitectura.
+Validado el flujo, escalar a los temas A1 restantes y luego A2 fue
+**replicar contenido**, no rediseñar arquitectura: las 21 lecciones restantes
+se agregaron solo como JSON, sin tocar código. El plan completo (12
+lecciones A1 + 12 A2, con tema, can-do, gramática y prerequisitos) está en la
+[Guía de autoría §2](guia-autoria-lecciones.md#2-plan-curricular-temario-a1-y-a2).
 
 ---
 
-## 8. Fundamento MCER del contenido (investigación respaldada)
+## 8. Fundamento MCER del contenido
 
-### 8.1 Tamaño de vocabulario meta
-- **A1 ≈ 500–1,000 palabras** de alta frecuencia; **A2 ≈ 1,000–2,000**
-  (acumulado). El *English Vocabulary Profile* asigna nivel a **cada acepción**
-  (~7,000 headwords A1–B2).
-- Enseñar también **chunks/expresiones**, no solo palabras: A1 ~47 frases + 4
-  phrasal verbs; A2 ~147 frases + 27 phrasal verbs.
-- **Implicación de diseño:** un corte vertical de 3 lecciones A1 con ~10–15
-  ítems de vocab c/u introduce ~30–45 lexemas; el A1 completo (~8–12 lecciones)
-  cubre el rango 500–1,000 objetivo.
+Fuente única: Consejo de Europa (2001), *Marco común europeo de referencia
+para las lenguas*, trad. Instituto Cervantes (2002). El detalle, con citas
+textuales y páginas, está en [`revision-mcer.md`](revision-mcer.md); aquí va
+el resumen que rige el diseño.
 
-### 8.2 Dominios temáticos (temario canónico A1/A2)
-Tomados del **listado oficial Cambridge A2 Key** y categorías YLE (A1 Movers):
+### 8.1 Qué toma el contenido del MCER
 
-Family & Friends · Food & Drink · House & Home · Health/Medicine/Exercise ·
-Hobbies & Leisure · Clothes · Colours · Communication & Technology ·
-Documents & Texts · Education · Entertainment & Media · The Natural World ·
-Money/Shopping · Personal Information · Personal Feelings & Opinions ·
-Places (Buildings / Town & City / Countryside) · Services · Sport · Time ·
-Travel & Transport · Weather · Work & Jobs · Measurements.
+- **Temas:** los *temas de comunicación* de §4.2 (pp. 55–56): identificación
+  personal; vivienda, hogar y entorno; vida cotidiana; tiempo libre y ocio;
+  viajes; relaciones con otras personas; salud y cuidado corporal; educación;
+  compras; comidas y bebidas; servicios públicos; lugares; lengua extranjera;
+  condiciones atmosféricas.
+- **Can-do:** cada uno se respalda con un descriptor del **nivel de la
+  lección** (Cuadro 1, p. 26; Cuadro 2, p. 30; escalas de los capítulos 4 y
+  5). La RN-03 se aplica por nivel: nada en A1 que el MCER ubique en A2.
+- **Alcance del vocabulario** (Riqueza de vocabulario, p. 109). A1:
+  *"repertorio básico de palabras y frases aisladas relativas a situaciones
+  concretas"*. A2: *"suficiente vocabulario para desenvolverse en
+  actividades habituales y en transacciones cotidianas que comprenden
+  situaciones y temas conocidos"*.
 
-> Estos son los **módulos temáticos candidatos**. A1 usa el subconjunto más
-> concreto y cotidiano; A2 añade descripciones, pasado y experiencias.
+### 8.2 Qué **no** toma del MCER (decisiones del equipo)
 
-### 8.3 Gramática núcleo por nivel
-- **A1:** *to be*, pronombres, artículos, plurales, posesivos, *present simple*,
-  *present continuous*, *can* (habilidad), *there is/are*, preposiciones básicas,
-  *wh-questions*, imperativos, *some/any*, *like + -ing*, números.
-- **A2:** *past simple* (reg./irreg.), *past continuous*, *present perfect* básico
-  (*ever/never/just/already/yet*), futuro (*going to/will*), comparativos y
-  superlativos, adverbios de frecuencia, modales (*should/must/have to*),
-  *first conditional*, cuantificadores, infinitivo de propósito, relativas básicas.
+- **Listas de palabras.** El MCER no las da (p. 28). Cada lección tiene
+  10–12 palabras o expresiones elegidas por el equipo para el tema y las
+  funciones de la lección. Eso da ~130–150 por nivel: un subconjunto de
+  **refuerzo** (RF-10), no un vocabulario completo del nivel.
+- **Gramática por nivel.** El MCER no la define (*"No se considera posible
+  elaborar una escala de la progresión relativa a la estructura gramatical
+  que sea aplicable a todas las lenguas"*, p. 111). La distribución de
+  estructuras de la Guía de autoría §2 es del equipo. Cada estructura se usa
+  solo para funciones que tienen descriptor en el nivel (por ejemplo, el
+  primer condicional de A2 sirve para *planes*, no para *hipótesis*, que es
+  B2).
+- **Umbral del 70%**, tamaños de sección y XP: decisiones de diseño
+  (Documento Técnico y §2.3).
 
-### 8.4 Proceso de curación (cómo se produce cada lección)
-1. Elegir el **módulo temático** y su **can-do** MCER objetivo.
-2. Seleccionar el **vocabulario** = (tema) ∩ (nivel) usando las listas CEFR.
-3. Elegir la **estructura gramatical** del nivel que se practica en el tema.
-4. Redactar **diálogo** y **ejercicios** usando solo ese vocab/gramática (RN-03).
+### 8.3 Proceso de autoría (cómo se produce cada lección)
+1. Elegir el **tema** de §4.2 y los **can-do** con sus descriptores del nivel.
+2. Seleccionar el **vocabulario** para esas funciones dentro del tema.
+3. Elegir la **estructura gramatical** que sirve a esas funciones.
+4. Redactar **diálogo** y **ejercicios** que practiquen solo esas funciones.
 5. Etiquetar cada ítem con `concepto_id` (para el SRS).
-6. Validar que nada exceda el descriptor del nivel (filtro MCER).
+6. Citar en `autoria.fuentes` el tema y los descriptores, textuales y con
+   página. El linter revisa que estén.
 
-### 8.5 Propiedad intelectual del contenido
+### 8.4 Propiedad intelectual del contenido
 
 Conecta con la factibilidad legal del proyecto (3.6.4 del Documento Técnico):
 
-- Las **listas de vocabulario CEFR** (Cambridge, Oxford, EVP) se usan como
-  **referencia de qué palabras enseñar** en cada nivel — los hechos "esta palabra
-  es A2" no son apropiables. Eso es un uso legítimo.
-- **No** copiar oraciones de ejemplo, diálogos ni ejercicios con copyright de esos
-  materiales: los **ejemplos y ejercicios se redactan originales** para XP-SPEAK.
-- Documentar la fuente de la lista usada por lección (campo interno de autoría),
-  para trazabilidad académica en la tesis.
+- Los descriptores del MCER se **citan** textualmente, con fuente y página,
+  solo en el campo interno `autoria`, que no se envía a la app.
+- Los ejemplos, diálogos y ejercicios se **redactan originales** para
+  XP-SPEAK. No se copian de libros ni de exámenes.
 
 ---
 
 ## 9. Fuentes (investigación)
 
-- Council of Europe — *CEFR global scale / self-assessment grid* (descriptores
-  can-do A1/A2): https://www.coe.int/en/web/common-european-framework-reference-languages/level-descriptions
-- Cambridge English — *A2 Key & A2 Key for Schools Vocabulary List* (listado
-  oficial de temas y vocabulario): https://www.cambridgeenglish.org/images/506886-a2-key-2020-vocabulary-list.pdf
-- Cambridge English Profile — *English Vocabulary Profile* (niveles por acepción,
-  tamaño de vocabulario): http://www.englishprofile.org
-- Cambridge — *A1–B2 vocabulary: insights from the English Profile Wordlists
-  project*: https://www.cambridge.org/core/journals/english-profile-journal/article/a1b2-vocabulary-insights-and-issues-arising-from-the-english-profile-wordlists-project/E57847F6C5574124B2354F9BEEC005FA
-- Cambridge English — *Pre A1 Starters, A1 Movers, A2 Flyers Wordlists* (YLE):
-  https://www.cambridgeenglish.org/images/149681-yle-flyers-word-list.pdf
+Enlaces revisados el 2026-09-29.
+
+**Contenido y niveles: fuente única**
+- Consejo de Europa (2001), *Marco común europeo de referencia para las
+  lenguas: aprendizaje, enseñanza, evaluación*. Madrid: Ministerio de
+  Educación, Cultura y Deporte / Anaya, 2002. Traducción del Instituto
+  Cervantes: https://cvc.cervantes.es/ensenanza/biblioteca_ele/marco/cvc_mer.pdf
+- Consejo de Europa (2020), *Common European Framework of Reference for
+  Languages: Companion Volume*. Actualiza los descriptores; está **pendiente**
+  cotejar con él las citas de la revisión (`revision-mcer.md` §6).
+
+**Repaso espaciado (base de RF-13 / RN-07)**
+- N. J. Cepeda, H. Pashler, E. Vul, J. T. Wixted y D. Rohrer, "Distributed
+  practice in verbal recall tasks: A review and quantitative synthesis,"
+  *Psychological Bulletin*, vol. 132, no. 3, pp. 354–380, 2006.
+  doi:10.1037/0033-2909.132.3.354
+- P. A. Woźniak, *Optimization of Learning*, tesis de maestría, Universidad
+  Tecnológica de Poznań, 1990 (origen del algoritmo SM-2):
+  https://super-memory.com/english/ol.htm
+- H. Ebbinghaus, *Über das Gedächtnis*, 1885 (trad. al inglés: *Memory: A
+  Contribution to Experimental Psychology*, 1913) — curva del olvido.
+
+**Umbral de aprobación (RN-06)**
+- B. S. Bloom, "Learning for Mastery," *Evaluation Comment*, vol. 1, no. 2,
+  pp. 1–12, 1968. Respalda el **mecanismo** (evaluación corta al final de cada
+  unidad, retroalimentación y nuevo intento antes de avanzar). Ojo: el
+  *mastery learning* suele fijar el criterio en 80–90%; el **70%** de XP-SPEAK
+  sale del Documento Técnico ("70% recomendado") y se eligió más bajo a
+  propósito para una app de refuerzo sin carácter de examen. Si se cita, hay
+  que presentarlo así, no como un número tomado de Bloom.
+
+> **Nota para la tesis:** en el Documento Técnico (§2.6.1–2.6.2), Ebbinghaus
+> y SM-2 están citados con [32] y [33], que son artículos sobre chatbots. Las
+> referencias correctas son las de arriba.
 
 ---
 
-## 10. Decisiones abiertas / a confirmar
+## 10. Decisiones tomadas
 
-1. **Almacén del contenido:** ¿JSON versionado en git (recomendado) o Firestore?
-   El diseño asume JSON.
-2. **Audio:** ¿TTS nativo de Android (recomendado, sin backend) o audio
-   pre-grabado servido por el backend? El diseño asume TTS nativo (`"tts:…"`).
-3. **Autenticación de los endpoints:** confirmar que Android enviará el **ID
-   token de Firebase** para que el servidor derive el `uid` (coherente con el uso
-   actual de `firebase-admin`).
-4. **Selección final de los 2–3 temas** del corte vertical (propuesta en §7).
-5. **Nombre/estructura de rutas** (`/api/lessons/...`) vs. el estilo plano actual
-   (`/api/send-reset-code`). Propongo subcarpetas dentro de `api/`.
-6. **Idioma L1 = español:** el contenido asume español como lengua materna (campos
-   `es`). Si a futuro se soportan otras L1, `es` pasaría a un mapa por idioma.
-7. **Sesión de repaso SRS** (futuro): `GET /srs/review` devuelve conceptos débiles;
-   la sesión de repaso se armaría reutilizando los mismos tipos de ítem (§4.3),
-   pero se diseña en la iteración del algoritmo SM-2, no en este corte vertical.
+Las decisiones que quedaron abiertas en la v1 ya se resolvieron:
+
+| # | Decisión | Resultado |
+|---|---|---|
+| 1 | Almacén del contenido | **JSON versionado en git** (§3.1). |
+| 2 | Audio | **TTS nativo de Android** (`"tts:…"`); sin archivos de audio. |
+| 3 | Autenticación | **ID token de Firebase** en `Authorization: Bearer`; el `uid` sale del token. |
+| 4 | Temas del corte vertical | Saludos, información personal, números y hora (§7). |
+| 5 | Rutas | Subcarpetas en `api/` (`/api/lessons/...`, `/api/srs/...`). |
+| 6 | Idioma L1 | Español; campos `es` planos. Si algún día hay otra L1, `es` pasa a mapa por idioma. |
+| 7 | Fuente del contenido | **Solo el MCER** (2026-09-29): temas de §4.2 y can-do con descriptores del nivel; sin listas de vocabulario externas. |
+| 8 | Alcance de la RN-03 | **Por nivel** (2026-09-29): una lección A1 no practica nada que el MCER ubique en A2. |
+
+Siguen abiertas:
+
+1. **Sesión de repaso SRS:** `GET /srs/review` ya devuelve conceptos débiles;
+   la sesión de repaso se diseña junto con el algoritmo SM-2.
+2. **Plan curricular y XP por nivel:** propuestos en la Guía de autoría (§2 y
+   §4), pendientes de validar por el equipo.
+3. **Caché offline y calificación local en Android** (§0).
 
 ---
 
 ## 11. Definition of Done (corte vertical)
 
-Se considera terminado el corte vertical cuando:
+Cumplido. Cada punto lo verifica una prueba automática:
 
 - [x] 3 lecciones A1 en JSON pasan el linter de contenido (§4.5).
-      *(Hay 24: temario A1 y A2 completo; `npm run lint:content` las valida.)*
+      → `test/lint-content.test.js`
 - [x] `GET /lessons`, `/lessons/:id`, `/lessons/manifest` responden con el
       contrato de §6 y filtran por nivel/desbloqueo (RN-02, RN-06).
+      → `test/api-lecciones.test.js` (catálogo, contenido, manifiesto)
 - [x] `POST /lessons/:id/attempt` califica, aplica 70%, otorga XP atómico e
       idempotente, desbloquea la siguiente y registra `srs_conceptos` (RN-06/09, §6.2).
+      → flujo completo, idempotencia y concurrencia en `test/api-lecciones.test.js`
 - [x] `GET /srs/review` devuelve los conceptos débiles del usuario.
 - [x] Colección de pruebas recorre el flujo feliz y los casos borde (bloqueada,
-      reprobada, reintento idempotente).
-      *(`npm test` y `npm run test:emulador` en el backend; `scripts/probar-lecciones.sh`.)*
+      reprobada, reintento idempotente). → `scripts/probar-lecciones.sh`
 - [x] Endpoints verifican token de Firebase y devuelven errores según §6.3.
-
-Cliente Android (fuera del corte vertical original, ya implementado):
-
-- [x] Catálogo, lección y evaluación consumiendo el backend.
-- [x] Caché offline en Room: lecciones del nivel (refrescadas con el manifiesto)
-      y último catálogo por usuario (RN-11/RNF-08).
-- [x] Calificación local sin conexión (`CalificadorLocal`, espejo de
-      `calificador.js`) y outbox de intentos que envía WorkManager al volver la red,
-      con el mismo `attempt_id` (RN-12, §6.2).
-- [x] El XP que confirma el servidor se suma al perfil local (RF-14).
-- [ ] Audio TTS de vocabulario y diálogos (se hace junto con el chat de voz).
-- [x] Sesión de repaso SRS con SM-2 (RF-13/RN-07, ver §12).
-
----
-
-## 12. Sesión de repaso SRS (SM-2)
-
-Resuelve la decisión abierta §10.7.
-
-- **Algoritmo:** SM-2 por concepto (`lib/lecciones/sm2.js`). Al acertar, el
-  intervalo pasa de 1 a 6 días y después se multiplica por la facilidad
-  (`ease`, 2.5 al inicio, mínimo 1.3). Al fallar vuelve a 1 día y la facilidad
-  baja. Se guardan `intervalo`, `ease`, `repeticiones` y `proxima_revision`
-  en `srs_conceptos`.
-- **Calidad de la respuesta:** los ejercicios se califican solos, así que en lugar
-  de botones "fácil/bueno/difícil" (TT §2.6.2) la calidad sale del resultado:
-  acierto = 4, fallo = 1. Si el concepto se falló al menos una vez en ese
-  intento, cuenta como fallo.
-- **Qué alimenta el SRS:** las evaluaciones de las lecciones y las sesiones de
-  repaso. Acertar antes de la fecha (p. ej. repetir la lección el mismo día) no
-  alarga el intervalo; fallar siempre lo reinicia.
-- **Sesión (`GET /api/srs/session`):** hasta 10 conceptos vencidos, primero
-  los de mayor tasa de error (RN-07). Cada uno usa un ítem real de alguna
-  evaluación; un par de "emparejar" se pregunta como opción múltiple con los
-  demás pares como distractores. Si hoy no toca nada, responde cuándo es el
-  próximo repaso.
-- **Respuestas (`POST /api/srs/session`):** el servidor recalifica, reprograma
-  cada concepto y responde en cuántos días vuelve. Es idempotente por
-  `attempt_id`. No da XP, para que no se pueda farmear, pero registra
-  `repaso_completado` en `eventos_actividad` para la racha (RN-08).
-- **Android:** en Lecciones aparece "Repaso de hoy" arriba del catálogo cuando
-  hay conceptos vencidos. El repaso requiere conexión; las lecciones siguen
-  funcionando sin ella.
-- **Pendiente:** RN-07 también pide priorizar el repaso "antes de permitir el
-  avance a nuevos temas". Hoy solo se sugiere (la tarjeta va primero), no se
-  bloquea el avance. Tampoco se usa la latencia de respuesta (TT §2.6.2).
+      → 401/405/409/429 en `test/api-lecciones.test.js`; token real en
+      `test/integracion/emulador.test.js`

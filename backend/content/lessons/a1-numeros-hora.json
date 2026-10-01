@@ -1,0 +1,140 @@
+{
+  "id": "a1-numeros-hora",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "Números y la hora",
+  "orden": 3,
+  "prerequisito_id": "a1-informacion-personal",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo contar del 0 al 20 y usar números en situaciones cotidianas.",
+    "Puedo preguntar y decir la hora de forma sencilla."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Vida cotidiana.",
+      "MCER, Interactuar para obtener bienes y servicios, A1 (p. 80): «Es capaz de pedirle a alguien alguna cosa, y viceversa. Se desenvuelve bien con números, cantidades, precios y horarios.»",
+      "MCER, Intercambiar información, A1 (p. 80): «Es capaz de hacer indicaciones temporales mediante frases como, por ejemplo, «la semana que viene, el pasado viernes, en noviembre, a las tres».»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos y ejercicios originales. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "Cuenta y di la hora",
+      "cuerpo": "Aprenderás los números del 0 al 20, a preguntar '¿qué hora es?' y a responder con o'clock y half past. También verás 'there is / there are' y las preguntas con 'how many'."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Números 0–20",
+      "items": [
+        { "concepto_id": "voc.numeros.zero", "en": "zero", "es": "cero", "audio": "tts:zero" },
+        { "concepto_id": "voc.numeros.one_to_five", "en": "one, two, three, four, five", "es": "uno, dos, tres, cuatro, cinco", "audio": "tts:one, two, three, four, five" },
+        { "concepto_id": "voc.numeros.six_to_ten", "en": "six, seven, eight, nine, ten", "es": "seis, siete, ocho, nueve, diez", "audio": "tts:six, seven, eight, nine, ten" },
+        { "concepto_id": "voc.numeros.eleven_to_fifteen", "en": "eleven, twelve, thirteen, fourteen, fifteen", "es": "once, doce, trece, catorce, quince", "audio": "tts:eleven, twelve, thirteen, fourteen, fifteen" },
+        { "concepto_id": "voc.numeros.sixteen_to_twenty", "en": "sixteen, seventeen, eighteen, nineteen, twenty", "es": "dieciséis, diecisiete, dieciocho, diecinueve, veinte", "audio": "tts:sixteen, seventeen, eighteen, nineteen, twenty" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "La hora",
+      "items": [
+        { "concepto_id": "voc.numeros.what_time_is_it", "en": "What time is it?", "es": "¿Qué hora es?", "audio": "tts:What time is it?" },
+        { "concepto_id": "voc.numeros.o_clock", "en": "… o'clock", "es": "… en punto", "audio": "tts:It's seven o'clock.", "nota": "It's seven o'clock = Son las siete en punto." },
+        { "concepto_id": "voc.numeros.half_past", "en": "half past …", "es": "… y media", "audio": "tts:It's half past two.", "nota": "It's half past two = Son las dos y media." },
+        { "concepto_id": "voc.numeros.hour", "en": "hour", "es": "hora (duración)", "audio": "tts:hour" },
+        { "concepto_id": "voc.numeros.minute", "en": "minute", "es": "minuto", "audio": "tts:minute" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.there_is_are",
+      "titulo": "There is / There are (hay)",
+      "explicacion": "'There is' se usa con una sola cosa y 'there are' con varias. Ambas significan 'hay'.",
+      "ejemplos": ["There is one clock in the classroom.", "There are twelve students in my class.", "There are sixty minutes in an hour."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.how_many_questions",
+      "titulo": "Preguntas con How many",
+      "explicacion": "'How many' (cuántos/cuántas) va con sustantivos en plural y suele combinarse con 'are there': How many students are there?",
+      "ejemplos": ["How many students are there? — There are fifteen.", "How many brothers have you got? — Two."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "¿A qué hora es la clase?",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Iván", "en": "Excuse me, what time is it?", "es": "Disculpa, ¿qué hora es?" },
+        { "hablante": "Carla", "en": "It's half past eight.", "es": "Son las ocho y media." },
+        { "hablante": "Iván", "en": "Oh no! My English class is at nine o'clock.", "es": "¡Oh, no! Mi clase de inglés es a las nueve en punto." },
+        { "hablante": "Carla", "en": "Don't worry. There are thirty minutes. How many students are there in your class?", "es": "No te preocupes. Hay treinta minutos. ¿Cuántos estudiantes hay en tu clase?" },
+        { "hablante": "Iván", "en": "There are fourteen students.", "es": "Hay catorce estudiantes." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.numeros.eleven_to_fifteen",
+          "enunciado": "¿Cómo se escribe 12 en inglés?",
+          "opciones": ["twenty", "twelve", "eleven", "two"],
+          "respuesta_correcta": 1,
+          "feedback_error": "12 = twelve; 20 = twenty."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.numeros.half_past",
+          "enunciado": "Son las 2:30. ¿Qué dices?",
+          "opciones": ["It's two o'clock.", "It's half past two.", "It's twelve o'clock."],
+          "respuesta_correcta": 1,
+          "feedback_error": "Para ':30' usamos 'half past': It's half past two."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "voc.numeros.o_clock",
+          "enunciado": "Son las 7:00. It's seven ___.",
+          "respuesta_correcta": "o'clock",
+          "acepta": ["o'clock", "o’clock", "oclock", "o clock"],
+          "feedback_error": "Para la hora exacta decimos 'o'clock'."
+        },
+        {
+          "id": "q4",
+          "tipo": "completar",
+          "concepto_id": "gram.there_is_are",
+          "enunciado": "There ___ twelve students in my class.",
+          "respuesta_correcta": "are",
+          "acepta": ["are"],
+          "feedback_error": "Con plural (twelve students) usamos 'there are'."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.how_many_questions",
+          "enunciado": "Quieres saber cuántos estudiantes hay. ¿Qué preguntas?",
+          "opciones": ["How old are the students?", "How many students are there?", "What time is it?"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'How many…?' pregunta por cantidad."
+        },
+        {
+          "id": "q6",
+          "tipo": "emparejar",
+          "enunciado": "Une cada número con su nombre.",
+          "pares": [
+            { "concepto_id": "voc.numeros.zero", "izq": "0", "der": "zero" },
+            { "concepto_id": "voc.numeros.one_to_five", "izq": "3", "der": "three" },
+            { "concepto_id": "voc.numeros.six_to_ten", "izq": "8", "der": "eight" },
+            { "concepto_id": "voc.numeros.sixteen_to_twenty", "izq": "18", "der": "eighteen" }
+          ],
+          "feedback_error": "Repasa la tabla de números 0–20."
+        }
+      ]
+    }
+  ]
+}

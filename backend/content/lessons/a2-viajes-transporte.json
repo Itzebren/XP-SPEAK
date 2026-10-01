@@ -1,0 +1,161 @@
+{
+  "id": "a2-viajes-transporte",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Viajes y transporte",
+  "orden": 2,
+  "prerequisito_id": "a2-fin-de-semana",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo contar un viaje que hice y cómo viajé.",
+    "Puedo preguntar a alguien sobre su viaje."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Viajes.",
+      "MCER, Interactuar para obtener bienes y servicios, A2 (p. 80): «Consigue información sencilla sobre viajes; utiliza el transporte público: autobuses, trenes y taxis; pide y da indicaciones para ir a un lugar y compra billetes.»",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe planes y citas, costumbres, actividades habituales o pertenecientes al pasado y experiencias personales.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Se repasan was/were y los verbos regulares de la lección A2-1. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "Un viaje inolvidable",
+      "cuerpo": "Aprenderás palabras de viajes y transporte, los verbos irregulares en pasado (go → went) y cómo hacer preguntas y negativos con did y didn't."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Transporte",
+      "items": [
+        { "concepto_id": "voc.viajes.plane", "en": "plane", "es": "avión", "audio": "tts:plane" },
+        { "concepto_id": "voc.viajes.train", "en": "train", "es": "tren", "audio": "tts:train" },
+        { "concepto_id": "voc.viajes.bus", "en": "bus", "es": "autobús / camión", "audio": "tts:bus" },
+        { "concepto_id": "voc.viajes.by_bus", "en": "by bus / by plane / by car", "es": "en autobús / en avión / en carro", "audio": "tts:I went by bus.", "nota": "Se usa 'by' sin artículo: by bus (no 'in the bus')." },
+        { "concepto_id": "voc.viajes.airport", "en": "airport", "es": "aeropuerto", "audio": "tts:airport" },
+        { "concepto_id": "voc.viajes.ticket", "en": "ticket", "es": "boleto", "audio": "tts:ticket" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "De viaje",
+      "items": [
+        { "concepto_id": "voc.viajes.trip", "en": "trip", "es": "viaje", "audio": "tts:trip", "nota": "'Trip' es el viaje (sustantivo); 'travel' es viajar (verbo)." },
+        { "concepto_id": "voc.viajes.travel", "en": "travel", "es": "viajar", "audio": "tts:travel" },
+        { "concepto_id": "voc.viajes.suitcase", "en": "suitcase", "es": "maleta", "audio": "tts:suitcase" },
+        { "concepto_id": "voc.viajes.hotel", "en": "hotel", "es": "hotel", "audio": "tts:hotel" },
+        { "concepto_id": "voc.viajes.beach", "en": "beach", "es": "playa", "audio": "tts:beach" },
+        { "concepto_id": "voc.viajes.take_a_photo", "en": "take a photo", "es": "tomar una foto", "audio": "tts:take a photo" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.past_simple_irregular",
+      "titulo": "Pasado simple: verbos irregulares",
+      "explicacion": "Muchos verbos comunes no usan -ed: tienen su propia forma en pasado y hay que aprenderla. Es igual para todas las personas: go → went, take → took, have → had, see → saw, buy → bought, get → got, eat → ate.",
+      "ejemplos": ["We went to Oaxaca last summer.", "I took a lot of photos.", "She bought a new suitcase.", "They saw the sea for the first time."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.past_simple_negative_questions",
+      "titulo": "Pasado: negativo y preguntas (didn't, did)",
+      "explicacion": "Negativo: didn't + verbo en forma base. Pregunta: Did + persona + verbo en forma base. ¡Ojo! Después de did / didn't el verbo NO va en pasado: Did you go? (no 'Did you went?'). Respuestas cortas: Yes, I did. / No, I didn't.",
+      "ejemplos": ["I didn't go by plane.", "Did you stay in a hotel? — No, I didn't.", "Where did you go?"]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Vacaciones en Oaxaca",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Luis", "en": "Where did you go on vacation?", "es": "¿A dónde fuiste de vacaciones?" },
+        { "hablante": "Sofía", "en": "I went to Oaxaca by bus. The trip was long!", "es": "Fui a Oaxaca en autobús. ¡El viaje fue largo!" },
+        { "hablante": "Luis", "en": "Did you stay in a hotel?", "es": "¿Te quedaste en un hotel?" },
+        { "hablante": "Sofía", "en": "No, we didn't. We stayed with my aunt, and we went to the beach every day.", "es": "No. Nos quedamos con mi tía y fuimos a la playa todos los días." },
+        { "hablante": "Luis", "en": "Did you take photos?", "es": "¿Tomaste fotos?" },
+        { "hablante": "Sofía", "en": "Yes, I did. I took a hundred photos!", "es": "Sí. ¡Tomé cien fotos!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "completar",
+          "concepto_id": "gram.past_simple_irregular",
+          "enunciado": "Last year I ___ to Cancún. (go)",
+          "respuesta_correcta": "went",
+          "acepta": ["went"],
+          "feedback_error": "'Go' es irregular: su pasado es 'went'."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.past_simple_irregular",
+          "enunciado": "¿Cuál es el pasado de 'buy'?",
+          "opciones": ["brought", "buyed", "bought"],
+          "respuesta_correcta": 2,
+          "feedback_error": "Buy → bought. 'Brought' es el pasado de 'bring' (traer)."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.past_simple_irregular",
+          "enunciado": "We ___ the train to Puebla. (take)",
+          "respuesta_correcta": "took",
+          "acepta": ["took"],
+          "feedback_error": "'Take' es irregular: su pasado es 'took'."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.past_simple_negative_questions",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["Did you went to the beach?", "Did you go to the beach?", "Do you went to the beach?"],
+          "respuesta_correcta": 1,
+          "feedback_error": "Después de 'did' el verbo va en forma base: Did you go?"
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.past_simple_negative_questions",
+          "enunciado": "She ___ stay in a hotel. She stayed with friends.",
+          "respuesta_correcta": "didn't",
+          "acepta": ["didn't", "did not"],
+          "feedback_error": "El negativo en pasado es didn't + verbo en forma base."
+        },
+        {
+          "id": "q6",
+          "tipo": "completar",
+          "concepto_id": "gram.past_simple_negative_questions",
+          "enunciado": "Did they buy the tickets? — Yes, they ___.",
+          "respuesta_correcta": "did",
+          "acepta": ["did"],
+          "feedback_error": "Si la pregunta empieza con 'Did', la respuesta corta es 'Yes, they did'."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.viajes.by_bus",
+          "enunciado": "¿Cómo dices 'Fui en autobús'?",
+          "opciones": ["I went by bus.", "I went in the bus.", "I went for bus."],
+          "respuesta_correcta": 0,
+          "feedback_error": "Para el medio de transporte usamos 'by' sin artículo: by bus."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa las tablas de viajes.",
+          "pares": [
+            { "concepto_id": "voc.viajes.ticket", "izq": "ticket", "der": "boleto" },
+            { "concepto_id": "voc.viajes.airport", "izq": "airport", "der": "aeropuerto" },
+            { "concepto_id": "voc.viajes.suitcase", "izq": "suitcase", "der": "maleta" },
+            { "concepto_id": "voc.viajes.beach", "izq": "beach", "der": "playa" }
+          ]
+        }
+      ]
+    }
+  ]
+}

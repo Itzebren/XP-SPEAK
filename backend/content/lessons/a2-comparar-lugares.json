@@ -1,0 +1,162 @@
+{
+  "id": "a2-comparar-lugares",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Comparar lugares",
+  "orden": 7,
+  "prerequisito_id": "a2-planes-futuro",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo comparar dos lugares con frases sencillas.",
+    "Puedo decir, de forma sencilla, qué lugar me parece el mejor."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Lugares.",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Utiliza un lenguaje sencillo y descriptivo para realizar breves declaraciones sobre objetos y posesiones y para hacer comparaciones.»",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe personas, lugares y posesiones en términos sencillos.»",
+      "MCER, Adecuación sociolingüística, A2 (p. 119): «Sabe llevar a cabo funciones básicas de la lengua como, por ejemplo, intercambiar y solicitar información; asimismo, expresa opiniones y actitudes de forma sencilla.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. 'Hierve el Agua' es un lugar real de Oaxaca, usado solo como ejemplo. Justificar opiniones es B1 (Cuadro 1, p. 26); aquí solo se dice qué lugar parece mejor. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Ciudad o campo?",
+      "cuerpo": "Aprenderás palabras para describir lugares, a compararlos (quieter than, more beautiful than) y a decir cuál es el mejor (the best, the biggest)."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Lugares",
+      "items": [
+        { "concepto_id": "voc.lugares.countryside", "en": "countryside", "es": "campo", "audio": "tts:countryside" },
+        { "concepto_id": "voc.lugares.village", "en": "village", "es": "pueblo", "audio": "tts:village" },
+        { "concepto_id": "voc.lugares.mountain", "en": "mountain", "es": "montaña", "audio": "tts:mountain" },
+        { "concepto_id": "voc.lugares.river", "en": "river", "es": "río", "audio": "tts:river" },
+        { "concepto_id": "voc.lugares.lake", "en": "lake", "es": "lago", "audio": "tts:lake" },
+        { "concepto_id": "voc.lugares.forest", "en": "forest", "es": "bosque", "audio": "tts:forest" },
+        { "concepto_id": "voc.lugares.building", "en": "building", "es": "edificio", "audio": "tts:building" },
+        { "concepto_id": "voc.lugares.bridge", "en": "bridge", "es": "puente", "audio": "tts:bridge" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "¿Cómo es?",
+      "items": [
+        { "concepto_id": "voc.lugares.quiet", "en": "quiet", "es": "tranquilo / silencioso", "audio": "tts:quiet" },
+        { "concepto_id": "voc.lugares.noisy", "en": "noisy", "es": "ruidoso", "audio": "tts:noisy" },
+        { "concepto_id": "voc.lugares.safe", "en": "safe", "es": "seguro", "audio": "tts:safe" },
+        { "concepto_id": "voc.lugares.dangerous", "en": "dangerous", "es": "peligroso", "audio": "tts:dangerous" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.comparatives",
+      "titulo": "Comparativos (más… que)",
+      "explicacion": "Adjetivos cortos: + -er + than: quiet → quieter than. Algunos doblan la última letra (big → bigger) y -y cambia a -ier (noisy → noisier). Adjetivos largos: more + adjetivo + than: more beautiful than. Irregulares: good → better, bad → worse.",
+      "ejemplos": ["The village is quieter than the city.", "Mexico City is bigger than Puebla.", "The forest is more beautiful than the beach.", "This hotel is better than the other one."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.superlatives",
+      "titulo": "Superlativos (el más…)",
+      "explicacion": "Para decir que algo es el más de un grupo: the + adjetivo corto + -est (the quietest, the biggest) o the most + adjetivo largo (the most beautiful). Irregulares: good → the best, bad → the worst.",
+      "ejemplos": ["It's the biggest city in Mexico.", "This is the most dangerous road in the mountains.", "For me, Oaxaca has the best food."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "¿A dónde vamos?",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Ana", "en": "Let's go to a village in the mountains. It's quieter than the city.", "es": "Vamos a un pueblo en las montañas. Es más tranquilo que la ciudad." },
+        { "hablante": "Diego", "en": "Yes, but the beach is warmer than the mountains.", "es": "Sí, pero la playa es más cálida que las montañas." },
+        { "hablante": "Ana", "en": "The village is safer and cheaper, too.", "es": "Además, el pueblo es más seguro y más barato." },
+        { "hablante": "Diego", "en": "Hmm. What's the most beautiful place in Oaxaca?", "es": "Mmm. ¿Cuál es el lugar más bonito de Oaxaca?" },
+        { "hablante": "Ana", "en": "I think Hierve el Agua is the best. And it's near the mountains!", "es": "Creo que Hierve el Agua es el mejor. ¡Y está cerca de las montañas!" },
+        { "hablante": "Diego", "en": "OK, let's go there!", "es": "¡Está bien, vamos ahí!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "completar",
+          "concepto_id": "gram.comparatives",
+          "enunciado": "The village is ___ than the city. (quiet)",
+          "respuesta_correcta": "quieter",
+          "acepta": ["quieter"],
+          "feedback_error": "Adjetivo corto + -er + than: quieter than."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.comparatives",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["Mexico City is more big than Puebla.", "Mexico City is bigger than Puebla.", "Mexico City is biger than Puebla."],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Big' es corto y dobla la g: bigger than."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.comparatives",
+          "enunciado": "This hotel is ___ than the other one. (good)",
+          "respuesta_correcta": "better",
+          "acepta": ["better"],
+          "feedback_error": "'Good' es irregular: good → better."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.comparatives",
+          "enunciado": "The forest is ___ than the river.",
+          "opciones": ["more beautiful", "beautifuler", "most beautiful"],
+          "respuesta_correcta": 0,
+          "feedback_error": "Adjetivo largo: more + adjetivo + than: more beautiful than."
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.superlatives",
+          "enunciado": "It's the ___ city in Mexico. (big)",
+          "respuesta_correcta": "biggest",
+          "acepta": ["biggest"],
+          "feedback_error": "Superlativo de adjetivo corto: the + -est. 'Big' dobla la g: the biggest."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.superlatives",
+          "enunciado": "For me, Oaxaca is ___ place in Mexico.",
+          "opciones": ["most beautiful", "the more beautiful", "the most beautiful"],
+          "respuesta_correcta": 2,
+          "feedback_error": "Superlativo de adjetivo largo: the most + adjetivo."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.lugares.noisy",
+          "enunciado": "Hay mucho ruido. Es un lugar…",
+          "opciones": ["quiet", "noisy", "safe"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Noisy' = ruidoso. 'Quiet' es lo contrario: tranquilo."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada lugar con su traducción.",
+          "feedback_error": "Repasa la tabla de lugares.",
+          "pares": [
+            { "concepto_id": "voc.lugares.river", "izq": "river", "der": "río" },
+            { "concepto_id": "voc.lugares.lake", "izq": "lake", "der": "lago" },
+            { "concepto_id": "voc.lugares.forest", "izq": "forest", "der": "bosque" },
+            { "concepto_id": "voc.lugares.bridge", "izq": "bridge", "der": "puente" }
+          ]
+        }
+      ]
+    }
+  ]
+}

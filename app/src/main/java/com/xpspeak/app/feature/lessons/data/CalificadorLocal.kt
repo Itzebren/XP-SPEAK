@@ -5,7 +5,7 @@ import java.text.Normalizer
 import kotlin.math.roundToLong
 
 /**
- * Calificación sin conexión (docs/lecciones-diseno.md §6.2). Es la misma lógica
+ * Calificación sin conexión (backend/docs/lecciones-diseno.md §6.2). Es la misma lógica
  * que lib/lecciones/calificador.js del backend: si cambia allá, cambia aquí.
  * Solo sirve para dar el resultado al instante; el XP y el desbloqueo los
  * decide el servidor cuando se sincroniza el intento.

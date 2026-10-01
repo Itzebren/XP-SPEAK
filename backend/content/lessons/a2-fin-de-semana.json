@@ -1,0 +1,162 @@
+{
+  "id": "a2-fin-de-semana",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Mi fin de semana",
+  "orden": 1,
+  "prerequisito_id": null,
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo contar qué hice el fin de semana pasado.",
+    "Puedo decir dónde estuve y cómo estuvo."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Tiempo libre y ocio.",
+      "MCER, Intercambiar información, A2 (p. 80): «Plantea y contesta preguntas sobre pasatiempos y actividades pasadas.»",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe planes y citas, costumbres, actividades habituales o pertenecientes al pasado y experiencias personales.»",
+      "MCER, Cuadro 1 (escala global), A2 (p. 26): «Sabe describir en términos sencillos aspectos de su pasado y su entorno, así como cuestiones relacionadas con sus necesidades inmediatas.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Primera lección de A2 (prerequisito null, guía §2.1). Reutiliza voc.rutina.weekend y voc.ocio.cook (mismo significado, guía §5.2). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Qué hiciste el fin de semana?",
+      "cuerpo": "Aprenderás a hablar del pasado: was y were para decir dónde estuviste y cómo estuvo algo, y los verbos regulares con -ed para contar lo que hiciste."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "¿Cuándo pasó?",
+      "items": [
+        { "concepto_id": "voc.rutina.weekend", "en": "weekend", "es": "fin de semana", "audio": "tts:weekend" },
+        { "concepto_id": "voc.ocio.yesterday", "en": "yesterday", "es": "ayer", "audio": "tts:yesterday" },
+        { "concepto_id": "voc.ocio.last_weekend", "en": "last weekend", "es": "el fin de semana pasado", "audio": "tts:last weekend", "nota": "También: last night (anoche), last Saturday (el sábado pasado)." },
+        { "concepto_id": "voc.ocio.ago", "en": "… ago", "es": "hace …", "audio": "tts:two days ago", "nota": "Va después del tiempo: two days ago = hace dos días." }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Actividades",
+      "items": [
+        { "concepto_id": "voc.ocio.party", "en": "party", "es": "fiesta", "audio": "tts:party" },
+        { "concepto_id": "voc.ocio.visit", "en": "visit", "es": "visitar", "audio": "tts:visit" },
+        { "concepto_id": "voc.ocio.stay_at_home", "en": "stay at home", "es": "quedarse en casa", "audio": "tts:stay at home" },
+        { "concepto_id": "voc.ocio.watch_a_movie", "en": "watch a movie", "es": "ver una película", "audio": "tts:watch a movie" },
+        { "concepto_id": "voc.ocio.cook", "en": "cook", "es": "cocinar", "audio": "tts:cook" },
+        { "concepto_id": "voc.ocio.clean_the_house", "en": "clean the house", "es": "limpiar la casa", "audio": "tts:clean the house" },
+        { "concepto_id": "voc.ocio.relax", "en": "relax", "es": "relajarse / descansar", "audio": "tts:relax" },
+        { "concepto_id": "voc.ocio.play_video_games", "en": "play video games", "es": "jugar videojuegos", "audio": "tts:play video games" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.past_to_be",
+      "titulo": "Was / were (el pasado de to be)",
+      "explicacion": "Es el pasado de am/is/are: was con I, he, she, it; were con you, we, they. Negativo: wasn't / weren't. Pregunta: Was it…? Were you…? Sirve para decir dónde estuviste o cómo estuvo algo: It was great.",
+      "ejemplos": ["I was at home yesterday.", "The party was fun.", "Were you at the concert? — No, I wasn't.", "My parents weren't in Puebla."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.past_simple_regular",
+      "titulo": "Pasado simple: verbos regulares (-ed)",
+      "explicacion": "Los verbos regulares forman el pasado con -ed y es igual para todas las personas: visit → visited, watch → watched. Si terminan en -e, solo se agrega -d: relax → relaxed, dance → danced. Consonante + y cambia a -ied: study → studied. Algunos doblan la última letra: stop → stopped.",
+      "ejemplos": ["I visited my grandmother.", "We watched a movie last night.", "She studied for two hours yesterday."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "El lunes en clase",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Diego", "en": "Hi, Laura! How was your weekend?", "es": "¡Hola, Laura! ¿Qué tal tu fin de semana?" },
+        { "hablante": "Laura", "en": "It was great! I visited my grandmother in Puebla.", "es": "¡Estuvo genial! Visité a mi abuela en Puebla." },
+        { "hablante": "Diego", "en": "Were your parents there too?", "es": "¿Tus papás también estuvieron ahí?" },
+        { "hablante": "Laura", "en": "Yes, they were. We cooked mole and watched a movie. And you?", "es": "Sí. Cocinamos mole y vimos una película. ¿Y tú?" },
+        { "hablante": "Diego", "en": "I stayed at home. I cleaned the house and played video games.", "es": "Me quedé en casa. Limpié la casa y jugué videojuegos." },
+        { "hablante": "Laura", "en": "So you relaxed!", "es": "¡Entonces descansaste!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "completar",
+          "concepto_id": "gram.past_to_be",
+          "enunciado": "I ___ at home yesterday.",
+          "respuesta_correcta": "was",
+          "acepta": ["was"],
+          "feedback_error": "Con 'I' el pasado de 'to be' es 'was'."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.past_to_be",
+          "enunciado": "They ___ at the party last weekend.",
+          "opciones": ["are", "was", "were"],
+          "respuesta_correcta": 2,
+          "feedback_error": "Es pasado ('last weekend') y con 'they' se usa 'were'."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.past_simple_regular",
+          "enunciado": "Last Saturday we ___ my grandmother. (visit)",
+          "respuesta_correcta": "visited",
+          "acepta": ["visited"],
+          "feedback_error": "Los verbos regulares forman el pasado con -ed: visited."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.past_simple_regular",
+          "enunciado": "¿Cuál es el pasado de 'study'?",
+          "opciones": ["studyed", "studied", "studed"],
+          "respuesta_correcta": 1,
+          "feedback_error": "Consonante + y cambia a -ied: study → studied."
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.past_to_be",
+          "enunciado": "The movie ___ good. It was boring.",
+          "respuesta_correcta": "wasn't",
+          "acepta": ["wasn't", "was not"],
+          "feedback_error": "El negativo de 'was' es 'wasn't' (was not)."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.ocio.ago",
+          "enunciado": "'Two days ago' significa…",
+          "opciones": ["Hace dos días", "En dos días", "Durante dos días"],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Ago' = hace (tiempo pasado) y va después: two days ago."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.ocio.stay_at_home",
+          "enunciado": "¿Qué significa 'stay at home'?",
+          "opciones": ["limpiar la casa", "visitar una casa", "quedarse en casa"],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Stay' = quedarse: stay at home = quedarse en casa."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su significado.",
+          "feedback_error": "Repasa las tablas de vocabulario.",
+          "pares": [
+            { "concepto_id": "voc.ocio.yesterday", "izq": "yesterday", "der": "ayer" },
+            { "concepto_id": "voc.ocio.party", "izq": "party", "der": "fiesta" },
+            { "concepto_id": "voc.ocio.relax", "izq": "relax", "der": "relajarse / descansar" },
+            { "concepto_id": "voc.ocio.clean_the_house", "izq": "clean the house", "der": "limpiar la casa" }
+          ]
+        }
+      ]
+    }
+  ]
+}

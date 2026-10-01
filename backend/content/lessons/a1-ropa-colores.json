@@ -1,0 +1,151 @@
+{
+  "id": "a1-ropa-colores",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "Ropa y colores",
+  "orden": 5,
+  "prerequisito_id": "a1-familia-amigos",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo nombrar la ropa que uso todos los días.",
+    "Puedo decir de qué color es una prenda."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Compras; Identificación personal.",
+      "MCER, Cuadro 1 (escala global), A1 (p. 26): «Puede presentarse a sí mismo y a otros, pedir y dar información personal básica sobre su domicilio, sus pertenencias y las personas que conoce.»",
+      "MCER, Expresión oral en general, A1 (p. 62): «Puede expresarse con frases sencillas y aisladas relativas a personas y lugares.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Se repasan 'have got' (lección 2) y los posesivos (lección 4) en el diálogo. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Qué ropa llevas?",
+      "cuerpo": "En esta lección aprenderás los nombres de la ropa y los colores, cuándo usar a, an y the, y cómo formar el plural: one shirt, two shirts."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "La ropa",
+      "items": [
+        { "concepto_id": "voc.ropa.shirt", "en": "shirt", "es": "camisa", "audio": "tts:shirt" },
+        { "concepto_id": "voc.ropa.t_shirt", "en": "T-shirt", "es": "playera", "audio": "tts:T-shirt" },
+        { "concepto_id": "voc.ropa.pants", "en": "pants", "es": "pantalones", "audio": "tts:pants", "nota": "Siempre va en plural: My pants are black. En Reino Unido se dice 'trousers'." },
+        { "concepto_id": "voc.ropa.dress", "en": "dress", "es": "vestido", "audio": "tts:dress" },
+        { "concepto_id": "voc.ropa.shoes", "en": "shoes", "es": "zapatos", "audio": "tts:shoes" },
+        { "concepto_id": "voc.ropa.jacket", "en": "jacket", "es": "chamarra / chaqueta", "audio": "tts:jacket" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Los colores",
+      "items": [
+        { "concepto_id": "voc.ropa.color", "en": "color", "es": "color", "audio": "tts:color", "nota": "En Reino Unido se escribe 'colour'." },
+        { "concepto_id": "voc.ropa.red", "en": "red", "es": "rojo", "audio": "tts:red" },
+        { "concepto_id": "voc.ropa.blue", "en": "blue", "es": "azul", "audio": "tts:blue" },
+        { "concepto_id": "voc.ropa.black", "en": "black", "es": "negro", "audio": "tts:black" },
+        { "concepto_id": "voc.ropa.white", "en": "white", "es": "blanco", "audio": "tts:white", "nota": "El color va antes de la prenda: a white T-shirt (una playera blanca)." },
+        { "concepto_id": "voc.ropa.green", "en": "green", "es": "verde", "audio": "tts:green" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.articles_a_an_the",
+      "titulo": "Artículos: a, an, the",
+      "explicacion": "'A' y 'an' significan un/una y van con una sola cosa. Usa 'a' antes de sonido de consonante (a shirt) y 'an' antes de sonido de vocal (an old jacket). 'The' (el, la, los, las) es para algo específico o que ya mencionaste.",
+      "ejemplos": ["I've got a red dress.", "She has got an orange T-shirt.", "I've got a jacket. The jacket is black."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.plural_nouns",
+      "titulo": "El plural de los sustantivos",
+      "explicacion": "Casi siempre se agrega -s: shirt → shirts. Después de s, sh, ch o x se agrega -es: dress → dresses. Algunos plurales son irregulares: man → men, woman → women, child → children. Los colores no cambian en plural: two red shirts.",
+      "ejemplos": ["I've got three white shirts.", "Her dresses are blue.", "Two women are in the store."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Ropa para la fiesta",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Laura", "en": "Look, Sofía! This is my new dress.", "es": "¡Mira, Sofía! Este es mi vestido nuevo." },
+        { "hablante": "Sofía", "en": "It's a beautiful dress! Is it red?", "es": "¡Es un vestido muy bonito! ¿Es rojo?" },
+        { "hablante": "Laura", "en": "Yes, it's red. And the shoes are black.", "es": "Sí, es rojo. Y los zapatos son negros." },
+        { "hablante": "Sofía", "en": "I've got an old blue jacket for the party.", "es": "Yo tengo una chamarra azul vieja para la fiesta." },
+        { "hablante": "Laura", "en": "Blue and red are my favorite colors!", "es": "¡El azul y el rojo son mis colores favoritos!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.articles_a_an_the",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["a old jacket", "old a jacket", "an old jacket"],
+          "respuesta_correcta": 2,
+          "feedback_error": "Antes de sonido de vocal usamos 'an': an old jacket."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.plural_nouns",
+          "enunciado": "One dress, two ___.",
+          "respuesta_correcta": "dresses",
+          "acepta": ["dresses"],
+          "feedback_error": "Después de s, sh, ch o x se agrega -es: dress → dresses."
+        },
+        {
+          "id": "q3",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.ropa.pants",
+          "enunciado": "¿Qué significa 'pants' en inglés de Estados Unidos?",
+          "opciones": ["calzones", "pantalones", "playeras"],
+          "respuesta_correcta": 1,
+          "feedback_error": "En Estados Unidos 'pants' son pantalones. En Reino Unido se dice 'trousers'."
+        },
+        {
+          "id": "q4",
+          "tipo": "completar",
+          "concepto_id": "gram.articles_a_an_the",
+          "enunciado": "I've got a new jacket. ___ jacket is black.",
+          "respuesta_correcta": "The",
+          "acepta": ["the"],
+          "feedback_error": "Ya mencionaste la chamarra, así que ahora es algo específico: the jacket."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.ropa.white",
+          "enunciado": "¿Cómo dices 'una playera blanca'?",
+          "opciones": ["a white T-shirt", "a T-shirt white", "an white T-shirt"],
+          "respuesta_correcta": 0,
+          "feedback_error": "En inglés el color va antes de la prenda: a white T-shirt."
+        },
+        {
+          "id": "q6",
+          "tipo": "completar",
+          "concepto_id": "gram.plural_nouns",
+          "enunciado": "One woman, two ___.",
+          "respuesta_correcta": "women",
+          "acepta": ["women"],
+          "feedback_error": "Algunos plurales son irregulares: woman → women, man → men."
+        },
+        {
+          "id": "q7",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa las tablas de ropa y colores.",
+          "pares": [
+            { "concepto_id": "voc.ropa.shoes", "izq": "shoes", "der": "zapatos" },
+            { "concepto_id": "voc.ropa.dress", "izq": "dress", "der": "vestido" },
+            { "concepto_id": "voc.ropa.jacket", "izq": "jacket", "der": "chamarra / chaqueta" },
+            { "concepto_id": "voc.ropa.green", "izq": "green", "der": "verde" }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -9,8 +9,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
- * Endpoints del módulo de Lecciones en xp-speak-auth-backend
- * (docs/lecciones-diseno.md §6). Todos exigen el ID token de Firebase, menos el
+ * Endpoints del módulo de Lecciones en backend/ (este mismo repo)
+ * (backend/docs/lecciones-diseno.md §6). Todos exigen el ID token de Firebase, menos el
  * manifiesto, que es público.
  */
 interface LeccionesApi {

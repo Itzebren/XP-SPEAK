@@ -41,7 +41,7 @@ class ErrorDelServidor(val codigo: Int, mensaje: String) : Exception(mensaje)
  * RF-10/RF-12/RF-13: consume el backend de Lecciones. El servidor saca el uid
  * del ID token de Firebase, así que cada llamada manda "Bearer <token>".
  *
- * Offline-first (docs/lecciones-diseno.md §3 y §6.2): las lecciones y el último
+ * Offline-first (backend/docs/lecciones-diseno.md §3 y §6.2): las lecciones y el último
  * catálogo se guardan en Room; sin conexión la evaluación se califica en el
  * teléfono y el intento se reenvía después con el mismo attempt_id, para que
  * el servidor no duplique el XP.

@@ -1,0 +1,155 @@
+{
+  "id": "a1-comida-bebida",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "Comida y bebida",
+  "orden": 8,
+  "prerequisito_id": "a1-rutina-diaria",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo pedir comida y bebida de forma sencilla.",
+    "Puedo preguntar si hay algo de comer o de beber y responder."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Comidas y bebidas.",
+      "MCER, Interactuar para obtener bienes y servicios, A1 (p. 80): «Es capaz de pedirle a alguien alguna cosa, y viceversa. Se desenvuelve bien con números, cantidades, precios y horarios.»",
+      "MCER, Interacción oral en general, A1 (p. 76): «Sabe plantear y contestar preguntas sencillas, realizar afirmaciones sencillas y responder a las afirmaciones que se le hacen en áreas de necesidad inmediata o sobre temas muy cotidianos.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. 'there is / there are' (lección 3) y el presente simple (lección 7) se repasan en ejemplos y diálogo. Expresar gustos ('I like…') es A2 (Conversación, p. 77); por eso esta lección trabaja 'want' para pedir y los gustos se enseñan en A2-3. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Qué quieres comer?",
+      "cuerpo": "Aprenderás comidas y bebidas, a pedir lo que quieres, a decir lo que no quieres, a hacer preguntas con do y does, y cuándo usar some y any."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Comida y bebida",
+      "items": [
+        { "concepto_id": "voc.comida.want", "en": "want", "es": "querer", "audio": "tts:I want some water.", "nota": "Para pedir con más cortesía verás 'I'd like' en la lección de compras." },
+        { "concepto_id": "voc.comida.hungry", "en": "hungry", "es": "con hambre", "audio": "tts:I'm hungry.", "nota": "Se usa con 'to be': I'm hungry = Tengo hambre." },
+        { "concepto_id": "voc.comida.water", "en": "water", "es": "agua", "audio": "tts:water" },
+        { "concepto_id": "voc.comida.coffee", "en": "coffee", "es": "café", "audio": "tts:coffee" },
+        { "concepto_id": "voc.comida.milk", "en": "milk", "es": "leche", "audio": "tts:milk" },
+        { "concepto_id": "voc.comida.juice", "en": "juice", "es": "jugo", "audio": "tts:juice" },
+        { "concepto_id": "voc.comida.bread", "en": "bread", "es": "pan", "audio": "tts:bread" },
+        { "concepto_id": "voc.comida.egg", "en": "egg", "es": "huevo", "audio": "tts:egg" },
+        { "concepto_id": "voc.comida.rice", "en": "rice", "es": "arroz", "audio": "tts:rice" },
+        { "concepto_id": "voc.comida.chicken", "en": "chicken", "es": "pollo", "audio": "tts:chicken" },
+        { "concepto_id": "voc.comida.fruit", "en": "fruit", "es": "fruta", "audio": "tts:fruit" },
+        { "concepto_id": "voc.comida.vegetables", "en": "vegetables", "es": "verduras", "audio": "tts:vegetables" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.present_simple_negative_questions",
+      "titulo": "Presente simple: negativo y preguntas",
+      "explicacion": "Negativo: don't + verbo (I, you, we, they) o doesn't + verbo (he, she, it). Pregunta: Do / Does + persona + verbo. Con 'does' y 'doesn't' el verbo ya no lleva -s: She doesn't want milk. Respuestas cortas: Yes, I do. / No, she doesn't.",
+      "ejemplos": ["I don't want coffee, thank you.", "My sister doesn't eat chicken.", "Do you want some rice? — Yes, I do.", "Does he want some milk? — No, he doesn't."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.some_any",
+      "titulo": "Some y any",
+      "explicacion": "'Some' (algo de, unos) se usa en oraciones afirmativas. 'Any' se usa en preguntas y en negativas. Van con sustantivos en plural (eggs) o que no se cuentan (bread, milk).",
+      "ejemplos": ["There is some bread on the table.", "Is there any milk?", "There aren't any eggs."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "¿Qué comemos?",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Diego", "en": "I'm hungry! Is there any bread?", "es": "¡Tengo hambre! ¿Hay pan?" },
+        { "hablante": "Sofía", "en": "Yes, there is some bread, but there aren't any eggs.", "es": "Sí, hay pan, pero no hay huevos." },
+        { "hablante": "Diego", "en": "Oh, no. Do you want rice and chicken?", "es": "Ay, no. ¿Quieres arroz con pollo?" },
+        { "hablante": "Sofía", "en": "Yes, I do! But my sister doesn't eat chicken.", "es": "¡Sí! Pero mi hermana no come pollo." },
+        { "hablante": "Diego", "en": "Does she want some vegetables?", "es": "¿Ella quiere verduras?" },
+        { "hablante": "Sofía", "en": "Yes, she does. And some fruit, please!", "es": "Sí. ¡Y fruta, por favor!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "completar",
+          "concepto_id": "gram.present_simple_negative_questions",
+          "enunciado": "No quiero café: I ___ want coffee.",
+          "respuesta_correcta": "don't",
+          "acepta": ["don't", "do not"],
+          "feedback_error": "Con 'I' el negativo es don't + verbo: I don't want."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_simple_negative_questions",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["She doesn't wants milk.", "She don't want milk.", "She doesn't want milk."],
+          "respuesta_correcta": 2,
+          "feedback_error": "Con she se usa 'doesn't', y después el verbo va sin -s: doesn't want."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.present_simple_negative_questions",
+          "enunciado": "___ your brother want some fruit?",
+          "respuesta_correcta": "Does",
+          "acepta": ["does"],
+          "feedback_error": "'Your brother' es he, así que la pregunta empieza con 'Does'."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.some_any",
+          "enunciado": "Is there ___ juice?",
+          "opciones": ["some", "any", "a"],
+          "respuesta_correcta": 1,
+          "feedback_error": "En preguntas usamos 'any': Is there any juice?"
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.some_any",
+          "enunciado": "There is ___ bread on the table.",
+          "respuesta_correcta": "some",
+          "acepta": ["some"],
+          "feedback_error": "Es una oración afirmativa, así que usamos 'some'."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_simple_negative_questions",
+          "enunciado": "Do you want some chicken?",
+          "opciones": ["Yes, I am.", "Yes, I want.", "Yes, I do."],
+          "respuesta_correcta": 2,
+          "feedback_error": "Si la pregunta empieza con 'Do', la respuesta corta es 'Yes, I do'."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.comida.hungry",
+          "enunciado": "'I'm hungry' significa…",
+          "opciones": ["Tengo hambre.", "Tengo sed.", "Estoy cansado."],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Hungry' = con hambre. En inglés se usa 'to be': I'm hungry."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa la tabla de comida y bebida.",
+          "pares": [
+            { "concepto_id": "voc.comida.water", "izq": "water", "der": "agua" },
+            { "concepto_id": "voc.comida.bread", "izq": "bread", "der": "pan" },
+            { "concepto_id": "voc.comida.egg", "izq": "egg", "der": "huevo" },
+            { "concepto_id": "voc.comida.vegetables", "izq": "vegetables", "der": "verduras" }
+          ]
+        }
+      ]
+    }
+  ]
+}

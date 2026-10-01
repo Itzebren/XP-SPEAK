@@ -1,0 +1,160 @@
+{
+  "id": "a2-salud-ejercicio",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Salud y ejercicio",
+  "orden": 5,
+  "prerequisito_id": "a2-trabajo-profesiones",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo decir qué me duele y cómo me siento.",
+    "Puedo hacer sugerencias sencillas y decir lo que tengo que hacer."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Salud y cuidado corporal.",
+      "MCER, Conversación, A2 (p. 77): «Expresa cómo se siente en términos sencillos y sabe cómo dar las gracias.»",
+      "MCER, Conversación, A2 (p. 77): «Realiza invitaciones y sugerencias, y responde a las que le hacen; se disculpa y responde a las disculpas que le presentan.»",
+      "MCER, Competencia lingüística general, A2 (p. 107): «Produce expresiones breves y habituales con el fin de satisfacer necesidades sencillas y concretas: datos personales, acciones habituales, carencias y necesidades, demandas de información.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. 'a cold' (resfriado) es un concepto distinto de voc.clima.cold (frío), por eso tiene su propio concepto_id (guía §5.2). En el MCER, dar consejos aparece hasta B2 (Intercambiar información, p. 80); en A2 'should' se presenta como sugerencia. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Qué te duele?",
+      "cuerpo": "Aprenderás a decir qué te duele, a hacer sugerencias con should y a hablar de lo que tienes que hacer con have to."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Síntomas",
+      "items": [
+        { "concepto_id": "voc.salud.sick", "en": "sick", "es": "enfermo / enferma", "audio": "tts:I feel sick.", "nota": "En Reino Unido también se dice 'ill'." },
+        { "concepto_id": "voc.salud.headache", "en": "headache", "es": "dolor de cabeza", "audio": "tts:I've got a headache." },
+        { "concepto_id": "voc.salud.stomachache", "en": "stomachache", "es": "dolor de estómago", "audio": "tts:stomachache" },
+        { "concepto_id": "voc.salud.sore_throat", "en": "sore throat", "es": "dolor de garganta", "audio": "tts:a sore throat" },
+        { "concepto_id": "voc.salud.a_cold", "en": "a cold", "es": "un resfriado / una gripa", "audio": "tts:I've got a cold.", "nota": "I've got a cold = Tengo gripa. I'm cold = Tengo frío." },
+        { "concepto_id": "voc.salud.hurt", "en": "hurt", "es": "doler", "audio": "tts:My back hurts.", "nota": "Lo que duele es el sujeto: My back hurts = Me duele la espalda." }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Cuidar la salud",
+      "items": [
+        { "concepto_id": "voc.salud.medicine", "en": "medicine", "es": "medicina / medicamento", "audio": "tts:medicine" },
+        { "concepto_id": "voc.salud.dentist", "en": "dentist", "es": "dentista", "audio": "tts:dentist" },
+        { "concepto_id": "voc.salud.exercise", "en": "exercise", "es": "ejercicio / hacer ejercicio", "audio": "tts:exercise" },
+        { "concepto_id": "voc.salud.healthy", "en": "healthy", "es": "saludable / sano", "audio": "tts:healthy" },
+        { "concepto_id": "voc.salud.rest", "en": "rest", "es": "descansar", "audio": "tts:rest" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.should_advice",
+      "titulo": "Should (deberías) para hacer sugerencias",
+      "explicacion": "'Should' + verbo en forma base = debería(s). Sirve para sugerir algo de forma sencilla. Es igual para todas las personas: You should rest. He should go to the doctor. Negativo: shouldn't (no deberías). Pregunta: What should I do?",
+      "ejemplos": ["You should drink a lot of water.", "You shouldn't eat a lot of sugar.", "What should I do? — You should see a dentist."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.have_to_obligation",
+      "titulo": "Have to (tener que)",
+      "explicacion": "'Have to' + verbo = tener que (obligación). Con he/she/it es 'has to'. Negativo: don't / doesn't have to = no es necesario, no tienes que. Pregunta: Do you have to…?",
+      "ejemplos": ["I have to take this medicine every day.", "She has to go to the doctor.", "You don't have to come tomorrow."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Me siento mal",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Mateo", "en": "I feel sick. I've got a headache and a sore throat.", "es": "Me siento mal. Me duele la cabeza y la garganta." },
+        { "hablante": "Sofía", "en": "Oh no! Maybe you've got a cold. You should rest.", "es": "¡Ay, no! A lo mejor tienes gripa. Deberías descansar." },
+        { "hablante": "Mateo", "en": "I can't. I have to go to work today.", "es": "No puedo. Tengo que ir a trabajar hoy." },
+        { "hablante": "Sofía", "en": "You shouldn't go to work sick. You should see a doctor.", "es": "No deberías ir a trabajar enfermo. Deberías ir al médico." },
+        { "hablante": "Mateo", "en": "You're right. And I have to buy some medicine.", "es": "Tienes razón. Y tengo que comprar medicina." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.should_advice",
+          "enunciado": "Tu amigo está muy cansado. Le sugieres:",
+          "opciones": ["You should to rest.", "You should rest.", "You shoulds rest."],
+          "respuesta_correcta": 1,
+          "feedback_error": "Después de 'should' va el verbo en forma base, sin 'to': You should rest."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.should_advice",
+          "enunciado": "No deberías comer tanta azúcar: You ___ eat a lot of sugar.",
+          "respuesta_correcta": "shouldn't",
+          "acepta": ["shouldn't", "should not"],
+          "feedback_error": "El consejo negativo es 'shouldn't' (should not)."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.have_to_obligation",
+          "enunciado": "She ___ to take medicine every day.",
+          "respuesta_correcta": "has",
+          "acepta": ["has"],
+          "feedback_error": "Con he/she/it se dice 'has to'."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.have_to_obligation",
+          "enunciado": "Mañana es domingo y no es necesario ir a clase: I ___ go to school tomorrow.",
+          "opciones": ["mustn't", "don't have to", "haven't to"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Don't have to' = no es necesario."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.have_to_obligation",
+          "enunciado": "¿Qué significa 'I have to study'?",
+          "opciones": ["Tengo estudios.", "Quiero estudiar.", "Tengo que estudiar."],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Have to' + verbo = tener que: I have to study = Tengo que estudiar."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.salud.a_cold",
+          "enunciado": "'I've got a cold' significa…",
+          "opciones": ["Tengo frío.", "Tengo gripa.", "Me duele el estómago."],
+          "respuesta_correcta": 1,
+          "feedback_error": "'A cold', con artículo, es un resfriado. 'I'm cold' es tener frío."
+        },
+        {
+          "id": "q7",
+          "tipo": "completar",
+          "concepto_id": "voc.salud.hurt",
+          "enunciado": "Me duele la espalda: My back ___.",
+          "respuesta_correcta": "hurts",
+          "acepta": ["hurts"],
+          "feedback_error": "Lo que duele es el sujeto y con 'it' el verbo lleva -s: My back hurts."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su significado.",
+          "feedback_error": "Repasa las tablas de salud.",
+          "pares": [
+            { "concepto_id": "voc.salud.headache", "izq": "headache", "der": "dolor de cabeza" },
+            { "concepto_id": "voc.salud.sore_throat", "izq": "sore throat", "der": "dolor de garganta" },
+            { "concepto_id": "voc.salud.dentist", "izq": "dentist", "der": "dentista" },
+            { "concepto_id": "voc.salud.healthy", "izq": "healthy", "der": "saludable / sano" }
+          ]
+        }
+      ]
+    }
+  ]
+}

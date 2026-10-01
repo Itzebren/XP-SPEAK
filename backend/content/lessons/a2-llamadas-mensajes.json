@@ -1,0 +1,153 @@
+{
+  "id": "a2-llamadas-mensajes",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Llamadas y mensajes",
+  "orden": 8,
+  "prerequisito_id": "a2-comparar-lugares",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo dejar y tomar mensajes breves y sencillos.",
+    "Puedo preguntar y contar experiencias personales: si alguna vez he hecho algo."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Servicios públicos (teléfono, correo); Relaciones con otras personas.",
+      "MCER, Notas, mensajes y formularios, A2 (p. 82): «Toma mensajes breves y sencillos siempre que pueda pedir que le repitan y le vuelvan a formular lo dicho. Escribe notas y mensajes breves y sencillos sobre asuntos relativos a áreas de necesidad inmediata.»",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe planes y citas, costumbres, actividades habituales o pertenecientes al pasado y experiencias personales.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Reencuadrada desde 'Tecnología', que no es tema del MCER §4.2. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Alguna vez has…?",
+      "cuerpo": "Aprenderás a hablar por teléfono y a dejar mensajes, y el present perfect con ever y never para hablar de experiencias: Have you ever written a letter?"
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Por teléfono",
+      "items": [
+        { "concepto_id": "voc.comunicacion.cell_phone", "en": "cell phone", "es": "celular", "audio": "tts:cell phone", "nota": "En Reino Unido se dice 'mobile phone'." },
+        { "concepto_id": "voc.personal.phone_number", "en": "phone number", "es": "número de teléfono", "audio": "tts:phone number" },
+        { "concepto_id": "voc.comunicacion.call", "en": "call", "es": "llamar / llamada", "audio": "tts:I'll call you later." },
+        { "concepto_id": "voc.comunicacion.answer_the_phone", "en": "answer the phone", "es": "contestar el teléfono", "audio": "tts:answer the phone" },
+        { "concepto_id": "voc.comunicacion.leave_a_message", "en": "leave a message", "es": "dejar un mensaje / recado", "audio": "tts:Can I leave a message?" },
+        { "concepto_id": "voc.comunicacion.video_call", "en": "video call", "es": "videollamada", "audio": "tts:video call" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Mensajes y cartas",
+      "items": [
+        { "concepto_id": "voc.comunicacion.message", "en": "message", "es": "mensaje", "audio": "tts:message" },
+        { "concepto_id": "voc.comunicacion.send", "en": "send", "es": "enviar / mandar", "audio": "tts:send", "nota": "Irregular: send → sent → sent." },
+        { "concepto_id": "voc.comunicacion.receive", "en": "receive", "es": "recibir", "audio": "tts:receive" },
+        { "concepto_id": "voc.comunicacion.email", "en": "email", "es": "correo electrónico", "audio": "tts:email" },
+        { "concepto_id": "voc.comunicacion.letter", "en": "letter", "es": "carta", "audio": "tts:letter", "nota": "También significa 'letra' del alfabeto." },
+        { "concepto_id": "voc.comunicacion.address", "en": "address", "es": "dirección", "audio": "tts:address", "nota": "Se escribe con dos d y dos s. Email address = dirección de correo." }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.present_perfect_ever_never",
+      "titulo": "Present perfect: ever y never",
+      "explicacion": "have / has + participio: I have (I've) sent a letter. Sirve para experiencias de la vida, sin decir cuándo. Have you ever…? = ¿Alguna vez has…? Respuesta: Yes, I have. / No, I haven't. Never = nunca. Participios: regulares con -ed; irregulares como sent, made, written, been, lost.",
+      "ejemplos": ["Have you ever lost your cell phone? — Yes, I have.", "I've never made a video call.", "She has received a letter from Canada.", "My grandfather has never sent an email."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Cartas y llamadas",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Mateo", "en": "Have you ever written a letter by hand?", "es": "¿Alguna vez has escrito una carta a mano?" },
+        { "hablante": "Sofía", "en": "Yes, I have! I wrote one to my grandmother last year.", "es": "¡Sí! Le escribí una a mi abuela el año pasado." },
+        { "hablante": "Mateo", "en": "My grandfather has never sent an email.", "es": "Mi abuelo nunca ha mandado un correo." },
+        { "hablante": "Sofía", "en": "Has he ever made a video call?", "es": "¿Alguna vez ha hecho una videollamada?" },
+        { "hablante": "Mateo", "en": "No, he hasn't. He only calls us on the phone, and if we don't answer, he leaves a message!", "es": "No. Solo nos llama por teléfono, ¡y si no contestamos, deja un mensaje!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "completar",
+          "concepto_id": "gram.present_perfect_ever_never",
+          "enunciado": "¿Alguna vez has perdido tu celular?: Have you ___ lost your cell phone?",
+          "respuesta_correcta": "ever",
+          "acepta": ["ever"],
+          "feedback_error": "Para preguntar por experiencias usamos 'Have you ever…?'."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_perfect_ever_never",
+          "enunciado": "Have you ever made a video call? — No, I ___.",
+          "opciones": ["didn't", "haven't", "don't"],
+          "respuesta_correcta": 1,
+          "feedback_error": "Si la pregunta empieza con 'Have', la respuesta corta es 'No, I haven't'."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.present_perfect_ever_never",
+          "enunciado": "Nunca he escrito una carta: I have ___ written a letter.",
+          "respuesta_correcta": "never",
+          "acepta": ["never"],
+          "feedback_error": "'Never' = nunca, y va entre have y el participio."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_perfect_ever_never",
+          "enunciado": "She has ___ an email to her teacher.",
+          "opciones": ["send", "sended", "sent"],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Send' es irregular; su participio es 'sent'."
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.present_perfect_ever_never",
+          "enunciado": "My brother ___ never made a video call.",
+          "respuesta_correcta": "has",
+          "acepta": ["has"],
+          "feedback_error": "Con he/she/it el present perfect usa 'has'."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_perfect_ever_never",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["I have sent the message yesterday.", "I sent the message yesterday.", "I have send the message yesterday."],
+          "respuesta_correcta": 1,
+          "feedback_error": "Si dices cuándo (yesterday) usa pasado simple: I sent."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.comunicacion.leave_a_message",
+          "enunciado": "Llamas a tu amiga y no contesta. Puedes…",
+          "opciones": ["answer the phone", "receive a letter", "leave a message"],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Leave a message' = dejar un mensaje o recado."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa las tablas de llamadas y mensajes.",
+          "pares": [
+            { "concepto_id": "voc.comunicacion.call", "izq": "call", "der": "llamar / llamada" },
+            { "concepto_id": "voc.comunicacion.receive", "izq": "receive", "der": "recibir" },
+            { "concepto_id": "voc.comunicacion.letter", "izq": "letter", "der": "carta" },
+            { "concepto_id": "voc.comunicacion.address", "izq": "address", "der": "dirección" }
+          ]
+        }
+      ]
+    }
+  ]
+}

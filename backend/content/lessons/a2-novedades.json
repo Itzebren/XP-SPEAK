@@ -1,0 +1,154 @@
+{
+  "id": "a2-novedades",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Escuela y novedades",
+  "orden": 9,
+  "prerequisito_id": "a2-llamadas-mensajes",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo decir lo que ya hice, lo que acabo de hacer y lo que todavía no hago.",
+    "Puedo hablar de mis estudios, tareas y exámenes."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Educación.",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe a su familia, sus condiciones de vida, sus estudios y su trabajo actual, o el último que tuvo.»",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe planes y citas, costumbres, actividades habituales o pertenecientes al pasado y experiencias personales.»",
+      "MCER, Intercambiar información, A2 (p. 80): «Intercambia información limitada sobre gestiones cotidianas y habituales.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Continúa el present perfect de A2-8; 'have to' (A2-5) se repasa en el diálogo. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Ya terminaste?",
+      "cuerpo": "Aprenderás palabras de la escuela y el present perfect con just, already y yet para decir lo que acabas de hacer, lo que ya hiciste y lo que todavía no."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "En la escuela",
+      "items": [
+        { "concepto_id": "voc.estudios.subject", "en": "subject", "es": "materia", "audio": "tts:subject", "nota": "My favorite subject is math = Mi materia favorita es mate." },
+        { "concepto_id": "voc.estudios.exam", "en": "exam", "es": "examen", "audio": "tts:exam" },
+        { "concepto_id": "voc.estudios.pass_an_exam", "en": "pass an exam", "es": "aprobar un examen", "audio": "tts:pass an exam", "nota": "Ojo: 'pass' es aprobar. Presentar un examen es 'take an exam'." },
+        { "concepto_id": "voc.estudios.fail", "en": "fail", "es": "reprobar", "audio": "tts:fail" },
+        { "concepto_id": "voc.estudios.grade", "en": "grade", "es": "calificación", "audio": "tts:grade", "nota": "En Reino Unido se dice 'mark'." },
+        { "concepto_id": "voc.estudios.project", "en": "project", "es": "proyecto", "audio": "tts:project" },
+        { "concepto_id": "voc.estudios.library", "en": "library", "es": "biblioteca", "audio": "tts:library", "nota": "Ojo: 'library' no es librería. Librería es 'bookstore'." },
+        { "concepto_id": "voc.estudios.dictionary", "en": "dictionary", "es": "diccionario", "audio": "tts:dictionary" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Documentos",
+      "items": [
+        { "concepto_id": "voc.estudios.form", "en": "form", "es": "formulario", "audio": "tts:form" },
+        { "concepto_id": "voc.estudios.fill_in", "en": "fill in", "es": "llenar (un formulario)", "audio": "tts:fill in the form" },
+        { "concepto_id": "voc.estudios.notes", "en": "notes", "es": "apuntes", "audio": "tts:notes" },
+        { "concepto_id": "voc.estudios.finish", "en": "finish", "es": "terminar", "audio": "tts:finish" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.present_perfect_just_already_yet",
+      "titulo": "Present perfect: just, already, yet",
+      "explicacion": "Con have / has + participio: just = acabo de (I've just finished), already = ya, en afirmativas (She has already done it). Yet va al final: en preguntas = ¿ya…? (Have you finished yet?) y en negativas = todavía no (I haven't finished yet). Participios: do → done, write → written, read → read.",
+      "ejemplos": ["I've just finished the exam.", "We have already done our homework.", "Have you filled in the form yet?", "She hasn't written the project yet."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "El proyecto de inglés",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Laura", "en": "Have you finished the English project yet?", "es": "¿Ya terminaste el proyecto de inglés?" },
+        { "hablante": "Luis", "en": "Yes, I've just sent it to the teacher. And you?", "es": "Sí, acabo de mandárselo al maestro. ¿Y tú?" },
+        { "hablante": "Laura", "en": "Not yet. I haven't written the last part.", "es": "Todavía no. No he escrito la última parte." },
+        { "hablante": "Luis", "en": "Hurry! We have to send it today.", "es": "¡Apúrate! Tenemos que mandarlo hoy." },
+        { "hablante": "Laura", "en": "I know. I've already done the other parts, so I'm almost finished.", "es": "Ya sé. Ya hice las otras partes, así que casi termino." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "completar",
+          "concepto_id": "gram.present_perfect_just_already_yet",
+          "enunciado": "¿Ya terminaste tu tarea?: Have you finished your homework ___?",
+          "respuesta_correcta": "yet",
+          "acepta": ["yet"],
+          "feedback_error": "En preguntas, '¿ya…?' se dice con 'yet' al final."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_perfect_just_already_yet",
+          "enunciado": "Ya la hice: I have ___ done my homework.",
+          "opciones": ["yet", "already", "ever"],
+          "respuesta_correcta": 1,
+          "feedback_error": "En afirmativas, 'ya' es 'already' y va entre have y el participio."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.present_perfect_just_already_yet",
+          "enunciado": "Acabo de terminar el examen: I've ___ finished the exam.",
+          "respuesta_correcta": "just",
+          "acepta": ["just"],
+          "feedback_error": "'Just' = acabo de. Va entre have y el participio."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_perfect_just_already_yet",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["I haven't finished the project yet.", "I haven't yet finished the project.", "I have finished not the project yet."],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Yet' va al final de la oración negativa: I haven't finished it yet."
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.present_perfect_just_already_yet",
+          "enunciado": "She has already ___ the email. (write)",
+          "respuesta_correcta": "written",
+          "acepta": ["written"],
+          "feedback_error": "'Write' es irregular; su participio es 'written'."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.estudios.pass_an_exam",
+          "enunciado": "'I passed the exam' significa…",
+          "opciones": ["Presenté el examen.", "Aprobé el examen.", "Reprobé el examen."],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Pass an exam' = aprobar. Presentarlo es 'take an exam'."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.estudios.subject",
+          "enunciado": "'My favorite subject is math'. Aquí 'subject' es…",
+          "opciones": ["sujeto", "tema de conversación", "materia"],
+          "respuesta_correcta": 2,
+          "feedback_error": "En la escuela, 'subject' es una materia: math, history, English."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa las tablas de la escuela.",
+          "pares": [
+            { "concepto_id": "voc.estudios.library", "izq": "library", "der": "biblioteca" },
+            { "concepto_id": "voc.estudios.grade", "izq": "grade", "der": "calificación" },
+            { "concepto_id": "voc.estudios.dictionary", "izq": "dictionary", "der": "diccionario" },
+            { "concepto_id": "voc.estudios.fail", "izq": "fail", "der": "reprobar" }
+          ]
+        }
+      ]
+    }
+  ]
+}

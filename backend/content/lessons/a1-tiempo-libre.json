@@ -1,0 +1,147 @@
+{
+  "id": "a1-tiempo-libre",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "Tiempo libre",
+  "orden": 10,
+  "prerequisito_id": "a1-ciudad-lugares",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo decir qué sé hacer y qué no.",
+    "Puedo preguntar a otra persona qué sabe hacer."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Tiempo libre y ocio.",
+      "MCER, Monólogo sostenido: descripción de experiencias, A1 (p. 62): «Es capaz de describirse a sí mismo, hablar de su profesión y de su lugar de residencia.»",
+      "MCER, Intercambiar información, A1 (p. 80): «Plantea y contesta preguntas sobre sí mismo y sobre otras personas: dónde vive, personas a las que conoce, cosas que tiene.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Expresar gustos ('like + -ing') es A2 (Conversación, p. 77), así que se movió a la lección A2-3. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Qué sabes hacer?",
+      "cuerpo": "Aprenderás pasatiempos y deportes, y a decir lo que sabes y no sabes hacer con can: I can swim. I can't sing."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Pasatiempos",
+      "items": [
+        { "concepto_id": "voc.ocio.free_time", "en": "free time", "es": "tiempo libre", "audio": "tts:free time" },
+        { "concepto_id": "voc.ocio.hobby", "en": "hobby", "es": "pasatiempo", "audio": "tts:hobby" },
+        { "concepto_id": "voc.ocio.play_soccer", "en": "play soccer", "es": "jugar fútbol", "audio": "tts:play soccer", "nota": "En Estados Unidos es 'soccer'; en Reino Unido, 'football'." },
+        { "concepto_id": "voc.ocio.play_the_guitar", "en": "play the guitar", "es": "tocar la guitarra", "audio": "tts:play the guitar", "nota": "Con instrumentos se usa 'play the': play the piano." },
+        { "concepto_id": "voc.ocio.swim", "en": "swim", "es": "nadar", "audio": "tts:swim" },
+        { "concepto_id": "voc.ocio.dance", "en": "dance", "es": "bailar", "audio": "tts:dance" },
+        { "concepto_id": "voc.ocio.sing", "en": "sing", "es": "cantar", "audio": "tts:sing" },
+        { "concepto_id": "voc.ocio.read", "en": "read", "es": "leer", "audio": "tts:read" },
+        { "concepto_id": "voc.ocio.cook", "en": "cook", "es": "cocinar", "audio": "tts:cook" },
+        { "concepto_id": "voc.ocio.watch_tv", "en": "watch TV", "es": "ver la tele", "audio": "tts:watch TV" },
+        { "concepto_id": "voc.ocio.listen_to_music", "en": "listen to music", "es": "escuchar música", "audio": "tts:listen to music", "nota": "Siempre con 'to': listen to music." },
+        { "concepto_id": "voc.ocio.ride_a_bike", "en": "ride a bike", "es": "andar en bicicleta", "audio": "tts:ride a bike" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.can_ability",
+      "titulo": "Can (saber, poder)",
+      "explicacion": "'Can' + verbo dice lo que sabes o puedes hacer. Es igual para todas las personas y el verbo no lleva -s: She can swim. Negativo: can't (cannot). Pregunta: Can you dance? Respuestas cortas: Yes, I can. / No, I can't.",
+      "ejemplos": ["I can play the guitar.", "My brother can't swim.", "Can you cook? — Yes, I can."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "¿Sabes tocar la guitarra?",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Diego", "en": "Can you play the guitar, Sofía?", "es": "¿Sabes tocar la guitarra, Sofía?" },
+        { "hablante": "Sofía", "en": "No, I can't. But I can sing and dance!", "es": "No. ¡Pero sé cantar y bailar!" },
+        { "hablante": "Diego", "en": "I can't sing, but I can play soccer.", "es": "Yo no sé cantar, pero sé jugar fútbol." },
+        { "hablante": "Sofía", "en": "Can your brother swim?", "es": "¿Tu hermano sabe nadar?" },
+        { "hablante": "Diego", "en": "Yes, he can. And he can ride a bike too.", "es": "Sí. Y también sabe andar en bicicleta." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.can_ability",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["She can swim.", "She cans swim.", "She can swims."],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Can' no cambia con she y el verbo va sin -s: she can swim."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.can_ability",
+          "enunciado": "No sé tocar la guitarra: I ___ play the guitar.",
+          "respuesta_correcta": "can't",
+          "acepta": ["can't", "cannot", "can not"],
+          "feedback_error": "El negativo de 'can' es 'can't' (cannot)."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.can_ability",
+          "enunciado": "Can you cook? — Yes, I ___.",
+          "respuesta_correcta": "can",
+          "acepta": ["can"],
+          "feedback_error": "Si la pregunta usa 'Can', la respuesta corta es 'Yes, I can'."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.can_ability",
+          "enunciado": "¿Cómo preguntas '¿Sabes nadar?'?",
+          "opciones": ["Do you can swim?", "You can swim?", "Can you swim?"],
+          "respuesta_correcta": 2,
+          "feedback_error": "La pregunta empieza con 'Can' y después va la persona: Can you swim?"
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "voc.ocio.play_the_guitar",
+          "enunciado": "Sé tocar la guitarra: I can play ___ guitar.",
+          "respuesta_correcta": "the",
+          "acepta": ["the"],
+          "feedback_error": "Con instrumentos se usa 'play the': play the guitar."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.ocio.play_soccer",
+          "enunciado": "En Estados Unidos, el fútbol se llama…",
+          "opciones": ["football", "soccer", "basketball"],
+          "respuesta_correcta": 1,
+          "feedback_error": "En Estados Unidos es 'soccer'. 'Football' allá es el fútbol americano."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.ocio.free_time",
+          "enunciado": "'In my free time' significa…",
+          "opciones": ["Gratis", "A tiempo", "En mi tiempo libre"],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Free time' = tiempo libre, cuando no trabajas ni estudias."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada actividad con su significado.",
+          "feedback_error": "Repasa la tabla de pasatiempos.",
+          "pares": [
+            { "concepto_id": "voc.ocio.sing", "izq": "sing", "der": "cantar" },
+            { "concepto_id": "voc.ocio.read", "izq": "read", "der": "leer" },
+            { "concepto_id": "voc.ocio.cook", "izq": "cook", "der": "cocinar" },
+            { "concepto_id": "voc.ocio.ride_a_bike", "izq": "ride a bike", "der": "andar en bicicleta" }
+          ]
+        }
+      ]
+    }
+  ]
+}

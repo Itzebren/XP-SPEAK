@@ -1,0 +1,154 @@
+{
+  "id": "a2-clima-excursiones",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Clima y excursiones",
+  "orden": 10,
+  "prerequisito_id": "a2-novedades",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo hablar del clima y entender un pronóstico breve y sencillo.",
+    "Puedo hacer planes y sugerencias sencillas según el clima."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Condiciones atmosféricas; Tiempo libre y ocio.",
+      "MCER, Escuchar avisos e instrucciones, A2 (p. 70): «Capta la idea principal de mensajes y declaraciones breves, claras y sencillas.»",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe planes y citas, costumbres, actividades habituales o pertenecientes al pasado y experiencias personales.»",
+      "MCER, Conversación, A2 (p. 77): «Realiza invitaciones y sugerencias, y responde a las que le hacen; se disculpa y responde a las disculpas que le presentan.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Reencuadrada desde 'Naturaleza' (medio ambiente no es tema del MCER §4.2). El primer condicional se usa para planes que dependen del clima, no para hipótesis (hacer hipótesis es B2, Conversación informal, p. 77). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "Si hace sol, vamos de excursión",
+      "cuerpo": "Aprenderás a hablar del clima y a planear una excursión con el primer condicional: If it's sunny, we'll have a picnic."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "El clima",
+      "items": [
+        { "concepto_id": "voc.clima.weather", "en": "weather", "es": "clima / tiempo", "audio": "tts:weather", "nota": "'Weather' es el clima de hoy; 'time' es el tiempo del reloj." },
+        { "concepto_id": "voc.clima.sunny", "en": "sunny", "es": "soleado", "audio": "tts:It's sunny." },
+        { "concepto_id": "voc.clima.rain", "en": "rain", "es": "lluvia / llover", "audio": "tts:It's raining." },
+        { "concepto_id": "voc.excursion.storm", "en": "storm", "es": "tormenta", "audio": "tts:storm" },
+        { "concepto_id": "voc.excursion.weather_forecast", "en": "weather forecast", "es": "pronóstico del tiempo", "audio": "tts:the weather forecast" },
+        { "concepto_id": "voc.excursion.temperature", "en": "temperature", "es": "temperatura", "audio": "tts:temperature" },
+        { "concepto_id": "voc.excursion.degrees", "en": "degrees", "es": "grados", "audio": "tts:twenty-five degrees" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "De excursión",
+      "items": [
+        { "concepto_id": "voc.excursion.have_a_picnic", "en": "have a picnic", "es": "hacer un día de campo", "audio": "tts:have a picnic" },
+        { "concepto_id": "voc.excursion.sky", "en": "sky", "es": "cielo", "audio": "tts:sky" },
+        { "concepto_id": "voc.excursion.tree", "en": "tree", "es": "árbol", "audio": "tts:tree" },
+        { "concepto_id": "voc.excursion.flower", "en": "flower", "es": "flor", "audio": "tts:flower" },
+        { "concepto_id": "voc.excursion.island", "en": "island", "es": "isla", "audio": "tts:island", "nota": "La s no se pronuncia: 'ai-land'." }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.first_conditional",
+      "titulo": "Primer condicional (If…, will…)",
+      "explicacion": "Sirve para hacer planes que dependen de algo, como el clima: If + presente simple, will + verbo. If it rains, we will stay at home. ¡Ojo! Después de 'if' no se usa 'will'. La parte con 'if' puede ir al final, sin coma: We'll stay at home if it rains.",
+      "ejemplos": ["If it's sunny tomorrow, we'll have a picnic.", "If there's a storm, we'll stay inside.", "We won't go to the island if it rains."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Planes para el sábado",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Ana", "en": "What's the weather forecast for Saturday?", "es": "¿Cuál es el pronóstico del tiempo para el sábado?" },
+        { "hablante": "Mateo", "en": "It says it will be sunny, twenty-five degrees.", "es": "Dice que va a estar soleado, a veinticinco grados." },
+        { "hablante": "Ana", "en": "Great! If it's sunny, we'll have a picnic in the park.", "es": "¡Qué bien! Si hace sol, haremos un día de campo en el parque." },
+        { "hablante": "Mateo", "en": "And if it rains?", "es": "¿Y si llueve?" },
+        { "hablante": "Ana", "en": "If there's a storm, we'll stay at home and watch a movie.", "es": "Si hay tormenta, nos quedaremos en casa a ver una película." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "completar",
+          "concepto_id": "gram.first_conditional",
+          "enunciado": "If it rains, we ___ stay at home.",
+          "respuesta_correcta": "will",
+          "acepta": ["will"],
+          "feedback_error": "En el primer condicional, lo que pasará va con will + verbo."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.first_conditional",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["If it will rain, I stay home.", "If it rains, I will stay home.", "If it rain, I will stay home."],
+          "respuesta_correcta": 1,
+          "feedback_error": "Después de 'if' va presente simple (it rains), y lo que pasará con 'will'."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.first_conditional",
+          "enunciado": "If it ___ tomorrow, we'll stay at home. (rain)",
+          "respuesta_correcta": "rains",
+          "acepta": ["rains"],
+          "feedback_error": "Después de 'if' va presente simple, no 'will'; con 'it' lleva -s: If it rains."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.first_conditional",
+          "enunciado": "If it's sunny, we ___ to the beach.",
+          "opciones": ["go", "going", "will go"],
+          "respuesta_correcta": 2,
+          "feedback_error": "Lo que pasará va con will + verbo: we will go."
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.first_conditional",
+          "enunciado": "Si hace frío, no iré a la playa: If it's cold, I ___ go to the beach.",
+          "respuesta_correcta": "won't",
+          "acepta": ["won't", "will not"],
+          "feedback_error": "El negativo de 'will' es 'won't' (will not)."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.excursion.storm",
+          "enunciado": "Llueve mucho y hay viento muy fuerte. Hay una…",
+          "opciones": ["storm", "star", "sky"],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Storm' = tormenta."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.excursion.weather_forecast",
+          "enunciado": "¿Qué es el 'weather forecast'?",
+          "opciones": ["la temperatura", "el pronóstico del tiempo", "una tormenta"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Weather forecast' = pronóstico del tiempo: dice cómo estará el clima."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa las tablas de vocabulario.",
+          "pares": [
+            { "concepto_id": "voc.excursion.sky", "izq": "sky", "der": "cielo" },
+            { "concepto_id": "voc.excursion.island", "izq": "island", "der": "isla" },
+            { "concepto_id": "voc.excursion.flower", "izq": "flower", "der": "flor" },
+            { "concepto_id": "voc.excursion.degrees", "izq": "degrees", "der": "grados" }
+          ]
+        }
+      ]
+    }
+  ]
+}
