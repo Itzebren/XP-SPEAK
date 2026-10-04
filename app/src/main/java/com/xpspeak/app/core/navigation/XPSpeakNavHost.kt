@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -55,6 +56,7 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
     val currentRoute = navBackStackEntry?.destination
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             // La barra inferior no se muestra en la pantalla de Auth
             val hideBottomBar = currentRoute?.hierarchy?.any {
