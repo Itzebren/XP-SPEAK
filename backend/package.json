@@ -2,13 +2,14 @@
   "name": "xp-speak-backend",
   "version": "1.0.0",
   "private": true,
-  "description": "Backend serverless de XP-SPEAK (Vercel): recuperación de acceso (RF-03) y Lecciones (RF-10, RF-12, RF-13, RF-14).",
+  "description": "Backend serverless de XP-SPEAK (Vercel): recuperación de acceso (RF-03), Lecciones (RF-10, RF-12, RF-13, RF-14) y Minijuegos (RF-11).",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "test": "node --test test/*.test.js",
     "lint:content": "node scripts/lint-content.js",
+    "exportar:minijuegos": "node scripts/exportar-banco-minijuegos.js",
     "test:emulador": "firebase emulators:exec --only firestore,auth --project demo-xpspeak \"node --test test/integracion/*.test.js\"",
     "dev:emulador": "firebase emulators:exec --only firestore,auth --project demo-xpspeak \"node scripts/servidor-local.js\"",
     "dev:app": "firebase emulators:exec --only firestore --project xp-speak \"node scripts/servidor-local.js\""

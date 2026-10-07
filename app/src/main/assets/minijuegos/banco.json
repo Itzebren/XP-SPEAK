@@ -1,0 +1,3768 @@
+{
+ "version": 1,
+ "version_contenido": "2aa673a922b6",
+ "lecciones": [
+  {
+   "id": "a1-saludos-presentaciones",
+   "nivel": "A1",
+   "orden": 1,
+   "titulo": "Saludos y presentaciones",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.saludos.hello",
+     "en": "Hello!",
+     "es": "¡Hola!"
+    },
+    {
+     "concepto_id": "voc.saludos.hi",
+     "en": "Hi!",
+     "es": "¡Hola! (informal)"
+    },
+    {
+     "concepto_id": "voc.saludos.good_morning",
+     "en": "Good morning!",
+     "es": "¡Buenos días!"
+    },
+    {
+     "concepto_id": "voc.saludos.good_afternoon",
+     "en": "Good afternoon!",
+     "es": "¡Buenas tardes!"
+    },
+    {
+     "concepto_id": "voc.saludos.good_evening",
+     "en": "Good evening!",
+     "es": "¡Buenas noches! (al llegar)"
+    },
+    {
+     "concepto_id": "voc.saludos.goodbye",
+     "en": "Goodbye!",
+     "es": "¡Adiós!"
+    },
+    {
+     "concepto_id": "voc.saludos.see_you_later",
+     "en": "See you later!",
+     "es": "¡Nos vemos luego!"
+    },
+    {
+     "concepto_id": "voc.saludos.how_are_you",
+     "en": "How are you?",
+     "es": "¿Cómo estás?"
+    },
+    {
+     "concepto_id": "voc.saludos.fine_thank_you",
+     "en": "I'm fine, thank you.",
+     "es": "Estoy bien, gracias."
+    },
+    {
+     "concepto_id": "voc.saludos.my_name_is",
+     "en": "My name is…",
+     "es": "Me llamo…"
+    },
+    {
+     "concepto_id": "voc.saludos.nice_to_meet_you",
+     "en": "Nice to meet you!",
+     "es": "¡Mucho gusto!"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.subject_pronouns",
+     "tema": "Pronombres personales (I, you, he, she…)",
+     "en": "I am Carlos."
+    },
+    {
+     "concepto_id": "gram.subject_pronouns",
+     "tema": "Pronombres personales (I, you, he, she…)",
+     "en": "She is my sister."
+    },
+    {
+     "concepto_id": "gram.subject_pronouns",
+     "tema": "Pronombres personales (I, you, he, she…)",
+     "en": "We are in the park."
+    },
+    {
+     "concepto_id": "gram.verb_to_be_present",
+     "tema": "Verbo to be (am / is / are)",
+     "en": "I am a new student."
+    },
+    {
+     "concepto_id": "gram.verb_to_be_present",
+     "tema": "Verbo to be (am / is / are)",
+     "en": "My name is Laura."
+    },
+    {
+     "concepto_id": "gram.verb_to_be_present",
+     "tema": "Verbo to be (am / is / are)",
+     "en": "You are very kind."
+    },
+    {
+     "concepto_id": "gram.verb_to_be_present",
+     "tema": "Verbo to be (am / is / are)",
+     "en": "They're from Puebla."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Laura",
+     "en": "Good morning! My name is Laura.",
+     "es": "¡Buenos días! Me llamo Laura."
+    },
+    {
+     "hablante": "Diego",
+     "en": "Hi, Laura! I'm Diego. Nice to meet you!",
+     "es": "¡Hola, Laura! Soy Diego. ¡Mucho gusto!"
+    },
+    {
+     "hablante": "Laura",
+     "en": "Nice to meet you too. How are you?",
+     "es": "Mucho gusto también. ¿Cómo estás?"
+    },
+    {
+     "hablante": "Diego",
+     "en": "I'm fine, thank you. This is Ana. She is my friend.",
+     "es": "Bien, gracias. Ella es Ana. Es mi amiga."
+    },
+    {
+     "hablante": "Ana",
+     "en": "Hello, Laura! See you later!",
+     "es": "¡Hola, Laura! ¡Nos vemos luego!"
+    }
+   ]
+  },
+  {
+   "id": "a1-informacion-personal",
+   "nivel": "A1",
+   "orden": 2,
+   "titulo": "Información personal",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.personal.name",
+     "en": "name",
+     "es": "nombre"
+    },
+    {
+     "concepto_id": "voc.personal.country",
+     "en": "country",
+     "es": "país"
+    },
+    {
+     "concepto_id": "voc.personal.city",
+     "en": "city",
+     "es": "ciudad"
+    },
+    {
+     "concepto_id": "voc.personal.age",
+     "en": "age",
+     "es": "edad"
+    },
+    {
+     "concepto_id": "voc.personal.years_old",
+     "en": "… years old",
+     "es": "… años (de edad)"
+    },
+    {
+     "concepto_id": "voc.personal.be_from",
+     "en": "to be from…",
+     "es": "ser de…"
+    },
+    {
+     "concepto_id": "voc.personal.live_in",
+     "en": "to live in…",
+     "es": "vivir en…"
+    },
+    {
+     "concepto_id": "voc.personal.student",
+     "en": "student",
+     "es": "estudiante"
+    },
+    {
+     "concepto_id": "voc.personal.teacher",
+     "en": "teacher",
+     "es": "maestro / maestra"
+    },
+    {
+     "concepto_id": "voc.personal.phone_number",
+     "en": "phone number",
+     "es": "número de teléfono"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.wh_questions_basic",
+     "tema": "Preguntas con What, Where, How old",
+     "en": "What is your name?"
+    },
+    {
+     "concepto_id": "gram.wh_questions_basic",
+     "tema": "Preguntas con What, Where, How old",
+     "en": "My name is Sofía."
+    },
+    {
+     "concepto_id": "gram.wh_questions_basic",
+     "tema": "Preguntas con What, Where, How old",
+     "en": "Where are you from?"
+    },
+    {
+     "concepto_id": "gram.wh_questions_basic",
+     "tema": "Preguntas con What, Where, How old",
+     "en": "I'm from Mexico."
+    },
+    {
+     "concepto_id": "gram.wh_questions_basic",
+     "tema": "Preguntas con What, Where, How old",
+     "en": "How old are you?"
+    },
+    {
+     "concepto_id": "gram.wh_questions_basic",
+     "tema": "Preguntas con What, Where, How old",
+     "en": "I'm nineteen."
+    },
+    {
+     "concepto_id": "gram.have_got",
+     "tema": "Have got (tener)",
+     "en": "I've got a new phone."
+    },
+    {
+     "concepto_id": "gram.have_got",
+     "tema": "Have got (tener)",
+     "en": "She has got two brothers."
+    },
+    {
+     "concepto_id": "gram.have_got",
+     "tema": "Have got (tener)",
+     "en": "We have got a big class."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Sofía",
+     "en": "Hi! What is your name?",
+     "es": "¡Hola! ¿Cómo te llamas?"
+    },
+    {
+     "hablante": "Mateo",
+     "en": "My name is Mateo. I'm a student.",
+     "es": "Me llamo Mateo. Soy estudiante."
+    },
+    {
+     "hablante": "Sofía",
+     "en": "Where are you from, Mateo?",
+     "es": "¿De dónde eres, Mateo?"
+    },
+    {
+     "hablante": "Mateo",
+     "en": "I'm from Mexico. I live in Guadalajara. And you?",
+     "es": "Soy de México. Vivo en Guadalajara. ¿Y tú?"
+    },
+    {
+     "hablante": "Sofía",
+     "en": "I'm from Colombia. How old are you?",
+     "es": "Soy de Colombia. ¿Cuántos años tienes?"
+    },
+    {
+     "hablante": "Mateo",
+     "en": "I'm eighteen years old. I've got a sister in Colombia!",
+     "es": "Tengo dieciocho años. ¡Tengo una hermana en Colombia!"
+    }
+   ]
+  },
+  {
+   "id": "a1-numeros-hora",
+   "nivel": "A1",
+   "orden": 3,
+   "titulo": "Números y la hora",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.numeros.zero",
+     "en": "zero",
+     "es": "cero"
+    },
+    {
+     "concepto_id": "voc.numeros.one_to_five",
+     "en": "one, two, three, four, five",
+     "es": "uno, dos, tres, cuatro, cinco"
+    },
+    {
+     "concepto_id": "voc.numeros.six_to_ten",
+     "en": "six, seven, eight, nine, ten",
+     "es": "seis, siete, ocho, nueve, diez"
+    },
+    {
+     "concepto_id": "voc.numeros.eleven_to_fifteen",
+     "en": "eleven, twelve, thirteen, fourteen, fifteen",
+     "es": "once, doce, trece, catorce, quince"
+    },
+    {
+     "concepto_id": "voc.numeros.sixteen_to_twenty",
+     "en": "sixteen, seventeen, eighteen, nineteen, twenty",
+     "es": "dieciséis, diecisiete, dieciocho, diecinueve, veinte"
+    },
+    {
+     "concepto_id": "voc.numeros.what_time_is_it",
+     "en": "What time is it?",
+     "es": "¿Qué hora es?"
+    },
+    {
+     "concepto_id": "voc.numeros.o_clock",
+     "en": "… o'clock",
+     "es": "… en punto"
+    },
+    {
+     "concepto_id": "voc.numeros.half_past",
+     "en": "half past …",
+     "es": "… y media"
+    },
+    {
+     "concepto_id": "voc.numeros.hour",
+     "en": "hour",
+     "es": "hora (duración)"
+    },
+    {
+     "concepto_id": "voc.numeros.minute",
+     "en": "minute",
+     "es": "minuto"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.there_is_are",
+     "tema": "There is / There are (hay)",
+     "en": "There is one clock in the classroom."
+    },
+    {
+     "concepto_id": "gram.there_is_are",
+     "tema": "There is / There are (hay)",
+     "en": "There are twelve students in my class."
+    },
+    {
+     "concepto_id": "gram.there_is_are",
+     "tema": "There is / There are (hay)",
+     "en": "There are sixty minutes in an hour."
+    },
+    {
+     "concepto_id": "gram.how_many_questions",
+     "tema": "Preguntas con How many",
+     "en": "How many students are there?"
+    },
+    {
+     "concepto_id": "gram.how_many_questions",
+     "tema": "Preguntas con How many",
+     "en": "There are fifteen."
+    },
+    {
+     "concepto_id": "gram.how_many_questions",
+     "tema": "Preguntas con How many",
+     "en": "How many brothers have you got?"
+    },
+    {
+     "concepto_id": "gram.how_many_questions",
+     "tema": "Preguntas con How many",
+     "en": "Two."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Iván",
+     "en": "Excuse me, what time is it?",
+     "es": "Disculpa, ¿qué hora es?"
+    },
+    {
+     "hablante": "Carla",
+     "en": "It's half past eight.",
+     "es": "Son las ocho y media."
+    },
+    {
+     "hablante": "Iván",
+     "en": "Oh no! My English class is at nine o'clock.",
+     "es": "¡Oh, no! Mi clase de inglés es a las nueve en punto."
+    },
+    {
+     "hablante": "Carla",
+     "en": "Don't worry. There are thirty minutes. How many students are there in your class?",
+     "es": "No te preocupes. Hay treinta minutos. ¿Cuántos estudiantes hay en tu clase?"
+    },
+    {
+     "hablante": "Iván",
+     "en": "There are fourteen students.",
+     "es": "Hay catorce estudiantes."
+    }
+   ]
+  },
+  {
+   "id": "a1-familia-amigos",
+   "nivel": "A1",
+   "orden": 4,
+   "titulo": "Familia y amigos",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.familia.family",
+     "en": "family",
+     "es": "familia"
+    },
+    {
+     "concepto_id": "voc.familia.mother",
+     "en": "mother",
+     "es": "mamá / madre"
+    },
+    {
+     "concepto_id": "voc.familia.father",
+     "en": "father",
+     "es": "papá / padre"
+    },
+    {
+     "concepto_id": "voc.familia.parents",
+     "en": "parents",
+     "es": "papás / padres"
+    },
+    {
+     "concepto_id": "voc.familia.brother",
+     "en": "brother",
+     "es": "hermano"
+    },
+    {
+     "concepto_id": "voc.familia.sister",
+     "en": "sister",
+     "es": "hermana"
+    },
+    {
+     "concepto_id": "voc.familia.son",
+     "en": "son",
+     "es": "hijo"
+    },
+    {
+     "concepto_id": "voc.familia.daughter",
+     "en": "daughter",
+     "es": "hija"
+    },
+    {
+     "concepto_id": "voc.familia.grandmother",
+     "en": "grandmother",
+     "es": "abuela"
+    },
+    {
+     "concepto_id": "voc.familia.friend",
+     "en": "friend",
+     "es": "amigo / amiga"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.possessive_adjectives",
+     "tema": "Adjetivos posesivos (my, your, his, her…)",
+     "en": "This is my brother."
+    },
+    {
+     "concepto_id": "gram.possessive_adjectives",
+     "tema": "Adjetivos posesivos (my, your, his, her…)",
+     "en": "Her name is Ana."
+    },
+    {
+     "concepto_id": "gram.possessive_adjectives",
+     "tema": "Adjetivos posesivos (my, your, his, her…)",
+     "en": "His parents are from Oaxaca."
+    },
+    {
+     "concepto_id": "gram.possessive_s",
+     "tema": "El posesivo 's (Ana's sister)",
+     "en": "Diego's father is a teacher."
+    },
+    {
+     "concepto_id": "gram.possessive_s",
+     "tema": "El posesivo 's (Ana's sister)",
+     "en": "My friend's name is Luis."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Ana",
+     "en": "Look! This is my family.",
+     "es": "¡Mira! Esta es mi familia."
+    },
+    {
+     "hablante": "Diego",
+     "en": "Who is she?",
+     "es": "¿Quién es ella?"
+    },
+    {
+     "hablante": "Ana",
+     "en": "She's my sister. Her name is Sofía.",
+     "es": "Es mi hermana. Se llama Sofía."
+    },
+    {
+     "hablante": "Diego",
+     "en": "And is he your father?",
+     "es": "¿Y él es tu papá?"
+    },
+    {
+     "hablante": "Ana",
+     "en": "No, he's my grandmother's brother!",
+     "es": "¡No, es el hermano de mi abuela!"
+    }
+   ]
+  },
+  {
+   "id": "a1-ropa-colores",
+   "nivel": "A1",
+   "orden": 5,
+   "titulo": "Ropa y colores",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.ropa.shirt",
+     "en": "shirt",
+     "es": "camisa"
+    },
+    {
+     "concepto_id": "voc.ropa.t_shirt",
+     "en": "T-shirt",
+     "es": "playera"
+    },
+    {
+     "concepto_id": "voc.ropa.pants",
+     "en": "pants",
+     "es": "pantalones"
+    },
+    {
+     "concepto_id": "voc.ropa.dress",
+     "en": "dress",
+     "es": "vestido"
+    },
+    {
+     "concepto_id": "voc.ropa.shoes",
+     "en": "shoes",
+     "es": "zapatos"
+    },
+    {
+     "concepto_id": "voc.ropa.jacket",
+     "en": "jacket",
+     "es": "chamarra / chaqueta"
+    },
+    {
+     "concepto_id": "voc.ropa.color",
+     "en": "color",
+     "es": "color"
+    },
+    {
+     "concepto_id": "voc.ropa.red",
+     "en": "red",
+     "es": "rojo"
+    },
+    {
+     "concepto_id": "voc.ropa.blue",
+     "en": "blue",
+     "es": "azul"
+    },
+    {
+     "concepto_id": "voc.ropa.black",
+     "en": "black",
+     "es": "negro"
+    },
+    {
+     "concepto_id": "voc.ropa.white",
+     "en": "white",
+     "es": "blanco"
+    },
+    {
+     "concepto_id": "voc.ropa.green",
+     "en": "green",
+     "es": "verde"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.articles_a_an_the",
+     "tema": "Artículos: a, an, the",
+     "en": "I've got a red dress."
+    },
+    {
+     "concepto_id": "gram.articles_a_an_the",
+     "tema": "Artículos: a, an, the",
+     "en": "She has got an orange T-shirt."
+    },
+    {
+     "concepto_id": "gram.articles_a_an_the",
+     "tema": "Artículos: a, an, the",
+     "en": "I've got a jacket. The jacket is black."
+    },
+    {
+     "concepto_id": "gram.plural_nouns",
+     "tema": "El plural de los sustantivos",
+     "en": "I've got three white shirts."
+    },
+    {
+     "concepto_id": "gram.plural_nouns",
+     "tema": "El plural de los sustantivos",
+     "en": "Her dresses are blue."
+    },
+    {
+     "concepto_id": "gram.plural_nouns",
+     "tema": "El plural de los sustantivos",
+     "en": "Two women are in the store."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Laura",
+     "en": "Look, Sofía! This is my new dress.",
+     "es": "¡Mira, Sofía! Este es mi vestido nuevo."
+    },
+    {
+     "hablante": "Sofía",
+     "en": "It's a beautiful dress! Is it red?",
+     "es": "¡Es un vestido muy bonito! ¿Es rojo?"
+    },
+    {
+     "hablante": "Laura",
+     "en": "Yes, it's red. And the shoes are black.",
+     "es": "Sí, es rojo. Y los zapatos son negros."
+    },
+    {
+     "hablante": "Sofía",
+     "en": "I've got an old blue jacket for the party.",
+     "es": "Yo tengo una chamarra azul vieja para la fiesta."
+    },
+    {
+     "hablante": "Laura",
+     "en": "Blue and red are my favorite colors!",
+     "es": "¡El azul y el rojo son mis colores favoritos!"
+    }
+   ]
+  },
+  {
+   "id": "a1-casa-hogar",
+   "nivel": "A1",
+   "orden": 6,
+   "titulo": "La casa",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.casa.house",
+     "en": "house",
+     "es": "casa"
+    },
+    {
+     "concepto_id": "voc.casa.apartment",
+     "en": "apartment",
+     "es": "departamento"
+    },
+    {
+     "concepto_id": "voc.casa.bedroom",
+     "en": "bedroom",
+     "es": "recámara / dormitorio"
+    },
+    {
+     "concepto_id": "voc.casa.bathroom",
+     "en": "bathroom",
+     "es": "baño"
+    },
+    {
+     "concepto_id": "voc.casa.kitchen",
+     "en": "kitchen",
+     "es": "cocina"
+    },
+    {
+     "concepto_id": "voc.casa.living_room",
+     "en": "living room",
+     "es": "sala"
+    },
+    {
+     "concepto_id": "voc.casa.bed",
+     "en": "bed",
+     "es": "cama"
+    },
+    {
+     "concepto_id": "voc.casa.table",
+     "en": "table",
+     "es": "mesa"
+    },
+    {
+     "concepto_id": "voc.casa.chair",
+     "en": "chair",
+     "es": "silla"
+    },
+    {
+     "concepto_id": "voc.casa.door",
+     "en": "door",
+     "es": "puerta"
+    },
+    {
+     "concepto_id": "voc.casa.window",
+     "en": "window",
+     "es": "ventana"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.prepositions_of_place",
+     "tema": "¿Dónde está? (in, on, under, next to…)",
+     "en": "My shoes are under the bed."
+    },
+    {
+     "concepto_id": "gram.prepositions_of_place",
+     "tema": "¿Dónde está? (in, on, under, next to…)",
+     "en": "The kitchen is next to the living room."
+    },
+    {
+     "concepto_id": "gram.prepositions_of_place",
+     "tema": "¿Dónde está? (in, on, under, next to…)",
+     "en": "There is a window in my bedroom."
+    },
+    {
+     "concepto_id": "gram.prepositions_of_place",
+     "tema": "¿Dónde está? (in, on, under, next to…)",
+     "en": "The car is in front of the house."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Diego",
+     "en": "Mom, where is my phone?",
+     "es": "Mamá, ¿dónde está mi celular?"
+    },
+    {
+     "hablante": "Mamá",
+     "en": "Is it in your bedroom? Look under the bed.",
+     "es": "¿Está en tu recámara? Busca debajo de la cama."
+    },
+    {
+     "hablante": "Diego",
+     "en": "No, it isn't. It isn't on my table.",
+     "es": "No, no está. No está en mi mesa."
+    },
+    {
+     "hablante": "Mamá",
+     "en": "There is a phone in the kitchen, next to the window.",
+     "es": "Hay un celular en la cocina, al lado de la ventana."
+    },
+    {
+     "hablante": "Diego",
+     "en": "Yes! It's my phone. Thank you, Mom!",
+     "es": "¡Sí! Es mi celular. ¡Gracias, mamá!"
+    }
+   ]
+  },
+  {
+   "id": "a1-rutina-diaria",
+   "nivel": "A1",
+   "orden": 7,
+   "titulo": "Rutina diaria",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.rutina.get_up",
+     "en": "get up",
+     "es": "levantarse"
+    },
+    {
+     "concepto_id": "voc.rutina.take_a_shower",
+     "en": "take a shower",
+     "es": "bañarse"
+    },
+    {
+     "concepto_id": "voc.rutina.have_breakfast",
+     "en": "have breakfast",
+     "es": "desayunar"
+    },
+    {
+     "concepto_id": "voc.rutina.go_to_school",
+     "en": "go to school",
+     "es": "ir a la escuela"
+    },
+    {
+     "concepto_id": "voc.rutina.have_lunch",
+     "en": "have lunch",
+     "es": "comer (a mediodía)"
+    },
+    {
+     "concepto_id": "voc.rutina.do_homework",
+     "en": "do homework",
+     "es": "hacer la tarea"
+    },
+    {
+     "concepto_id": "voc.rutina.go_home",
+     "en": "go home",
+     "es": "ir a casa"
+    },
+    {
+     "concepto_id": "voc.rutina.have_dinner",
+     "en": "have dinner",
+     "es": "cenar"
+    },
+    {
+     "concepto_id": "voc.rutina.go_to_bed",
+     "en": "go to bed",
+     "es": "irse a dormir"
+    },
+    {
+     "concepto_id": "voc.rutina.every_day",
+     "en": "every day",
+     "es": "todos los días"
+    },
+    {
+     "concepto_id": "voc.rutina.in_the_morning",
+     "en": "in the morning / afternoon / evening",
+     "es": "en la mañana / tarde / noche"
+    },
+    {
+     "concepto_id": "voc.rutina.weekend",
+     "en": "weekend",
+     "es": "fin de semana"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.present_simple_affirmative",
+     "tema": "Presente simple (I get up, we go…)",
+     "en": "I get up at six o'clock."
+    },
+    {
+     "concepto_id": "gram.present_simple_affirmative",
+     "tema": "Presente simple (I get up, we go…)",
+     "en": "We have lunch at home."
+    },
+    {
+     "concepto_id": "gram.present_simple_affirmative",
+     "tema": "Presente simple (I get up, we go…)",
+     "en": "They go to bed at eleven."
+    },
+    {
+     "concepto_id": "gram.present_simple_third_person",
+     "tema": "He, she, it: el verbo lleva -s",
+     "en": "Laura gets up at seven."
+    },
+    {
+     "concepto_id": "gram.present_simple_third_person",
+     "tema": "He, she, it: el verbo lleva -s",
+     "en": "My brother goes to bed late."
+    },
+    {
+     "concepto_id": "gram.present_simple_third_person",
+     "tema": "He, she, it: el verbo lleva -s",
+     "en": "She has breakfast at home."
+    },
+    {
+     "concepto_id": "gram.present_simple_third_person",
+     "tema": "He, she, it: el verbo lleva -s",
+     "en": "He does his homework in the evening."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Luis",
+     "en": "I get up at six o'clock every day.",
+     "es": "Me levanto a las seis todos los días."
+    },
+    {
+     "hablante": "Laura",
+     "en": "Six o'clock? I get up at half past seven!",
+     "es": "¿A las seis? ¡Yo me levanto a las siete y media!"
+    },
+    {
+     "hablante": "Luis",
+     "en": "My class is at seven. I have breakfast and I go to school.",
+     "es": "Mi clase es a las siete. Desayuno y me voy a la escuela."
+    },
+    {
+     "hablante": "Laura",
+     "en": "My brother gets up at ten. He goes to bed very late!",
+     "es": "Mi hermano se levanta a las diez. ¡Se va a dormir muy tarde!"
+    },
+    {
+     "hablante": "Luis",
+     "en": "My sister does her homework in the evening and goes to bed at ten.",
+     "es": "Mi hermana hace su tarea en la noche y se va a dormir a las diez."
+    }
+   ]
+  },
+  {
+   "id": "a1-comida-bebida",
+   "nivel": "A1",
+   "orden": 8,
+   "titulo": "Comida y bebida",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.comida.want",
+     "en": "want",
+     "es": "querer"
+    },
+    {
+     "concepto_id": "voc.comida.hungry",
+     "en": "hungry",
+     "es": "con hambre"
+    },
+    {
+     "concepto_id": "voc.comida.water",
+     "en": "water",
+     "es": "agua"
+    },
+    {
+     "concepto_id": "voc.comida.coffee",
+     "en": "coffee",
+     "es": "café"
+    },
+    {
+     "concepto_id": "voc.comida.milk",
+     "en": "milk",
+     "es": "leche"
+    },
+    {
+     "concepto_id": "voc.comida.juice",
+     "en": "juice",
+     "es": "jugo"
+    },
+    {
+     "concepto_id": "voc.comida.bread",
+     "en": "bread",
+     "es": "pan"
+    },
+    {
+     "concepto_id": "voc.comida.egg",
+     "en": "egg",
+     "es": "huevo"
+    },
+    {
+     "concepto_id": "voc.comida.rice",
+     "en": "rice",
+     "es": "arroz"
+    },
+    {
+     "concepto_id": "voc.comida.chicken",
+     "en": "chicken",
+     "es": "pollo"
+    },
+    {
+     "concepto_id": "voc.comida.fruit",
+     "en": "fruit",
+     "es": "fruta"
+    },
+    {
+     "concepto_id": "voc.comida.vegetables",
+     "en": "vegetables",
+     "es": "verduras"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.present_simple_negative_questions",
+     "tema": "Presente simple: negativo y preguntas",
+     "en": "I don't want coffee, thank you."
+    },
+    {
+     "concepto_id": "gram.present_simple_negative_questions",
+     "tema": "Presente simple: negativo y preguntas",
+     "en": "My sister doesn't eat chicken."
+    },
+    {
+     "concepto_id": "gram.present_simple_negative_questions",
+     "tema": "Presente simple: negativo y preguntas",
+     "en": "Do you want some rice?"
+    },
+    {
+     "concepto_id": "gram.present_simple_negative_questions",
+     "tema": "Presente simple: negativo y preguntas",
+     "en": "Yes, I do."
+    },
+    {
+     "concepto_id": "gram.present_simple_negative_questions",
+     "tema": "Presente simple: negativo y preguntas",
+     "en": "Does he want some milk?"
+    },
+    {
+     "concepto_id": "gram.present_simple_negative_questions",
+     "tema": "Presente simple: negativo y preguntas",
+     "en": "No, he doesn't."
+    },
+    {
+     "concepto_id": "gram.some_any",
+     "tema": "Some y any",
+     "en": "There is some bread on the table."
+    },
+    {
+     "concepto_id": "gram.some_any",
+     "tema": "Some y any",
+     "en": "Is there any milk?"
+    },
+    {
+     "concepto_id": "gram.some_any",
+     "tema": "Some y any",
+     "en": "There aren't any eggs."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Diego",
+     "en": "I'm hungry! Is there any bread?",
+     "es": "¡Tengo hambre! ¿Hay pan?"
+    },
+    {
+     "hablante": "Sofía",
+     "en": "Yes, there is some bread, but there aren't any eggs.",
+     "es": "Sí, hay pan, pero no hay huevos."
+    },
+    {
+     "hablante": "Diego",
+     "en": "Oh, no. Do you want rice and chicken?",
+     "es": "Ay, no. ¿Quieres arroz con pollo?"
+    },
+    {
+     "hablante": "Sofía",
+     "en": "Yes, I do! But my sister doesn't eat chicken.",
+     "es": "¡Sí! Pero mi hermana no come pollo."
+    },
+    {
+     "hablante": "Diego",
+     "en": "Does she want some vegetables?",
+     "es": "¿Ella quiere verduras?"
+    },
+    {
+     "hablante": "Sofía",
+     "en": "Yes, she does. And some fruit, please!",
+     "es": "Sí. ¡Y fruta, por favor!"
+    }
+   ]
+  },
+  {
+   "id": "a1-ciudad-lugares",
+   "nivel": "A1",
+   "orden": 9,
+   "titulo": "La ciudad",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.ciudad.street",
+     "en": "street",
+     "es": "calle"
+    },
+    {
+     "concepto_id": "voc.ciudad.park",
+     "en": "park",
+     "es": "parque"
+    },
+    {
+     "concepto_id": "voc.ciudad.bank",
+     "en": "bank",
+     "es": "banco"
+    },
+    {
+     "concepto_id": "voc.ciudad.supermarket",
+     "en": "supermarket",
+     "es": "supermercado"
+    },
+    {
+     "concepto_id": "voc.ciudad.hospital",
+     "en": "hospital",
+     "es": "hospital"
+    },
+    {
+     "concepto_id": "voc.ciudad.restaurant",
+     "en": "restaurant",
+     "es": "restaurante"
+    },
+    {
+     "concepto_id": "voc.ciudad.bus_stop",
+     "en": "bus stop",
+     "es": "parada de autobús"
+    },
+    {
+     "concepto_id": "voc.ciudad.excuse_me",
+     "en": "Excuse me",
+     "es": "Disculpe"
+    },
+    {
+     "concepto_id": "voc.ciudad.near",
+     "en": "near",
+     "es": "cerca (de)"
+    },
+    {
+     "concepto_id": "voc.ciudad.turn_left",
+     "en": "turn left",
+     "es": "dar vuelta a la izquierda"
+    },
+    {
+     "concepto_id": "voc.ciudad.turn_right",
+     "en": "turn right",
+     "es": "dar vuelta a la derecha"
+    },
+    {
+     "concepto_id": "voc.ciudad.go_straight",
+     "en": "go straight",
+     "es": "seguir derecho"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.imperatives",
+     "tema": "Entender indicaciones (imperativo)",
+     "en": "Go straight and turn right."
+    },
+    {
+     "concepto_id": "gram.imperatives",
+     "tema": "Entender indicaciones (imperativo)",
+     "en": "Please take the bus."
+    },
+    {
+     "concepto_id": "gram.imperatives",
+     "tema": "Entender indicaciones (imperativo)",
+     "en": "Don't cross here."
+    },
+    {
+     "concepto_id": "gram.this_that_these_those",
+     "tema": "This, that, these, those",
+     "en": "This street is very quiet."
+    },
+    {
+     "concepto_id": "gram.this_that_these_those",
+     "tema": "This, that, these, those",
+     "en": "That is the hospital."
+    },
+    {
+     "concepto_id": "gram.this_that_these_those",
+     "tema": "This, that, these, those",
+     "en": "These books are my brother's."
+    },
+    {
+     "concepto_id": "gram.this_that_these_those",
+     "tema": "This, that, these, those",
+     "en": "Those restaurants are new."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Laura",
+     "en": "Excuse me, is there a bank near here?",
+     "es": "Disculpe, ¿hay un banco cerca de aquí?"
+    },
+    {
+     "hablante": "Señor",
+     "en": "Yes, there is. Go straight and turn left on Reforma Street.",
+     "es": "Sí, hay uno. Siga derecho y dé vuelta a la izquierda en la calle Reforma."
+    },
+    {
+     "hablante": "Laura",
+     "en": "Is that the bank, next to the park?",
+     "es": "¿Ese es el banco, al lado del parque?"
+    },
+    {
+     "hablante": "Señor",
+     "en": "No, that is a restaurant. The bank is next to the supermarket.",
+     "es": "No, ese es un restaurante. El banco está al lado del supermercado."
+    },
+    {
+     "hablante": "Laura",
+     "en": "Thank you very much!",
+     "es": "¡Muchas gracias!"
+    }
+   ]
+  },
+  {
+   "id": "a1-tiempo-libre",
+   "nivel": "A1",
+   "orden": 10,
+   "titulo": "Tiempo libre",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.ocio.free_time",
+     "en": "free time",
+     "es": "tiempo libre"
+    },
+    {
+     "concepto_id": "voc.ocio.hobby",
+     "en": "hobby",
+     "es": "pasatiempo"
+    },
+    {
+     "concepto_id": "voc.ocio.play_soccer",
+     "en": "play soccer",
+     "es": "jugar fútbol"
+    },
+    {
+     "concepto_id": "voc.ocio.play_the_guitar",
+     "en": "play the guitar",
+     "es": "tocar la guitarra"
+    },
+    {
+     "concepto_id": "voc.ocio.swim",
+     "en": "swim",
+     "es": "nadar"
+    },
+    {
+     "concepto_id": "voc.ocio.dance",
+     "en": "dance",
+     "es": "bailar"
+    },
+    {
+     "concepto_id": "voc.ocio.sing",
+     "en": "sing",
+     "es": "cantar"
+    },
+    {
+     "concepto_id": "voc.ocio.read",
+     "en": "read",
+     "es": "leer"
+    },
+    {
+     "concepto_id": "voc.ocio.cook",
+     "en": "cook",
+     "es": "cocinar"
+    },
+    {
+     "concepto_id": "voc.ocio.watch_tv",
+     "en": "watch TV",
+     "es": "ver la tele"
+    },
+    {
+     "concepto_id": "voc.ocio.listen_to_music",
+     "en": "listen to music",
+     "es": "escuchar música"
+    },
+    {
+     "concepto_id": "voc.ocio.ride_a_bike",
+     "en": "ride a bike",
+     "es": "andar en bicicleta"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.can_ability",
+     "tema": "Can (saber, poder)",
+     "en": "I can play the guitar."
+    },
+    {
+     "concepto_id": "gram.can_ability",
+     "tema": "Can (saber, poder)",
+     "en": "My brother can't swim."
+    },
+    {
+     "concepto_id": "gram.can_ability",
+     "tema": "Can (saber, poder)",
+     "en": "Can you cook?"
+    },
+    {
+     "concepto_id": "gram.can_ability",
+     "tema": "Can (saber, poder)",
+     "en": "Yes, I can."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Diego",
+     "en": "Can you play the guitar, Sofía?",
+     "es": "¿Sabes tocar la guitarra, Sofía?"
+    },
+    {
+     "hablante": "Sofía",
+     "en": "No, I can't. But I can sing and dance!",
+     "es": "No. ¡Pero sé cantar y bailar!"
+    },
+    {
+     "hablante": "Diego",
+     "en": "I can't sing, but I can play soccer.",
+     "es": "Yo no sé cantar, pero sé jugar fútbol."
+    },
+    {
+     "hablante": "Sofía",
+     "en": "Can your brother swim?",
+     "es": "¿Tu hermano sabe nadar?"
+    },
+    {
+     "hablante": "Diego",
+     "en": "Yes, he can. And he can ride a bike too.",
+     "es": "Sí. Y también sabe andar en bicicleta."
+    }
+   ]
+  },
+  {
+   "id": "a1-clima-ahora",
+   "nivel": "A1",
+   "orden": 11,
+   "titulo": "El clima",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.clima.weather",
+     "en": "weather",
+     "es": "clima / tiempo"
+    },
+    {
+     "concepto_id": "voc.clima.whats_the_weather_like",
+     "en": "What's the weather like?",
+     "es": "¿Cómo está el clima?"
+    },
+    {
+     "concepto_id": "voc.clima.sunny",
+     "en": "sunny",
+     "es": "soleado"
+    },
+    {
+     "concepto_id": "voc.clima.cloudy",
+     "en": "cloudy",
+     "es": "nublado"
+    },
+    {
+     "concepto_id": "voc.clima.windy",
+     "en": "windy",
+     "es": "con viento"
+    },
+    {
+     "concepto_id": "voc.clima.hot",
+     "en": "hot",
+     "es": "caluroso / caliente"
+    },
+    {
+     "concepto_id": "voc.clima.cold",
+     "en": "cold",
+     "es": "frío"
+    },
+    {
+     "concepto_id": "voc.clima.rain",
+     "en": "rain",
+     "es": "lluvia / llover"
+    },
+    {
+     "concepto_id": "voc.clima.snow",
+     "en": "snow",
+     "es": "nieve / nevar"
+    },
+    {
+     "concepto_id": "voc.clima.umbrella",
+     "en": "umbrella",
+     "es": "paraguas"
+    },
+    {
+     "concepto_id": "voc.clima.now",
+     "en": "now / right now",
+     "es": "ahora / ahorita"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.present_continuous",
+     "tema": "Presente continuo (estoy haciendo)",
+     "en": "It's raining right now."
+    },
+    {
+     "concepto_id": "gram.present_continuous",
+     "tema": "Presente continuo (estoy haciendo)",
+     "en": "Luis is playing soccer in the park."
+    },
+    {
+     "concepto_id": "gram.present_continuous",
+     "tema": "Presente continuo (estoy haciendo)",
+     "en": "Are you listening to music?"
+    },
+    {
+     "concepto_id": "gram.present_continuous",
+     "tema": "Presente continuo (estoy haciendo)",
+     "en": "No, I'm not."
+    },
+    {
+     "concepto_id": "gram.present_continuous",
+     "tema": "Presente continuo (estoy haciendo)",
+     "en": "We aren't watching TV."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Luis",
+     "en": "Hi, Ana! What's the weather like in Oaxaca?",
+     "es": "¡Hola, Ana! ¿Cómo está el clima en Oaxaca?"
+    },
+    {
+     "hablante": "Ana",
+     "en": "It's sunny and hot. I'm sitting in the park now.",
+     "es": "Está soleado y hace calor. Ahorita estoy sentada en el parque."
+    },
+    {
+     "hablante": "Luis",
+     "en": "Here in Mexico City it's cloudy and cold. It's raining right now.",
+     "es": "Aquí en la Ciudad de México está nublado y hace frío. Está lloviendo ahorita."
+    },
+    {
+     "hablante": "Ana",
+     "en": "Oh no! Are you using your umbrella?",
+     "es": "¡Ay, no! ¿Estás usando tu paraguas?"
+    },
+    {
+     "hablante": "Luis",
+     "en": "No, I'm not. I'm at home. I'm watching TV and drinking coffee!",
+     "es": "No. Estoy en casa. ¡Estoy viendo la tele y tomando café!"
+    }
+   ]
+  },
+  {
+   "id": "a1-compras",
+   "nivel": "A1",
+   "orden": 12,
+   "titulo": "De compras",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.compras.store",
+     "en": "store",
+     "es": "tienda"
+    },
+    {
+     "concepto_id": "voc.compras.money",
+     "en": "money",
+     "es": "dinero"
+    },
+    {
+     "concepto_id": "voc.compras.price",
+     "en": "price",
+     "es": "precio"
+    },
+    {
+     "concepto_id": "voc.compras.buy",
+     "en": "buy",
+     "es": "comprar"
+    },
+    {
+     "concepto_id": "voc.compras.pay",
+     "en": "pay",
+     "es": "pagar"
+    },
+    {
+     "concepto_id": "voc.compras.cheap",
+     "en": "cheap",
+     "es": "barato"
+    },
+    {
+     "concepto_id": "voc.compras.expensive",
+     "en": "expensive",
+     "es": "caro"
+    },
+    {
+     "concepto_id": "voc.compras.cash",
+     "en": "cash",
+     "es": "efectivo"
+    },
+    {
+     "concepto_id": "voc.compras.card",
+     "en": "card",
+     "es": "tarjeta"
+    },
+    {
+     "concepto_id": "voc.compras.here_you_are",
+     "en": "Here you are.",
+     "es": "Aquí tiene. / Aquí está."
+    },
+    {
+     "concepto_id": "voc.compras.thirty_to_fifty",
+     "en": "thirty, forty, fifty",
+     "es": "treinta, cuarenta, cincuenta"
+    },
+    {
+     "concepto_id": "voc.compras.sixty_to_one_hundred",
+     "en": "sixty, seventy, eighty, ninety, one hundred",
+     "es": "sesenta, setenta, ochenta, noventa, cien"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.how_much_price",
+     "tema": "How much…? (¿Cuánto cuesta?)",
+     "en": "How much is this T-shirt?"
+    },
+    {
+     "concepto_id": "gram.how_much_price",
+     "tema": "How much…? (¿Cuánto cuesta?)",
+     "en": "It's ninety pesos."
+    },
+    {
+     "concepto_id": "gram.how_much_price",
+     "tema": "How much…? (¿Cuánto cuesta?)",
+     "en": "How much are the shoes?"
+    },
+    {
+     "concepto_id": "gram.how_much_price",
+     "tema": "How much…? (¿Cuánto cuesta?)",
+     "en": "They're five hundred pesos."
+    },
+    {
+     "concepto_id": "gram.how_much_price",
+     "tema": "How much…? (¿Cuánto cuesta?)",
+     "en": "How much is it?"
+    },
+    {
+     "concepto_id": "gram.would_like",
+     "tema": "I'd like… (quisiera)",
+     "en": "I'd like a coffee, please."
+    },
+    {
+     "concepto_id": "gram.would_like",
+     "tema": "I'd like… (quisiera)",
+     "en": "Would you like some water?"
+    },
+    {
+     "concepto_id": "gram.would_like",
+     "tema": "I'd like… (quisiera)",
+     "en": "Yes, please."
+    },
+    {
+     "concepto_id": "gram.would_like",
+     "tema": "I'd like… (quisiera)",
+     "en": "We'd like two tickets."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Vendedora",
+     "en": "Hello! Can I help you?",
+     "es": "¡Hola! ¿Te puedo ayudar?"
+    },
+    {
+     "hablante": "Luis",
+     "en": "Yes, please. I'd like this white T-shirt. How much is it?",
+     "es": "Sí, por favor. Quisiera esta playera blanca. ¿Cuánto cuesta?"
+    },
+    {
+     "hablante": "Vendedora",
+     "en": "It's ninety pesos.",
+     "es": "Cuesta noventa pesos."
+    },
+    {
+     "hablante": "Luis",
+     "en": "Great, it's cheap! Can I pay by card?",
+     "es": "¡Qué bien, está barata! ¿Puedo pagar con tarjeta?"
+    },
+    {
+     "hablante": "Vendedora",
+     "en": "Yes, of course. Here you are. Would you like a bag?",
+     "es": "Sí, claro. Aquí tienes. ¿Quieres una bolsa?"
+    },
+    {
+     "hablante": "Luis",
+     "en": "No, thank you.",
+     "es": "No, gracias."
+    }
+   ]
+  },
+  {
+   "id": "a2-fin-de-semana",
+   "nivel": "A2",
+   "orden": 1,
+   "titulo": "Mi fin de semana",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.rutina.weekend",
+     "en": "weekend",
+     "es": "fin de semana"
+    },
+    {
+     "concepto_id": "voc.ocio.yesterday",
+     "en": "yesterday",
+     "es": "ayer"
+    },
+    {
+     "concepto_id": "voc.ocio.last_weekend",
+     "en": "last weekend",
+     "es": "el fin de semana pasado"
+    },
+    {
+     "concepto_id": "voc.ocio.ago",
+     "en": "… ago",
+     "es": "hace …"
+    },
+    {
+     "concepto_id": "voc.ocio.party",
+     "en": "party",
+     "es": "fiesta"
+    },
+    {
+     "concepto_id": "voc.ocio.visit",
+     "en": "visit",
+     "es": "visitar"
+    },
+    {
+     "concepto_id": "voc.ocio.stay_at_home",
+     "en": "stay at home",
+     "es": "quedarse en casa"
+    },
+    {
+     "concepto_id": "voc.ocio.watch_a_movie",
+     "en": "watch a movie",
+     "es": "ver una película"
+    },
+    {
+     "concepto_id": "voc.ocio.cook",
+     "en": "cook",
+     "es": "cocinar"
+    },
+    {
+     "concepto_id": "voc.ocio.clean_the_house",
+     "en": "clean the house",
+     "es": "limpiar la casa"
+    },
+    {
+     "concepto_id": "voc.ocio.relax",
+     "en": "relax",
+     "es": "relajarse / descansar"
+    },
+    {
+     "concepto_id": "voc.ocio.play_video_games",
+     "en": "play video games",
+     "es": "jugar videojuegos"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.past_to_be",
+     "tema": "Was / were (el pasado de to be)",
+     "en": "I was at home yesterday."
+    },
+    {
+     "concepto_id": "gram.past_to_be",
+     "tema": "Was / were (el pasado de to be)",
+     "en": "The party was fun."
+    },
+    {
+     "concepto_id": "gram.past_to_be",
+     "tema": "Was / were (el pasado de to be)",
+     "en": "Were you at the concert?"
+    },
+    {
+     "concepto_id": "gram.past_to_be",
+     "tema": "Was / were (el pasado de to be)",
+     "en": "No, I wasn't."
+    },
+    {
+     "concepto_id": "gram.past_to_be",
+     "tema": "Was / were (el pasado de to be)",
+     "en": "My parents weren't in Puebla."
+    },
+    {
+     "concepto_id": "gram.past_simple_regular",
+     "tema": "Pasado simple: verbos regulares (-ed)",
+     "en": "I visited my grandmother."
+    },
+    {
+     "concepto_id": "gram.past_simple_regular",
+     "tema": "Pasado simple: verbos regulares (-ed)",
+     "en": "We watched a movie last night."
+    },
+    {
+     "concepto_id": "gram.past_simple_regular",
+     "tema": "Pasado simple: verbos regulares (-ed)",
+     "en": "She studied for two hours yesterday."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Diego",
+     "en": "Hi, Laura! How was your weekend?",
+     "es": "¡Hola, Laura! ¿Qué tal tu fin de semana?"
+    },
+    {
+     "hablante": "Laura",
+     "en": "It was great! I visited my grandmother in Puebla.",
+     "es": "¡Estuvo genial! Visité a mi abuela en Puebla."
+    },
+    {
+     "hablante": "Diego",
+     "en": "Were your parents there too?",
+     "es": "¿Tus papás también estuvieron ahí?"
+    },
+    {
+     "hablante": "Laura",
+     "en": "Yes, they were. We cooked mole and watched a movie. And you?",
+     "es": "Sí. Cocinamos mole y vimos una película. ¿Y tú?"
+    },
+    {
+     "hablante": "Diego",
+     "en": "I stayed at home. I cleaned the house and played video games.",
+     "es": "Me quedé en casa. Limpié la casa y jugué videojuegos."
+    },
+    {
+     "hablante": "Laura",
+     "en": "So you relaxed!",
+     "es": "¡Entonces descansaste!"
+    }
+   ]
+  },
+  {
+   "id": "a2-viajes-transporte",
+   "nivel": "A2",
+   "orden": 2,
+   "titulo": "Viajes y transporte",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.viajes.plane",
+     "en": "plane",
+     "es": "avión"
+    },
+    {
+     "concepto_id": "voc.viajes.train",
+     "en": "train",
+     "es": "tren"
+    },
+    {
+     "concepto_id": "voc.viajes.bus",
+     "en": "bus",
+     "es": "autobús / camión"
+    },
+    {
+     "concepto_id": "voc.viajes.by_bus",
+     "en": "by bus / by plane / by car",
+     "es": "en autobús / en avión / en carro"
+    },
+    {
+     "concepto_id": "voc.viajes.airport",
+     "en": "airport",
+     "es": "aeropuerto"
+    },
+    {
+     "concepto_id": "voc.viajes.ticket",
+     "en": "ticket",
+     "es": "boleto"
+    },
+    {
+     "concepto_id": "voc.viajes.trip",
+     "en": "trip",
+     "es": "viaje"
+    },
+    {
+     "concepto_id": "voc.viajes.travel",
+     "en": "travel",
+     "es": "viajar"
+    },
+    {
+     "concepto_id": "voc.viajes.suitcase",
+     "en": "suitcase",
+     "es": "maleta"
+    },
+    {
+     "concepto_id": "voc.viajes.hotel",
+     "en": "hotel",
+     "es": "hotel"
+    },
+    {
+     "concepto_id": "voc.viajes.beach",
+     "en": "beach",
+     "es": "playa"
+    },
+    {
+     "concepto_id": "voc.viajes.take_a_photo",
+     "en": "take a photo",
+     "es": "tomar una foto"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.past_simple_irregular",
+     "tema": "Pasado simple: verbos irregulares",
+     "en": "We went to Oaxaca last summer."
+    },
+    {
+     "concepto_id": "gram.past_simple_irregular",
+     "tema": "Pasado simple: verbos irregulares",
+     "en": "I took a lot of photos."
+    },
+    {
+     "concepto_id": "gram.past_simple_irregular",
+     "tema": "Pasado simple: verbos irregulares",
+     "en": "She bought a new suitcase."
+    },
+    {
+     "concepto_id": "gram.past_simple_irregular",
+     "tema": "Pasado simple: verbos irregulares",
+     "en": "They saw the sea for the first time."
+    },
+    {
+     "concepto_id": "gram.past_simple_negative_questions",
+     "tema": "Pasado: negativo y preguntas (didn't, did)",
+     "en": "I didn't go by plane."
+    },
+    {
+     "concepto_id": "gram.past_simple_negative_questions",
+     "tema": "Pasado: negativo y preguntas (didn't, did)",
+     "en": "Did you stay in a hotel?"
+    },
+    {
+     "concepto_id": "gram.past_simple_negative_questions",
+     "tema": "Pasado: negativo y preguntas (didn't, did)",
+     "en": "No, I didn't."
+    },
+    {
+     "concepto_id": "gram.past_simple_negative_questions",
+     "tema": "Pasado: negativo y preguntas (didn't, did)",
+     "en": "Where did you go?"
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Luis",
+     "en": "Where did you go on vacation?",
+     "es": "¿A dónde fuiste de vacaciones?"
+    },
+    {
+     "hablante": "Sofía",
+     "en": "I went to Oaxaca by bus. The trip was long!",
+     "es": "Fui a Oaxaca en autobús. ¡El viaje fue largo!"
+    },
+    {
+     "hablante": "Luis",
+     "en": "Did you stay in a hotel?",
+     "es": "¿Te quedaste en un hotel?"
+    },
+    {
+     "hablante": "Sofía",
+     "en": "No, we didn't. We stayed with my aunt, and we went to the beach every day.",
+     "es": "No. Nos quedamos con mi tía y fuimos a la playa todos los días."
+    },
+    {
+     "hablante": "Luis",
+     "en": "Did you take photos?",
+     "es": "¿Tomaste fotos?"
+    },
+    {
+     "hablante": "Sofía",
+     "en": "Yes, I did. I took a hundred photos!",
+     "es": "Sí. ¡Tomé cien fotos!"
+    }
+   ]
+  },
+  {
+   "id": "a2-anecdotas",
+   "nivel": "A2",
+   "orden": 3,
+   "titulo": "Anécdotas",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.sentimientos.feel",
+     "en": "feel",
+     "es": "sentirse"
+    },
+    {
+     "concepto_id": "voc.sentimientos.happy",
+     "en": "happy",
+     "es": "feliz / contento"
+    },
+    {
+     "concepto_id": "voc.sentimientos.sad",
+     "en": "sad",
+     "es": "triste"
+    },
+    {
+     "concepto_id": "voc.sentimientos.angry",
+     "en": "angry",
+     "es": "enojado / enojada"
+    },
+    {
+     "concepto_id": "voc.sentimientos.tired",
+     "en": "tired",
+     "es": "cansado / cansada"
+    },
+    {
+     "concepto_id": "voc.sentimientos.bored",
+     "en": "bored",
+     "es": "aburrido / aburrida"
+    },
+    {
+     "concepto_id": "voc.sentimientos.excited",
+     "en": "excited",
+     "es": "emocionado / emocionada"
+    },
+    {
+     "concepto_id": "voc.sentimientos.worried",
+     "en": "worried",
+     "es": "preocupado / preocupada"
+    },
+    {
+     "concepto_id": "voc.sentimientos.nervous",
+     "en": "nervous",
+     "es": "nervioso / nerviosa"
+    },
+    {
+     "concepto_id": "voc.sentimientos.surprised",
+     "en": "surprised",
+     "es": "sorprendido / sorprendida"
+    },
+    {
+     "concepto_id": "voc.sentimientos.afraid",
+     "en": "afraid",
+     "es": "con miedo"
+    },
+    {
+     "concepto_id": "voc.sentimientos.suddenly",
+     "en": "suddenly",
+     "es": "de repente"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.past_continuous",
+     "tema": "Pasado continuo (estaba haciendo)",
+     "en": "I was sleeping when you called."
+    },
+    {
+     "concepto_id": "gram.past_continuous",
+     "tema": "Pasado continuo (estaba haciendo)",
+     "en": "They were watching a movie at ten o'clock."
+    },
+    {
+     "concepto_id": "gram.past_continuous",
+     "tema": "Pasado continuo (estaba haciendo)",
+     "en": "What were you doing yesterday at five?"
+    },
+    {
+     "concepto_id": "gram.past_continuous",
+     "tema": "Pasado continuo (estaba haciendo)",
+     "en": "She wasn't listening to the teacher."
+    },
+    {
+     "concepto_id": "gram.like_ing",
+     "tema": "Like, love, hate + -ing (gustos)",
+     "en": "I love listening to music."
+    },
+    {
+     "concepto_id": "gram.like_ing",
+     "tema": "Like, love, hate + -ing (gustos)",
+     "en": "She hates walking in the rain."
+    },
+    {
+     "concepto_id": "gram.like_ing",
+     "tema": "Like, love, hate + -ing (gustos)",
+     "en": "We don't like getting up early."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Ana",
+     "en": "You look tired, Diego. What happened yesterday?",
+     "es": "Te ves cansado, Diego. ¿Qué pasó ayer?"
+    },
+    {
+     "hablante": "Diego",
+     "en": "I was walking home when it suddenly started to rain.",
+     "es": "Iba caminando a mi casa cuando de repente empezó a llover."
+    },
+    {
+     "hablante": "Ana",
+     "en": "Oh no! Did you have an umbrella?",
+     "es": "¡Ay, no! ¿Tenías paraguas?"
+    },
+    {
+     "hablante": "Diego",
+     "en": "No, I didn't. I was wet and angry. I hate walking in the rain! But then my friend Luis saw me from his car.",
+     "es": "No. Estaba mojado y enojado. ¡Odio caminar bajo la lluvia! Pero entonces mi amigo Luis me vio desde su carro."
+    },
+    {
+     "hablante": "Ana",
+     "en": "What was he doing there?",
+     "es": "¿Qué estaba haciendo ahí?"
+    },
+    {
+     "hablante": "Diego",
+     "en": "He was driving to the supermarket! He took me home. I felt so happy.",
+     "es": "¡Iba al supermercado! Me llevó a mi casa. Me sentí muy feliz."
+    }
+   ]
+  },
+  {
+   "id": "a2-trabajo-profesiones",
+   "nivel": "A2",
+   "orden": 4,
+   "titulo": "Trabajo y profesiones",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.trabajo.job",
+     "en": "job",
+     "es": "trabajo / empleo"
+    },
+    {
+     "concepto_id": "voc.trabajo.work",
+     "en": "work",
+     "es": "trabajar / trabajo"
+    },
+    {
+     "concepto_id": "voc.trabajo.doctor",
+     "en": "doctor",
+     "es": "médico / médica"
+    },
+    {
+     "concepto_id": "voc.trabajo.nurse",
+     "en": "nurse",
+     "es": "enfermero / enfermera"
+    },
+    {
+     "concepto_id": "voc.trabajo.engineer",
+     "en": "engineer",
+     "es": "ingeniero / ingeniera"
+    },
+    {
+     "concepto_id": "voc.trabajo.waiter",
+     "en": "waiter / waitress",
+     "es": "mesero / mesera"
+    },
+    {
+     "concepto_id": "voc.trabajo.office",
+     "en": "office",
+     "es": "oficina"
+    },
+    {
+     "concepto_id": "voc.trabajo.company",
+     "en": "company",
+     "es": "empresa"
+    },
+    {
+     "concepto_id": "voc.trabajo.boss",
+     "en": "boss",
+     "es": "jefe / jefa"
+    },
+    {
+     "concepto_id": "voc.trabajo.meeting",
+     "en": "meeting",
+     "es": "reunión / junta"
+    },
+    {
+     "concepto_id": "voc.trabajo.customer",
+     "en": "customer",
+     "es": "cliente"
+    },
+    {
+     "concepto_id": "voc.trabajo.part_time",
+     "en": "part-time",
+     "es": "de medio tiempo"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.adverbs_of_frequency",
+     "tema": "Adverbios de frecuencia",
+     "en": "I always have coffee in the morning."
+    },
+    {
+     "concepto_id": "gram.adverbs_of_frequency",
+     "tema": "Adverbios de frecuencia",
+     "en": "My boss is never late."
+    },
+    {
+     "concepto_id": "gram.adverbs_of_frequency",
+     "tema": "Adverbios de frecuencia",
+     "en": "We sometimes work from home."
+    },
+    {
+     "concepto_id": "gram.present_simple_vs_continuous",
+     "tema": "Presente simple vs. presente continuo",
+     "en": "My father works in a hospital."
+    },
+    {
+     "concepto_id": "gram.present_simple_vs_continuous",
+     "tema": "Presente simple vs. presente continuo",
+     "en": "Look! The waiter is coming."
+    },
+    {
+     "concepto_id": "gram.present_simple_vs_continuous",
+     "tema": "Presente simple vs. presente continuo",
+     "en": "She usually drives, but this week she's taking the bus."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Laura",
+     "en": "What do you do, Luis?",
+     "es": "¿A qué te dedicas, Luis?"
+    },
+    {
+     "hablante": "Luis",
+     "en": "I'm a student, but I have a part-time job. I work at a restaurant.",
+     "es": "Soy estudiante, pero tengo un trabajo de medio tiempo. Trabajo en un restaurante."
+    },
+    {
+     "hablante": "Laura",
+     "en": "Are you a waiter?",
+     "es": "¿Eres mesero?"
+    },
+    {
+     "hablante": "Luis",
+     "en": "Yes. I usually work on weekends, but this week I'm working every night.",
+     "es": "Sí. Normalmente trabajo los fines de semana, pero esta semana estoy trabajando todas las noches."
+    },
+    {
+     "hablante": "Laura",
+     "en": "Wow! Is your boss nice?",
+     "es": "¡Guau! ¿Tu jefa es agradable?"
+    },
+    {
+     "hablante": "Luis",
+     "en": "Yes, she is. She's always friendly with the customers.",
+     "es": "Sí. Siempre es amable con los clientes."
+    }
+   ]
+  },
+  {
+   "id": "a2-salud-ejercicio",
+   "nivel": "A2",
+   "orden": 5,
+   "titulo": "Salud y ejercicio",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.salud.sick",
+     "en": "sick",
+     "es": "enfermo / enferma"
+    },
+    {
+     "concepto_id": "voc.salud.headache",
+     "en": "headache",
+     "es": "dolor de cabeza"
+    },
+    {
+     "concepto_id": "voc.salud.stomachache",
+     "en": "stomachache",
+     "es": "dolor de estómago"
+    },
+    {
+     "concepto_id": "voc.salud.sore_throat",
+     "en": "sore throat",
+     "es": "dolor de garganta"
+    },
+    {
+     "concepto_id": "voc.salud.a_cold",
+     "en": "a cold",
+     "es": "un resfriado / una gripa"
+    },
+    {
+     "concepto_id": "voc.salud.hurt",
+     "en": "hurt",
+     "es": "doler"
+    },
+    {
+     "concepto_id": "voc.salud.medicine",
+     "en": "medicine",
+     "es": "medicina / medicamento"
+    },
+    {
+     "concepto_id": "voc.salud.dentist",
+     "en": "dentist",
+     "es": "dentista"
+    },
+    {
+     "concepto_id": "voc.salud.exercise",
+     "en": "exercise",
+     "es": "ejercicio / hacer ejercicio"
+    },
+    {
+     "concepto_id": "voc.salud.healthy",
+     "en": "healthy",
+     "es": "saludable / sano"
+    },
+    {
+     "concepto_id": "voc.salud.rest",
+     "en": "rest",
+     "es": "descansar"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.should_advice",
+     "tema": "Should (deberías) para hacer sugerencias",
+     "en": "You should drink a lot of water."
+    },
+    {
+     "concepto_id": "gram.should_advice",
+     "tema": "Should (deberías) para hacer sugerencias",
+     "en": "You shouldn't eat a lot of sugar."
+    },
+    {
+     "concepto_id": "gram.should_advice",
+     "tema": "Should (deberías) para hacer sugerencias",
+     "en": "What should I do?"
+    },
+    {
+     "concepto_id": "gram.should_advice",
+     "tema": "Should (deberías) para hacer sugerencias",
+     "en": "You should see a dentist."
+    },
+    {
+     "concepto_id": "gram.have_to_obligation",
+     "tema": "Have to (tener que)",
+     "en": "I have to take this medicine every day."
+    },
+    {
+     "concepto_id": "gram.have_to_obligation",
+     "tema": "Have to (tener que)",
+     "en": "She has to go to the doctor."
+    },
+    {
+     "concepto_id": "gram.have_to_obligation",
+     "tema": "Have to (tener que)",
+     "en": "You don't have to come tomorrow."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Mateo",
+     "en": "I feel sick. I've got a headache and a sore throat.",
+     "es": "Me siento mal. Me duele la cabeza y la garganta."
+    },
+    {
+     "hablante": "Sofía",
+     "en": "Oh no! Maybe you've got a cold. You should rest.",
+     "es": "¡Ay, no! A lo mejor tienes gripa. Deberías descansar."
+    },
+    {
+     "hablante": "Mateo",
+     "en": "I can't. I have to go to work today.",
+     "es": "No puedo. Tengo que ir a trabajar hoy."
+    },
+    {
+     "hablante": "Sofía",
+     "en": "You shouldn't go to work sick. You should see a doctor.",
+     "es": "No deberías ir a trabajar enfermo. Deberías ir al médico."
+    },
+    {
+     "hablante": "Mateo",
+     "en": "You're right. And I have to buy some medicine.",
+     "es": "Tienes razón. Y tengo que comprar medicina."
+    }
+   ]
+  },
+  {
+   "id": "a2-planes-futuro",
+   "nivel": "A2",
+   "orden": 6,
+   "titulo": "Planes y futuro",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.planes.concert",
+     "en": "concert",
+     "es": "concierto"
+    },
+    {
+     "concepto_id": "voc.planes.band",
+     "en": "band",
+     "es": "banda / grupo musical"
+    },
+    {
+     "concepto_id": "voc.planes.singer",
+     "en": "singer",
+     "es": "cantante"
+    },
+    {
+     "concepto_id": "voc.planes.actor",
+     "en": "actor",
+     "es": "actor / actriz"
+    },
+    {
+     "concepto_id": "voc.planes.famous",
+     "en": "famous",
+     "es": "famoso / famosa"
+    },
+    {
+     "concepto_id": "voc.planes.show",
+     "en": "show",
+     "es": "espectáculo / programa"
+    },
+    {
+     "concepto_id": "voc.planes.news",
+     "en": "news",
+     "es": "noticias"
+    },
+    {
+     "concepto_id": "voc.viajes.ticket",
+     "en": "ticket",
+     "es": "boleto"
+    },
+    {
+     "concepto_id": "voc.planes.tonight",
+     "en": "tonight",
+     "es": "esta noche"
+    },
+    {
+     "concepto_id": "voc.planes.tomorrow",
+     "en": "tomorrow",
+     "es": "mañana"
+    },
+    {
+     "concepto_id": "voc.planes.next_week",
+     "en": "next week",
+     "es": "la próxima semana"
+    },
+    {
+     "concepto_id": "voc.planes.maybe",
+     "en": "maybe",
+     "es": "quizá / a lo mejor"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.going_to_plans",
+     "tema": "Going to (voy a…) para planes",
+     "en": "I'm going to visit my cousins next week."
+    },
+    {
+     "concepto_id": "gram.going_to_plans",
+     "tema": "Going to (voy a…) para planes",
+     "en": "She is going to watch a movie tonight."
+    },
+    {
+     "concepto_id": "gram.going_to_plans",
+     "tema": "Going to (voy a…) para planes",
+     "en": "Are you going to buy the tickets?"
+    },
+    {
+     "concepto_id": "gram.will_predictions",
+     "tema": "Will para opinar sobre el futuro",
+     "en": "I think the concert will be amazing."
+    },
+    {
+     "concepto_id": "gram.will_predictions",
+     "tema": "Will para opinar sobre el futuro",
+     "en": "Maybe it will rain tomorrow."
+    },
+    {
+     "concepto_id": "gram.will_predictions",
+     "tema": "Will para opinar sobre el futuro",
+     "en": "Don't worry, you won't be late."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Laura",
+     "en": "What are you going to do this weekend?",
+     "es": "¿Qué vas a hacer este fin de semana?"
+    },
+    {
+     "hablante": "Luis",
+     "en": "I'm going to see a concert with my sister. Our favorite band is playing!",
+     "es": "Voy a ir a un concierto con mi hermana. ¡Toca nuestra banda favorita!"
+    },
+    {
+     "hablante": "Laura",
+     "en": "Cool! Are you going to buy the tickets online?",
+     "es": "¡Qué bien! ¿Van a comprar los boletos por internet?"
+    },
+    {
+     "hablante": "Luis",
+     "en": "Yes, we are. I think it will be amazing.",
+     "es": "Sí. Creo que va a estar increíble."
+    },
+    {
+     "hablante": "Laura",
+     "en": "Maybe the singer will sing your favorite song!",
+     "es": "¡A lo mejor el cantante canta tu canción favorita!"
+    }
+   ]
+  },
+  {
+   "id": "a2-comparar-lugares",
+   "nivel": "A2",
+   "orden": 7,
+   "titulo": "Comparar lugares",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.lugares.countryside",
+     "en": "countryside",
+     "es": "campo"
+    },
+    {
+     "concepto_id": "voc.lugares.village",
+     "en": "village",
+     "es": "pueblo"
+    },
+    {
+     "concepto_id": "voc.lugares.mountain",
+     "en": "mountain",
+     "es": "montaña"
+    },
+    {
+     "concepto_id": "voc.lugares.river",
+     "en": "river",
+     "es": "río"
+    },
+    {
+     "concepto_id": "voc.lugares.lake",
+     "en": "lake",
+     "es": "lago"
+    },
+    {
+     "concepto_id": "voc.lugares.forest",
+     "en": "forest",
+     "es": "bosque"
+    },
+    {
+     "concepto_id": "voc.lugares.building",
+     "en": "building",
+     "es": "edificio"
+    },
+    {
+     "concepto_id": "voc.lugares.bridge",
+     "en": "bridge",
+     "es": "puente"
+    },
+    {
+     "concepto_id": "voc.lugares.quiet",
+     "en": "quiet",
+     "es": "tranquilo / silencioso"
+    },
+    {
+     "concepto_id": "voc.lugares.noisy",
+     "en": "noisy",
+     "es": "ruidoso"
+    },
+    {
+     "concepto_id": "voc.lugares.safe",
+     "en": "safe",
+     "es": "seguro"
+    },
+    {
+     "concepto_id": "voc.lugares.dangerous",
+     "en": "dangerous",
+     "es": "peligroso"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.comparatives",
+     "tema": "Comparativos (más… que)",
+     "en": "The village is quieter than the city."
+    },
+    {
+     "concepto_id": "gram.comparatives",
+     "tema": "Comparativos (más… que)",
+     "en": "Mexico City is bigger than Puebla."
+    },
+    {
+     "concepto_id": "gram.comparatives",
+     "tema": "Comparativos (más… que)",
+     "en": "The forest is more beautiful than the beach."
+    },
+    {
+     "concepto_id": "gram.comparatives",
+     "tema": "Comparativos (más… que)",
+     "en": "This hotel is better than the other one."
+    },
+    {
+     "concepto_id": "gram.superlatives",
+     "tema": "Superlativos (el más…)",
+     "en": "It's the biggest city in Mexico."
+    },
+    {
+     "concepto_id": "gram.superlatives",
+     "tema": "Superlativos (el más…)",
+     "en": "This is the most dangerous road in the mountains."
+    },
+    {
+     "concepto_id": "gram.superlatives",
+     "tema": "Superlativos (el más…)",
+     "en": "For me, Oaxaca has the best food."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Ana",
+     "en": "Let's go to a village in the mountains. It's quieter than the city.",
+     "es": "Vamos a un pueblo en las montañas. Es más tranquilo que la ciudad."
+    },
+    {
+     "hablante": "Diego",
+     "en": "Yes, but the beach is warmer than the mountains.",
+     "es": "Sí, pero la playa es más cálida que las montañas."
+    },
+    {
+     "hablante": "Ana",
+     "en": "The village is safer and cheaper, too.",
+     "es": "Además, el pueblo es más seguro y más barato."
+    },
+    {
+     "hablante": "Diego",
+     "en": "Hmm. What's the most beautiful place in Oaxaca?",
+     "es": "Mmm. ¿Cuál es el lugar más bonito de Oaxaca?"
+    },
+    {
+     "hablante": "Ana",
+     "en": "I think Hierve el Agua is the best. And it's near the mountains!",
+     "es": "Creo que Hierve el Agua es el mejor. ¡Y está cerca de las montañas!"
+    },
+    {
+     "hablante": "Diego",
+     "en": "OK, let's go there!",
+     "es": "¡Está bien, vamos ahí!"
+    }
+   ]
+  },
+  {
+   "id": "a2-llamadas-mensajes",
+   "nivel": "A2",
+   "orden": 8,
+   "titulo": "Llamadas y mensajes",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.comunicacion.cell_phone",
+     "en": "cell phone",
+     "es": "celular"
+    },
+    {
+     "concepto_id": "voc.personal.phone_number",
+     "en": "phone number",
+     "es": "número de teléfono"
+    },
+    {
+     "concepto_id": "voc.comunicacion.call",
+     "en": "call",
+     "es": "llamar / llamada"
+    },
+    {
+     "concepto_id": "voc.comunicacion.answer_the_phone",
+     "en": "answer the phone",
+     "es": "contestar el teléfono"
+    },
+    {
+     "concepto_id": "voc.comunicacion.leave_a_message",
+     "en": "leave a message",
+     "es": "dejar un mensaje / recado"
+    },
+    {
+     "concepto_id": "voc.comunicacion.video_call",
+     "en": "video call",
+     "es": "videollamada"
+    },
+    {
+     "concepto_id": "voc.comunicacion.message",
+     "en": "message",
+     "es": "mensaje"
+    },
+    {
+     "concepto_id": "voc.comunicacion.send",
+     "en": "send",
+     "es": "enviar / mandar"
+    },
+    {
+     "concepto_id": "voc.comunicacion.receive",
+     "en": "receive",
+     "es": "recibir"
+    },
+    {
+     "concepto_id": "voc.comunicacion.email",
+     "en": "email",
+     "es": "correo electrónico"
+    },
+    {
+     "concepto_id": "voc.comunicacion.letter",
+     "en": "letter",
+     "es": "carta"
+    },
+    {
+     "concepto_id": "voc.comunicacion.address",
+     "en": "address",
+     "es": "dirección"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.present_perfect_ever_never",
+     "tema": "Present perfect: ever y never",
+     "en": "Have you ever lost your cell phone?"
+    },
+    {
+     "concepto_id": "gram.present_perfect_ever_never",
+     "tema": "Present perfect: ever y never",
+     "en": "Yes, I have."
+    },
+    {
+     "concepto_id": "gram.present_perfect_ever_never",
+     "tema": "Present perfect: ever y never",
+     "en": "I've never made a video call."
+    },
+    {
+     "concepto_id": "gram.present_perfect_ever_never",
+     "tema": "Present perfect: ever y never",
+     "en": "She has received a letter from Canada."
+    },
+    {
+     "concepto_id": "gram.present_perfect_ever_never",
+     "tema": "Present perfect: ever y never",
+     "en": "My grandfather has never sent an email."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Mateo",
+     "en": "Have you ever written a letter by hand?",
+     "es": "¿Alguna vez has escrito una carta a mano?"
+    },
+    {
+     "hablante": "Sofía",
+     "en": "Yes, I have! I wrote one to my grandmother last year.",
+     "es": "¡Sí! Le escribí una a mi abuela el año pasado."
+    },
+    {
+     "hablante": "Mateo",
+     "en": "My grandfather has never sent an email.",
+     "es": "Mi abuelo nunca ha mandado un correo."
+    },
+    {
+     "hablante": "Sofía",
+     "en": "Has he ever made a video call?",
+     "es": "¿Alguna vez ha hecho una videollamada?"
+    },
+    {
+     "hablante": "Mateo",
+     "en": "No, he hasn't. He only calls us on the phone, and if we don't answer, he leaves a message!",
+     "es": "No. Solo nos llama por teléfono, ¡y si no contestamos, deja un mensaje!"
+    }
+   ]
+  },
+  {
+   "id": "a2-novedades",
+   "nivel": "A2",
+   "orden": 9,
+   "titulo": "Escuela y novedades",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.estudios.subject",
+     "en": "subject",
+     "es": "materia"
+    },
+    {
+     "concepto_id": "voc.estudios.exam",
+     "en": "exam",
+     "es": "examen"
+    },
+    {
+     "concepto_id": "voc.estudios.pass_an_exam",
+     "en": "pass an exam",
+     "es": "aprobar un examen"
+    },
+    {
+     "concepto_id": "voc.estudios.fail",
+     "en": "fail",
+     "es": "reprobar"
+    },
+    {
+     "concepto_id": "voc.estudios.grade",
+     "en": "grade",
+     "es": "calificación"
+    },
+    {
+     "concepto_id": "voc.estudios.project",
+     "en": "project",
+     "es": "proyecto"
+    },
+    {
+     "concepto_id": "voc.estudios.library",
+     "en": "library",
+     "es": "biblioteca"
+    },
+    {
+     "concepto_id": "voc.estudios.dictionary",
+     "en": "dictionary",
+     "es": "diccionario"
+    },
+    {
+     "concepto_id": "voc.estudios.form",
+     "en": "form",
+     "es": "formulario"
+    },
+    {
+     "concepto_id": "voc.estudios.fill_in",
+     "en": "fill in",
+     "es": "llenar (un formulario)"
+    },
+    {
+     "concepto_id": "voc.estudios.notes",
+     "en": "notes",
+     "es": "apuntes"
+    },
+    {
+     "concepto_id": "voc.estudios.finish",
+     "en": "finish",
+     "es": "terminar"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.present_perfect_just_already_yet",
+     "tema": "Present perfect: just, already, yet",
+     "en": "I've just finished the exam."
+    },
+    {
+     "concepto_id": "gram.present_perfect_just_already_yet",
+     "tema": "Present perfect: just, already, yet",
+     "en": "We have already done our homework."
+    },
+    {
+     "concepto_id": "gram.present_perfect_just_already_yet",
+     "tema": "Present perfect: just, already, yet",
+     "en": "Have you filled in the form yet?"
+    },
+    {
+     "concepto_id": "gram.present_perfect_just_already_yet",
+     "tema": "Present perfect: just, already, yet",
+     "en": "She hasn't written the project yet."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Laura",
+     "en": "Have you finished the English project yet?",
+     "es": "¿Ya terminaste el proyecto de inglés?"
+    },
+    {
+     "hablante": "Luis",
+     "en": "Yes, I've just sent it to the teacher. And you?",
+     "es": "Sí, acabo de mandárselo al maestro. ¿Y tú?"
+    },
+    {
+     "hablante": "Laura",
+     "en": "Not yet. I haven't written the last part.",
+     "es": "Todavía no. No he escrito la última parte."
+    },
+    {
+     "hablante": "Luis",
+     "en": "Hurry! We have to send it today.",
+     "es": "¡Apúrate! Tenemos que mandarlo hoy."
+    },
+    {
+     "hablante": "Laura",
+     "en": "I know. I've already done the other parts, so I'm almost finished.",
+     "es": "Ya sé. Ya hice las otras partes, así que casi termino."
+    }
+   ]
+  },
+  {
+   "id": "a2-clima-excursiones",
+   "nivel": "A2",
+   "orden": 10,
+   "titulo": "Clima y excursiones",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.clima.weather",
+     "en": "weather",
+     "es": "clima / tiempo"
+    },
+    {
+     "concepto_id": "voc.clima.sunny",
+     "en": "sunny",
+     "es": "soleado"
+    },
+    {
+     "concepto_id": "voc.clima.rain",
+     "en": "rain",
+     "es": "lluvia / llover"
+    },
+    {
+     "concepto_id": "voc.excursion.storm",
+     "en": "storm",
+     "es": "tormenta"
+    },
+    {
+     "concepto_id": "voc.excursion.weather_forecast",
+     "en": "weather forecast",
+     "es": "pronóstico del tiempo"
+    },
+    {
+     "concepto_id": "voc.excursion.temperature",
+     "en": "temperature",
+     "es": "temperatura"
+    },
+    {
+     "concepto_id": "voc.excursion.degrees",
+     "en": "degrees",
+     "es": "grados"
+    },
+    {
+     "concepto_id": "voc.excursion.have_a_picnic",
+     "en": "have a picnic",
+     "es": "hacer un día de campo"
+    },
+    {
+     "concepto_id": "voc.excursion.sky",
+     "en": "sky",
+     "es": "cielo"
+    },
+    {
+     "concepto_id": "voc.excursion.tree",
+     "en": "tree",
+     "es": "árbol"
+    },
+    {
+     "concepto_id": "voc.excursion.flower",
+     "en": "flower",
+     "es": "flor"
+    },
+    {
+     "concepto_id": "voc.excursion.island",
+     "en": "island",
+     "es": "isla"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.first_conditional",
+     "tema": "Primer condicional (If…, will…)",
+     "en": "If it's sunny tomorrow, we'll have a picnic."
+    },
+    {
+     "concepto_id": "gram.first_conditional",
+     "tema": "Primer condicional (If…, will…)",
+     "en": "If there's a storm, we'll stay inside."
+    },
+    {
+     "concepto_id": "gram.first_conditional",
+     "tema": "Primer condicional (If…, will…)",
+     "en": "We won't go to the island if it rains."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Ana",
+     "en": "What's the weather forecast for Saturday?",
+     "es": "¿Cuál es el pronóstico del tiempo para el sábado?"
+    },
+    {
+     "hablante": "Mateo",
+     "en": "It says it will be sunny, twenty-five degrees.",
+     "es": "Dice que va a estar soleado, a veinticinco grados."
+    },
+    {
+     "hablante": "Ana",
+     "en": "Great! If it's sunny, we'll have a picnic in the park.",
+     "es": "¡Qué bien! Si hace sol, haremos un día de campo en el parque."
+    },
+    {
+     "hablante": "Mateo",
+     "en": "And if it rains?",
+     "es": "¿Y si llueve?"
+    },
+    {
+     "hablante": "Ana",
+     "en": "If there's a storm, we'll stay at home and watch a movie.",
+     "es": "Si hay tormenta, nos quedaremos en casa a ver una película."
+    }
+   ]
+  },
+  {
+   "id": "a2-servicios-compras",
+   "nivel": "A2",
+   "orden": 11,
+   "titulo": "Servicios y compras",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.servicios.post_office",
+     "en": "post office",
+     "es": "oficina de correos"
+    },
+    {
+     "concepto_id": "voc.servicios.pharmacy",
+     "en": "pharmacy",
+     "es": "farmacia"
+    },
+    {
+     "concepto_id": "voc.servicios.hairdresser",
+     "en": "hairdresser",
+     "es": "peluquero / peluquera"
+    },
+    {
+     "concepto_id": "voc.servicios.atm",
+     "en": "ATM",
+     "es": "cajero automático"
+    },
+    {
+     "concepto_id": "voc.servicios.receipt",
+     "en": "receipt",
+     "es": "recibo / ticket de compra"
+    },
+    {
+     "concepto_id": "voc.servicios.wait_in_line",
+     "en": "wait in line",
+     "es": "hacer fila"
+    },
+    {
+     "concepto_id": "voc.servicios.open",
+     "en": "open",
+     "es": "abierto / abrir"
+    },
+    {
+     "concepto_id": "voc.servicios.closed",
+     "en": "closed",
+     "es": "cerrado"
+    },
+    {
+     "concepto_id": "voc.servicios.kilo",
+     "en": "kilo",
+     "es": "kilo"
+    },
+    {
+     "concepto_id": "voc.servicios.liter",
+     "en": "liter",
+     "es": "litro"
+    },
+    {
+     "concepto_id": "voc.servicios.bottle",
+     "en": "bottle",
+     "es": "botella"
+    },
+    {
+     "concepto_id": "voc.servicios.package",
+     "en": "package",
+     "es": "paquete"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.quantifiers_much_many",
+     "tema": "Much, many, a lot of",
+     "en": "How many bottles do you need?"
+    },
+    {
+     "concepto_id": "gram.quantifiers_much_many",
+     "tema": "Much, many, a lot of",
+     "en": "There isn't much milk in the fridge."
+    },
+    {
+     "concepto_id": "gram.quantifiers_much_many",
+     "tema": "Much, many, a lot of",
+     "en": "There are a lot of people at the bank."
+    },
+    {
+     "concepto_id": "gram.must_mustnt",
+     "tema": "Must y mustn't (reglas)",
+     "en": "You must pay at the front desk."
+    },
+    {
+     "concepto_id": "gram.must_mustnt",
+     "tema": "Must y mustn't (reglas)",
+     "en": "You mustn't open other people's packages."
+    },
+    {
+     "concepto_id": "gram.must_mustnt",
+     "tema": "Must y mustn't (reglas)",
+     "en": "Passengers must show their tickets."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Laura",
+     "en": "Good morning. I need some medicine for a sore throat.",
+     "es": "Buenos días. Necesito una medicina para el dolor de garganta."
+    },
+    {
+     "hablante": "Farmacéutico",
+     "en": "Here you are. You must take one every eight hours.",
+     "es": "Aquí tiene. Debe tomar una cada ocho horas."
+    },
+    {
+     "hablante": "Laura",
+     "en": "How many can I take in a day?",
+     "es": "¿Cuántas puedo tomar al día?"
+    },
+    {
+     "hablante": "Farmacéutico",
+     "en": "Three. You mustn't take more than three.",
+     "es": "Tres. No debe tomar más de tres."
+    },
+    {
+     "hablante": "Laura",
+     "en": "OK. I also need two bottles of water. How much is it?",
+     "es": "Muy bien. También necesito dos botellas de agua. ¿Cuánto es?"
+    },
+    {
+     "hablante": "Farmacéutico",
+     "en": "It's one hundred pesos. Here is your receipt.",
+     "es": "Son cien pesos. Aquí está su recibo."
+    }
+   ]
+  },
+  {
+   "id": "a2-describir-personas-cosas",
+   "nivel": "A2",
+   "orden": 12,
+   "titulo": "Describir personas y cosas",
+   "vocabulario": [
+    {
+     "concepto_id": "voc.descripcion.tall",
+     "en": "tall",
+     "es": "alto / alta"
+    },
+    {
+     "concepto_id": "voc.descripcion.short",
+     "en": "short",
+     "es": "bajo / corto"
+    },
+    {
+     "concepto_id": "voc.descripcion.slim",
+     "en": "slim",
+     "es": "delgado / delgada"
+    },
+    {
+     "concepto_id": "voc.descripcion.curly_hair",
+     "en": "curly hair",
+     "es": "cabello rizado / chino"
+    },
+    {
+     "concepto_id": "voc.descripcion.beard",
+     "en": "beard",
+     "es": "barba"
+    },
+    {
+     "concepto_id": "voc.descripcion.glasses",
+     "en": "glasses",
+     "es": "lentes / anteojos"
+    },
+    {
+     "concepto_id": "voc.descripcion.look_like",
+     "en": "look like",
+     "es": "parecerse a"
+    },
+    {
+     "concepto_id": "voc.descripcion.friendly",
+     "en": "friendly",
+     "es": "amable / amigable"
+    },
+    {
+     "concepto_id": "voc.descripcion.shy",
+     "en": "shy",
+     "es": "tímido / tímida"
+    },
+    {
+     "concepto_id": "voc.descripcion.funny",
+     "en": "funny",
+     "es": "divertido / chistoso"
+    },
+    {
+     "concepto_id": "voc.descripcion.useful",
+     "en": "useful",
+     "es": "útil"
+    },
+    {
+     "concepto_id": "voc.descripcion.thing",
+     "en": "thing",
+     "es": "cosa"
+    }
+   ],
+   "oraciones": [
+    {
+     "concepto_id": "gram.relative_clauses_basic",
+     "tema": "Who, which, that (que)",
+     "en": "The woman who lives next door is a doctor."
+    },
+    {
+     "concepto_id": "gram.relative_clauses_basic",
+     "tema": "Who, which, that (que)",
+     "en": "This is the laptop which I use for school."
+    },
+    {
+     "concepto_id": "gram.relative_clauses_basic",
+     "tema": "Who, which, that (que)",
+     "en": "He's the singer that I told you about."
+    },
+    {
+     "concepto_id": "gram.infinitive_of_purpose",
+     "tema": "To + verbo (para…)",
+     "en": "I went to the store to buy bread."
+    },
+    {
+     "concepto_id": "gram.infinitive_of_purpose",
+     "tema": "To + verbo (para…)",
+     "en": "We use a dictionary to find new words."
+    },
+    {
+     "concepto_id": "gram.infinitive_of_purpose",
+     "tema": "To + verbo (para…)",
+     "en": "She's saving money to buy a laptop."
+    }
+   ],
+   "dialogo": [
+    {
+     "hablante": "Sofía",
+     "en": "Who is the man who is talking to your sister?",
+     "es": "¿Quién es el señor que está hablando con tu hermana?"
+    },
+    {
+     "hablante": "Diego",
+     "en": "The tall man with glasses? He's my cousin Luis.",
+     "es": "¿El alto de lentes? Es mi primo Luis."
+    },
+    {
+     "hablante": "Sofía",
+     "en": "He looks friendly! Is he the one who plays the guitar?",
+     "es": "¡Se ve amable! ¿Es el que toca la guitarra?"
+    },
+    {
+     "hablante": "Diego",
+     "en": "Yes! He came to the party to play some songs.",
+     "es": "¡Sí! Vino a la fiesta para tocar unas canciones."
+    },
+    {
+     "hablante": "Sofía",
+     "en": "And what is that small thing in his hand?",
+     "es": "¿Y qué es esa cosa pequeña que tiene en la mano?"
+    },
+    {
+     "hablante": "Diego",
+     "en": "It's a speaker. It's a thing that you use to play music from your phone.",
+     "es": "Es una bocina. Es una cosa que usas para poner música desde tu celular."
+    }
+   ]
+  }
+ ],
+ "misiones": [
+  {
+   "id": "mision-a1-cafeteria",
+   "version": 1,
+   "nivel": "A1",
+   "leccion_id": "a1-comida-bebida",
+   "titulo": "En la cafetería",
+   "escenario": "Llegas a una cafetería con mucha hambre. El mesero se acerca a tu mesa.",
+   "personaje": "Mesero",
+   "objetivos": [
+    {
+     "id": "comida",
+     "texto": "Pide algo de comer"
+    },
+    {
+     "id": "bebida",
+     "texto": "Pide algo de beber"
+    },
+    {
+     "id": "agradecer",
+     "texto": "Termina tu pedido con cortesía"
+    }
+   ],
+   "pasos": [
+    {
+     "npc": "Hi! Are you hungry?",
+     "npc_es": "¡Hola! ¿Tienes hambre?",
+     "opciones": [
+      {
+       "en": "Yes, I hungry.",
+       "correcta": false,
+       "feedback": "'Hungry' va con to be: Yes, I'm hungry."
+      },
+      {
+       "en": "Yes, I'm hungry!",
+       "correcta": true,
+       "concepto_id": "voc.comida.hungry"
+      },
+      {
+       "en": "Yes, I'm water.",
+       "correcta": false,
+       "feedback": "No tiene sentido: 'I'm water' es 'soy agua'."
+      }
+     ]
+    },
+    {
+     "npc": "OK! What do you want?",
+     "npc_es": "¡Bien! ¿Qué quieres?",
+     "opciones": [
+      {
+       "en": "I want some bread and an egg, please.",
+       "correcta": true,
+       "cumple": "comida",
+       "concepto_id": "gram.some_any"
+      },
+      {
+       "en": "I want any bread, please.",
+       "correcta": false,
+       "feedback": "En oraciones afirmativas se usa 'some': I want some bread."
+      },
+      {
+       "en": "Goodbye! See you later!",
+       "correcta": false,
+       "feedback": "Acabas de llegar: primero pide tu comida."
+      }
+     ]
+    },
+    {
+     "npc": "Do you want some coffee?",
+     "npc_es": "¿Quieres café?",
+     "opciones": [
+      {
+       "en": "No, I doesn't. I want some juice.",
+       "correcta": false,
+       "feedback": "Con 'I' el negativo es 'don't': No, I don't."
+      },
+      {
+       "en": "Yes, I am.",
+       "correcta": false,
+       "feedback": "Si la pregunta empieza con 'Do', la respuesta corta es 'Yes, I do' o 'No, I don't'."
+      },
+      {
+       "en": "No, I don't. I want some juice.",
+       "correcta": true,
+       "cumple": "bebida",
+       "concepto_id": "gram.present_simple_negative_questions"
+      }
+     ]
+    },
+    {
+     "npc": "Juice, bread and an egg. Do you want any fruit?",
+     "npc_es": "Jugo, pan y un huevo. ¿Quieres fruta?",
+     "opciones": [
+      {
+       "en": "Yes, I want any fruit.",
+       "correcta": false,
+       "feedback": "En oraciones afirmativas se usa 'some': Yes, I want some fruit."
+      },
+      {
+       "en": "No, I don't. Thank you!",
+       "correcta": true,
+       "cumple": "agradecer",
+       "concepto_id": "gram.present_simple_negative_questions"
+      },
+      {
+       "en": "No, I'm not fruit.",
+       "correcta": false,
+       "feedback": "La pregunta usa 'Do you want…?', así que la respuesta es 'No, I don't'."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mision-a1-direcciones",
+   "version": 1,
+   "nivel": "A1",
+   "leccion_id": "a1-ciudad-lugares",
+   "titulo": "¿Dónde está el banco?",
+   "escenario": "Estás en el centro de la ciudad y necesitas un banco. Le preguntas a un señor en la calle.",
+   "personaje": "Señor",
+   "objetivos": [
+    {
+     "id": "preguntar",
+     "texto": "Pregunta por el banco"
+    },
+    {
+     "id": "indicaciones",
+     "texto": "Confirma las indicaciones"
+    },
+    {
+     "id": "agradecer",
+     "texto": "Da las gracias"
+    }
+   ],
+   "pasos": [
+    {
+     "npc": "Hello! Are you OK?",
+     "npc_es": "¡Hola! ¿Estás bien?",
+     "opciones": [
+      {
+       "en": "Excuse me, are there a bank near here?",
+       "correcta": false,
+       "feedback": "Con un solo lugar (a bank) se usa 'is there': Is there a bank near here?"
+      },
+      {
+       "en": "Turn left, please.",
+       "correcta": false,
+       "feedback": "Tú eres quien busca el banco: primero pregunta dónde está."
+      },
+      {
+       "en": "Excuse me, is there a bank near here?",
+       "correcta": true,
+       "cumple": "preguntar",
+       "concepto_id": "voc.ciudad.excuse_me"
+      }
+     ]
+    },
+    {
+     "npc": "Yes, there is. Go straight and turn left.",
+     "npc_es": "Sí, hay uno. Sigue derecho y da vuelta a la izquierda.",
+     "opciones": [
+      {
+       "en": "OK. Go straight and turn left.",
+       "correcta": true,
+       "cumple": "indicaciones",
+       "concepto_id": "gram.imperatives"
+      },
+      {
+       "en": "OK. Go straight and turn right.",
+       "correcta": false,
+       "feedback": "Te dijo 'turn left': left es izquierda y right es derecha."
+      },
+      {
+       "en": "OK. Don't go straight.",
+       "correcta": false,
+       "feedback": "Te dijo 'Go straight' (sigue derecho), no 'Don't go'."
+      }
+     ]
+    },
+    {
+     "npc": "Look! That is the park. The bank is near the park.",
+     "npc_es": "¡Mira! Ese es el parque. El banco está cerca del parque.",
+     "opciones": [
+      {
+       "en": "Those is the park.",
+       "correcta": false,
+       "feedback": "'Those' es plural; con un solo lugar se usa 'That is'."
+      },
+      {
+       "en": "Great! Thank you very much!",
+       "correcta": true,
+       "cumple": "agradecer",
+       "concepto_id": "gram.this_that_these_those"
+      },
+      {
+       "en": "Go straight, please!",
+       "correcta": false,
+       "feedback": "El señor ya te ayudó; ahora agradécele."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mision-a1-presentarte",
+   "version": 1,
+   "nivel": "A1",
+   "leccion_id": "a1-saludos-presentaciones",
+   "titulo": "Primer día de clases",
+   "escenario": "Es tu primer día en la escuela de idiomas. Laura, una compañera nueva, se acerca a saludarte.",
+   "personaje": "Laura",
+   "objetivos": [
+    {
+     "id": "saludar",
+     "texto": "Saluda a Laura"
+    },
+    {
+     "id": "presentarte",
+     "texto": "Di tu nombre"
+    },
+    {
+     "id": "despedirte",
+     "texto": "Despídete"
+    }
+   ],
+   "pasos": [
+    {
+     "npc": "Good morning!",
+     "npc_es": "¡Buenos días!",
+     "opciones": [
+      {
+       "en": "Good morning!",
+       "correcta": true,
+       "cumple": "saludar",
+       "concepto_id": "voc.saludos.good_morning"
+      },
+      {
+       "en": "Morning good!",
+       "correcta": false,
+       "feedback": "En inglés el orden es 'Good morning!'."
+      },
+      {
+       "en": "See you later!",
+       "correcta": false,
+       "feedback": "'See you later' es para despedirte, y Laura te está saludando."
+      }
+     ]
+    },
+    {
+     "npc": "My name is Laura. What's your name?",
+     "npc_es": "Me llamo Laura. ¿Cómo te llamas?",
+     "opciones": [
+      {
+       "en": "My name are Diego.",
+       "correcta": false,
+       "feedback": "Con 'my name' se usa 'is': My name is Diego."
+      },
+      {
+       "en": "My name is Diego.",
+       "correcta": true,
+       "cumple": "presentarte",
+       "concepto_id": "voc.saludos.my_name_is"
+      },
+      {
+       "en": "I'm fine, thank you.",
+       "correcta": false,
+       "feedback": "Laura te pregunta tu nombre, no cómo estás."
+      }
+     ]
+    },
+    {
+     "npc": "Nice to meet you! How are you?",
+     "npc_es": "¡Mucho gusto! ¿Cómo estás?",
+     "opciones": [
+      {
+       "en": "I is fine, thank you.",
+       "correcta": false,
+       "feedback": "Con 'I' el verbo to be es 'am': I am fine (I'm fine)."
+      },
+      {
+       "en": "My name is fine.",
+       "correcta": false,
+       "feedback": "Te preguntan cómo estás: I'm fine, thank you."
+      },
+      {
+       "en": "I'm fine, thank you.",
+       "correcta": true,
+       "concepto_id": "voc.saludos.fine_thank_you"
+      }
+     ]
+    },
+    {
+     "npc": "Great! See you later!",
+     "npc_es": "¡Qué bien! ¡Nos vemos luego!",
+     "opciones": [
+      {
+       "en": "Goodbye! See you later!",
+       "correcta": true,
+       "cumple": "despedirte",
+       "concepto_id": "voc.saludos.goodbye"
+      },
+      {
+       "en": "Hello! Nice to meet you!",
+       "correcta": false,
+       "feedback": "'Hello' es para saludar; para despedirte di 'Goodbye!'."
+      },
+      {
+       "en": "You is my friend.",
+       "correcta": false,
+       "feedback": "Con 'you' se usa 'are': You are my friend."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mision-a1-tienda",
+   "version": 1,
+   "nivel": "A1",
+   "leccion_id": "a1-compras",
+   "titulo": "Una playera nueva",
+   "escenario": "Estás en una tienda de ropa y te gusta una playera azul. La vendedora se acerca.",
+   "personaje": "Vendedora",
+   "objetivos": [
+    {
+     "id": "pedir",
+     "texto": "Pide la playera"
+    },
+    {
+     "id": "precio",
+     "texto": "Pregunta el precio"
+    },
+    {
+     "id": "pagar",
+     "texto": "Pregunta cómo pagar"
+    }
+   ],
+   "pasos": [
+    {
+     "npc": "Hello! Can I help you?",
+     "npc_es": "¡Hola! ¿Te puedo ayudar?",
+     "opciones": [
+      {
+       "en": "Yes, please. I'd like this blue T-shirt.",
+       "correcta": true,
+       "cumple": "pedir",
+       "concepto_id": "gram.would_like"
+      },
+      {
+       "en": "Yes, please. I like would this T-shirt.",
+       "correcta": false,
+       "feedback": "Para pedir algo con cortesía se dice 'I'd like…' (I would like)."
+      },
+      {
+       "en": "Yes, I'm hungry!",
+       "correcta": false,
+       "feedback": "Estás en una tienda de ropa: pide la playera."
+      }
+     ]
+    },
+    {
+     "npc": "Here you are.",
+     "npc_es": "Aquí tienes.",
+     "opciones": [
+      {
+       "en": "How much are it?",
+       "correcta": false,
+       "feedback": "Con una sola cosa (it) se usa 'is': How much is it?"
+      },
+      {
+       "en": "It's ninety pesos.",
+       "correcta": false,
+       "feedback": "Tú preguntas el precio; la vendedora es quien te lo dice."
+      },
+      {
+       "en": "Thank you. How much is it?",
+       "correcta": true,
+       "cumple": "precio",
+       "concepto_id": "gram.how_much_price"
+      }
+     ]
+    },
+    {
+     "npc": "It's ninety pesos.",
+     "npc_es": "Son noventa pesos.",
+     "opciones": [
+      {
+       "en": "Great, it's cheap! Can I pay by card?",
+       "correcta": true,
+       "cumple": "pagar",
+       "concepto_id": "voc.compras.card"
+      },
+      {
+       "en": "Great, it's cheaps!",
+       "correcta": false,
+       "feedback": "Los adjetivos no tienen plural en inglés: it's cheap."
+      },
+      {
+       "en": "Turn left on Reforma Street.",
+       "correcta": false,
+       "feedback": "Eso es una indicación para llegar a un lugar, no tiene que ver con la compra."
+      }
+     ]
+    },
+    {
+     "npc": "Yes, of course. Would you like a bag?",
+     "npc_es": "Sí, claro. ¿Quieres una bolsa?",
+     "opciones": [
+      {
+       "en": "No, I'd like.",
+       "correcta": false,
+       "feedback": "Para decir que no con cortesía: No, thank you."
+      },
+      {
+       "en": "No, thank you.",
+       "correcta": true,
+       "concepto_id": "gram.would_like"
+      },
+      {
+       "en": "Yes, I'm a bag.",
+       "correcta": false,
+       "feedback": "'I'm a bag' es 'soy una bolsa'. Responde 'Yes, please' o 'No, thank you'."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mision-a2-doctor",
+   "version": 1,
+   "nivel": "A2",
+   "leccion_id": "a2-salud-ejercicio",
+   "titulo": "En el consultorio",
+   "escenario": "Te sientes mal y vas con la doctora. Explícale qué te pasa y entiende sus consejos.",
+   "personaje": "Doctora",
+   "objetivos": [
+    {
+     "id": "sintomas",
+     "texto": "Explica cómo te sientes"
+    },
+    {
+     "id": "consejo",
+     "texto": "Pregunta qué debes hacer"
+    },
+    {
+     "id": "medicina",
+     "texto": "Pregunta por la medicina"
+    }
+   ],
+   "pasos": [
+    {
+     "npc": "Good morning. How do you feel?",
+     "npc_es": "Buenos días. ¿Cómo te sientes?",
+     "opciones": [
+      {
+       "en": "I feel sick. My head is a headache.",
+       "correcta": false,
+       "feedback": "Se dice 'I've got a headache' (tengo dolor de cabeza)."
+      },
+      {
+       "en": "I feel sick. I've got a headache.",
+       "correcta": true,
+       "cumple": "sintomas",
+       "concepto_id": "voc.salud.headache"
+      },
+      {
+       "en": "I went to the beach by bus.",
+       "correcta": false,
+       "feedback": "La doctora te pregunta cómo te sientes hoy."
+      }
+     ]
+    },
+    {
+     "npc": "Have you got a sore throat too?",
+     "npc_es": "¿También te duele la garganta?",
+     "opciones": [
+      {
+       "en": "Yes, I have. It hurts a lot.",
+       "correcta": true,
+       "concepto_id": "voc.salud.hurt"
+      },
+      {
+       "en": "Yes, I have. It hurt a lot.",
+       "correcta": false,
+       "feedback": "Hablas de ahora, y con 'it' el presente lleva -s: It hurts."
+      },
+      {
+       "en": "No, I'm a dentist.",
+       "correcta": false,
+       "feedback": "No responde a la pregunta sobre tu garganta."
+      }
+     ]
+    },
+    {
+     "npc": "You've got a cold. You should rest and drink a lot of water.",
+     "npc_es": "Tienes un resfriado. Deberías descansar y tomar mucha agua.",
+     "opciones": [
+      {
+       "en": "OK. Do I should go to work tomorrow?",
+       "correcta": false,
+       "feedback": "Con 'should' no se usa 'do': Should I go…?"
+      },
+      {
+       "en": "OK. I should eat a lot of sugar.",
+       "correcta": false,
+       "feedback": "Eso no es lo que te recomendó la doctora."
+      },
+      {
+       "en": "OK. Should I go to work tomorrow?",
+       "correcta": true,
+       "cumple": "consejo",
+       "concepto_id": "gram.should_advice"
+      }
+     ]
+    },
+    {
+     "npc": "No, you shouldn't. You should stay at home.",
+     "npc_es": "No, no deberías. Deberías quedarte en casa.",
+     "opciones": [
+      {
+       "en": "Do I have to take any medicine?",
+       "correcta": true,
+       "cumple": "medicina",
+       "concepto_id": "gram.have_to_obligation"
+      },
+      {
+       "en": "Do I has to take any medicine?",
+       "correcta": false,
+       "feedback": "Con 'I' se usa 'have': Do I have to…?"
+      },
+      {
+       "en": "I have to go to the airport.",
+       "correcta": false,
+       "feedback": "La doctora te dijo que te quedes en casa."
+      }
+     ]
+    },
+    {
+     "npc": "Yes. You have to take this medicine every eight hours.",
+     "npc_es": "Sí. Tienes que tomar esta medicina cada ocho horas.",
+     "opciones": [
+      {
+       "en": "OK, every eight hours. Thank you, doctor!",
+       "correcta": true,
+       "concepto_id": "voc.salud.medicine"
+      },
+      {
+       "en": "OK, every eight days. Thank you!",
+       "correcta": false,
+       "feedback": "Dijo 'every eight hours': cada ocho horas, no días."
+      },
+      {
+       "en": "You should rest, doctor.",
+       "correcta": false,
+       "feedback": "Tú eres quien está enfermo: agradece el consejo."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mision-a2-vacaciones",
+   "version": 1,
+   "nivel": "A2",
+   "leccion_id": "a2-viajes-transporte",
+   "titulo": "¿Qué tal tus vacaciones?",
+   "escenario": "Regresaste de vacaciones y tu amigo Luis quiere saber cómo te fue.",
+   "personaje": "Luis",
+   "objetivos": [
+    {
+     "id": "destino",
+     "texto": "Di a dónde fuiste"
+    },
+    {
+     "id": "transporte",
+     "texto": "Di cómo viajaste"
+    },
+    {
+     "id": "actividad",
+     "texto": "Cuenta qué hiciste"
+    }
+   ],
+   "pasos": [
+    {
+     "npc": "Hi! Where did you go on vacation?",
+     "npc_es": "¡Hola! ¿A dónde fuiste de vacaciones?",
+     "opciones": [
+      {
+       "en": "I goed to Oaxaca.",
+       "correcta": false,
+       "feedback": "'Go' es irregular: en pasado es 'went'."
+      },
+      {
+       "en": "I went to Oaxaca.",
+       "correcta": true,
+       "cumple": "destino",
+       "concepto_id": "gram.past_simple_irregular"
+      },
+      {
+       "en": "I go to Oaxaca every day.",
+       "correcta": false,
+       "feedback": "Luis pregunta por el pasado (did), así que responde en pasado: I went…"
+      }
+     ]
+    },
+    {
+     "npc": "Cool! Did you go by plane?",
+     "npc_es": "¡Qué padre! ¿Fuiste en avión?",
+     "opciones": [
+      {
+       "en": "No, I didn't went by plane.",
+       "correcta": false,
+       "feedback": "Después de 'didn't' el verbo va en forma base: I didn't go."
+      },
+      {
+       "en": "Yes, I am.",
+       "correcta": false,
+       "feedback": "A 'Did you…?' se responde 'Yes, I did' o 'No, I didn't'."
+      },
+      {
+       "en": "No, I didn't. I went by bus.",
+       "correcta": true,
+       "cumple": "transporte",
+       "concepto_id": "gram.past_simple_negative_questions"
+      }
+     ]
+    },
+    {
+     "npc": "Did you stay in a hotel?",
+     "npc_es": "¿Te quedaste en un hotel?",
+     "opciones": [
+      {
+       "en": "Yes, I did. It was near the beach.",
+       "correcta": true,
+       "concepto_id": "voc.viajes.hotel"
+      },
+      {
+       "en": "Yes, I do. It was near the beach.",
+       "correcta": false,
+       "feedback": "La pregunta está en pasado (Did), así que la respuesta es 'Yes, I did'."
+      },
+      {
+       "en": "My suitcase is blue.",
+       "correcta": false,
+       "feedback": "No responde a la pregunta sobre el hotel."
+      }
+     ]
+    },
+    {
+     "npc": "Great! Did you take any photos?",
+     "npc_es": "¡Genial! ¿Tomaste fotos?",
+     "opciones": [
+      {
+       "en": "Yes, I taked a lot of photos!",
+       "correcta": false,
+       "feedback": "'Take' es irregular: en pasado es 'took'."
+      },
+      {
+       "en": "Yes, I took a lot of photos!",
+       "correcta": true,
+       "cumple": "actividad",
+       "concepto_id": "voc.viajes.take_a_photo"
+      },
+      {
+       "en": "No, I didn't. I took a lot of photos.",
+       "correcta": false,
+       "feedback": "Si dices 'No, I didn't', no puedes decir después que tomaste fotos."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

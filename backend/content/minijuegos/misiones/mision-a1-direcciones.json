@@ -1,0 +1,50 @@
+{
+  "id": "mision-a1-direcciones",
+  "version": 1,
+  "nivel": "A1",
+  "leccion_id": "a1-ciudad-lugares",
+  "titulo": "¿Dónde está el banco?",
+  "escenario": "Estás en el centro de la ciudad y necesitas un banco. Le preguntas a un señor en la calle.",
+  "personaje": "Señor",
+  "objetivos": [
+    { "id": "preguntar", "texto": "Pregunta por el banco" },
+    { "id": "indicaciones", "texto": "Confirma las indicaciones" },
+    { "id": "agradecer", "texto": "Da las gracias" }
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Lugares.",
+      "MCER, Intercambiar información, A1 (p. 80): «Comprende preguntas e instrucciones que se le formulan despacio y con cuidado, y comprende indicaciones breves y sencillas sobre cómo ir a un lugar.»"
+    ],
+    "notas": "Guion original basado en el diálogo de la lección a1-ciudad-lugares."
+  },
+  "pasos": [
+    {
+      "npc": "Hello! Are you OK?",
+      "npc_es": "¡Hola! ¿Estás bien?",
+      "opciones": [
+        { "en": "Excuse me, are there a bank near here?", "correcta": false, "feedback": "Con un solo lugar (a bank) se usa 'is there': Is there a bank near here?" },
+        { "en": "Turn left, please.", "correcta": false, "feedback": "Tú eres quien busca el banco: primero pregunta dónde está." },
+        { "en": "Excuse me, is there a bank near here?", "correcta": true, "cumple": "preguntar", "concepto_id": "voc.ciudad.excuse_me" }
+      ]
+    },
+    {
+      "npc": "Yes, there is. Go straight and turn left.",
+      "npc_es": "Sí, hay uno. Sigue derecho y da vuelta a la izquierda.",
+      "opciones": [
+        { "en": "OK. Go straight and turn left.", "correcta": true, "cumple": "indicaciones", "concepto_id": "gram.imperatives" },
+        { "en": "OK. Go straight and turn right.", "correcta": false, "feedback": "Te dijo 'turn left': left es izquierda y right es derecha." },
+        { "en": "OK. Don't go straight.", "correcta": false, "feedback": "Te dijo 'Go straight' (sigue derecho), no 'Don't go'." }
+      ]
+    },
+    {
+      "npc": "Look! That is the park. The bank is near the park.",
+      "npc_es": "¡Mira! Ese es el parque. El banco está cerca del parque.",
+      "opciones": [
+        { "en": "Those is the park.", "correcta": false, "feedback": "'Those' es plural; con un solo lugar se usa 'That is'." },
+        { "en": "Great! Thank you very much!", "correcta": true, "cumple": "agradecer", "concepto_id": "gram.this_that_these_those" },
+        { "en": "Go straight, please!", "correcta": false, "feedback": "El señor ya te ayudó; ahora agradécele." }
+      ]
+    }
+  ]
+}
