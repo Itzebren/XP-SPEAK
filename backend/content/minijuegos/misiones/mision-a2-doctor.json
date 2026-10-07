@@ -1,0 +1,68 @@
+{
+  "id": "mision-a2-doctor",
+  "version": 1,
+  "nivel": "A2",
+  "leccion_id": "a2-salud-ejercicio",
+  "titulo": "En el consultorio",
+  "escenario": "Te sientes mal y vas con la doctora. Explícale qué te pasa y entiende sus consejos.",
+  "personaje": "Doctora",
+  "objetivos": [
+    { "id": "sintomas", "texto": "Explica cómo te sientes" },
+    { "id": "consejo", "texto": "Pregunta qué debes hacer" },
+    { "id": "medicina", "texto": "Pregunta por la medicina" }
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Salud y cuidado corporal.",
+      "MCER, Conversación, A2 (p. 77): «Expresa cómo se siente en términos sencillos y sabe cómo dar las gracias.»"
+    ],
+    "notas": "Guion original basado en el diálogo de la lección a2-salud-ejercicio."
+  },
+  "pasos": [
+    {
+      "npc": "Good morning. How do you feel?",
+      "npc_es": "Buenos días. ¿Cómo te sientes?",
+      "opciones": [
+        { "en": "I feel sick. My head is a headache.", "correcta": false, "feedback": "Se dice 'I've got a headache' (tengo dolor de cabeza)." },
+        { "en": "I feel sick. I've got a headache.", "correcta": true, "cumple": "sintomas", "concepto_id": "voc.salud.headache" },
+        { "en": "I went to the beach by bus.", "correcta": false, "feedback": "La doctora te pregunta cómo te sientes hoy." }
+      ]
+    },
+    {
+      "npc": "Have you got a sore throat too?",
+      "npc_es": "¿También te duele la garganta?",
+      "opciones": [
+        { "en": "Yes, I have. It hurts a lot.", "correcta": true, "concepto_id": "voc.salud.hurt" },
+        { "en": "Yes, I have. It hurt a lot.", "correcta": false, "feedback": "Hablas de ahora, y con 'it' el presente lleva -s: It hurts." },
+        { "en": "No, I'm a dentist.", "correcta": false, "feedback": "No responde a la pregunta sobre tu garganta." }
+      ]
+    },
+    {
+      "npc": "You've got a cold. You should rest and drink a lot of water.",
+      "npc_es": "Tienes un resfriado. Deberías descansar y tomar mucha agua.",
+      "opciones": [
+        { "en": "OK. Do I should go to work tomorrow?", "correcta": false, "feedback": "Con 'should' no se usa 'do': Should I go…?" },
+        { "en": "OK. I should eat a lot of sugar.", "correcta": false, "feedback": "Eso no es lo que te recomendó la doctora." },
+        { "en": "OK. Should I go to work tomorrow?", "correcta": true, "cumple": "consejo", "concepto_id": "gram.should_advice" }
+      ]
+    },
+    {
+      "npc": "No, you shouldn't. You should stay at home.",
+      "npc_es": "No, no deberías. Deberías quedarte en casa.",
+      "opciones": [
+        { "en": "Do I have to take any medicine?", "correcta": true, "cumple": "medicina", "concepto_id": "gram.have_to_obligation" },
+        { "en": "Do I has to take any medicine?", "correcta": false, "feedback": "Con 'I' se usa 'have': Do I have to…?" },
+        { "en": "I have to go to the airport.", "correcta": false, "feedback": "La doctora te dijo que te quedes en casa." }
+      ]
+    },
+    {
+      "npc": "Yes. You have to take this medicine every eight hours.",
+      "npc_es": "Sí. Tienes que tomar esta medicina cada ocho horas.",
+      "opciones": [
+        { "en": "OK, every eight hours. Thank you, doctor!", "correcta": true, "concepto_id": "voc.salud.medicine" },
+        { "en": "OK, every eight days. Thank you!", "correcta": false, "feedback": "Dijo 'every eight hours': cada ocho horas, no días." },
+        { "en": "You should rest, doctor.", "correcta": false, "feedback": "Tú eres quien está enfermo: agradece el consejo." }
+      ]
+    }
+  ]
+}

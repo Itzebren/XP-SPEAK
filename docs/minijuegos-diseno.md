@@ -1,8 +1,10 @@
 # Diseño y alcance del módulo de **Minijuegos** — XP-SPEAK
 
 > App Android (Kotlin/Compose) + backend Node/Vercel · Rama `feature/minijuegos`
-> Trabajo Terminal 2026-B162 · Documento de diseño previo a la implementación
-> Estado: **v1 — propuesta** (2026-10-01)
+> Trabajo Terminal 2026-B162 · Documento de diseño
+> Estado: **v2 — implementado y probado en emulador** (2026-10-07). v1 (propuesta) del 2026-10-01; las
+> decisiones abiertas se resolvieron en §9 y lo que cambió respecto a la propuesta
+> está en §10.
 
 Este documento reúne el contexto del Documento Técnico (PDF) y la propuesta de
 implementación de los cuatro minijuegos del catálogo: **Eco Vocal**,
@@ -16,13 +18,64 @@ a cambio (ver §9).
 
 | Pieza | Estado | Dónde |
 |---|---|---|
-| Catálogo 2x2 sin imágenes (CU-07 pasos 1–3) | ✅ | `feature/games/ui/GamesScreen.kt` |
-| Enum del catálogo | ✅ | `feature/games/domain/Minijuego.kt` |
-| Navegación catálogo → juego (`games/{id}`) | ✅ (pantalla "Próximamente") | `feature/games/ui/MinijuegoScreen.kt`, `core/navigation/` |
-| Banco de contenido local para juegos | ❌ | §3 |
-| Motor común (sesión, puntaje, XP, guardado parcial) | ❌ | §4 |
-| Mecánica de cada juego | ❌ | §5 |
-| Registro de resultados y sincronización | ❌ | §6 |
+| Catálogo 2x2 sin imágenes (CU-07 pasos 1–3), nivel y "Continuar" | ✅ | `feature/games/ui/GamesScreen.kt`, `GamesViewModel.kt` |
+| Enum del catálogo (con `xpBase` y tiempo objetivo) | ✅ | `feature/games/domain/Minijuego.kt` |
+| Navegación catálogo → juego (`games/{id}`) | ✅ | `feature/games/ui/MinijuegoScreen.kt`, `core/navigation/` |
+| Banco de contenido local (6 misiones + lecciones) | ✅ | §3 · `backend/scripts/exportar-banco-minijuegos.js` → `app/src/main/assets/minijuegos/banco.json` |
+| Motor común (rondas, Room v4, XP, racha, retomar) | ✅ | §4 · `feature/games/ui/comun/`, `feature/games/data/` |
+| Orden Maestro | ✅ | `feature/games/ui/orden/` |
+| Ráfaga de Palabras | ✅ | `feature/games/ui/rafaga/` |
+| Misión Situacional | ✅ | `feature/games/ui/mision/` |
+| Eco Vocal (Azure + respaldo del teléfono) | ✅ | `feature/games/ui/ecovocal/`, `feature/games/data/voz/` |
+| `POST /api/games/result` + worker + SRS + racha | ✅ | §6 · `backend/api/games/result.js`, `SincronizarPartidasWorker.kt` |
+| `GET /api/speech/token` | ✅ | `backend/api/speech/token.js` |
+| Imágenes del catálogo y sonidos (fase 8) | ❌ | Pendiente de assets |
+| Recurso de Azure Speech en producción | ❌ | Configurar `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION` en Vercel (ver `backend/README.md`) |
+
+### 0.1 Contexto para retomar el desarrollo
+
+Última sesión: **2026-10-07**. Los cuatro juegos funcionan de punta a punta y se
+probaron en el emulador (Pixel_10a) contra el backend local:
+
+| Juego | Prueba | Resultado |
+|---|---|---|
+| Orden Maestro | 8/8, error a propósito con segundo intento | +10 XP confirmada por el servidor |
+| Ráfaga de Palabras | 19/21, el reloj termina bien con +1 s por acierto | +12 XP |
+| Misión Situacional | 3/4, explicación del error gramatical | +15 XP |
+| Eco Vocal | Sin Azure en local (token → 503) → respaldo del teléfono → panel de confianza baja (Ilustración 40) | Sin puntaje: el micrófono del emulador no recibe audio |
+
+También se verificó: la migración Room v3→v4 conserva los datos, retomar una partida
+(incluso tras reinstalar), el envío `POST /api/games/result` → 200 y "Para repasar"
+con los conceptos fallados. Pruebas: backend 91/91 (`npm test`) y unitarias de Android
+(`ReglasMinijuegosTest`, `GeneradorRondasTest`, `EstadoPersistenteTest`).
+
+**Pendiente (bloquea el cierre del módulo):**
+1. **Azure Speech en producción.** Crear el recurso (capa F0 basta para pruebas) y
+   poner `AZURE_SPEECH_KEY` y `AZURE_SPEECH_REGION` en Vercel. Luego probar Eco Vocal
+   en un **teléfono físico**: nunca se ha visto un puntaje real de pronunciación.
+   En el emulador se puede intentar activando *Extended controls → Microphone →
+   "Virtual microphone uses host audio input"*.
+2. **Imágenes del catálogo y sonidos de acierto/error (fase 8).** Depende de los
+   assets; hoy el feedback es visual + háptico y las tarjetas no tienen ilustración.
+
+**Opcional / mejoras:**
+- Revisar con el equipo los guiones de las 6 misiones (`backend/content/minijuegos/misiones/`):
+  los redactó el asistente de código.
+- Reducir el APK (~58 MB, sobre todo por el SDK de Azure) con *ABI splits*.
+- La racha local (`UsuarioEntity.ultimoDiaActivo`) solo la actualizan los minijuegos;
+  Lecciones también debería actualizarla (fuera de este módulo).
+- Fuera del módulo: la pantalla Cuenta muestra "Racha: 1 días" y la app siempre
+  arranca en el login.
+
+**Cómo levantar el entorno de prueba:**
+```sh
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+sh gradlew assembleDebug            # gradlew no tiene permiso de ejecución
+cd backend && npm run dev:app       # API en http://localhost:3000 + emulador de Firestore
+adb reverse tcp:3000 tcp:3000       # el emulador de Android ve la API local
+```
+Si cambia el contenido de lecciones o misiones: `npm run lint:content` y
+`npm run exportar:minijuegos` (regenera `app/src/main/assets/minijuegos/banco.json`).
 
 ---
 
@@ -49,7 +102,7 @@ a cambio (ver §9).
 
 Flujo principal:
 1. El usuario abre "Minijuegos". → ✅ hecho
-2. El sistema despliega el catálogo (consulta catálogo + nivel A1/A2 en Room). → ✅ catálogo; falta leer nivel
+2. El sistema despliega el catálogo (consulta catálogo + nivel A1/A2 en Room). → ✅ hecho (lee el nivel de `UsuarioEntity`)
 3. El usuario selecciona un juego. → ✅ hecho
 4. Se cargan lógica y activos **desde almacenamiento local** (RNF-08).
 5. El usuario interactúa con la mecánica (loop de sesión).
@@ -121,9 +174,9 @@ Forma sugerida:
 }
 ```
 
-> **Pendiente de contenido:** los `ejemplos` de gramática hoy no traen traducción al
-> español. Orden Maestro la necesita como pista: hay que añadir `es` a los ejemplos
-> (o usar solo las líneas de diálogo, que sí la tienen).
+> **Resuelto:** los `ejemplos` de gramática no traen traducción al español, así que
+> Orden Maestro muestra el tema del concepto como pista en esos casos y usa sobre todo
+> las líneas de diálogo (partidas en oraciones, cada una con su traducción).
 
 ### 3.3 En Android
 - `feature/games/data/BancoMinijuegos.kt`: lee el JSON de `assets` una vez (Gson, ya está en el proyecto) y lo deja en memoria.
@@ -218,7 +271,7 @@ Regla simple y común: si el usuario lleva 3 aciertos seguidos, la siguiente ron
 | Credenciales | La llave de Azure **no va en la app** (RNF-06, RN-13). Endpoint nuevo `GET /api/speech/token` en el backend que pide un token de 10 min a Azure (`issueToken`) para el usuario autenticado. |
 | Audio | Captura con el SDK desde el micrófono en streaming; no se guarda archivo (RN-04). Azure no almacena el audio por defecto. |
 | Sin conexión | Respaldo con `SpeechRecognizer` de Android (`EXTRA_PREFER_OFFLINE`): compara la transcripción con el texto de referencia (acierto si coincide normalizado). Sin puntaje fonético; se avisa al usuario. |
-| Permiso | `RECORD_AUDIO` ya está en el manifiesto; falta pedirlo en tiempo de ejecución. |
+| Permiso | `RECORD_AUDIO` en el manifiesto y se pide en tiempo de ejecución al tocar el micrófono por primera vez. |
 | Latencia | Frases cortas para cumplir RN-05 (≤ 2.5 s). |
 
 **Riesgos:** costo de Azure (capa gratuita F0: ~5 h de audio/mes; suficiente para pruebas); necesidad de red para el puntaje fonético. Comparte trabajo con RF-07/RF-09 del chat.
@@ -274,7 +327,7 @@ Regla simple y común: si el usuario lleva 3 aciertos seguidos, la siguiente ron
 **Mecánica (M):**
 1. 60 segundos en el reloj.
 2. Aparece una palabra en inglés (con audio opcional) y 4 opciones en español; o al revés en dificultad alta.
-3. Acierto: +1, suma al combo (x2 a partir de 5 seguidas) y +2 s al reloj. Error: rompe el combo y −3 s; se muestra la respuesta correcta medio segundo.
+3. Acierto: +1, suma al combo (x2 a partir de 5 seguidas) y +1 s al reloj (v1 proponía +2 s; ver §10). Error: rompe el combo y −3 s; se muestra la respuesta correcta medio segundo.
 4. Termina cuando el reloj llega a 0. Desempeño = aciertos / intentos, más el puntaje del combo.
 5. Distractores del mismo módulo temático (más difícil) o de otros módulos (más fácil).
 
@@ -319,10 +372,9 @@ Endpoint nuevo (mismo estilo que los de lecciones: token Firebase, errores, rate
 `POST /api/games/result`
 ```json
 {
-  "partidaId": "uuid",
+  "partida_id": "uuid",
   "juego": "orden-maestro",
-  "aciertos": 7, "total": 8, "duracionMs": 94000,
-  "xpCliente": 13,
+  "aciertos": 7, "total": 8, "duracion_ms": 94000,
   "conceptos": [{ "concepto_id": "gram.prepositions_of_place", "aciertos": 2, "errores": 1 }]
 }
 ```
@@ -374,11 +426,54 @@ Pruebas: `CalculadorXp`, validación de Orden Maestro y selección de rondas son
 
 ---
 
-## 9. Decisiones abiertas
+## 9. Decisiones (antes abiertas)
 
-1. **Eco Vocal:** ¿Azure desde el inicio o primero solo `SpeechRecognizer` de Android y Azure después? (Azure es lo que promete el PDF, pero requiere recurso y backend de token.)
-2. **Misión Situacional:** ¿v1 con guiones locales (recomendado) o directo con IA?
-3. **Ráfaga de Palabras:** ¿4 opciones o "aceptar / descartar al bote" (como sugiere la ilustración)?
-4. **XP:** confirmar valores (10–20 por partida, tope diario).
-5. **Contenido:** ¿quién escribe las traducciones de `gramatica.ejemplos` y los guiones de misiones? (Afecta a la guía de autoría.)
-6. **Juegos y nivel:** ¿un usuario A2 puede jugar también con contenido A1 como repaso? (Propuesta: sí, opcional.)
+1. **Eco Vocal:** **Azure desde el inicio**, como promete el PDF (§1.2, CU-05),
+   con `SpeechRecognizer` de Android como respaldo automático sin red o si el
+   backend no tiene Azure configurado (responde 503). El audio ilegible
+   (confianza < 30%) muestra el panel de la Ilustración 40 y se repite sin gastar
+   el intento (mismo criterio que CU-05 A1).
+2. **Misión Situacional:** **v1 con guiones locales** (6: cuatro A1 y dos A2).
+   La variante con IA queda para v2.
+3. **Ráfaga de Palabras:** **"coinciden / al bote"**, la variante de la
+   Ilustración 37 (se juega con una mano y es más rápida).
+4. **XP:** los valores de §4.3 (10 o 15 de base + bono 0–5; mitad desde la 6.ª
+   partida del mismo juego en el día; tope duro de 60 partidas diarias).
+5. **Contenido:** los ejemplos de gramática **no** necesitaron traducción: en
+   Orden Maestro su pista es el tema ("Tema: Some y any") y las líneas de
+   diálogo usan su traducción. Los guiones de misión siguen las reglas del
+   linter (ver `backend/README.md`, módulo de Minijuegos).
+6. **Juegos y nivel:** **sí**, un usuario A2 juega con sus lecciones A2 no
+   bloqueadas más todo A1 como repaso.
+
+---
+
+## 10. Lo que cambió respecto a la propuesta
+
+- **Rondas por dificultad (§4.4):** cada partida arma un "mazo" con rondas de
+  tres niveles (fácil/medio/difícil) y la dificultad adaptativa decide de cuál
+  sale la siguiente. Así el estado completo de la partida se guarda en Room y
+  se retoma idéntico.
+- **Orden Maestro:** las líneas de diálogo con varias oraciones se separan en
+  rompecabezas distintos; la primera ficha va en minúscula (salvo "I" y nombres
+  propios) y la puntuación final se muestra fija, para no delatar el orden.
+- **Misión Situacional:** tras 3 aciertos seguidos al primer intento, el
+  siguiente paso se responde **escribiendo** (se acepta con ≥ 80% de palabras
+  coincidentes) con un botón "Ver opciones" para volver a elegir.
+- **Ráfaga:** cada acierto suma **1 s** (no 2): en pruebas, con +2 s alguien que
+  contesta en menos de 2 s nunca veía el reloj llegar a 0. Además, los
+  distractores no pueden compartir sentido con la respuesta correcta ("Hi! →
+  ¡Hola!" no puede salir como incorrecto aunque en el banco "Hi!" sea "¡Hola!
+  (informal)").
+- **Ráfaga:** el reloj se detiene mientras se muestra el feedback de cada par
+  (0.3 s al acertar, 1.2 s al fallar); el servidor tolera ese tiempo extra al
+  validar la duración.
+- **XP en el teléfono:** solo se suma al perfil la XP que **confirma el
+  servidor** (igual que en Lecciones). Sin conexión, la pantalla final muestra la
+  XP calculada en el teléfono con la leyenda "se confirma al reconectarte".
+- **Racha local (RN-08):** el perfil guarda `ultimoDiaActivo`; terminar una
+  partida sube la racha una vez por día y la reinicia si pasó un día sin
+  actividad (`domain/Racha.kt`). Las lecciones aún no la actualizan en el
+  teléfono (el servidor sí registra su evento de actividad).
+- **Tiempo de juego:** solo cuenta el tiempo con la pantalla activa; al pasar a
+  segundo plano se pausa (y en Ráfaga se detiene el reloj).

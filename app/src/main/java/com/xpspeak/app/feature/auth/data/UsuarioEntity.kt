@@ -15,5 +15,7 @@ data class UsuarioEntity(
     val nivel: String,       // "A1" o "A2" — RF-04
     val avatar: String? = null,
     val xp: Int = 0,
-    val racha: Int = 0
+    val racha: Int = 0,
+    /** Último día (ISO, hora local) con una actividad válida: base de la racha (RN-08). */
+    val ultimoDiaActivo: String? = null
 )

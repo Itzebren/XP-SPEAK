@@ -84,6 +84,9 @@ dependencies {
     // WorkManager (envía los intentos pendientes al volver la conexión)
     implementation(libs.androidx.work.runtime.ktx)
 
+    // Azure AI Speech: evaluación de pronunciación de Eco Vocal (minijuegos-diseno.md §5.1)
+    implementation(libs.azure.speech)
+
     // OkHttp (red base - módulo NetworkModule)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)

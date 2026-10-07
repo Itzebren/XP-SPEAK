@@ -1,0 +1,59 @@
+{
+  "id": "mision-a1-presentarte",
+  "version": 1,
+  "nivel": "A1",
+  "leccion_id": "a1-saludos-presentaciones",
+  "titulo": "Primer día de clases",
+  "escenario": "Es tu primer día en la escuela de idiomas. Laura, una compañera nueva, se acerca a saludarte.",
+  "personaje": "Laura",
+  "objetivos": [
+    { "id": "saludar", "texto": "Saluda a Laura" },
+    { "id": "presentarte", "texto": "Di tu nombre" },
+    { "id": "despedirte", "texto": "Despídete" }
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Relaciones con otras personas; Identificación personal.",
+      "MCER, Conversación, A1 (p. 77): «Se presenta y utiliza saludos y expresiones de despedida básicos. Pregunta cómo están las personas y expresa sus reacciones ante las noticias.»"
+    ],
+    "notas": "Guion original basado en el diálogo de la lección a1-saludos-presentaciones."
+  },
+  "pasos": [
+    {
+      "npc": "Good morning!",
+      "npc_es": "¡Buenos días!",
+      "opciones": [
+        { "en": "Good morning!", "correcta": true, "cumple": "saludar", "concepto_id": "voc.saludos.good_morning" },
+        { "en": "Morning good!", "correcta": false, "feedback": "En inglés el orden es 'Good morning!'." },
+        { "en": "See you later!", "correcta": false, "feedback": "'See you later' es para despedirte, y Laura te está saludando." }
+      ]
+    },
+    {
+      "npc": "My name is Laura. What's your name?",
+      "npc_es": "Me llamo Laura. ¿Cómo te llamas?",
+      "opciones": [
+        { "en": "My name are Diego.", "correcta": false, "feedback": "Con 'my name' se usa 'is': My name is Diego." },
+        { "en": "My name is Diego.", "correcta": true, "cumple": "presentarte", "concepto_id": "voc.saludos.my_name_is" },
+        { "en": "I'm fine, thank you.", "correcta": false, "feedback": "Laura te pregunta tu nombre, no cómo estás." }
+      ]
+    },
+    {
+      "npc": "Nice to meet you! How are you?",
+      "npc_es": "¡Mucho gusto! ¿Cómo estás?",
+      "opciones": [
+        { "en": "I is fine, thank you.", "correcta": false, "feedback": "Con 'I' el verbo to be es 'am': I am fine (I'm fine)." },
+        { "en": "My name is fine.", "correcta": false, "feedback": "Te preguntan cómo estás: I'm fine, thank you." },
+        { "en": "I'm fine, thank you.", "correcta": true, "concepto_id": "voc.saludos.fine_thank_you" }
+      ]
+    },
+    {
+      "npc": "Great! See you later!",
+      "npc_es": "¡Qué bien! ¡Nos vemos luego!",
+      "opciones": [
+        { "en": "Goodbye! See you later!", "correcta": true, "cumple": "despedirte", "concepto_id": "voc.saludos.goodbye" },
+        { "en": "Hello! Nice to meet you!", "correcta": false, "feedback": "'Hello' es para saludar; para despedirte di 'Goodbye!'." },
+        { "en": "You is my friend.", "correcta": false, "feedback": "Con 'you' se usa 'are': You are my friend." }
+      ]
+    }
+  ]
+}

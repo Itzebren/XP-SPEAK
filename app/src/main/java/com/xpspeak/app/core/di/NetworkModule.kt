@@ -3,6 +3,7 @@ package com.xpspeak.app.core.di
 import com.xpspeak.app.BuildConfig
 import com.xpspeak.app.feature.auth.data.RecuperacionApi
 import com.xpspeak.app.feature.chat.data.ChatApi
+import com.xpspeak.app.feature.games.data.MinijuegosApi
 import com.xpspeak.app.feature.lessons.data.LeccionesApi
 import dagger.Module
 import dagger.Provides
@@ -66,6 +67,12 @@ object NetworkModule {
     @Singleton
     fun provideLeccionesApi(@Named("lecciones") retrofit: Retrofit): LeccionesApi =
         retrofit.create(LeccionesApi::class.java)
+
+    /** Minijuegos vive en el mismo backend que Lecciones. */
+    @Provides
+    @Singleton
+    fun provideMinijuegosApi(@Named("lecciones") retrofit: Retrofit): MinijuegosApi =
+        retrofit.create(MinijuegosApi::class.java)
 
     @Provides
     @Singleton
