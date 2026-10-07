@@ -9,7 +9,7 @@ const MAX_CONCEPTOS = 40;
 const MS_MINIMO_POR_RONDA = 300;
 // Las partidas se pueden retomar, pero solo cuenta el tiempo jugado.
 const DURACION_MAXIMA_MS = 30 * 60 * 1000;
-// Ráfaga empieza con 60 s y cada acierto suma 2 s (§5.3). El reloj se detiene
+// Ráfaga empieza con 60 s y cada acierto suma 1 s (§5.3); se toleran hasta 2 s. El reloj se detiene
 // mientras se muestra el feedback de cada par, pero ese tiempo sí cuenta como jugado.
 const RAFAGA_MS_INICIALES = 60000;
 const RAFAGA_MS_POR_ACIERTO = 2000;

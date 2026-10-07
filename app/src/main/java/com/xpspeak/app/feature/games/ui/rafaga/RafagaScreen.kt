@@ -94,7 +94,7 @@ fun RafagaScreen(onVolver: () -> Unit, viewModel: RafagaViewModel = hiltViewMode
 
         if (respondido != null) {
             if (respondido.acierto) {
-                TarjetaFeedback(Veredicto.ACIERTO, "¡Bien! +2 s")
+                TarjetaFeedback(Veredicto.ACIERTO, "¡Bien! +1 s")
             } else {
                 TarjetaFeedback(Veredicto.ERROR, "−3 s", "${respondido.en} = ${respondido.esCorrecta}")
             }

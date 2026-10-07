@@ -282,7 +282,7 @@ Regla simple y común: si el usuario lleva 3 aciertos seguidos, la siguiente ron
 **Mecánica (M):**
 1. 60 segundos en el reloj.
 2. Aparece una palabra en inglés (con audio opcional) y 4 opciones en español; o al revés en dificultad alta.
-3. Acierto: +1, suma al combo (x2 a partir de 5 seguidas) y +2 s al reloj. Error: rompe el combo y −3 s; se muestra la respuesta correcta medio segundo.
+3. Acierto: +1, suma al combo (x2 a partir de 5 seguidas) y +1 s al reloj (v1 proponía +2 s; ver §10). Error: rompe el combo y −3 s; se muestra la respuesta correcta medio segundo.
 4. Termina cuando el reloj llega a 0. Desempeño = aciertos / intentos, más el puntaje del combo.
 5. Distractores del mismo módulo temático (más difícil) o de otros módulos (más fácil).
 
@@ -415,6 +415,11 @@ Pruebas: `CalculadorXp`, validación de Orden Maestro y selección de rondas son
 - **Misión Situacional:** tras 3 aciertos seguidos al primer intento, el
   siguiente paso se responde **escribiendo** (se acepta con ≥ 80% de palabras
   coincidentes) con un botón "Ver opciones" para volver a elegir.
+- **Ráfaga:** cada acierto suma **1 s** (no 2): en pruebas, con +2 s alguien que
+  contesta en menos de 2 s nunca veía el reloj llegar a 0. Además, los
+  distractores no pueden compartir sentido con la respuesta correcta ("Hi! →
+  ¡Hola!" no puede salir como incorrecto aunque en el banco "Hi!" sea "¡Hola!
+  (informal)").
 - **Ráfaga:** el reloj se detiene mientras se muestra el feedback de cada par
   (0.3 s al acertar, 1.2 s al fallar); el servidor tolera ese tiempo extra al
   validar la duración.

@@ -157,7 +157,7 @@ object GeneradorRondas {
             // Si hay pocas palabras (una sola lección disponible) se repiten, en otro orden.
             for ((leccionId, palabra) in ponderar(palabras, contenido.prioritarios, random) { it.second.conceptoId }) {
                 if (pares.size == cantidad) break
-                val distinta = { otra: Palabra -> Texto.normalizar(otra.es) != Texto.normalizar(palabra.es) }
+                val distinta = { otra: Palabra -> sentidos(otra.es).none { it in sentidos(palabra.es) } }
                 val mismoTema = palabras.filter { it.first == leccionId && distinta(it.second) }.map { it.second }
                 val otroTema = palabras.filter { it.first != leccionId && distinta(it.second) }.map { it.second }
                 val dificil = (mismoTema.ifEmpty { otroTema }).randomOrNull(random) ?: continue
@@ -167,6 +167,17 @@ object GeneradorRondas {
         }
         return pares
     }
+
+    /**
+     * Traducciones que acepta una palabra, sin notas ni signos: "¡Hola! (informal)"
+     * → {"hola"}, "chamarra / chaqueta" → {"chamarra", "chaqueta"}. Un distractor
+     * no puede compartir ninguna, o "Hi! → ¡Hola!" saldría como incorrecto.
+     */
+    fun sentidos(es: String): Set<String> =
+        es.replace(Regex("\\([^)]*\\)"), " ").split('/')
+            .map { Texto.palabras(it).joinToString(" ") }
+            .filter { it.isNotEmpty() }
+            .toSet()
 
     // ── Eco Vocal ──────────────────────────────────────────────────────────
 

@@ -42,7 +42,7 @@ data class EstadoRafaga(
 /**
  * Ráfaga de Palabras (§5.3), variante de la Ilustración 37: aparece una
  * palabra con una traducción y el usuario dice si coinciden o la manda al
- * bote. 60 s en el reloj; acertar suma 2 s, fallar resta 3 s.
+ * bote. 60 s en el reloj; acertar suma 1 s, fallar resta 3 s.
  */
 @HiltViewModel
 class RafagaViewModel @Inject constructor(
@@ -119,7 +119,8 @@ class RafagaViewModel @Inject constructor(
 
     companion object {
         const val MS_INICIALES = 60_000L
-        const val MS_POR_ACIERTO = 2_000L
+        // 1 s y no 2: con 2 s quien contesta rápido nunca ve el reloj llegar a 0.
+        const val MS_POR_ACIERTO = 1_000L
         const val MS_POR_ERROR = 3_000L
         const val COMBO_PARA_DOBLE = 5
         private const val TICK_MS = 100L

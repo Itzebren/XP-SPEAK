@@ -82,12 +82,20 @@ class GeneradorRondasTest {
     fun `rafaga nunca muestra como distractor la traduccion correcta`() {
         val pares = GeneradorRondas.paresRafaga(todoA1, Random(7))
         pares.forEach { par ->
-            assertNotEquals(Texto.normalizar(par.esCorrecta), Texto.normalizar(par.distractorFacil))
-            assertNotEquals(Texto.normalizar(par.esCorrecta), Texto.normalizar(par.distractorDificil))
+            val correctas = GeneradorRondas.sentidos(par.esCorrecta)
+            assertTrue(GeneradorRondas.sentidos(par.distractorFacil).none { it in correctas })
+            assertTrue("${par.en}: ${par.distractorDificil}", GeneradorRondas.sentidos(par.distractorDificil).none { it in correctas })
             assertEquals(par.esCorrecta, par.copy(muestraCorrecta = true).mostrada(Dificultad.DIFICIL))
         }
         // Aproximadamente la mitad de los pares coinciden.
         assertTrue(pares.count { it.muestraCorrecta } in 40..80)
+    }
+
+    @Test
+    fun `las traducciones se comparan sin notas ni alternativas`() {
+        assertEquals(setOf("hola"), GeneradorRondas.sentidos("¡Hola! (informal)"))
+        assertEquals(setOf("hola"), GeneradorRondas.sentidos("¡Hola!"))
+        assertEquals(setOf("chamarra", "chaqueta"), GeneradorRondas.sentidos("chamarra / chaqueta"))
     }
 
     @Test

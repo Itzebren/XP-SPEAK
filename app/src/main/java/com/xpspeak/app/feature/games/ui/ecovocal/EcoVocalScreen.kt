@@ -139,7 +139,8 @@ fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltView
             }
         } else {
             BotonMicrofono(escuchando, onClick = hablar)
-            if (aviso != null) {
+            // Si el micrófono no capta nada (o falla), el usuario no debe quedar atorado en la frase.
+            if (aviso != null || evaluacion != null) {
                 OutlinedButton(onClick = viewModel::saltar, modifier = Modifier.fillMaxWidth()) { Text("Saltar esta frase") }
             }
         }
