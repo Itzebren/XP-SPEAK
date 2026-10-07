@@ -38,11 +38,23 @@ insignias en ningún lado. El PDF lo exige:
    transacciones que ya existen (lección, repaso, minijuego). Así `GET /api/progress` lee
    pocos documentos en vez de sumar todo el historial. Si no existe (usuarios que ya jugaron
    antes de este módulo), se reconstruye una vez a partir de `eventos_actividad`.
+   **Regla para no perder historial:** las transacciones de actividad solo *actualizan* un
+   resumen que ya existe; si no existe, no lo crean. El resumen solo lo crea la
+   reconstrucción, que ya incluye el evento nuevo. Si una transacción lo creara desde
+   `resumenVacio`, un usuario con historial (por ejemplo 136 XP) que juega antes de abrir
+   Progreso se quedaría con la XP total equivocada.
 3. **Insignias evaluadas en el servidor al terminar cada actividad** (RN-09). Nunca se
    revocan. Las respuestas de lección y minijuego devuelven `insignias_nuevas` para festejarlas.
+   Las insignias que se otorgan **al reconstruir** el resumen se guardan sin festejo
+   (`retroactiva: true`), para no mostrar cinco diálogos de golpe. Solo se festejan las que
+   se ganan en vivo.
 4. **Habilidades en barras, no radar.** Son 4 ejes, son más legibles y no requieren librería
    (el PDF permite "radar o barras").
-5. **Las ilustraciones son provisionales:** iconos de Material dentro de círculos de color,
+5. **Catálogo de insignias empaquetado en la app** (RN-11, RNF-08): se exporta a
+   `app/src/main/assets/progreso/insignias.json` con `npm run exportar:insignias`, igual que
+   `banco.json` de minijuegos. Así la cuadrícula se dibuja aunque no haya red ni caché.
+   El servidor sigue siendo quien decide qué insignias se obtienen.
+6. **Las ilustraciones son provisionales:** iconos de Material dentro de círculos de color,
    hasta tener el arte final (`res/drawable/insignia_<id>.png`). Mascota: placeholder en el
    encabezado.
 
@@ -89,7 +101,8 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
 
 ## Fase 1 — Backend: reglas puras (`backend/lib/progreso/`)
 
-- `niveles.js`: `nivelPorXp(xp)` devuelve `{nivel, xpEnNivel, xpParaSiguiente}`.
+- `niveles.js`: `nivelPorXp(xp)` devuelve `{nivel, xpEnNivel, xpParaSiguiente}`, y
+  `subioDeNivel(xpAntes, xpDespues)` sirve para festejar el cambio de nivel.
 - `racha.js`: `registrarDia(resumen, dia)` y `rachaVigente(resumen, hoy)`.
 - `insignias.js`: `CATALOGO` (id, nombre, descripción, criterio en texto, icono) y
   `evaluar(resumen)`, que devuelve los ids nuevos y el progreso de cada insignia.
@@ -98,8 +111,9 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
   - `aplicarActividad(resumen, actividad, ahora)`, función pura. `actividad` es
     `{tipo, xp, juego?, aciertos?, total?, leccionId?, nivel?, aprobada?}`. Suma XP, día,
     conteos por juego y lecciones aprobadas por nivel, evalúa insignias y devuelve
-    `{resumen, insigniasNuevas}`.
-  - `reconstruirResumen(uid, eventos, progresos)`.
+    `{resumen, insigniasNuevas, nivelNuevo?}`.
+  - `reconstruirResumen(uid, eventos, progresos)`: marca las insignias que otorga como
+    `retroactiva: true`.
 - Pruebas: `backend/test/progreso.test.js` (reglas puras, casos de borde de racha con cambio
   de día en hora de México, cada criterio de insignia).
 
@@ -109,7 +123,8 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
   `{uid, xp_total, racha_actual, racha_maxima, ultimo_dia, dias_activos[], lecciones_aprobadas:{A1:[],A2:[]}, juegos:{[juego]:{partidas, aciertos, total, eco_80?}}, conteos:{repasos, chats}, insignias:{[id]: fecha}, version}`.
 - **Engancharlo en las tres transacciones.** Agregar la ref del resumen a su `getAll` (en
   Firestore las lecturas van antes que las escrituras), llamar `aplicarActividad` y hacer
-  `tx.set`. Agregar `insignias_nuevas` a la respuesta:
+  `tx.set` **solo si el resumen ya existe** (Decisión 2). Agregar a la respuesta
+  `insignias_nuevas` y `nivel_xp_nuevo` (opcionales):
   - `registrarIntento` en `backend/lib/lecciones/repositorio.js` (solo cuando el intento
     aprueba).
   - `registrarRepaso` en el mismo archivo.
@@ -117,10 +132,13 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
   - Las respuestas idempotentes (repetidas) no vuelven a aplicar nada.
 - **`GET /api/progress`** (`backend/api/progress/index.js` con `crearEndpoint`; el servidor
   local lo descubre solo):
-  - Lee el resumen, o lo reconstruye y guarda si no existe.
+  - Lee el resumen, o lo reconstruye y guarda si no existe. Esto va en una transacción,
+    para no pisar una actividad que se registre al mismo tiempo.
   - Lee `progreso_lecciones` y `srs_conceptos` del uid y recibe `?level=` con `validarNivel`.
   - Devuelve
-    `{nivel, dominio:{aprobadas,total,porcentaje}, xp:{total,nivel,xp_en_nivel,xp_para_siguiente}, racha:{actual,maxima}, habilidades:[{id,nombre,porcentaje|null}], insignias:[{id,nombre,descripcion,criterio,icono,obtenida,fecha?,progreso:{actual,meta}}], sin_actividad}`.
+    `{nivel, dominio:{aprobadas,total,porcentaje}, xp:{total,nivel,xp_en_nivel,xp_para_siguiente}, racha:{actual,maxima}, habilidades:[{id,nombre,porcentaje|null}], insignias:[{id,nombre,descripcion,criterio,icono,obtenida,fecha?,retroactiva?,progreso:{actual,meta}}], sin_actividad}`.
+  - Responde con **ETag** usando `responderConEtag` de `backend/lib/http.js`, para no
+    descargar el progreso completo cada vez que se entra a la pestaña.
 - **`POST /api/progress/chat`** con body `{sesion_id}`, idempotente: la app lo llama al
   recibir la primera respuesta de la IA en una conversación. Registra el evento
   `chat_completado` (0 XP), cuenta para la racha (RN-08) y desbloquea "Habla con IA". Va aquí
@@ -129,7 +147,13 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
   - `GET` con y sin datos, reconstrucción e insignias nuevas.
   - Que las transacciones existentes escriban el resumen (extender
     `backend/test/minijuegos.test.js` y las pruebas de lecciones).
-- `backend/README.md`: sección "Módulo de Progreso".
+- **Script `npm run migrar:resumen`** (`backend/scripts/migrar-resumen.js`): genera el
+  resumen de todos los usuarios con actividad (con `reconstruirResumen`), es idempotente y
+  se corre antes de desplegar.
+- **Script `npm run exportar:insignias`** (`backend/scripts/exportar-insignias.js`): escribe
+  `app/src/main/assets/progreso/insignias.json` a partir de `CATALOGO` (id, nombre,
+  descripción, criterio e icono).
+- `backend/README.md`: sección "Módulo de Progreso", que incluye el orden de despliegue.
 
 ## Fase 3 — Android: datos (`feature/progress/data/`)
 
@@ -142,9 +166,18 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
   - `refrescar()`: red, luego caché, y sincroniza `UsuarioEntity` (`xp`, `racha`) con el
     servidor mediante el nuevo `UsuarioDao.actualizarProgreso(uid, xp, racha)`. Corrige la
     deriva local. Hay que actualizar `FakeUsuarioDao` en `AccountViewModelTest`.
+  - **Regla de sincronización de la racha:** la racha del servidor solo sobrescribe la local
+    si no hay partidas ni intentos pendientes en los outbox (`resultados_minijuego` sin
+    sincronizar, `intentos_pendientes`). Si los hay, se queda la local, para no borrar lo
+    hecho sin conexión. La XP sí se sobrescribe siempre, porque la local solo suma XP ya
+    confirmada.
+  - Manda `If-None-Match` con el ETag guardado; si recibe 304, solo marca la caché como
+    fresca.
   - `registrarChat(sesionId)`: se intenta una vez y, si falla, se ignora (no bloquea el chat).
 - Sin red y sin caché: se arma el estado mínimo con `UsuarioEntity` (nivel, XP, racha) y las
-  insignias en gris.
+  insignias en gris, tomadas del catálogo empaquetado `assets/progreso/insignias.json`
+  (lo lee `CatalogoInsigniasLocal`, con el mismo patrón que `BancoLocal` de minijuegos).
+- La tabla `progreso_cache` guarda también el `etag`.
 
 ## Fase 4 — Android: UI (`feature/progress/ui/`)
 
@@ -164,11 +197,19 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
     y progreso.
   - **A1 Sin actividad:** todo en cero, mensaje motivacional y botón "Haz tu primera lección".
   - **Datos viejos:** aviso "Sin conexión · datos de hace X".
+  - **Accesibilidad y compatibilidad (RNF-01, RNF-07):**
+    - Cada insignia lleva un `contentDescription` como "Racha de 7 días, bloqueada, 3 de 7".
+    - El estado bloqueado se marca con gris *y* candado, nunca solo con el color.
+    - Los números grandes respetan el tamaño de fuente del sistema.
+    - Se prueba en una pantalla chica (360 dp de ancho) y con fuente al 130 %.
 - Barra inferior: cambiar el ícono de Progreso a `Icons.Filled.EmojiEvents` en
   `core/navigation/XPSpeakNavHost.kt`.
 - Componente público `InsigniaNueva` (diálogo de festejo) para usar en el resultado de lección
   (`lessons/ui/components/ResultadoIntento.kt`) y de minijuego
-  (`games/ui/comun/PantallaPartida.kt`) cuando la respuesta trae `insignias_nuevas`.
+  (`games/ui/comun/PantallaPartida.kt`) cuando la respuesta trae `insignias_nuevas`. Las
+  `retroactiva` no se festejan.
+- **Subida de nivel de XP:** si la respuesta trae `nivel_xp_nuevo`, el mismo resultado
+  muestra "¡Subiste a nivel N!" junto con las insignias nuevas.
 
 ## Fase 5 — Racha unificada y chat
 
@@ -176,6 +217,15 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
   `core/actividad/RegistroActividad` compartido. Llamarlo también al aprobar una lección
   (`LeccionesRepository`) y al recibir la primera respuesta del chat (`ChatViewModel`, que
   además llama a `registrarChat`). De paso se corrige "Racha: 1 días" en `AccountScreen`.
+
+## Orden de despliegue y compatibilidad
+
+1. Desplegar primero el backend: el endpoint nuevo y las transacciones con resumen.
+2. Correr `npm run migrar:resumen` contra producción.
+3. Publicar la app. Los campos nuevos de las respuestas (`insignias_nuevas`,
+   `nivel_xp_nuevo`) son opcionales, así que una app vieja sigue funcionando contra el
+   backend nuevo. Una app nueva contra un backend viejo ve "Sin conexión" en Progreso y nada
+   más.
 
 ## Fuera de alcance (otros módulos)
 
@@ -188,11 +238,12 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
 
 - **Backend nuevos:** `backend/lib/progreso/{niveles,racha,insignias,resumen,repositorio}.js`,
   `backend/api/progress/index.js`, `backend/api/progress/chat.js`,
-  `backend/test/progreso.test.js`.
+  `backend/scripts/{migrar-resumen,exportar-insignias}.js`, `backend/test/progreso.test.js`.
 - **Backend modificados:** `backend/lib/lecciones/repositorio.js`,
   `backend/lib/minijuegos/repositorio.js`, `backend/README.md`.
-- **Android nuevos:** `feature/progress/data/*`, `feature/progress/ui/*`,
-  `core/actividad/RegistroActividad.kt`.
+- **Android nuevos:** `feature/progress/data/*` (incluye `CatalogoInsigniasLocal`),
+  `feature/progress/ui/*`, `core/actividad/RegistroActividad.kt` y
+  `app/src/main/assets/progreso/insignias.json`.
 - **Android modificados:** `core/data/local/AppDatabase.kt`, `core/di/DatabaseModule.kt`,
   `core/di/NetworkModule.kt`, `feature/auth/data/UsuarioDao.kt`,
   `core/navigation/XPSpeakNavHost.kt`, `feature/games/data/MinijuegosRepository.kt`,
@@ -201,16 +252,29 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
 ## Verificación
 
 1. `cd backend && npm test`: todas las pruebas verdes, incluidas las nuevas de progreso.
+   Casos obligatorios:
+   - Una partida de un usuario con historial y sin resumen no crea un resumen vacío, y el
+     `GET` posterior reconstruye la XP correcta.
+   - La migración es idempotente.
+   - El `GET` responde 304 con el ETag correcto.
 2. Android:
    - `sh gradlew testDebugUnitTest` (con `JAVA_HOME` del JBR de Android Studio).
    - Pruebas nuevas: `ProgresoReglasTest` (nivel por XP, mapeo de DTOs), `ProgresoCacheTest`
-     (ida y vuelta con Gson) y `ProgressViewModelTest` (con fakes).
+     (ida y vuelta con Gson) y `ProgressViewModelTest` (con fakes, incluida la regla de
+     sincronización de la racha con outbox pendiente).
+   - **`ProgresoContratoTest`**, con el patrón de `LeccionesContratoTest`: deserializa un
+     JSON real de `GET /api/progress` y del resultado con `insignias_nuevas`, para que
+     Android y el backend no se desfasen. También valida que `assets/progreso/insignias.json`
+     tenga las 9 insignias.
 3. Emulador (`npm run dev:app` + `adb reverse tcp:3000 tcp:3000`) con la cuenta de prueba:
    - La pestaña Progreso muestra la XP y la racha que ya tiene (la reconstrucción desde
      eventos funciona).
    - Jugar una partida al 100 % debe festejar "Estrella del Minijuego" y mostrarla a color en
      Progreso.
-   - Modo avión: Progreso sigue mostrando los datos en caché con el aviso.
+   - Modo avión: Progreso sigue mostrando los datos en caché con el aviso. Con la caché
+     borrada, se ven las 9 insignias en gris desde el catálogo empaquetado.
+   - Las insignias que la cuenta ya merecía aparecen a color, sin diálogos de festejo.
+   - Pantalla chica y fuente grande: nada se corta.
    - Cuenta nueva: indicadores en cero y mensaje motivacional (A1).
 4. Al terminar: actualizar `docs/progreso-diseno.md` con el estado (como en el §0 de
    minijuegos), commit y push de `feature/progreso`.
