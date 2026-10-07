@@ -19,6 +19,10 @@ interface UsuarioDao {
     @Query("UPDATE usuarios SET xp = xp + :xp WHERE uid = :uid")
     suspend fun sumarXp(uid: String, xp: Int)
 
+    /** RN-08: racha calculada con Racha.siguiente al terminar una actividad. */
+    @Query("UPDATE usuarios SET racha = :racha, ultimoDiaActivo = :dia WHERE uid = :uid")
+    suspend fun actualizarRacha(uid: String, racha: Int, dia: String)
+
     @Query("SELECT * FROM usuarios WHERE uid = :uid")
     fun observarUsuario(uid: String): Flow<UsuarioEntity?>
 }

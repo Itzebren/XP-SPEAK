@@ -15,6 +15,7 @@ class AccountViewModelTest {
         override suspend fun guardar(usuario: UsuarioEntity) {}
         override suspend fun buscarPorUid(uid: String): UsuarioEntity? = null
         override suspend fun sumarXp(uid: String, xp: Int) {}
+        override suspend fun actualizarRacha(uid: String, racha: Int, dia: String) {}
         override fun observarUsuario(uid: String): Flow<UsuarioEntity?> = flowOf(null)
     }
 

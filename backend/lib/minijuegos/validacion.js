@@ -9,9 +9,11 @@ const MAX_CONCEPTOS = 40;
 const MS_MINIMO_POR_RONDA = 300;
 // Las partidas se pueden retomar, pero solo cuenta el tiempo jugado.
 const DURACION_MAXIMA_MS = 30 * 60 * 1000;
-// Ráfaga empieza con 60 s y cada acierto suma 2 s (§5.3).
+// Ráfaga empieza con 60 s y cada acierto suma 2 s (§5.3). El reloj se detiene
+// mientras se muestra el feedback de cada par, pero ese tiempo sí cuenta como jugado.
 const RAFAGA_MS_INICIALES = 60000;
 const RAFAGA_MS_POR_ACIERTO = 2000;
+const RAFAGA_MS_FEEDBACK_POR_PAR = 1500;
 const RAFAGA_MARGEN_MS = 5000;
 
 const entradaInvalida = (mensaje) => new ErrorApi(400, 'ENTRADA_INVALIDA', mensaje);
@@ -44,7 +46,8 @@ function validarResultado(body) {
   if (!esEntero(duracionMs, total * MS_MINIMO_POR_RONDA, DURACION_MAXIMA_MS)) {
     throw entradaInvalida('duracion_ms no es posible para esa cantidad de rondas');
   }
-  if (config.msPorRonda === null && duracionMs > RAFAGA_MS_INICIALES + aciertos * RAFAGA_MS_POR_ACIERTO + RAFAGA_MARGEN_MS) {
+  const maximoRafaga = RAFAGA_MS_INICIALES + aciertos * RAFAGA_MS_POR_ACIERTO + total * RAFAGA_MS_FEEDBACK_POR_PAR + RAFAGA_MARGEN_MS;
+  if (config.msPorRonda === null && duracionMs > maximoRafaga) {
     throw entradaInvalida('duracion_ms excede el reloj de Ráfaga');
   }
 
