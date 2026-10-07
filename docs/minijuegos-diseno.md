@@ -2,7 +2,7 @@
 
 > App Android (Kotlin/Compose) + backend Node/Vercel · Rama `feature/minijuegos`
 > Trabajo Terminal 2026-B162 · Documento de diseño
-> Estado: **v2 — implementado** (2026-10-06). v1 (propuesta) del 2026-10-01; las
+> Estado: **v2 — implementado y probado en emulador** (2026-10-07). v1 (propuesta) del 2026-10-01; las
 > decisiones abiertas se resolvieron en §9 y lo que cambió respecto a la propuesta
 > está en §10.
 
@@ -32,6 +32,51 @@ a cambio (ver §9).
 | Imágenes del catálogo y sonidos (fase 8) | ❌ | Pendiente de assets |
 | Recurso de Azure Speech en producción | ❌ | Configurar `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION` en Vercel (ver `backend/README.md`) |
 
+### 0.1 Contexto para retomar el desarrollo
+
+Última sesión: **2026-10-07**. Los cuatro juegos funcionan de punta a punta y se
+probaron en el emulador (Pixel_10a) contra el backend local:
+
+| Juego | Prueba | Resultado |
+|---|---|---|
+| Orden Maestro | 8/8, error a propósito con segundo intento | +10 XP confirmada por el servidor |
+| Ráfaga de Palabras | 19/21, el reloj termina bien con +1 s por acierto | +12 XP |
+| Misión Situacional | 3/4, explicación del error gramatical | +15 XP |
+| Eco Vocal | Sin Azure en local (token → 503) → respaldo del teléfono → panel de confianza baja (Ilustración 40) | Sin puntaje: el micrófono del emulador no recibe audio |
+
+También se verificó: la migración Room v3→v4 conserva los datos, retomar una partida
+(incluso tras reinstalar), el envío `POST /api/games/result` → 200 y "Para repasar"
+con los conceptos fallados. Pruebas: backend 91/91 (`npm test`) y unitarias de Android
+(`ReglasMinijuegosTest`, `GeneradorRondasTest`, `EstadoPersistenteTest`).
+
+**Pendiente (bloquea el cierre del módulo):**
+1. **Azure Speech en producción.** Crear el recurso (capa F0 basta para pruebas) y
+   poner `AZURE_SPEECH_KEY` y `AZURE_SPEECH_REGION` en Vercel. Luego probar Eco Vocal
+   en un **teléfono físico**: nunca se ha visto un puntaje real de pronunciación.
+   En el emulador se puede intentar activando *Extended controls → Microphone →
+   "Virtual microphone uses host audio input"*.
+2. **Imágenes del catálogo y sonidos de acierto/error (fase 8).** Depende de los
+   assets; hoy el feedback es visual + háptico y las tarjetas no tienen ilustración.
+
+**Opcional / mejoras:**
+- Revisar con el equipo los guiones de las 6 misiones (`backend/content/minijuegos/misiones/`):
+  los redactó el asistente de código.
+- Reducir el APK (~58 MB, sobre todo por el SDK de Azure) con *ABI splits*.
+- La racha local (`UsuarioEntity.ultimoDiaActivo`) solo la actualizan los minijuegos;
+  Lecciones también debería actualizarla (fuera de este módulo).
+- Fuera del módulo: la pantalla Cuenta muestra "Racha: 1 días" y la app siempre
+  arranca en el login.
+
+**Cómo levantar el entorno de prueba:**
+```sh
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+sh gradlew assembleDebug            # gradlew no tiene permiso de ejecución
+cd backend && npm run dev:app       # API en http://localhost:3000 + emulador de Firestore
+adb reverse tcp:3000 tcp:3000       # el emulador de Android ve la API local
+```
+Si cambia el contenido de lecciones o misiones: `npm run lint:content` y
+`npm run exportar:minijuegos` (regenera `app/src/main/assets/minijuegos/banco.json`).
+
 ---
 
 ## 1. Lo que exige el Documento Técnico
@@ -57,7 +102,7 @@ a cambio (ver §9).
 
 Flujo principal:
 1. El usuario abre "Minijuegos". → ✅ hecho
-2. El sistema despliega el catálogo (consulta catálogo + nivel A1/A2 en Room). → ✅ catálogo; falta leer nivel
+2. El sistema despliega el catálogo (consulta catálogo + nivel A1/A2 en Room). → ✅ hecho (lee el nivel de `UsuarioEntity`)
 3. El usuario selecciona un juego. → ✅ hecho
 4. Se cargan lógica y activos **desde almacenamiento local** (RNF-08).
 5. El usuario interactúa con la mecánica (loop de sesión).
@@ -129,9 +174,9 @@ Forma sugerida:
 }
 ```
 
-> **Pendiente de contenido:** los `ejemplos` de gramática hoy no traen traducción al
-> español. Orden Maestro la necesita como pista: hay que añadir `es` a los ejemplos
-> (o usar solo las líneas de diálogo, que sí la tienen).
+> **Resuelto:** los `ejemplos` de gramática no traen traducción al español, así que
+> Orden Maestro muestra el tema del concepto como pista en esos casos y usa sobre todo
+> las líneas de diálogo (partidas en oraciones, cada una con su traducción).
 
 ### 3.3 En Android
 - `feature/games/data/BancoMinijuegos.kt`: lee el JSON de `assets` una vez (Gson, ya está en el proyecto) y lo deja en memoria.
@@ -226,7 +271,7 @@ Regla simple y común: si el usuario lleva 3 aciertos seguidos, la siguiente ron
 | Credenciales | La llave de Azure **no va en la app** (RNF-06, RN-13). Endpoint nuevo `GET /api/speech/token` en el backend que pide un token de 10 min a Azure (`issueToken`) para el usuario autenticado. |
 | Audio | Captura con el SDK desde el micrófono en streaming; no se guarda archivo (RN-04). Azure no almacena el audio por defecto. |
 | Sin conexión | Respaldo con `SpeechRecognizer` de Android (`EXTRA_PREFER_OFFLINE`): compara la transcripción con el texto de referencia (acierto si coincide normalizado). Sin puntaje fonético; se avisa al usuario. |
-| Permiso | `RECORD_AUDIO` ya está en el manifiesto; falta pedirlo en tiempo de ejecución. |
+| Permiso | `RECORD_AUDIO` en el manifiesto y se pide en tiempo de ejecución al tocar el micrófono por primera vez. |
 | Latencia | Frases cortas para cumplir RN-05 (≤ 2.5 s). |
 
 **Riesgos:** costo de Azure (capa gratuita F0: ~5 h de audio/mes; suficiente para pruebas); necesidad de red para el puntaje fonético. Comparte trabajo con RF-07/RF-09 del chat.
