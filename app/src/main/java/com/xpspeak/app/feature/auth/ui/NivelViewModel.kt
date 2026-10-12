@@ -25,14 +25,15 @@ class NivelViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(NivelUiState())
     val uiState: StateFlow<NivelUiState> = _uiState.asStateFlow()
 
-    fun seleccionarNivel(nivel: String) {
+    fun seleccionarNivel(nivel: String, avatar: String? = null) {
         val usuario = firebaseAuth.currentUser ?: return
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(guardando = true)
             perfilRepository.crearPerfil(
                 uid = usuario.uid,
                 correo = usuario.email.orEmpty(),
-                nivel = nivel
+                nivel = nivel,
+                avatar = avatar
             )
             _uiState.value = _uiState.value.copy(guardando = false, listo = true)
         }

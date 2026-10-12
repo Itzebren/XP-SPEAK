@@ -1,5 +1,8 @@
 package com.xpspeak.app.feature.lessons.ui
 
+import androidx.compose.foundation.layout.statusBarsPadding
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
+import com.xpspeak.app.core.ui.theme.FormaBoton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,7 +47,7 @@ fun RepasoScreen(
     val resultado = uiState.resultado
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+        modifier = Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedButton(onClick = onVolver) { Text("← Lecciones") }
@@ -83,12 +86,14 @@ fun RepasoScreen(
                 if (sesion.totalVencidos > sesion.items.size) {
                     OutlinedButton(onClick = viewModel::cargar) { Text("Seguir repasando") }
                 }
-                Button(onClick = onVolver) { Text("Volver al catálogo") }
+                Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onVolver) { Text("Volver al catálogo") }
             }
         } else {
             // Un ejercicio sin responder no le dice nada a SM-2: se piden todos.
             val faltan = sesion.items.size - uiState.respuestas.size
             Button(
+                colors = coloresBotonPrincipal(),
+                shape = FormaBoton,
                 onClick = viewModel::enviar,
                 enabled = !uiState.enviando && faltan == 0,
                 modifier = Modifier.fillMaxWidth()

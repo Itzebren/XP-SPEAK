@@ -1,6 +1,5 @@
 package com.xpspeak.app.feature.progress.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -23,7 +22,6 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,13 +30,13 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.xpspeak.app.core.ui.theme.XPBluePrimary
-import com.xpspeak.app.core.ui.theme.XPGreenSuccess
-import com.xpspeak.app.core.ui.theme.XPOrangeAccent
+import com.xpspeak.app.core.ui.componentes.recursoDrawable
+import com.xpspeak.app.core.ui.theme.XPAzul
+import com.xpspeak.app.core.ui.theme.XPVerdeExito
+import com.xpspeak.app.core.ui.theme.XPNaranja
 import com.xpspeak.app.feature.progress.data.InsigniaDto
 
 /**
@@ -50,27 +48,16 @@ private data class Estilo(val icono: ImageVector, val color: Color)
 
 private val ESTILOS = mapOf(
     "estrella" to Estilo(Icons.Filled.Star, Color(0xFFF9A825)),
-    "chat" to Estilo(Icons.AutoMirrored.Filled.Chat, XPBluePrimary),
+    "chat" to Estilo(Icons.AutoMirrored.Filled.Chat, XPAzul),
     "juego" to Estilo(Icons.Filled.SportsEsports, Color(0xFF8E24AA)),
     "fuego" to Estilo(Icons.Filled.LocalFireDepartment, Color(0xFFE64A19)),
     "brujula" to Estilo(Icons.Filled.Explore, Color(0xFF00897B)),
     "birrete" to Estilo(Icons.Filled.School, Color(0xFF3949AB)),
     "microfono" to Estilo(Icons.Filled.Mic, Color(0xFFD81B60)),
-    "trofeo" to Estilo(Icons.Filled.EmojiEvents, XPOrangeAccent),
-    "calendario" to Estilo(Icons.Filled.CalendarMonth, XPGreenSuccess)
+    "trofeo" to Estilo(Icons.Filled.EmojiEvents, XPNaranja),
+    "calendario" to Estilo(Icons.Filled.CalendarMonth, XPVerdeExito)
 )
-private val ESTILO_DESCONOCIDO = Estilo(Icons.Filled.MilitaryTech, XPBluePrimary)
-
-/**
- * Id de un drawable por nombre, o 0 si no existe. Permite agregar el arte final
- * (`res/drawable/insignia_<id>.png`, `mascota.png`) sin cambiar código.
- */
-@SuppressLint("DiscouragedApi")
-@Composable
-fun recursoDrawable(nombre: String): Int {
-    val context = LocalContext.current
-    return remember(nombre) { context.resources.getIdentifier(nombre, "drawable", context.packageName) }
-}
+private val ESTILO_DESCONOCIDO = Estilo(Icons.Filled.MilitaryTech, XPAzul)
 
 /** Bloqueada: gris y con candado, nunca solo el color (RNF-01). */
 @Composable

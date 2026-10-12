@@ -1,5 +1,8 @@
 package com.xpspeak.app.feature.games.ui
 
+import androidx.compose.foundation.layout.statusBarsPadding
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
+import com.xpspeak.app.core.ui.theme.FormaBoton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,12 +28,12 @@ fun MinijuegoScreen(juego: Minijuego?, onVolver: () -> Unit) {
         Minijuego.RAFAGA_PALABRAS -> RafagaScreen(onVolver)
         Minijuego.ORDEN_MAESTRO -> OrdenMaestroScreen(onVolver)
         null -> Column(
-            modifier = Modifier.fillMaxSize().padding(24.dp),
+            modifier = Modifier.fillMaxSize().statusBarsPadding().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically)
         ) {
             Text("Ese minijuego no existe.")
-            Button(onClick = onVolver) { Text("Volver") }
+            Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onVolver) { Text("Volver") }
         }
     }
 }

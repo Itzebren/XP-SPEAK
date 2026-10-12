@@ -1,13 +1,17 @@
 package com.xpspeak.app.feature.auth.ui
 
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Pin
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,10 +19,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.xpspeak.app.core.ui.componentes.BotonPrincipal
+import com.xpspeak.app.core.ui.componentes.CampoTexto
+import com.xpspeak.app.core.ui.componentes.Logotipo
 
+/** Recuperar contraseña (Ilustración 30), en dos pasos: correo y código. */
 @Composable
 fun RecuperarAccesoScreen(
     onCompletado: () -> Unit,
@@ -31,68 +40,69 @@ fun RecuperarAccesoScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 28.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
+        Logotipo(tamano = 150.dp)
+        Text("Recuperar contraseña", style = MaterialTheme.typography.headlineLarge, textAlign = TextAlign.Center)
+
         when (uiState.paso) {
             PasoRecuperacion.CORREO -> {
-                Text("Recuperar acceso")
-                Text("Te enviaremos un código de verificación a tu correo.")
-
-                OutlinedTextField(
-                    value = uiState.correo,
-                    onValueChange = viewModel::onCorreoChange,
-                    label = { Text("Correo") },
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                Text(
+                    "Ingresa tu correo electrónico para recibir un código",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
                 )
-
-                Button(
-                    onClick = viewModel::solicitarCodigo,
-                    modifier = Modifier.padding(top = 16.dp)
-                ) { Text("Enviar código") }
+                CampoTexto(
+                    valor = uiState.correo,
+                    onCambio = viewModel::onCorreoChange,
+                    etiqueta = "Correo electrónico",
+                    icono = Icons.Filled.Email,
+                    tipoTeclado = KeyboardType.Email
+                )
+                Error(uiState.error)
+                BotonPrincipal("Enviar código", onClick = viewModel::solicitarCodigo, cargando = uiState.cargando)
             }
 
             PasoRecuperacion.CODIGO -> {
-                Text("Revisa tu correo")
-                Text("Ingresa el código de 6 caracteres y tu nueva contraseña.")
-
-                OutlinedTextField(
-                    value = uiState.codigo,
-                    onValueChange = viewModel::onCodigoChange,
-                    label = { Text("Código") },
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                Text(
+                    "Revisa tu correo: escribe el código de 6 caracteres y tu nueva contraseña.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
                 )
-
-                OutlinedTextField(
-                    value = uiState.nuevaPassword,
-                    onValueChange = viewModel::onNuevaPasswordChange,
-                    label = { Text("Nueva contraseña") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                CampoTexto(
+                    valor = uiState.codigo,
+                    onCambio = viewModel::onCodigoChange,
+                    etiqueta = "Código de verificación",
+                    icono = Icons.Filled.Pin
                 )
-
-                OutlinedTextField(
-                    value = uiState.confirmarPassword,
-                    onValueChange = viewModel::onConfirmarPasswordChange,
-                    label = { Text("Confirmar contraseña") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                CampoTexto(
+                    valor = uiState.nuevaPassword,
+                    onCambio = viewModel::onNuevaPasswordChange,
+                    etiqueta = "Nueva contraseña",
+                    icono = Icons.Filled.Lock,
+                    esContrasena = true
                 )
-
-                Button(
-                    onClick = viewModel::confirmarNuevaPassword,
-                    modifier = Modifier.padding(top = 16.dp)
-                ) { Text("Cambiar contraseña") }
+                CampoTexto(
+                    valor = uiState.confirmarPassword,
+                    onCambio = viewModel::onConfirmarPasswordChange,
+                    etiqueta = "Confirmar contraseña",
+                    icono = Icons.Filled.Lock,
+                    esContrasena = true
+                )
+                Error(uiState.error)
+                BotonPrincipal("Restablecer contraseña", onClick = viewModel::confirmarNuevaPassword, cargando = uiState.cargando)
             }
         }
-
-        uiState.error?.let { mensaje ->
-            Text(mensaje, modifier = Modifier.padding(top = 8.dp))
-        }
-
-        if (uiState.cargando) {
-            CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
-        }
     }
+}
+
+@Composable
+private fun Error(mensaje: String?) {
+    mensaje?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium) }
 }

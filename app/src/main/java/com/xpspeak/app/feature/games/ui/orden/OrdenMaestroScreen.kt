@@ -1,5 +1,7 @@
 package com.xpspeak.app.feature.games.ui.orden
 
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
+import com.xpspeak.app.core.ui.theme.FormaBoton
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,7 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.xpspeak.app.core.ui.theme.XPGreenSuccess
+import com.xpspeak.app.core.ui.theme.XPVerdeExito
 import com.xpspeak.app.feature.games.domain.GeneradorRondas
 import com.xpspeak.app.feature.games.domain.Minijuego
 import com.xpspeak.app.feature.games.ui.comun.PantallaPartida
@@ -70,7 +72,7 @@ fun OrdenMaestroScreen(onVolver: () -> Unit, viewModel: OrdenMaestroViewModel = 
                 estado.colocadas.forEachIndexed { posicion, indice ->
                     val color = when {
                         revision == null -> null
-                        revision.correcta -> XPGreenSuccess
+                        revision.correcta -> XPVerdeExito
                         posicion in revision.posicionesMal -> MaterialTheme.colorScheme.error
                         else -> null
                     }
@@ -103,7 +105,7 @@ fun OrdenMaestroScreen(onVolver: () -> Unit, viewModel: OrdenMaestroViewModel = 
                 )
                 else -> TarjetaFeedback(Veredicto.ERROR, "La oración correcta es:", oracion)
             }
-            Button(onClick = viewModel::continuar, modifier = Modifier.fillMaxWidth()) {
+            Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = viewModel::continuar, modifier = Modifier.fillMaxWidth()) {
                 Text(if (revision.definitiva) "Continuar" else "Intentar de nuevo")
             }
         }
