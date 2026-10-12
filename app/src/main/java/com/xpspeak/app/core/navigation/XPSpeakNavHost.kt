@@ -5,8 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -25,9 +26,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.xpspeak.app.feature.account.ui.AccountScreen
 import com.xpspeak.app.feature.auth.ui.AuthScreen
+import com.xpspeak.app.feature.auth.ui.RecuperarAccesoScreen
+import com.xpspeak.app.feature.auth.ui.SeleccionarNivelScreen
 import com.xpspeak.app.feature.chat.ui.ChatScreen
+import com.xpspeak.app.feature.games.domain.Minijuego
 import com.xpspeak.app.feature.games.ui.GamesScreen
+import com.xpspeak.app.feature.games.ui.MinijuegoScreen
+import com.xpspeak.app.feature.lessons.ui.LeccionScreen
 import com.xpspeak.app.feature.lessons.ui.LessonsScreen
+import com.xpspeak.app.feature.lessons.ui.RepasoScreen
 import com.xpspeak.app.feature.progress.ui.ProgressScreen
 
 private data class BottomTab(val route: String, val label: String, val icon: ImageVector)
@@ -35,8 +42,8 @@ private data class BottomTab(val route: String, val label: String, val icon: Ima
 private val bottomTabs = listOf(
     BottomTab(Routes.CHAT, "Chat", Icons.Filled.Chat),
     BottomTab(Routes.LESSONS, "Lecciones", Icons.Filled.MenuBook),
-    BottomTab(Routes.GAMES, "Juegos", Icons.Filled.EmojiEvents),
-    BottomTab(Routes.PROGRESS, "Progreso", Icons.Filled.Home),
+    BottomTab(Routes.PROGRESS, "Progreso", Icons.Filled.EmojiEvents),
+    BottomTab(Routes.GAMES, "Juegos", Icons.Filled.SportsEsports),
     BottomTab(Routes.ACCOUNT, "Cuenta", Icons.Filled.AccountCircle),
 )
 
@@ -53,12 +60,17 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
     Scaffold(
         bottomBar = {
             // La barra inferior no se muestra en la pantalla de Auth
-            val hideBottomBar = currentRoute?.hierarchy?.any { it.route == Routes.AUTH } == true
+            val hideBottomBar = currentRoute?.hierarchy?.any {
+                it.route == Routes.AUTH || it.route == Routes.SELECCIONAR_NIVEL || it.route == Routes.RECUPERAR_ACCESO
+            } == true
             if (!hideBottomBar) {
                 NavigationBar {
                     bottomTabs.forEach { tab ->
                         NavigationBarItem(
-                            selected = currentRoute?.hierarchy?.any { it.route == tab.route } == true,
+                            // También resalta la pestaña en sus pantallas hijas (p. ej. games/{id})
+                            selected = currentRoute?.hierarchy?.any {
+                                it.route == tab.route || it.route?.startsWith("${tab.route}/") == true
+                            } == true,
                             onClick = {
                                 navController.navigate(tab.route) {
                                     popUpTo(navController.graph.findStartDestination().id) { saveState = true }
@@ -67,7 +79,8 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
                                 }
                             },
                             icon = { Icon(tab.icon, contentDescription = tab.label) },
-                            label = { Text(tab.label) }
+                            // Una sola línea: con fuente grande en pantallas chicas se partía la palabra.
+                            label = { Text(tab.label, maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis) }
                         )
                     }
                 }
@@ -80,17 +93,74 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Routes.AUTH) {
-                AuthScreen(onAuthSuccess = {
+                AuthScreen(
+                    onAuthSuccess = {
+                        navController.navigate(Routes.CHAT) {
+                            popUpTo(Routes.AUTH) { inclusive = true }
+                        }
+                    },
+                    onNecesitaNivel = {
+                        navController.navigate(Routes.SELECCIONAR_NIVEL) {
+                            popUpTo(Routes.AUTH) { inclusive = true }
+                        }
+                    },
+                    onOlvideContrasena = {
+                        navController.navigate(Routes.RECUPERAR_ACCESO)
+                    }
+                )
+            }
+            composable(Routes.RECUPERAR_ACCESO) {
+                RecuperarAccesoScreen(onCompletado = {
+                    navController.popBackStack()
+                })
+            }
+            composable(Routes.SELECCIONAR_NIVEL) {
+                SeleccionarNivelScreen(onNivelSeleccionado = {
                     navController.navigate(Routes.CHAT) {
-                        popUpTo(Routes.AUTH) { inclusive = true }
+                        popUpTo(Routes.SELECCIONAR_NIVEL) { inclusive = true }
                     }
                 })
             }
             composable(Routes.CHAT) { ChatScreen() }
-            composable(Routes.LESSONS) { LessonsScreen() }
-            composable(Routes.GAMES) { GamesScreen() }
-            composable(Routes.PROGRESS) { ProgressScreen() }
-            composable(Routes.ACCOUNT) { AccountScreen() }
+            composable(Routes.LESSONS) {
+                LessonsScreen(
+                    onAbrirLeccion = { id -> navController.navigate(Routes.leccion(id)) },
+                    onAbrirRepaso = { navController.navigate(Routes.REPASO) }
+                )
+            }
+            composable(Routes.REPASO) {
+                RepasoScreen(onVolver = { navController.popBackStack() })
+            }
+            composable(Routes.LECCION) {
+                LeccionScreen(onVolver = { navController.popBackStack() })
+            }
+            composable(Routes.GAMES) {
+                GamesScreen(onAbrirJuego = { juego -> navController.navigate(Routes.minijuego(juego.id)) })
+            }
+            composable(Routes.MINIJUEGO) { entry ->
+                MinijuegoScreen(
+                    juego = Minijuego.porId(entry.arguments?.getString("id")),
+                    onVolver = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.PROGRESS) {
+                ProgressScreen(onIrALecciones = {
+                    navController.navigate(Routes.LESSONS) {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                })
+            }
+            composable(Routes.ACCOUNT) {
+                AccountScreen(
+                    onCerrarSesion = {
+                        navController.navigate(Routes.AUTH) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+            }
         }
     }
 }

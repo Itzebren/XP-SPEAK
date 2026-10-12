@@ -1,19 +1,24 @@
 package com.xpspeak.app.core.di
 
+import com.xpspeak.app.BuildConfig
+import com.xpspeak.app.feature.auth.data.RecuperacionApi
+import com.xpspeak.app.feature.chat.data.ChatApi
+import com.xpspeak.app.feature.games.data.MinijuegosApi
+import com.xpspeak.app.feature.lessons.data.LeccionesApi
+import com.xpspeak.app.feature.progress.data.ProgresoApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
-/**
- * Módulo de red base. Los clientes Retrofit específicos para Azure OpenAI
- * (chatbot, RF-06) y Azure AI Speech (voz, RF-07/RF-08) se agregan aquí
- * mismo en la Fase 3, una vez que definamos cómo se manejarán las claves
- * de API de forma segura (NUNCA hardcodeadas).
- */
+private const val BASE_URL_RECUPERACION = "https://xp-speak-auth-backend.vercel.app/"
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
@@ -21,11 +26,63 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
+        // Solo en debug, y sin el token: el header Authorization lleva la sesión del usuario.
         val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BASIC
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+            redactHeader("Authorization")
         }
         return OkHttpClient.Builder()
             .addInterceptor(logging)
             .build()
     }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(client: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL_RECUPERACION)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideRecuperacionApi(retrofit: Retrofit): RecuperacionApi =
+        retrofit.create(RecuperacionApi::class.java)
+
+    /**
+     * Lecciones usa su propia base URL: en debug apunta al backend local
+     * (BuildConfig.LECCIONES_BASE_URL) para probar sin desplegar.
+     */
+    @Provides
+    @Singleton
+    @Named("lecciones")
+    fun provideLeccionesRetrofit(client: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.LECCIONES_BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideLeccionesApi(@Named("lecciones") retrofit: Retrofit): LeccionesApi =
+        retrofit.create(LeccionesApi::class.java)
+
+    /** Minijuegos vive en el mismo backend que Lecciones. */
+    @Provides
+    @Singleton
+    fun provideMinijuegosApi(@Named("lecciones") retrofit: Retrofit): MinijuegosApi =
+        retrofit.create(MinijuegosApi::class.java)
+
+    /** Progreso también vive en el backend de Lecciones. */
+    @Provides
+    @Singleton
+    fun provideProgresoApi(@Named("lecciones") retrofit: Retrofit): ProgresoApi =
+        retrofit.create(ProgresoApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideChatApi(retrofit: Retrofit): ChatApi =
+        retrofit.create(ChatApi::class.java)
 }

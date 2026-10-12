@@ -1,0 +1,161 @@
+{
+  "id": "a1-rutina-diaria",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "Rutina diaria",
+  "orden": 7,
+  "prerequisito_id": "a1-casa-hogar",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo decir con frases sencillas qué hago cada día y a qué hora.",
+    "Puedo decir con frases sencillas qué hace otra persona cada día."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Vida cotidiana.",
+      "MCER, Expresión oral en general, A1 (p. 62): «Puede expresarse con frases sencillas y aisladas relativas a personas y lugares.»",
+      "MCER, Intercambiar información, A1 (p. 80): «Es capaz de hacer indicaciones temporales mediante frases como, por ejemplo, «la semana que viene, el pasado viernes, en noviembre, a las tres».»",
+      "MCER, Monólogo sostenido: descripción de experiencias, A1 (p. 62): «Es capaz de describirse a sí mismo, hablar de su profesión y de su lugar de residencia.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. La hora (o'clock, half past) se repasa desde la lección 3 en el diálogo. Describir costumbres y actividades habituales es A2 (Monólogo sostenido, p. 62), así que en A1 la rutina se trabaja solo con frases sencillas y aisladas. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "Un día normal",
+      "cuerpo": "Aprenderás a decir con frases sencillas lo que haces cada día con el presente simple, y a cambiar el verbo cuando hablas de él o de ella: I get up, she gets up."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Mi rutina",
+      "items": [
+        { "concepto_id": "voc.rutina.get_up", "en": "get up", "es": "levantarse", "audio": "tts:get up" },
+        { "concepto_id": "voc.rutina.take_a_shower", "en": "take a shower", "es": "bañarse", "audio": "tts:take a shower" },
+        { "concepto_id": "voc.rutina.have_breakfast", "en": "have breakfast", "es": "desayunar", "audio": "tts:have breakfast" },
+        { "concepto_id": "voc.rutina.go_to_school", "en": "go to school", "es": "ir a la escuela", "audio": "tts:go to school", "nota": "En inglés de EE. UU. 'school' también se usa para la universidad." },
+        { "concepto_id": "voc.rutina.have_lunch", "en": "have lunch", "es": "comer (a mediodía)", "audio": "tts:have lunch" },
+        { "concepto_id": "voc.rutina.do_homework", "en": "do homework", "es": "hacer la tarea", "audio": "tts:do homework" },
+        { "concepto_id": "voc.rutina.go_home", "en": "go home", "es": "ir a casa", "audio": "tts:go home", "nota": "Sin 'to': I go home (no 'go to home')." },
+        { "concepto_id": "voc.rutina.have_dinner", "en": "have dinner", "es": "cenar", "audio": "tts:have dinner" },
+        { "concepto_id": "voc.rutina.go_to_bed", "en": "go to bed", "es": "irse a dormir", "audio": "tts:go to bed" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "¿Cuándo?",
+      "items": [
+        { "concepto_id": "voc.rutina.every_day", "en": "every day", "es": "todos los días", "audio": "tts:every day" },
+        { "concepto_id": "voc.rutina.in_the_morning", "en": "in the morning / afternoon / evening", "es": "en la mañana / tarde / noche", "audio": "tts:in the morning, in the afternoon, in the evening", "nota": "Pero 'at night' (en la noche, ya tarde)." },
+        { "concepto_id": "voc.rutina.weekend", "en": "weekend", "es": "fin de semana", "audio": "tts:weekend" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.present_simple_affirmative",
+      "titulo": "Presente simple (I get up, we go…)",
+      "explicacion": "El presente simple sirve para rutinas y cosas que hacemos siempre. Con I, you, we y they el verbo va en su forma base, sin cambios: I get up at seven. We go to school every day. La hora se dice con 'at': at six o'clock.",
+      "ejemplos": ["I get up at six o'clock.", "We have lunch at home.", "They go to bed at eleven."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.present_simple_third_person",
+      "titulo": "He, she, it: el verbo lleva -s",
+      "explicacion": "Con he, she, it (o un nombre como Laura) el verbo lleva -s: she gets up. Con go, do y verbos que terminan en sh, ch se agrega -es: goes, does, watches. 'Have' es irregular: he has. Consonante + y cambia a -ies: study → studies.",
+      "ejemplos": ["Laura gets up at seven.", "My brother goes to bed late.", "She has breakfast at home.", "He does his homework in the evening."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "¿A qué hora te levantas?",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Luis", "en": "I get up at six o'clock every day.", "es": "Me levanto a las seis todos los días." },
+        { "hablante": "Laura", "en": "Six o'clock? I get up at half past seven!", "es": "¿A las seis? ¡Yo me levanto a las siete y media!" },
+        { "hablante": "Luis", "en": "My class is at seven. I have breakfast and I go to school.", "es": "Mi clase es a las siete. Desayuno y me voy a la escuela." },
+        { "hablante": "Laura", "en": "My brother gets up at ten. He goes to bed very late!", "es": "Mi hermano se levanta a las diez. ¡Se va a dormir muy tarde!" },
+        { "hablante": "Luis", "en": "My sister does her homework in the evening and goes to bed at ten.", "es": "Mi hermana hace su tarea en la noche y se va a dormir a las diez." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "completar",
+          "concepto_id": "gram.present_simple_third_person",
+          "enunciado": "Laura ___ up at seven. (get)",
+          "respuesta_correcta": "gets",
+          "acepta": ["gets"],
+          "feedback_error": "Con he/she o un nombre, el verbo lleva -s: Laura gets up."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_simple_affirmative",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["I gets up at six.", "I get up at six.", "I getting up at six."],
+          "respuesta_correcta": 1,
+          "feedback_error": "Con 'I' el verbo va en su forma base, sin -s: I get up."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.present_simple_third_person",
+          "enunciado": "My brother ___ to bed at eleven. (go)",
+          "respuesta_correcta": "goes",
+          "acepta": ["goes"],
+          "feedback_error": "Con 'go' y he/she se agrega -es: he goes."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_simple_third_person",
+          "enunciado": "She ___ breakfast at home.",
+          "opciones": ["have", "haves", "has"],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Have' es irregular: con he/she/it se dice 'has'."
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.present_simple_affirmative",
+          "enunciado": "We ___ our homework in the evening. (do)",
+          "respuesta_correcta": "do",
+          "acepta": ["do"],
+          "feedback_error": "Con I, you, we y they el verbo no cambia: we do."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.rutina.have_breakfast",
+          "enunciado": "¿Qué significa 'have breakfast'?",
+          "opciones": ["desayunar", "comer", "cenar"],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Breakfast' es el desayuno. 'Lunch' es la comida y 'dinner' la cena."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.rutina.weekend",
+          "enunciado": "¿Qué días son el 'weekend'?",
+          "opciones": ["lunes y martes", "sábado y domingo", "todos los días"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Weekend' = fin de semana: sábado y domingo."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada acción con su significado.",
+          "feedback_error": "Repasa la tabla de la rutina.",
+          "pares": [
+            { "concepto_id": "voc.rutina.get_up", "izq": "get up", "der": "levantarse" },
+            { "concepto_id": "voc.rutina.take_a_shower", "izq": "take a shower", "der": "bañarse" },
+            { "concepto_id": "voc.rutina.go_to_bed", "izq": "go to bed", "der": "irse a dormir" },
+            { "concepto_id": "voc.rutina.have_dinner", "izq": "have dinner", "der": "cenar" }
+          ]
+        }
+      ]
+    }
+  ]
+}

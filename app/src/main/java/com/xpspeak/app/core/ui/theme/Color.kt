@@ -16,6 +16,9 @@ val XPBlueLight = Color(0xFFBBDEFB)
 val XPOrangeAccent = Color(0xFFFB8C00)
 val XPYellowAccent = Color(0xFFFDD835)
 
+// --- Retroalimentación (acierto en lecciones y minijuegos) ---
+val XPGreenSuccess = Color(0xFF2E7D32)
+
 // --- Neutros (contenido y tipografía) ---
 val XPNeutralWhite = Color(0xFFFFFFFF)
 val XPNeutralGrayLight = Color(0xFFF5F5F5)

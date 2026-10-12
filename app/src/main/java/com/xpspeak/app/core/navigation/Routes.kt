@@ -1,16 +1,18 @@
 package com.xpspeak.app.core.navigation
 
-/**
- * Rutas de navegación de XP-SPEAK.
- * Cada una corresponde a un paquete de casos de uso del Cap. 4.2.2:
- * Autenticación, Práctica Conversacional, Lecciones, Gamificación,
- * Progreso y Notificaciones/Cuenta.
- */
 object Routes {
     const val AUTH = "auth"
+    const val SELECCIONAR_NIVEL = "seleccionar_nivel"
+    const val RECUPERAR_ACCESO = "recuperar_acceso"
     const val CHAT = "chat"
     const val LESSONS = "lessons"
+    const val LECCION = "lessons/{id}"
+    const val REPASO = "repaso"
     const val GAMES = "games"
+    const val MINIJUEGO = "games/{id}"
     const val PROGRESS = "progress"
     const val ACCOUNT = "account"
+
+    fun leccion(id: String) = "lessons/$id"
+    fun minijuego(id: String) = "games/$id"
 }

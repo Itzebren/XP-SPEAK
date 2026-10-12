@@ -2,7 +2,13 @@ package com.xpspeak.app.feature.auth.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.xpspeak.app.feature.auth.data.AuthRepository
+import com.xpspeak.app.feature.auth.data.PerfilRepository
+import com.xpspeak.app.feature.auth.domain.PasswordValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,42 +16,91 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+enum class AuthMode { LOGIN, REGISTRO }
+enum class DestinoPostAuth { NINGUNO, SELECCIONAR_NIVEL, HOME }
+
 data class AuthUiState(
+    val modo: AuthMode = AuthMode.LOGIN,
     val correo: String = "",
-    val nivel: String = "A1",
+    val password: String = "",
+    val confirmarPassword: String = "",
     val cargando: Boolean = false,
-    val registroExitoso: Boolean = false
+    val error: String? = null,
+    val destino: DestinoPostAuth = DestinoPostAuth.NINGUNO
 )
 
-/**
- * ViewModel de ejemplo. Demuestra el flujo completo:
- * UI (Compose) --dispara evento--> ViewModel --llama--> Repository --usa--> DAO/Room
- * y la UI se actualiza automáticamente al observar el StateFlow.
- *
- * La validación real de RF-01/RF-02/RF-03 (formato de correo, contraseña,
- * recuperación de acceso, etc.) se construye en la Fase 2.
- */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val perfilRepository: PerfilRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
+    fun cambiarModo(modo: AuthMode) {
+        _uiState.value = _uiState.value.copy(modo = modo, error = null)
+    }
+
+    // Un correo nunca lleva espacios: se quitan también el Tab o salto de línea
+    // que mete el teclado físico al pasar de un campo a otro.
     fun onCorreoChange(valor: String) {
-        _uiState.value = _uiState.value.copy(correo = valor)
+        _uiState.value = _uiState.value.copy(correo = valor.filterNot { it.isWhitespace() }, error = null)
     }
 
-    fun onNivelChange(valor: String) {
-        _uiState.value = _uiState.value.copy(nivel = valor)
+    fun onPasswordChange(valor: String) {
+        _uiState.value = _uiState.value.copy(password = valor, error = null)
     }
 
-    fun registrarDemo() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(cargando = true)
-            repository.registrarUsuarioDemo(_uiState.value.correo, _uiState.value.nivel)
-            _uiState.value = _uiState.value.copy(cargando = false, registroExitoso = true)
+    fun onConfirmarPasswordChange(valor: String) {
+        _uiState.value = _uiState.value.copy(confirmarPassword = valor, error = null)
+    }
+
+    fun enviar() {
+        val estado = _uiState.value
+
+        if (estado.correo.isBlank() || !estado.correo.contains("@")) {
+            _uiState.value = estado.copy(error = "Ingresa un correo válido.")
+            return
         }
+
+        if (estado.modo == AuthMode.REGISTRO) {
+            if (!PasswordValidator.esValida(estado.password)) {
+                _uiState.value = estado.copy(error = PasswordValidator.mensajeError())
+                return
+            }
+            if (estado.password != estado.confirmarPassword) {
+                _uiState.value = estado.copy(error = "Las contraseñas no coinciden.")
+                return
+            }
+        }
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(cargando = true, error = null)
+
+            val resultado = if (estado.modo == AuthMode.REGISTRO) {
+                authRepository.registrar(estado.correo, estado.password)
+            } else {
+                authRepository.iniciarSesion(estado.correo, estado.password)
+            }
+
+            resultado
+                .onSuccess { usuario ->
+                    val tienePerfil = perfilRepository.existePerfil(usuario.uid)
+                    val destino = if (tienePerfil) DestinoPostAuth.HOME else DestinoPostAuth.SELECCIONAR_NIVEL
+                    _uiState.value = _uiState.value.copy(cargando = false, destino = destino)
+                }
+                .onFailure { excepcion ->
+                    _uiState.value = _uiState.value.copy(cargando = false, error = mapearError(excepcion))
+                }
+        }
+    }
+
+    private fun mapearError(excepcion: Throwable): String = when (excepcion) {
+        is FirebaseAuthUserCollisionException -> "Ya existe una cuenta con ese correo."
+        is FirebaseAuthWeakPasswordException -> "La contraseña es demasiado débil."
+        is FirebaseAuthInvalidCredentialsException -> "Correo o contraseña incorrectos."
+        is FirebaseAuthInvalidUserException -> "No existe una cuenta con ese correo."
+        else -> "Ocurrió un error. Intenta de nuevo."
     }
 }
