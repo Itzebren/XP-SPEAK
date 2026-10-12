@@ -1,4 +1,4 @@
-package com.xpspeak.app.feature.games.domain
+package com.xpspeak.app.core.actividad
 
 import java.time.LocalDate
 
@@ -17,4 +17,13 @@ object Racha {
             else -> 1
         }
     }
+
+    /** La racha que se muestra hoy: si el último día activo fue antes de ayer, ya se perdió. */
+    fun vigente(rachaActual: Int, ultimoDia: String?, hoy: LocalDate): Int {
+        val ultimo = ultimoDia?.let { runCatching { LocalDate.parse(it) }.getOrNull() } ?: return 0
+        return if (ultimo == hoy || ultimo == hoy.minusDays(1)) rachaActual else 0
+    }
+
+    /** "1 día", "5 días". */
+    fun texto(dias: Int): String = if (dias == 1) "1 día" else "$dias días"
 }

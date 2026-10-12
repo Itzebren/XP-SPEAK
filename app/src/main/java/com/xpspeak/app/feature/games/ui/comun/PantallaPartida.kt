@@ -32,6 +32,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,12 +45,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import com.xpspeak.app.core.actividad.Racha
 import com.xpspeak.app.core.ui.theme.XPBlueLight
 import com.xpspeak.app.core.ui.theme.XPGreenSuccess
 import com.xpspeak.app.core.ui.theme.XPOrangeAccent
 import com.xpspeak.app.feature.games.domain.CalculadorXp
 import com.xpspeak.app.feature.games.domain.Minijuego
 import com.xpspeak.app.feature.games.domain.ResultadoPartida
+import com.xpspeak.app.feature.progress.ui.InsigniaNueva
 import kotlin.math.roundToInt
 
 /**
@@ -135,6 +140,8 @@ private fun ColumnScope.Mensaje(icono: String, mensaje: String, onVolver: () -> 
 @Composable
 private fun ColumnScope.PantallaResultado(resultado: ResultadoPartida, onOtraVez: () -> Unit, onVolver: () -> Unit) {
     val porcentaje = (resultado.precision * 100).roundToInt()
+    var festejar by remember(resultado) { mutableStateOf(true) }
+    if (festejar) InsigniaNueva(resultado.insigniasNuevas, resultado.nivelXpNuevo, onCerrar = { festejar = false })
     Column(
         modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -153,7 +160,7 @@ private fun ColumnScope.PantallaResultado(resultado: ResultadoPartida, onOtraVez
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Fila("Precisión", "$porcentaje% (${resultado.aciertos}/${resultado.total})")
                 Fila("Tiempo", formatearDuracion(resultado.duracionMs))
-                Fila("Racha", "🔥 ${resultado.racha} ${if (resultado.racha == 1) "día" else "días"}")
+                Fila("Racha", "🔥 ${Racha.texto(resultado.racha)}")
             }
         }
         Card(
@@ -165,6 +172,9 @@ private fun ColumnScope.PantallaResultado(resultado: ResultadoPartida, onOtraVez
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text("+${resultado.xp} XP", style = MaterialTheme.typography.headlineLarge, color = XPOrangeAccent, fontWeight = FontWeight.Bold)
+                resultado.nivelXpNuevo?.let {
+                    Text("⭐ ¡Subiste a nivel $it!", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                }
                 if (!resultado.confirmada) {
                     Text(
                         "Sin conexión: tu XP se confirma al reconectarte.",

@@ -5,8 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -41,8 +42,8 @@ private data class BottomTab(val route: String, val label: String, val icon: Ima
 private val bottomTabs = listOf(
     BottomTab(Routes.CHAT, "Chat", Icons.Filled.Chat),
     BottomTab(Routes.LESSONS, "Lecciones", Icons.Filled.MenuBook),
-    BottomTab(Routes.PROGRESS, "Progreso", Icons.Filled.Home),
-    BottomTab(Routes.GAMES, "Juegos", Icons.Filled.EmojiEvents),
+    BottomTab(Routes.PROGRESS, "Progreso", Icons.Filled.EmojiEvents),
+    BottomTab(Routes.GAMES, "Juegos", Icons.Filled.SportsEsports),
     BottomTab(Routes.ACCOUNT, "Cuenta", Icons.Filled.AccountCircle),
 )
 
@@ -78,7 +79,8 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
                                 }
                             },
                             icon = { Icon(tab.icon, contentDescription = tab.label) },
-                            label = { Text(tab.label) }
+                            // Una sola línea: con fuente grande en pantallas chicas se partía la palabra.
+                            label = { Text(tab.label, maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis) }
                         )
                     }
                 }
@@ -141,7 +143,15 @@ fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
                     onVolver = { navController.popBackStack() }
                 )
             }
-            composable(Routes.PROGRESS) { ProgressScreen() }
+            composable(Routes.PROGRESS) {
+                ProgressScreen(onIrALecciones = {
+                    navController.navigate(Routes.LESSONS) {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                })
+            }
             composable(Routes.ACCOUNT) {
                 AccountScreen(
                     onCerrarSesion = {

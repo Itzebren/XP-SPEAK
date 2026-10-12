@@ -2,6 +2,7 @@ package com.xpspeak.app.feature.lessons.data
 
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
+import com.xpspeak.app.feature.progress.data.InsigniaDto
 
 // Valores que manda el backend. Gson deja en null un valor desconocido,
 // así una versión nueva del contenido no rompe una app vieja.
@@ -121,7 +122,10 @@ data class IntentoResponse(
     val feedback: List<FeedbackDto>,
     @SerializedName("xp_ganado") val xpGanado: Int,
     @SerializedName("desbloqueada_siguiente") val desbloqueadaSiguiente: String?,
-    @SerializedName("conceptos_debiles") val conceptosDebiles: List<String>
+    @SerializedName("conceptos_debiles") val conceptosDebiles: List<String>,
+    /** Progreso: insignias ganadas en vivo (para festejarlas) y nivel de XP alcanzado; faltan en un backend viejo. */
+    @SerializedName("insignias_nuevas") val insigniasNuevas: List<InsigniaDto>? = null,
+    @SerializedName("nivel_xp_nuevo") val nivelXpNuevo: Int? = null
 )
 
 data class FeedbackDto(
@@ -167,7 +171,10 @@ data class RepasoResponse(
     val total: Int,
     val feedback: List<FeedbackDto>,
     val conceptos: List<ConceptoReprogramadoDto>,
-    val repetido: Boolean
+    val repetido: Boolean,
+    /** Progreso: insignias ganadas en vivo (para festejarlas) y nivel de XP alcanzado; faltan en un backend viejo. */
+    @SerializedName("insignias_nuevas") val insigniasNuevas: List<InsigniaDto>? = null,
+    @SerializedName("nivel_xp_nuevo") val nivelXpNuevo: Int? = null
 )
 
 data class ConceptoReprogramadoDto(

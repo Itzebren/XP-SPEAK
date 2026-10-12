@@ -17,12 +17,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.xpspeak.app.feature.lessons.data.ItemDto
 import com.xpspeak.app.feature.lessons.data.RepasoResponse
 import com.xpspeak.app.feature.lessons.ui.components.EjercicioEvaluacion
+import com.xpspeak.app.feature.progress.ui.InsigniaNueva
 import java.text.DateFormat
 import java.util.Date
 
@@ -104,6 +108,8 @@ fun RepasoScreen(
 /** Puntaje y, por concepto, cuándo vuelve a salir según SM-2. */
 @Composable
 private fun ResultadoRepaso(resultado: RepasoResponse, items: List<ItemDto>) {
+    var festejar by remember(resultado) { mutableStateOf(true) }
+    if (festejar) InsigniaNueva(resultado.insigniasNuevas.orEmpty(), resultado.nivelXpNuevo, onCerrar = { festejar = false })
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text("${resultado.correctas}/${resultado.total} correctas", style = MaterialTheme.typography.titleLarge)

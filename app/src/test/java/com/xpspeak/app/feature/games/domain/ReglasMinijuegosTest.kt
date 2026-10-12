@@ -1,5 +1,6 @@
 package com.xpspeak.app.feature.games.domain
 
+import com.xpspeak.app.core.actividad.Racha
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

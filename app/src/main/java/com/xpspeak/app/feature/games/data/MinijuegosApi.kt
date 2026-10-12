@@ -1,6 +1,7 @@
 package com.xpspeak.app.feature.games.data
 
 import com.google.gson.annotations.SerializedName
+import com.xpspeak.app.feature.progress.data.InsigniaDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -38,7 +39,10 @@ data class ResultadoResponse(
     @SerializedName("xp_ganado") val xpGanado: Int,
     @SerializedName("xp_reducida") val xpReducida: Boolean,
     @SerializedName("partidas_hoy") val partidasHoy: Int,
-    val repetido: Boolean
+    val repetido: Boolean,
+    /** Progreso: insignias ganadas en vivo (para festejarlas) y nivel de XP alcanzado; faltan en un backend viejo. */
+    @SerializedName("insignias_nuevas") val insigniasNuevas: List<InsigniaDto>? = null,
+    @SerializedName("nivel_xp_nuevo") val nivelXpNuevo: Int? = null
 )
 
 /** Token de Azure AI Speech de 10 minutos; la llave nunca llega a la app (RNF-06). */
