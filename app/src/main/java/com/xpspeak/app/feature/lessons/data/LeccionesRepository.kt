@@ -10,6 +10,7 @@ import androidx.work.WorkManager
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import com.xpspeak.app.core.actividad.RegistroActividad
 import com.xpspeak.app.feature.auth.data.UsuarioDao
 import com.xpspeak.app.feature.lessons.domain.RespuestaUsuario
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -51,6 +52,7 @@ class LeccionesRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val usuarioDao: UsuarioDao,
     private val dao: LeccionesDao,
+    private val registroActividad: RegistroActividad,
     @ApplicationContext private val context: Context
 ) {
     private val gson = Gson()
@@ -127,6 +129,9 @@ class LeccionesRepository @Inject constructor(
     suspend fun enviarRepaso(attemptId: String, respuestas: Map<String, RespuestaUsuario>): Result<RepasoResponse> =
         llamar {
             api.enviarRepaso(it, RepasoRequest(attemptId, respuestas.map { (id, respuesta) -> respuesta.aDto(id) }))
+        }.onSuccess {
+            // El repaso cuenta como actividad para la racha (RN-08), igual que en el servidor.
+            registroActividad.registrar(uidActual())
         }.recoverCatching { error ->
             throw if (esSinConexion(error)) Exception("Sin conexión. Intenta enviar de nuevo cuando tengas red.") else error
         }
@@ -147,6 +152,7 @@ class LeccionesRepository @Inject constructor(
         llamar { api.enviarIntento(it, leccionId, request) }.fold(
             onSuccess = { resultado ->
                 acreditarXp(resultado)
+                if (resultado.aprobada) registroActividad.registrar(uidActual())
                 EnvioIntento.Calificado(resultado)
             },
             onFailure = { error ->
@@ -157,7 +163,10 @@ class LeccionesRepository @Inject constructor(
                     IntentoPendienteEntity(attemptId, uidActual(), leccionId, gson.toJson(request), System.currentTimeMillis())
                 )
                 programarSincronizacion(context)
-                EnvioIntento.Pendiente(CalificadorLocal.calificar(evaluacion, respuestas))
+                val calificado = CalificadorLocal.calificar(evaluacion, respuestas)
+                // La lección se aprobó hoy aunque el servidor se entere después: la racha sube ya.
+                if (calificado.aprobada) registroActividad.registrar(uidActual())
+                EnvioIntento.Pendiente(calificado)
             }
         )
     }

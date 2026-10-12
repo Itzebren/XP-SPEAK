@@ -23,6 +23,17 @@ interface UsuarioDao {
     @Query("UPDATE usuarios SET racha = :racha, ultimoDiaActivo = :dia WHERE uid = :uid")
     suspend fun actualizarRacha(uid: String, racha: Int, dia: String)
 
+    /**
+     * Progreso: XP y racha que confirma GET /api/progress (corrige la deriva
+     * local). Solo se usa cuando no hay actividades sin enviar.
+     */
+    @Query("UPDATE usuarios SET xp = :xp, racha = :racha, ultimoDiaActivo = :ultimoDia WHERE uid = :uid")
+    suspend fun actualizarProgreso(uid: String, xp: Int, racha: Int, ultimoDia: String?)
+
+    /** Progreso con actividades sin enviar: la XP se sincroniza, la racha local se conserva. */
+    @Query("UPDATE usuarios SET xp = :xp WHERE uid = :uid")
+    suspend fun actualizarXp(uid: String, xp: Int)
+
     @Query("SELECT * FROM usuarios WHERE uid = :uid")
     fun observarUsuario(uid: String): Flow<UsuarioEntity?>
 }

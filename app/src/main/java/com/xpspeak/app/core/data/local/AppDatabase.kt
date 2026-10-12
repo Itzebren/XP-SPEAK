@@ -13,6 +13,8 @@ import com.xpspeak.app.feature.lessons.data.CatalogoCacheEntity
 import com.xpspeak.app.feature.lessons.data.IntentoPendienteEntity
 import com.xpspeak.app.feature.lessons.data.LeccionCacheEntity
 import com.xpspeak.app.feature.lessons.data.LeccionesDao
+import com.xpspeak.app.feature.progress.data.ProgresoCacheEntity
+import com.xpspeak.app.feature.progress.data.ProgresoDao
 
 /**
  * Base de datos local (Room sobre SQLite — decisión del Cap. 3.4.6).
@@ -27,15 +29,17 @@ import com.xpspeak.app.feature.lessons.data.LeccionesDao
         CatalogoCacheEntity::class,
         IntentoPendienteEntity::class,
         PartidaGuardadaEntity::class,
-        ResultadoMinijuegoEntity::class
+        ResultadoMinijuegoEntity::class,
+        ProgresoCacheEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun usuarioDao(): UsuarioDao
     abstract fun leccionesDao(): LeccionesDao
     abstract fun minijuegosDao(): MinijuegosDao
+    abstract fun progresoDao(): ProgresoDao
 
     companion object {
         /**
@@ -78,6 +82,16 @@ abstract class AppDatabase : RoomDatabase() {
                         "`duracionMs` INTEGER NOT NULL, `xpLocal` INTEGER NOT NULL, `xpServidor` INTEGER, " +
                         "`conceptosJson` TEXT NOT NULL, `dia` TEXT NOT NULL, `terminadaEn` INTEGER NOT NULL, " +
                         "`sincronizado` INTEGER NOT NULL, PRIMARY KEY(`partidaId`))"
+                )
+            }
+        }
+
+        /** v5: Progreso (docs/progreso-diseno.md Fase 3) — última respuesta de GET /api/progress. */
+        val MIGRACION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `progreso_cache` (`uid` TEXT NOT NULL, `nivel` TEXT NOT NULL, " +
+                        "`json` TEXT NOT NULL, `etag` TEXT, `actualizadoEn` INTEGER NOT NULL, PRIMARY KEY(`uid`))"
                 )
             }
         }

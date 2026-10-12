@@ -3,6 +3,7 @@ const { ESTADOS, estaDesbloqueada, aplicarIntento } = require('./estado');
 const { siguienteLeccion } = require('./contenido');
 const { acumularSenal } = require('./srs');
 const { consumirIntento } = require('./limite');
+const { leerResumenEnTx, aplicarEnTx } = require('../progreso/repositorio');
 
 /**
  * Persistencia por usuario en Firestore (docs/lecciones-diseno.md §5.2).
@@ -82,6 +83,9 @@ function construirRespuesta({ attemptId, leccion, resultado, progreso, xpGanado,
     conceptos_debiles: resultado.conceptos_debiles,
     // CU-06 A3: con menos del 70% se sugiere repetir antes de avanzar.
     sugerencia: resultado.aprobada ? null : 'repetir_leccion',
+    // Módulo de Progreso: insignias y nivel de XP ganados con este intento (solo al aprobar).
+    insignias_nuevas: [],
+    nivel_xp_nuevo: null,
   };
 }
 
@@ -117,6 +121,8 @@ async function registrarIntento(db, { uid, leccion, attemptId, resultado, ahora 
     const limite = consumirIntento(leido.progreso, ahora);
     const { progreso, xpGanado, primeraAprobacion } = aplicarIntento(leido.progreso, leccion, resultado, ahora);
     const respuesta = construirRespuesta({ attemptId, leccion, resultado, progreso, xpGanado, primeraAprobacion });
+    // Última lectura (antes de escribir): el resumen de progreso, solo si el intento cuenta como actividad.
+    const resumen = resultado.aprobada ? (await leerResumenEnTx(tx, db, uid, ahora)).resumen : null;
 
     // 3. Escrituras.
     tx.set(refs.progreso, { ...progreso, ...limite, uid });
@@ -134,6 +140,10 @@ async function registrarIntento(db, { uid, leccion, attemptId, resultado, ahora 
         xp: xpGanado,
         fecha: ahora,
       });
+      Object.assign(
+        respuesta,
+        aplicarEnTx(tx, db, resumen, { tipo: 'leccion', xp: xpGanado, leccionId: leccion.id, nivel: leccion.nivel_mcer }, ahora)
+      );
     }
     // Serializada: Firestore no admite arrays anidados (los pares de "emparejar").
     tx.set(refIntento, {
@@ -198,6 +208,7 @@ async function registrarRepaso(db, { uid, attemptId, resultado, leccionDeConcept
     if (leido.intento) {
       return { ...JSON.parse(leido.intento.respuesta_json), repetido: true };
     }
+    const { resumen } = await leerResumenEnTx(tx, db, uid, ahora);
 
     const conceptos = resultado.conceptos.map((conteo, i) => {
       const nuevo = acumularSenal(leido.srs[i], { uid, ...conteo }, leccionDeConcepto.get(conteo.concepto_id), ahora);
@@ -217,6 +228,7 @@ async function registrarRepaso(db, { uid, attemptId, resultado, leccionDeConcept
       total: resultado.total,
       feedback: resultado.feedback,
       conceptos,
+      ...aplicarEnTx(tx, db, resumen, { tipo: 'repaso', xp: 0 }, ahora),
     };
 
     tx.set(db.collection(COLECCIONES.EVENTOS).doc(), {

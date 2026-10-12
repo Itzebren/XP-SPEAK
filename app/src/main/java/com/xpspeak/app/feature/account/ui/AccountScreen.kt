@@ -30,6 +30,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.xpspeak.app.core.actividad.Racha
+import java.time.LocalDate
 
 /**
  * Pantalla de Cuenta (RF-15 / RN-14).
@@ -98,7 +100,10 @@ fun AccountScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Default.EmojiEvents, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = "Racha: ${usuario.racha} días", style = MaterialTheme.typography.bodyLarge)
+                        Text(
+                            text = "Racha: ${Racha.texto(Racha.vigente(usuario.racha, usuario.ultimoDiaActivo, LocalDate.now()))}",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
             }

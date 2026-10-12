@@ -5,6 +5,7 @@ import com.xpspeak.app.feature.auth.data.RecuperacionApi
 import com.xpspeak.app.feature.chat.data.ChatApi
 import com.xpspeak.app.feature.games.data.MinijuegosApi
 import com.xpspeak.app.feature.lessons.data.LeccionesApi
+import com.xpspeak.app.feature.progress.data.ProgresoApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -73,6 +74,12 @@ object NetworkModule {
     @Singleton
     fun provideMinijuegosApi(@Named("lecciones") retrofit: Retrofit): MinijuegosApi =
         retrofit.create(MinijuegosApi::class.java)
+
+    /** Progreso también vive en el backend de Lecciones. */
+    @Provides
+    @Singleton
+    fun provideProgresoApi(@Named("lecciones") retrofit: Retrofit): ProgresoApi =
+        retrofit.create(ProgresoApi::class.java)
 
     @Provides
     @Singleton

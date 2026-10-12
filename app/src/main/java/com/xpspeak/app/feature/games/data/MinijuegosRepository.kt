@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.xpspeak.app.core.actividad.RegistroActividad
 import com.xpspeak.app.core.data.local.AppDatabase
 import com.xpspeak.app.feature.auth.data.UsuarioDao
 import com.xpspeak.app.feature.games.domain.CalculadorXp
@@ -18,7 +19,6 @@ import com.xpspeak.app.feature.games.domain.ContenidoJuegos
 import com.xpspeak.app.feature.games.domain.ConteoConcepto
 import com.xpspeak.app.feature.games.domain.Marcador
 import com.xpspeak.app.feature.games.domain.Minijuego
-import com.xpspeak.app.feature.games.domain.Racha
 import com.xpspeak.app.feature.games.domain.ResultadoPartida
 import com.xpspeak.app.feature.lessons.data.CatalogoDto
 import com.xpspeak.app.feature.lessons.data.ErrorDelServidor
@@ -53,6 +53,7 @@ class MinijuegosRepository @Inject constructor(
     private val api: MinijuegosApi,
     private val dao: MinijuegosDao,
     private val usuarioDao: UsuarioDao,
+    private val registroActividad: RegistroActividad,
     private val leccionesDao: LeccionesDao,
     private val leccionesRepository: LeccionesRepository,
     private val firebaseAuth: FirebaseAuth,
@@ -162,7 +163,7 @@ class MinijuegosRepository @Inject constructor(
         val racha = db.withTransaction {
             dao.borrarPartida(uid, juego.id)
             dao.insertarResultado(resultado)
-            registrarActividad(uid, hoy)
+            registroActividad.registrar(uid, hoy)
         }
 
         val confirmado = sincronizando.withLock { enviar(resultado) }
@@ -176,17 +177,12 @@ class MinijuegosRepository @Inject constructor(
             xpReducida = confirmado?.xpReducida ?: xpLocal.reducida,
             confirmada = confirmado != null,
             racha = racha,
+            // Solo las ganadas en vivo: sin conexión se verán después en Progreso.
+            insigniasNuevas = confirmado?.insigniasNuevas.orEmpty().filterNot { it.retroactiva },
+            nivelXpNuevo = confirmado?.nivelXpNuevo,
             paraRepasar = marcador.conceptos.filterValues { it.errores > 0 }.keys
                 .mapNotNull { bancoLocal.descripcionConcepto(it) }.distinct()
         )
-    }
-
-    /** RN-08 en el perfil local: sube una vez por día con actividad. */
-    private suspend fun registrarActividad(uid: String, hoy: LocalDate): Int {
-        val usuario = usuarioDao.buscarPorUid(uid) ?: return 0
-        val racha = Racha.siguiente(usuario.racha, usuario.ultimoDiaActivo, hoy)
-        usuarioDao.actualizarRacha(uid, racha, hoy.toString())
-        return racha
     }
 
     /** Reenvía la outbox. Devuelve false si hay que reintentar más tarde. */

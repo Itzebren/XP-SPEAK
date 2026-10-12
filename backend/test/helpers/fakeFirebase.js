@@ -1,7 +1,7 @@
 /**
  * Doble de prueba de firebase-admin: Firestore en memoria + verifyIdToken.
- * Implementa solo lo que usa el backend (doc/get/where ==/runTransaction con
- * getAll/set). Las transacciones se ejecutan de una en una, igual que el
+ * Implementa solo lo que usa el backend (doc/get/where ==/get de colección/
+ * runTransaction con getAll/get de documento o de consulta/set). Las transacciones se ejecutan de una en una, igual que el
  * aislamiento serializable que garantiza Firestore.
  */
 const { randomUUID } = require('crypto');
@@ -33,6 +33,13 @@ function crearFirestoreFalso() {
     data: () => (datos === undefined ? undefined : structuredClone(datos)),
   });
 
+  const consulta = (nombre, filtro) => ({
+    esConsulta: true,
+    get: async () => ({
+      docs: [...tabla(nombre).values()].filter(filtro).map((datos) => snapshot(datos)),
+    }),
+  });
+
   const db = {
     collection(nombre) {
       return {
@@ -47,14 +54,9 @@ function crearFirestoreFalso() {
         }),
         where(campo, operador, valor) {
           if (operador !== '==') throw new Error(`Operador no soportado en el doble: ${operador}`);
-          return {
-            get: async () => ({
-              docs: [...tabla(nombre).values()]
-                .filter((datos) => datos[campo] === valor)
-                .map((datos) => snapshot(datos)),
-            }),
-          };
+          return consulta(nombre, (datos) => datos[campo] === valor);
         },
+        get: () => consulta(nombre, () => true).get(),
       };
     },
 
@@ -63,7 +65,7 @@ function crearFirestoreFalso() {
         const escrituras = [];
         const tx = {
           getAll: async (...refs) => refs.map((ref) => snapshot(tabla(ref.coleccion).get(ref.id))),
-          get: async (ref) => snapshot(tabla(ref.coleccion).get(ref.id)),
+          get: async (ref) => (ref.esConsulta ? ref.get() : snapshot(tabla(ref.coleccion).get(ref.id))),
           set: (ref, datos) => {
             exigirSinArraysAnidados(datos);
             escrituras.push([ref, structuredClone(datos)]);
