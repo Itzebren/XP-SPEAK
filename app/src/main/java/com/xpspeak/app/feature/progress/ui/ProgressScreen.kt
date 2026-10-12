@@ -1,5 +1,6 @@
 package com.xpspeak.app.feature.progress.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -162,7 +164,12 @@ private fun Encabezado() {
             modifier = Modifier.size(56.dp).clip(CircleShape).background(Color.White),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Filled.SmartToy, contentDescription = "Mascota de XP-SPEAK", tint = XPBluePrimary, modifier = Modifier.size(36.dp))
+            val mascota = recursoDrawable("mascota")
+            if (mascota != 0) {
+                Image(painterResource(mascota), contentDescription = "Mascota de XP-SPEAK", modifier = Modifier.size(52.dp))
+            } else {
+                Icon(Icons.Filled.SmartToy, contentDescription = "Mascota de XP-SPEAK", tint = XPBluePrimary, modifier = Modifier.size(36.dp))
+            }
         }
         Spacer(Modifier.size(12.dp))
         Column {

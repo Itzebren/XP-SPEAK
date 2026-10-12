@@ -1,5 +1,7 @@
 package com.xpspeak.app.feature.progress.ui
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -21,11 +23,17 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.xpspeak.app.core.ui.theme.XPBluePrimary
@@ -53,6 +61,17 @@ private val ESTILOS = mapOf(
 )
 private val ESTILO_DESCONOCIDO = Estilo(Icons.Filled.MilitaryTech, XPBluePrimary)
 
+/**
+ * Id de un drawable por nombre, o 0 si no existe. Permite agregar el arte final
+ * (`res/drawable/insignia_<id>.png`, `mascota.png`) sin cambiar código.
+ */
+@SuppressLint("DiscouragedApi")
+@Composable
+fun recursoDrawable(nombre: String): Int {
+    val context = LocalContext.current
+    return remember(nombre) { context.resources.getIdentifier(nombre, "drawable", context.packageName) }
+}
+
 /** Bloqueada: gris y con candado, nunca solo el color (RNF-01). */
 @Composable
 fun IconoInsignia(insignia: InsigniaDto, obtenida: Boolean, tamano: Dp = 64.dp, modifier: Modifier = Modifier) {
@@ -61,11 +80,23 @@ fun IconoInsignia(insignia: InsigniaDto, obtenida: Boolean, tamano: Dp = 64.dp, 
     val fondo = if (obtenida) estilo.color else MaterialTheme.colorScheme.outlineVariant
     val tinte = if (obtenida) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
     Box(modifier = modifier.size(tamano)) {
-        Box(
-            modifier = Modifier.size(tamano).clip(CircleShape).background(fondo),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(estilo.icono, contentDescription = null, tint = tinte, modifier = Modifier.size(tamano * 0.55f))
+        val arte = recursoDrawable("insignia_${insignia.id.replace('-', '_')}")
+        if (arte != 0) {
+            // Arte final (res/drawable/insignia_<id>): bloqueada en escala de grises.
+            Image(
+                painter = painterResource(arte),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                colorFilter = if (obtenida) null else ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) }),
+                modifier = Modifier.size(tamano).clip(CircleShape)
+            )
+        } else {
+            Box(
+                modifier = Modifier.size(tamano).clip(CircleShape).background(fondo),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(estilo.icono, contentDescription = null, tint = tinte, modifier = Modifier.size(tamano * 0.55f))
+            }
         }
         if (!obtenida) {
             Box(
