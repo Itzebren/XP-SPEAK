@@ -1,9 +1,10 @@
 # XP-SPEAK — Backend serverless (Vercel)
 
-Incluye tres módulos:
+Incluye cuatro módulos:
 - **Recuperación de acceso (RF-03)** — esta sección.
 - **Lecciones (RF-10, RF-12, RF-13, RF-14)** — ver [Módulo de Lecciones](#módulo-de-lecciones) más abajo.
-- **Minijuegos (RF-11)** — ver [Módulo de Minijuegos](#módulo-de-minijuegos) al final.
+- **Minijuegos (RF-11)** — ver [Módulo de Minijuegos](#módulo-de-minijuegos).
+- **Progreso y logros (CU-08, RF-05, RF-14)** — ver [Módulo de Progreso](#módulo-de-progreso) al final.
 
 ## Recuperación de acceso (RF-03)
 
@@ -203,10 +204,13 @@ Errores: `{ "error": "mensaje legible", "codigo": "LECCION_BLOQUEADA" }`
 | `srs_conceptos` | `<uid>_<concepto_id>` | aciertos, fallos, `tasa_error`, `ultima_vista` y SM-2: `intervalo`, `ease`, `repeticiones`, `proxima_revision` |
 | `intentos_lecciones` | `<uid>_<attempt_id>` | idempotencia: respuesta ya calculada de cada intento |
 | `intentos_repaso` | `<uid>_<attempt_id>` | idempotencia de las sesiones de repaso |
-| `eventos_actividad` | automático | `leccion_completada` (con XP), `repaso_completado` (sin XP) y `minijuego_completado`, para racha (RN-08) y gamificación |
+| `eventos_actividad` | automático | `leccion_completada` (con XP), `repaso_completado` (sin XP), `minijuego_completado` y `chat_completado`, para racha (RN-08) y gamificación |
 | `partidas_minijuego` | `<uid>_<partida_id>` | idempotencia: respuesta ya calculada de cada partida |
 | `minijuegos_diario` | `<uid>_<AAAA-MM-DD>` | partidas del día por juego (hora de México), para el tope de XP |
 | `limite_speech` | `<uid>` | ventana de rate limiting de tokens de voz |
+| `resumen_usuario` | `<uid>` | XP total, racha, lecciones aprobadas, estadísticas por juego e insignias (Progreso) |
+| `chats_registrados` | `<uid>_<sesion_id>` | idempotencia de `POST /api/progress/chat` |
+| `chats_diario` | `<uid>_<AAAA-MM-DD>` | conversaciones registradas en el día, para el tope |
 
 Las fechas se guardan en milisegundos epoch (igual que `password_reset_codes`).
 Solo se usan consultas `where('uid', '==', …)`, así que **no hace falta crear
@@ -283,9 +287,10 @@ BASE_URL=https://xp-speak-auth-backend.vercel.app TOKEN=$TOKEN ./scripts/probar-
   de error (RN-07). Cada uno usa un ítem real de alguna evaluación; un par de
   "emparejar" se pregunta como opción múltiple. No da XP (no se puede farmear),
   pero cuenta como actividad para la racha.
-- **XP total del usuario:** este módulo no lo acumula; emite `eventos_actividad`
-  con el XP de cada aprobación para que Gamificación lo consuma (y la respuesta
-  del intento trae `xp_ganado` para que Android actualice su perfil local).
+- **XP total del usuario:** este módulo emite `eventos_actividad` con el XP de
+  cada aprobación y actualiza el resumen del [Módulo de Progreso](#módulo-de-progreso)
+  en la misma transacción (la respuesta del intento trae `xp_ganado` para que
+  Android actualice su perfil local).
 
 ---
 
@@ -349,3 +354,69 @@ Sin esas variables el endpoint responde 503 y la app usa el reconocimiento de
 voz del teléfono como respaldo (sin puntaje fonético). Límite: 10 tokens por
 usuario por hora.
 
+
+---
+
+# Módulo de Progreso
+
+Diseño completo: [`../docs/progreso-diseno.md`](../docs/progreso-diseno.md).
+El servidor es la fuente de verdad de la XP total, la racha y las insignias;
+la app guarda la última respuesta para mostrarla sin red (RNF-10).
+
+## Resumen por usuario
+
+`resumen_usuario/{uid}` acumula XP, racha (días en hora de México), lecciones
+aprobadas, estadísticas por juego e insignias. Se actualiza **dentro** de las
+transacciones de lección aprobada, repaso, partida y chat (`lib/progreso/`), así
+que `GET /api/progress` lee pocos documentos en vez de sumar el historial.
+
+Si un usuario no tiene resumen (tuvo actividad antes de este módulo), se
+reconstruye desde `eventos_actividad` antes de aplicar la actividad nueva, en
+la misma transacción; nunca se crea desde cero, para no perder XP. Las insignias
+que salen de la reconstrucción quedan como `retroactiva` (sin festejo).
+
+## Contrato
+
+```jsonc
+// GET /api/progress?level=A1   (con If-None-Match → 304 si no cambió)
+{ "nivel": "A1",
+  "dominio": { "aprobadas": 3, "total": 12, "porcentaje": 25 },
+  "xp": { "total": 720, "nivel": 4, "xp_en_nivel": 120, "xp_para_siguiente": 400 },
+  "racha": { "actual": 5, "maxima": 9, "ultimo_dia": "2026-10-11" },
+  "habilidades": [ { "id": "vocabulario", "nombre": "Vocabulario", "porcentaje": 82, "sugerencia": "Juega Ráfaga de Palabras" } ],
+  "insignias": [ { "id": "racha-7", "nombre": "Racha de 7 Días", "descripcion": "…", "criterio": "…", "icono": "fuego",
+                   "obtenida": false, "fecha": null, "retroactiva": false, "progreso": { "actual": 5, "meta": 7 } } ],
+  "sin_actividad": false }
+
+// POST /api/progress/chat   — primera respuesta de la IA en una conversación
+{ "sesion_id": "<id de la conversación>" }
+// 200
+{ "sesion_id": "…", "insignias_nuevas": [ … ], "nivel_xp_nuevo": null, "repetido": false }
+```
+
+- Las respuestas de `POST /api/lessons/:id/attempt`, `POST /api/srs/session` y
+  `POST /api/games/result` traen además `insignias_nuevas` (insignias ganadas en
+  vivo, para festejarlas) y `nivel_xp_nuevo` (número o `null`). Son campos
+  opcionales: una app vieja los ignora.
+- Niveles de experiencia: el nivel *n* pide `50·n·(n−1)` XP (0, 100, 300, 600…).
+- Habilidades: precisión del SRS por tipo de concepto más la del minijuego
+  correspondiente; `null` ("Sin datos") con menos de 5 respuestas.
+- Chat: idempotente por `sesion_id`, sin XP, máximo 20 por día (429).
+
+## Catálogo de insignias en el APK
+
+```bash
+npm run exportar:insignias   # regenera app/src/main/assets/progreso/insignias.json
+```
+
+`npm test` falla si el catálogo del APK quedó viejo.
+
+## Orden de despliegue
+
+1. Desplegar el backend (endpoint nuevo y transacciones con resumen).
+2. Correr la migración contra producción (idempotente; se puede repetir):
+   ```bash
+   FIREBASE_SERVICE_ACCOUNT_BASE64=... npm run migrar:resumen
+   ```
+3. Publicar la app. Una app vieja sigue funcionando contra este backend; una
+   app nueva contra un backend viejo solo ve "Sin conexión" en Progreso.

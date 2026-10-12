@@ -3,6 +3,8 @@ const { obtenerConcepto, obtenerLeccion } = require('../lecciones/contenido');
 const { acumularSenal } = require('../lecciones/srs');
 const { COLECCIONES: COLECCIONES_LECCIONES } = require('../lecciones/repositorio');
 const { calcularXp } = require('./xp');
+const { diaLocal } = require('../progreso/racha');
+const { leerResumenEnTx, aplicarEnTx } = require('../progreso/repositorio');
 
 /**
  * Persistencia de los minijuegos en Firestore (docs/minijuegos-diseno.md §6).
@@ -17,12 +19,6 @@ const COLECCIONES = {
 
 // Tope duro por usuario y día, sumando todos los juegos (además de la XP a la mitad).
 const MAX_PARTIDAS_POR_DIA = 60;
-const ZONA_HORARIA = 'America/Mexico_City';
-
-/** "2026-10-06": el día cuenta en hora de México, no en UTC. */
-function diaLocal(ahora) {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: ZONA_HORARIA }).format(new Date(ahora));
-}
 
 /** La lección de la que sale el concepto: el SRS la usa para su nivel MCER. */
 function leccionDeConcepto(conceptoId) {
@@ -61,6 +57,7 @@ async function registrarPartida(db, { uid, resultado, ahora = Date.now() }) {
     }
     const previasDelJuego = conteo[juego] || 0;
     const { xp, reducida } = calcularXp(juego, { aciertos, total, duracionMs }, previasDelJuego);
+    const { resumen } = await leerResumenEnTx(tx, db, uid, ahora);
 
     const respuesta = {
       partida_id: partidaId,
@@ -71,6 +68,8 @@ async function registrarPartida(db, { uid, resultado, ahora = Date.now() }) {
       xp_ganado: xp,
       xp_reducida: reducida,
       partidas_hoy: previasDelJuego + 1,
+      // Módulo de Progreso: insignias y nivel de XP ganados con esta partida.
+      ...aplicarEnTx(tx, db, resumen, { tipo: 'minijuego', xp, juego, aciertos, total }, ahora),
     };
 
     conceptos.forEach((conteoConcepto, i) => {
