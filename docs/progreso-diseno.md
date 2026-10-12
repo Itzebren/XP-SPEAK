@@ -1,8 +1,78 @@
 # Diseño y plan del módulo de **Progreso y logros** (CU-08, RF-05, RF-14)
 
-> Rama `feature/progreso` (desde `develop` `bd20c01`). Estado: **plan aprobado, sin
-> implementar** (2026-10-07). Es el documento de contexto del módulo, igual que
-> `docs/minijuegos-diseno.md`: se actualiza conforme avance el desarrollo.
+> Rama `feature/progreso` (desde `develop` `bd20c01`). Estado: **implementado y probado en
+> emulador** (2026-10-11). El plan se aprobó el 2026-10-07. Es el documento de contexto del
+> módulo, igual que `docs/minijuegos-diseno.md`: se actualiza conforme avance el desarrollo.
+
+## 0. Estado actual
+
+| Pieza | Estado | Dónde |
+|---|---|---|
+| Fase 1: reglas puras (niveles, racha, insignias, resumen) | ✅ | `backend/lib/progreso/{niveles,racha,insignias,resumen}.js` |
+| Fase 2: resumen en las transacciones, `GET /api/progress` (ETag), `POST /api/progress/chat` | ✅ | `backend/lib/progreso/{repositorio,vista}.js`, `backend/api/progress/` |
+| Scripts `migrar:resumen` y `exportar:insignias` | ✅ | `backend/scripts/`, `app/src/main/assets/progreso/insignias.json` |
+| Fase 3: datos en Android (API, Room v5, repositorio, catálogo local) | ✅ | `feature/progress/data/`, `core/sesion/SesionActual.kt` |
+| Fase 4: pantalla Progreso, detalle de insignia, festejo `InsigniaNueva` | ✅ | `feature/progress/ui/` (también en lección, minijuego, repaso y chat) |
+| Fase 5: racha unificada (`RegistroActividad`) y chat | ✅ | `core/actividad/`, `LeccionesRepository`, `ChatViewModel` |
+| Arte final de insignias y mascota | ❌ | Pendiente de assets (hoy: íconos de Material, Decisión 6) |
+| Despliegue a producción y `npm run migrar:resumen` | ❌ | Seguir "Orden de despliegue" (abajo y en `backend/README.md`) |
+
+### 0.1 Contexto para retomar el desarrollo
+
+Última sesión: **2026-10-11**. Pruebas automáticas:
+- Backend: **119/119** con `npm test`, de las cuales 28 son nuevas en `test/progreso.test.js`.
+- Emulador de Firestore: **3/3** con `npm run test:emulador`. Incluye la reconstrucción
+  dentro de la transacción con Firestore real, el ETag, dos registros de chat simultáneos y la
+  migración.
+- Android: **63/63** con `testDebugUnitTest`. Las nuevas son `ProgresoReglasTest`,
+  `ProgresoCacheTest`, `ProgresoContratoTest`, `ProgresoRepositoryTest` y
+  `ProgressViewModelTest`.
+
+Verificación en el emulador (Pixel_10a, `npm run dev:app`, cuenta de prueba con un historial
+de 136 XP sembrado sin resumen):
+
+| Caso | Resultado |
+|---|---|
+| Progreso reconstruye desde eventos | 136 XP, nivel 2 (36/200), racha de 2 días, dominio 1/12 |
+| Insignias que ya merecía | "Primer Logro" a color, sin diálogo |
+| Orden Maestro al 100 % | Festejo "Estrella del Minijuego", +10 XP; en Progreso: 146 XP y racha de 3 días |
+| Primera respuesta del chat | Festejo "Habla con IA" (`POST /api/progress/chat` → 200) |
+| Sin conexión con caché | Aviso "Sin conexión · datos de hace un momento" |
+| Sin conexión y sin caché | 9 insignias en gris desde el catálogo empaquetado, más la XP y la racha del perfil local |
+| Usuario nuevo (A1) | Mensaje motivacional; "Haz tu primera lección" lleva a Lecciones |
+| 360 dp con fuente al 130 % | Nada se corta en Progreso |
+
+**Cambios respecto al plan** (las secciones de abajo siguen siendo el diseño de referencia):
+1. **Resumen faltante dentro de una actividad.** La transacción lo reconstruye desde el
+   historial (`leerResumenEnTx`, con lecturas consistentes vía `tx.get(consulta)`) y luego
+   aplica la actividad en vivo. Se mantiene la regla de nunca crearlo desde `resumenVacio`,
+   pero un usuario nuevo sí ve el festejo de "Primer Logro". Con el plan original, ese festejo
+   se perdía (habría llegado como retroactiva).
+2. **`racha.ultimo_dia` en `GET /api/progress`.** Así la app sigue contando la racha sin red
+   después de sincronizar. Por eso `UsuarioDao.actualizarProgreso` recibe también `ultimoDia`.
+   Con actividades pendientes se usa `actualizarXp`.
+3. **Habilidades:** se muestra "Sin datos" con menos de 5 respuestas
+   (`MIN_RESPUESTAS_HABILIDAD`). Cada habilidad trae una `sugerencia` ("Juega Eco Vocal").
+4. **Jugador Experto:** sin haber jugado los 4 juegos, su progreso se queda en 24/25.
+5. **Festejo también en el repaso y en el chat**, no solo en lección y minijuego.
+6. **Interfaz para pruebas.** `SesionActual`, `CatalogoInsignias` y `FuenteProgreso` son
+   interfaces (enlazadas en `core/di/ProgresoModule.kt`) para probar con fakes, sin Firebase.
+7. **Barra inferior:**
+   - Juegos cambió a `SportsEsports`, porque `EmojiEvents` ahora es de Progreso.
+   - Las etiquetas van en una sola línea, porque con fuente grande se partían.
+8. **`diaLocal`** se movió a `backend/lib/progreso/racha.js`. `minijuegos/repositorio.js` lo
+   reexporta.
+
+**Pendiente:** el arte final de las insignias (`res/drawable/insignia_<id>.png`) y de la
+mascota, y desplegar. El cliente de chat no tiene un id de conversación propio:
+`ChatViewModel` genera un UUID por pantalla de chat.
+
+**Cómo levantar el entorno de prueba:** igual que en minijuegos (§0.1 de
+`docs/minijuegos-diseno.md`). `npm run dev:app` y `npm run test:emulador` necesitan Java en
+el `PATH`:
+```sh
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"; export PATH="$JAVA_HOME/bin:$PATH"
+```
 
 ## Contexto
 
