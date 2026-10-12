@@ -1,5 +1,7 @@
 package com.xpspeak.app.feature.games.ui.mision
 
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
+import com.xpspeak.app.core.ui.theme.FormaBoton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +39,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.xpspeak.app.core.ui.theme.XPGreenSuccess
+import com.xpspeak.app.core.ui.theme.XPVerdeExito
 import com.xpspeak.app.feature.games.domain.Minijuego
 import com.xpspeak.app.feature.games.ui.comun.PantallaPartida
 import com.xpspeak.app.feature.games.ui.comun.TarjetaFeedback
@@ -69,7 +71,7 @@ fun MisionScreen(onVolver: () -> Unit, viewModel: MisionViewModel = hiltViewMode
                     Text(
                         "${if (hecho) "✅" else "⬜"} ${objetivo.texto}",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = if (hecho) XPGreenSuccess else MaterialTheme.colorScheme.onSurface
+                        color = if (hecho) XPVerdeExito else MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -147,6 +149,6 @@ private fun RespuestaEscrita(paso: Int, onEnviar: (String) -> Unit, onVerOpcione
     )
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
         TextButton(onClick = onVerOpciones, modifier = Modifier.weight(1f)) { Text("Ver opciones") }
-        Button(onClick = { onEnviar(texto) }, enabled = texto.isNotBlank(), modifier = Modifier.weight(1f)) { Text("Responder") }
+        Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = { onEnviar(texto) }, enabled = texto.isNotBlank(), modifier = Modifier.weight(1f)) { Text("Responder") }
     }
 }

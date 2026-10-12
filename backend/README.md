@@ -411,6 +411,14 @@ npm run exportar:insignias   # regenera app/src/main/assets/progreso/insignias.j
 
 `npm test` falla si el catálogo del APK quedó viejo.
 
+## Eliminar cuenta (RN-14)
+
+`POST /api/account/delete` (Ilustración 36, pantalla "Confirmar eliminación"): borra todos los
+documentos con el `uid` del usuario en las colecciones de lecciones, repaso, minijuegos, progreso
+y `limite_speech`, más su código en `password_reset_codes`, y al final la cuenta de Firebase
+Auth. Necesita las credenciales de administrador (`FIREBASE_*`): sin ellas responde 500 y no
+borra nada. Si la cuenta ya no existe (reintento), responde 200. Ver `docs/diseno.md`.
+
 ## Orden de despliegue
 
 1. Desplegar el backend (endpoint nuevo y transacciones con resumen).

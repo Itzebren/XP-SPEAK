@@ -51,6 +51,8 @@ class ProgresoRepositoryTest {
             usuario = usuario?.copy(xp = xp, racha = racha, ultimoDiaActivo = ultimoDia)
         }
         override suspend fun actualizarXp(uid: String, xp: Int) { usuario = usuario?.copy(xp = xp) }
+        override suspend fun actualizarAvatar(uid: String, avatar: String) { usuario = usuario?.copy(avatar = avatar) }
+        override suspend fun actualizarNivel(uid: String, nivel: String) { usuario = usuario?.copy(nivel = nivel) }
         override fun observarUsuario(uid: String): Flow<UsuarioEntity?> = flowOf(usuario)
     }
 

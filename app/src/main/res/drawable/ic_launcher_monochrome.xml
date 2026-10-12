@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ícono temático (Android 13+): la cabeza de la mascota en una sola tinta, centrada en 108 dp. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <group android:scaleX="0.5" android:scaleY="0.5" android:translateX="6" android:translateY="6">
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M11.25,3h1.5v3h-1.5z M12,1a1.5,1.5 0,1 1,0 3a1.5,1.5 0,1 1,0 -3z M1,10h1.5v5h-1.5z M21.5,10h1.5v5h-1.5z" />
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M7,6h10a4,4 0,0 1,4 4v5a4,4 0,0 1,-4 4h-10a4,4 0,0 1,-4 -4v-5a4,4 0,0 1,4 -4z M9,10.5a1.5,1.5 0,1 0,0 3a1.5,1.5 0,1 0,0 -3z M15,10.5a1.5,1.5 0,1 0,0 3a1.5,1.5 0,1 0,0 -3z"
+            android:fillType="evenOdd" />
+    </group>
+</vector>

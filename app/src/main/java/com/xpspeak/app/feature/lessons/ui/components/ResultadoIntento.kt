@@ -1,5 +1,7 @@
 package com.xpspeak.app.feature.lessons.ui.components
 
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
+import com.xpspeak.app.core.ui.theme.FormaBoton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -57,6 +59,6 @@ fun ResultadoIntento(
     }
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedButton(onClick = onReintentar) { Text("Intentar de nuevo") }
-        Button(onClick = onVolver) { Text("Volver al catálogo") }
+        Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onVolver) { Text("Volver al catálogo") }
     }
 }

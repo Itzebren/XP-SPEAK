@@ -16,7 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.xpspeak.app.core.ui.theme.XPOrangeAccent
+import com.xpspeak.app.core.ui.theme.XPNaranja
+import com.xpspeak.app.core.ui.theme.XPNaranjaTexto
 import com.xpspeak.app.feature.progress.data.InsigniaDto
 
 /**
@@ -52,7 +53,7 @@ fun InsigniaNueva(insignias: List<InsigniaDto>, nivelXpNuevo: Int?, onCerrar: ()
                     Text(
                         "¡Subiste a nivel $it!",
                         style = MaterialTheme.typography.titleMedium,
-                        color = XPOrangeAccent,
+                        color = XPNaranjaTexto,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()

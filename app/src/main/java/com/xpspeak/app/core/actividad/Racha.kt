@@ -24,6 +24,20 @@ object Racha {
         return if (ultimo == hoy || ultimo == hoy.minusDays(1)) rachaActual else 0
     }
 
+    /**
+     * Los 7 círculos del Inicio (Ilustración 32), de lunes a domingo de la semana de [hoy]:
+     * `true` en los días que cubre la racha vigente.
+     */
+    fun semana(rachaActual: Int, ultimoDia: String?, hoy: LocalDate): List<Boolean> {
+        val racha = vigente(rachaActual, ultimoDia, hoy)
+        val ultimo = ultimoDia?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+        val lunes = hoy.minusDays(hoy.dayOfWeek.value - 1L)
+        return (0L..6L).map { i ->
+            val dia = lunes.plusDays(i)
+            racha > 0 && ultimo != null && !dia.isAfter(ultimo) && dia.isAfter(ultimo.minusDays(racha.toLong()))
+        }
+    }
+
     /** "1 día", "5 días". */
     fun texto(dias: Int): String = if (dias == 1) "1 día" else "$dias días"
 }

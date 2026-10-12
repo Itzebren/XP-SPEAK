@@ -1,6 +1,7 @@
 package com.xpspeak.app.core.di
 
 import com.xpspeak.app.BuildConfig
+import com.xpspeak.app.feature.account.data.CuentaApi
 import com.xpspeak.app.feature.auth.data.RecuperacionApi
 import com.xpspeak.app.feature.chat.data.ChatApi
 import com.xpspeak.app.feature.games.data.MinijuegosApi
@@ -80,6 +81,12 @@ object NetworkModule {
     @Singleton
     fun provideProgresoApi(@Named("lecciones") retrofit: Retrofit): ProgresoApi =
         retrofit.create(ProgresoApi::class.java)
+
+    /** Eliminar la cuenta (RN-14) vive en el mismo backend que Progreso. */
+    @Provides
+    @Singleton
+    fun provideCuentaApi(@Named("lecciones") retrofit: Retrofit): CuentaApi =
+        retrofit.create(CuentaApi::class.java)
 
     @Provides
     @Singleton

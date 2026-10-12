@@ -34,6 +34,14 @@ interface UsuarioDao {
     @Query("UPDATE usuarios SET xp = :xp WHERE uid = :uid")
     suspend fun actualizarXp(uid: String, xp: Int)
 
+    /** RF-05: avatar elegido en Personalización o en Ajustes de perfil (id de `Avatar`). */
+    @Query("UPDATE usuarios SET avatar = :avatar WHERE uid = :uid")
+    suspend fun actualizarAvatar(uid: String, avatar: String)
+
+    /** Ajustes de perfil: cambiar de nivel MCER. El avance de cada nivel se guarda aparte. */
+    @Query("UPDATE usuarios SET nivel = :nivel WHERE uid = :uid")
+    suspend fun actualizarNivel(uid: String, nivel: String)
+
     @Query("SELECT * FROM usuarios WHERE uid = :uid")
     fun observarUsuario(uid: String): Flow<UsuarioEntity?>
 }

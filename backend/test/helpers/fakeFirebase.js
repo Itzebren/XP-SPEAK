@@ -28,30 +28,38 @@ function crearFirestoreFalso() {
     return colecciones.get(nombre);
   };
 
-  const snapshot = (datos) => ({
+  const snapshot = (datos, ref) => ({
     exists: datos !== undefined,
     data: () => (datos === undefined ? undefined : structuredClone(datos)),
+    ref,
+  });
+
+  const referencia = (nombre, id) => ({
+    coleccion: nombre,
+    id,
+    get: async () => snapshot(tabla(nombre).get(id)),
+    set: async (datos) => {
+      exigirSinArraysAnidados(datos);
+      tabla(nombre).set(id, structuredClone(datos));
+    },
+    delete: async () => {
+      tabla(nombre).delete(id);
+    },
   });
 
   const consulta = (nombre, filtro) => ({
     esConsulta: true,
     get: async () => ({
-      docs: [...tabla(nombre).values()].filter(filtro).map((datos) => snapshot(datos)),
+      docs: [...tabla(nombre).entries()]
+        .filter(([, datos]) => filtro(datos))
+        .map(([id, datos]) => snapshot(datos, referencia(nombre, id))),
     }),
   });
 
   const db = {
     collection(nombre) {
       return {
-        doc: (id = randomUUID()) => ({
-          coleccion: nombre,
-          id,
-          get: async () => snapshot(tabla(nombre).get(id)),
-          set: async (datos) => {
-            exigirSinArraysAnidados(datos);
-            tabla(nombre).set(id, structuredClone(datos));
-          },
-        }),
+        doc: (id = randomUUID()) => referencia(nombre, id),
         where(campo, operador, valor) {
           if (operador !== '==') throw new Error(`Operador no soportado en el doble: ${operador}`);
           return consulta(nombre, (datos) => datos[campo] === valor);
@@ -94,6 +102,9 @@ function crearFirestoreFalso() {
  */
 function instalarFirebaseFalso(tokens) {
   const db = crearFirestoreFalso();
+  // Usuarios de Firebase Auth: uid → { uid, email }. Las pruebas pueden agregar más.
+  let falloAuth = null;
+  const usuarios = new Map(Object.values(tokens).map((uid) => [uid, { uid, email: `${uid}@prueba.com` }]));
   const admin = {
     firestore: () => db,
     auth: () => ({
@@ -101,7 +112,20 @@ function instalarFirebaseFalso(tokens) {
         if (!tokens[token]) throw new Error('token inválido');
         return { uid: tokens[token] };
       },
+      getUser: async (uid) => {
+        if (falloAuth) throw falloAuth;
+        if (!usuarios.has(uid)) throw Object.assign(new Error('no existe'), { code: 'auth/user-not-found' });
+        return { ...usuarios.get(uid) };
+      },
+      deleteUser: async (uid) => {
+        if (!usuarios.delete(uid)) throw Object.assign(new Error('no existe'), { code: 'auth/user-not-found' });
+      },
     }),
+    _usuarios: usuarios,
+    /** Simula que Firebase Auth falla (p. ej. sin credenciales). */
+    _fallarAuth: (error) => {
+      falloAuth = error;
+    },
   };
 
   const ruta = require.resolve(path.join(__dirname, '..', '..', 'lib', 'firebaseAdmin'));

@@ -2,6 +2,7 @@ package com.xpspeak.app.feature.auth.data
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.userProfileChangeRequest
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -18,10 +19,30 @@ open class AuthRepository @Inject constructor(
     open val usuarioActual: FirebaseUser?
         get() = firebaseAuth?.currentUser
 
-    open suspend fun registrar(correo: String, password: String): Result<FirebaseUser> = runCatching {
+    /** [nombre] es el nombre de usuario de la Ilustración 29; se guarda como displayName. */
+    open suspend fun registrar(correo: String, password: String, nombre: String? = null): Result<FirebaseUser> = runCatching {
         val auth = requireNotNull(firebaseAuth) { "FirebaseAuth no está inicializado" }
         val resultado = auth.createUserWithEmailAndPassword(correo, password).await()
-        resultado.user ?: throw IllegalStateException("No se pudo crear el usuario")
+        val usuario = resultado.user ?: throw IllegalStateException("No se pudo crear el usuario")
+        if (!nombre.isNullOrBlank()) {
+            usuario.updateProfile(userProfileChangeRequest { displayName = nombre.trim() }).await()
+        }
+        usuario
+    }
+
+    /** Ajustes de perfil (Ilustración 35): cambia el nombre que se muestra. */
+    open suspend fun cambiarNombre(nombre: String): Result<Unit> = runCatching {
+        val usuario = requireNotNull(usuarioActual) { "Inicia sesión para cambiar tu nombre." }
+        usuario.updateProfile(userProfileChangeRequest { displayName = nombre.trim() }).await()
+    }
+
+    /**
+     * Ajustes de perfil: Firebase manda un enlace al correo nuevo y lo cambia hasta que
+     * el usuario lo confirma, para que nadie se adueñe de la cuenta con un correo ajeno.
+     */
+    open suspend fun cambiarCorreo(nuevo: String): Result<Unit> = runCatching {
+        val usuario = requireNotNull(usuarioActual) { "Inicia sesión para cambiar tu correo." }
+        usuario.verifyBeforeUpdateEmail(nuevo).await()
     }
 
     open suspend fun iniciarSesion(correo: String, password: String): Result<FirebaseUser> = runCatching {

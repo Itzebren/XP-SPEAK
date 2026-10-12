@@ -1,5 +1,8 @@
 package com.xpspeak.app.feature.games.ui.comun
 
+import androidx.compose.foundation.layout.statusBarsPadding
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
+import com.xpspeak.app.core.ui.theme.FormaBoton
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,9 +49,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.xpspeak.app.core.actividad.Racha
-import com.xpspeak.app.core.ui.theme.XPBlueLight
-import com.xpspeak.app.core.ui.theme.XPGreenSuccess
-import com.xpspeak.app.core.ui.theme.XPOrangeAccent
+import com.xpspeak.app.core.ui.theme.XPAzulClaro
+import com.xpspeak.app.core.ui.theme.XPVerdeExito
+import com.xpspeak.app.core.ui.theme.XPNaranja
+import com.xpspeak.app.core.ui.theme.XPNaranjaTexto
 import com.xpspeak.app.feature.games.domain.CalculadorXp
 import com.xpspeak.app.feature.games.domain.Minijuego
 import com.xpspeak.app.feature.games.domain.ResultadoPartida
@@ -96,7 +100,7 @@ fun <E : EstadoPartida<E>> PantallaPartida(
 
 @Composable
 private fun EncabezadoJuego(titulo: String, onVolver: () -> Unit, progreso: Float?) {
-    Column(modifier = Modifier.fillMaxWidth().background(XPBlueLight)) {
+    Column(modifier = Modifier.fillMaxWidth().background(XPAzulClaro).statusBarsPadding()) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(4.dp)) {
             IconButton(onClick = onVolver) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver al catálogo")
@@ -120,7 +124,7 @@ private fun DialogoRetomar(onRetomar: () -> Unit, onNueva: () -> Unit) {
         onDismissRequest = {},
         title = { Text("¿Retomar la partida?") },
         text = { Text("Tienes una partida sin terminar. Puedes seguir donde te quedaste o empezar una nueva.") },
-        confirmButton = { Button(onClick = onRetomar) { Text("Retomar") } },
+        confirmButton = { Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onRetomar) { Text("Retomar") } },
         dismissButton = { TextButton(onClick = onNueva) { Text("Empezar de nuevo") } }
     )
 }
@@ -131,7 +135,7 @@ private fun ColumnScope.Mensaje(icono: String, mensaje: String, onVolver: () -> 
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(icono, style = MaterialTheme.typography.displaySmall)
             Text(mensaje, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
-            Button(onClick = onVolver) { Text("Volver al catálogo") }
+            Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onVolver) { Text("Volver al catálogo") }
         }
     }
 }
@@ -165,13 +169,13 @@ private fun ColumnScope.PantallaResultado(resultado: ResultadoPartida, onOtraVez
         }
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = XPOrangeAccent.copy(alpha = 0.15f))
+            colors = CardDefaults.cardColors(containerColor = XPNaranja.copy(alpha = 0.15f))
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("+${resultado.xp} XP", style = MaterialTheme.typography.headlineLarge, color = XPOrangeAccent, fontWeight = FontWeight.Bold)
+                Text("+${resultado.xp} XP", style = MaterialTheme.typography.headlineLarge, color = XPNaranjaTexto, fontWeight = FontWeight.Bold)
                 resultado.nivelXpNuevo?.let {
                     Text("⭐ ¡Subiste a nivel $it!", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                 }
@@ -206,7 +210,7 @@ private fun ColumnScope.PantallaResultado(resultado: ResultadoPartida, onOtraVez
     }
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
         OutlinedButton(onClick = onVolver, modifier = Modifier.weight(1f)) { Text("Catálogo") }
-        Button(onClick = onOtraVez, modifier = Modifier.weight(1f)) { Text("Jugar otra vez") }
+        Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onOtraVez, modifier = Modifier.weight(1f)) { Text("Jugar otra vez") }
     }
 }
 
@@ -259,7 +263,7 @@ fun TarjetaFeedback(veredicto: Veredicto?, titulo: String, detalle: String? = nu
 
 @Composable
 fun colorDe(veredicto: Veredicto?): Color = when (veredicto) {
-    Veredicto.ACIERTO -> XPGreenSuccess
+    Veredicto.ACIERTO -> XPVerdeExito
     Veredicto.ERROR -> MaterialTheme.colorScheme.error
     null -> MaterialTheme.colorScheme.primary
 }

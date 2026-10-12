@@ -15,7 +15,7 @@
 | Fase 4: pantalla Progreso, detalle de insignia, festejo `InsigniaNueva` | ✅ | `feature/progress/ui/` (también en lección, minijuego, repaso y chat) |
 | Fase 5: racha unificada (`RegistroActividad`) y chat | ✅ | `core/actividad/`, `LeccionesRepository`, `ChatViewModel` |
 | Carga del arte final de insignias y mascota | ✅ | `recursoDrawable` en `feature/progress/ui/IconosInsignia.kt`: usa `res/drawable/insignia_<id>` y `mascota` si existen |
-| Archivos del arte final (asset del equipo) | ❌ | Solo hay que agregar los PNG; mientras tanto se ven íconos de Material (Decisión 6) |
+| Archivos del arte final | ✅ | VectorDrawable `insignia_<id>` y `mascota` generados en `feature/diseno` (ver `docs/diseno.md`) |
 | Despliegue a producción y `npm run migrar:resumen` | ❌ | Seguir "Orden de despliegue" (abajo y en `backend/README.md`) |
 
 ### 0.1 Contexto para retomar el desarrollo

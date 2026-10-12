@@ -1,5 +1,6 @@
 package com.xpspeak.app.feature.games.ui.rafaga
 
+import com.xpspeak.app.core.ui.theme.FormaBoton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,8 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.xpspeak.app.core.ui.theme.XPGreenSuccess
-import com.xpspeak.app.core.ui.theme.XPOrangeAccent
+import com.xpspeak.app.core.ui.theme.XPVerdeExito
+import com.xpspeak.app.core.ui.theme.XPNaranja
+import com.xpspeak.app.core.ui.theme.XPNaranjaTexto
 import com.xpspeak.app.feature.games.domain.Minijuego
 import com.xpspeak.app.feature.games.ui.comun.PantallaPartida
 import com.xpspeak.app.feature.games.ui.comun.TarjetaFeedback
@@ -64,7 +66,7 @@ fun RafagaScreen(onVolver: () -> Unit, viewModel: RafagaViewModel = hiltViewMode
         Text(
             if (estado.multiplicador > 1) "🔥 Combo ${estado.combo} · ¡puntos x2!" else "Combo ${estado.combo}",
             style = MaterialTheme.typography.labelLarge,
-            color = if (estado.multiplicador > 1) XPOrangeAccent else MaterialTheme.colorScheme.onSurfaceVariant
+            color = if (estado.multiplicador > 1) XPNaranjaTexto else MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Text(
@@ -105,6 +107,7 @@ fun RafagaScreen(onVolver: () -> Unit, viewModel: RafagaViewModel = hiltViewMode
         Spacer(Modifier.weight(1f))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
             Button(
+                shape = FormaBoton,
                 onClick = { viewModel.responder(coinciden = false) },
                 enabled = respondido == null,
                 modifier = Modifier.weight(1f).height(72.dp),
@@ -114,10 +117,11 @@ fun RafagaScreen(onVolver: () -> Unit, viewModel: RafagaViewModel = hiltViewMode
                 Text("  Al bote", style = MaterialTheme.typography.titleMedium)
             }
             Button(
+                shape = FormaBoton,
                 onClick = { viewModel.responder(coinciden = true) },
                 enabled = respondido == null,
                 modifier = Modifier.weight(1f).height(72.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = XPGreenSuccess)
+                colors = ButtonDefaults.buttonColors(containerColor = XPVerdeExito)
             ) {
                 Icon(Icons.Filled.Check, contentDescription = null)
                 Text("  Coinciden", style = MaterialTheme.typography.titleMedium)

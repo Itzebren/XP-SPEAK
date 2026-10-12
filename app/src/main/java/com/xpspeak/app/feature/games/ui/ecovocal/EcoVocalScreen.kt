@@ -1,5 +1,15 @@
 package com.xpspeak.app.feature.games.ui.ecovocal
 
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
+import com.xpspeak.app.core.ui.theme.FormaBoton
+import androidx.compose.foundation.Image
+import androidx.compose.material3.Surface
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import com.xpspeak.app.R
+import com.xpspeak.app.core.ui.componentes.TarjetaXP
+import com.xpspeak.app.core.ui.theme.XPBlanco
+import com.xpspeak.app.core.ui.theme.XPTexto
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -45,8 +55,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.xpspeak.app.core.ui.theme.XPGreenSuccess
-import com.xpspeak.app.core.ui.theme.XPOrangeAccent
+import com.xpspeak.app.core.ui.theme.XPVerdeExito
+import com.xpspeak.app.core.ui.theme.XPNaranja
+import com.xpspeak.app.core.ui.theme.XPNaranjaTexto
 import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import com.xpspeak.app.feature.games.domain.FuenteEvaluacion
 import com.xpspeak.app.feature.games.domain.GeneradorRondas
@@ -102,10 +113,12 @@ fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltView
                 AudioNoLegible(evaluacion)
             }
 
-            Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Enunciado", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Text(ronda.en, style = MaterialTheme.typography.headlineSmall)
+            TarjetaXP {
+                Column {
+                    Text("Enunciado", style = MaterialTheme.typography.titleLarge)
+                    Surface(color = XPBlanco, shape = MaterialTheme.shapes.small, modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
+                        Text(ronda.en, style = MaterialTheme.typography.headlineSmall, color = XPTexto, fontFamily = FontFamily.Default, modifier = Modifier.padding(12.dp))
+                    }
                     ronda.es?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
                     Row {
                         TextButton(onClick = { locutor.decir(ronda.en) }) {
@@ -134,7 +147,7 @@ fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltView
         }
 
         if (revision != null) {
-            Button(onClick = viewModel::continuar, modifier = Modifier.fillMaxWidth()) {
+            Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = viewModel::continuar, modifier = Modifier.fillMaxWidth()) {
                 Text(if (revision.definitiva) "Continuar" else "Intentar de nuevo")
             }
         } else {
@@ -156,7 +169,7 @@ private fun BotonMicrofono(escuchando: Boolean, onClick: () -> Unit) {
                 enabled = !escuchando,
                 modifier = Modifier.size(88.dp),
                 shape = CircleShape,
-                colors = IconButtonDefaults.filledIconButtonColors(containerColor = XPOrangeAccent)
+                colors = IconButtonDefaults.filledIconButtonColors(containerColor = XPNaranja)
             ) {
                 Icon(Icons.Filled.Mic, contentDescription = "Hablar", modifier = Modifier.size(44.dp))
             }
@@ -170,11 +183,15 @@ private fun BotonMicrofono(escuchando: Boolean, onClick: () -> Unit) {
 @Composable
 private fun AudioNoLegible(evaluacion: EvaluacionVoz) {
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(
+            painterResource(R.drawable.mascota_preocupada),
+            contentDescription = null,
+            modifier = Modifier.size(width = 88.dp, height = 97.dp)
+        )
         Text(
-            "¡PRONUNCIACIÓN INCORRECTA!",
-            color = XPOrangeAccent,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
+            "¡Pronunciación incorrecta!",
+            color = XPNaranjaTexto,
+            style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
         Text(
@@ -183,17 +200,17 @@ private fun AudioNoLegible(evaluacion: EvaluacionVoz) {
             style = MaterialTheme.typography.bodyMedium
         )
     }
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+    TarjetaXP {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
-                modifier = Modifier.background(MaterialTheme.colorScheme.error, RoundedCornerShape(8.dp)).padding(12.dp)
+                modifier = Modifier.background(MaterialTheme.colorScheme.error, RoundedCornerShape(14.dp)).padding(horizontal = 16.dp, vertical = 10.dp)
             ) {
-                Text("${evaluacion.confianza}%", color = Color.White, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                Text("${evaluacion.confianza}%", color = Color.White, style = MaterialTheme.typography.headlineMedium)
             }
             Spacer(Modifier.size(16.dp))
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
                 Text("Índice de confianza:", style = MaterialTheme.typography.titleMedium)
-                Text("BAJO", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                Text("Bajo", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.headlineSmall)
             }
         }
     }
@@ -203,8 +220,8 @@ private fun AudioNoLegible(evaluacion: EvaluacionVoz) {
 /** Puntaje y palabras coloreadas (verde/amarillo/rojo) según la evaluación. */
 @Composable
 private fun PuntajePronunciacion(evaluacion: EvaluacionVoz) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    TarjetaXP {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     "${evaluacion.puntaje}",
@@ -241,7 +258,7 @@ private fun PuntajePronunciacion(evaluacion: EvaluacionVoz) {
 
 @Composable
 private fun colorPorPuntaje(puntaje: Int): Color = when (Pronunciacion.nivelDe(puntaje)) {
-    Pronunciacion.Nivel.BUENO -> XPGreenSuccess
+    Pronunciacion.Nivel.BUENO -> XPVerdeExito
     Pronunciacion.Nivel.REGULAR -> Color(0xFFF9A825)
     Pronunciacion.Nivel.MALO -> MaterialTheme.colorScheme.error
 }

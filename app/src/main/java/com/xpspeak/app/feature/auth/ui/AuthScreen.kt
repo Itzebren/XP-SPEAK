@@ -1,13 +1,18 @@
 package com.xpspeak.app.feature.auth.ui
 
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -16,10 +21,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.xpspeak.app.core.ui.componentes.BotonPrincipal
+import com.xpspeak.app.core.ui.componentes.CampoTexto
+import com.xpspeak.app.core.ui.componentes.Logotipo
+import com.xpspeak.app.core.ui.theme.XPMarino
 
+/** Iniciar sesión y Crear cuenta (Ilustraciones 28 y 29). */
 @Composable
 fun AuthScreen(
     onAuthSuccess: () -> Unit,
@@ -28,6 +39,7 @@ fun AuthScreen(
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val esLogin = uiState.modo == AuthMode.LOGIN
 
     LaunchedEffect(uiState.destino) {
         when (uiState.destino) {
@@ -38,65 +50,78 @@ fun AuthScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 28.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        Text(if (uiState.modo == AuthMode.LOGIN) "Iniciar sesión" else "Crear cuenta")
-
-        OutlinedTextField(
-            value = uiState.correo,
-            onValueChange = viewModel::onCorreoChange,
-            label = { Text("Correo") },
-            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+        Logotipo(tamano = if (esLogin) 190.dp else 160.dp)
+        Text(
+            if (esLogin) "¡Bienvenido!" else "Crear cuenta",
+            style = MaterialTheme.typography.displaySmall,
+            modifier = Modifier.padding(bottom = 4.dp)
         )
 
-        OutlinedTextField(
-            value = uiState.password,
-            onValueChange = viewModel::onPasswordChange,
-            label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+        CampoTexto(
+            valor = uiState.correo,
+            onCambio = viewModel::onCorreoChange,
+            etiqueta = "Correo electrónico",
+            icono = Icons.Filled.Email,
+            tipoTeclado = KeyboardType.Email
         )
-
-        if (uiState.modo == AuthMode.REGISTRO) {
-            OutlinedTextField(
-                value = uiState.confirmarPassword,
-                onValueChange = viewModel::onConfirmarPasswordChange,
-                label = { Text("Confirmar contraseña") },
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+        if (!esLogin) {
+            CampoTexto(
+                valor = uiState.nombre,
+                onCambio = viewModel::onNombreChange,
+                etiqueta = "Nombre de usuario",
+                icono = Icons.Filled.Person
+            )
+        }
+        CampoTexto(
+            valor = uiState.password,
+            onCambio = viewModel::onPasswordChange,
+            etiqueta = "Contraseña",
+            icono = Icons.Filled.Lock,
+            esContrasena = true
+        )
+        if (!esLogin) {
+            CampoTexto(
+                valor = uiState.confirmarPassword,
+                onCambio = viewModel::onConfirmarPasswordChange,
+                etiqueta = "Confirmar contraseña",
+                icono = Icons.Filled.Lock,
+                esContrasena = true
             )
         }
 
-        uiState.error?.let { mensaje ->
-            Text(mensaje, modifier = Modifier.padding(top = 8.dp))
-        }
-
-        Button(onClick = viewModel::enviar, modifier = Modifier.padding(top = 16.dp)) {
-            Text(if (uiState.modo == AuthMode.LOGIN) "Entrar" else "Registrarme")
-        }
-
-        TextButton(
-            onClick = {
-                viewModel.cambiarModo(if (uiState.modo == AuthMode.LOGIN) AuthMode.REGISTRO else AuthMode.LOGIN)
-            },
-            modifier = Modifier.padding(top = 8.dp)
-        ) {
-            Text(
-                if (uiState.modo == AuthMode.LOGIN) "¿No tienes cuenta? Regístrate"
-                else "¿Ya tienes cuenta? Inicia sesión"
-            )
-        }
-
-        if (uiState.modo == AuthMode.LOGIN) {
-            TextButton(onClick = onOlvideContrasena) {
-                Text("¿Olvidaste tu contraseña?")
+        if (esLogin) {
+            TextButton(onClick = onOlvideContrasena, modifier = Modifier.align(Alignment.End)) {
+                Text("¿Olvidaste tu contraseña?", color = XPMarino, fontWeight = FontWeight.SemiBold)
             }
         }
 
-        if (uiState.cargando) {
-            CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
+        uiState.error?.let { mensaje ->
+            Text(mensaje, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
+        }
+
+        BotonPrincipal(
+            texto = if (esLogin) "Iniciar sesión" else "Comenzar",
+            onClick = viewModel::enviar,
+            cargando = uiState.cargando,
+            modifier = Modifier.padding(top = 4.dp)
+        )
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                if (esLogin) "¿No tienes cuenta?" else "¿Ya tienes cuenta?",
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            TextButton(onClick = { viewModel.cambiarModo(if (esLogin) AuthMode.REGISTRO else AuthMode.LOGIN) }) {
+                Text(if (esLogin) "Crear cuenta" else "Iniciar sesión", color = XPMarino, fontWeight = FontWeight.Bold)
+            }
         }
     }
 }
