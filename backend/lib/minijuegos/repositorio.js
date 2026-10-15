@@ -3,7 +3,7 @@ const { obtenerConcepto, obtenerLeccion } = require('../lecciones/contenido');
 const { acumularSenal } = require('../lecciones/srs');
 const { COLECCIONES: COLECCIONES_LECCIONES } = require('../lecciones/repositorio');
 const { calcularXp } = require('./xp');
-const { diaLocal } = require('../progreso/racha');
+const { diaLocal, fechaDeActividad } = require('../progreso/racha');
 const { leerResumenEnTx, aplicarEnTx } = require('../progreso/repositorio');
 
 /**
@@ -33,7 +33,9 @@ function leccionDeConcepto(conceptoId) {
  */
 async function registrarPartida(db, { uid, resultado, ahora = Date.now() }) {
   const { partidaId, juego, aciertos, total, duracionMs, conceptos } = resultado;
-  const dia = diaLocal(ahora);
+  // RN-08: una partida jugada sin conexión cuenta para el día en que se jugó, no el de su envío.
+  const fecha = fechaDeActividad(resultado.completadoEn, ahora);
+  const dia = diaLocal(fecha);
   const refPartida = db.collection(COLECCIONES.PARTIDAS).doc(`${uid}_${partidaId}`);
   const refDiario = db.collection(COLECCIONES.DIARIO).doc(`${uid}_${dia}`);
   const refsSrs = conceptos.map((c) => db.collection(COLECCIONES_LECCIONES.SRS).doc(`${uid}_${c.concepto_id}`));
@@ -69,12 +71,12 @@ async function registrarPartida(db, { uid, resultado, ahora = Date.now() }) {
       xp_reducida: reducida,
       partidas_hoy: previasDelJuego + 1,
       // Módulo de Progreso: insignias y nivel de XP ganados con esta partida.
-      ...aplicarEnTx(tx, db, resumen, { tipo: 'minijuego', xp, juego, aciertos, total }, ahora),
+      ...aplicarEnTx(tx, db, resumen, { tipo: 'minijuego', xp, juego, aciertos, total }, fecha),
     };
 
     conceptos.forEach((conteoConcepto, i) => {
       const leccion = leccionDeConcepto(conteoConcepto.concepto_id);
-      tx.set(refsSrs[i], acumularSenal(srs[i], { uid, ...conteoConcepto }, leccion, ahora));
+      tx.set(refsSrs[i], acumularSenal(srs[i], { uid, ...conteoConcepto }, leccion, fecha));
     });
     tx.set(refDiario, { uid, dia, conteo: { ...conteo, [juego]: previasDelJuego + 1 } });
     // "Actividad válida" para la racha (RN-08) y auditoría de la XP otorgada.
@@ -85,7 +87,7 @@ async function registrarPartida(db, { uid, resultado, ahora = Date.now() }) {
       partida_id: partidaId,
       puntaje: respuesta.precision,
       xp,
-      fecha: ahora,
+      fecha,
     });
     tx.set(refPartida, {
       uid,

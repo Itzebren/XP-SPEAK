@@ -5,8 +5,8 @@ const { validarNivel, validarLimite } = require('../../lib/lecciones/validacion'
 
 /**
  * GET /api/srs/review[?level=A1&limit=20] — conceptos "débiles" del usuario,
- * ordenados por tasa de error (base de RF-13 / RN-07). El algoritmo SM-2 y la
- * sesión de repaso se implementan en la siguiente iteración.
+ * ordenados por tasa de error (base de RF-13 / RN-07). La sesión de repaso con
+ * SM-2 está en /api/srs/session.
  */
 module.exports = crearEndpoint({ metodo: 'GET', nombre: 'srs/review' }, async ({ req, res, uid, db }) => {
   const nivel = req.query.level ? validarNivel(req.query.level) : null;

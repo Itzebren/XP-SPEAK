@@ -60,6 +60,21 @@ function seleccionarParaRepaso(conceptos, { nivel = null, ahora, limite = LIMITE
 }
 
 /**
+ * RN-07: conceptos débiles (ya fallados, tasa de error alta) cuyo repaso ya venció. Mientras
+ * haya alguno, el usuario repasa antes de empezar un tema nuevo. Repasarlo lo reprograma con
+ * SM-2 a una fecha futura, así que el bloqueo se levanta al terminar la sesión de repaso.
+ */
+function conceptosQueBloquean(conceptos, { nivel = null, ahora }) {
+  return conceptos.filter(
+    (c) =>
+      (!nivel || c.nivel_mcer === nivel) &&
+      c.fallos > 0 &&
+      c.tasa_error >= UMBRAL_TASA_ERROR &&
+      (c.proxima_revision ?? 0) <= ahora
+  );
+}
+
+/**
  * Un concepto es "débil" si ya se falló y su tasa de error es alta (RN-07).
  * La lista se muestra en el catálogo; la sesión de repaso usa SM-2.
  */
@@ -94,7 +109,9 @@ module.exports = {
   LIMITE_POR_DEFECTO,
   LIMITE_MAXIMO,
   LIMITE_SESION,
+  UMBRAL_TASA_ERROR,
   acumularSenal,
+  conceptosQueBloquean,
   seleccionarConceptosDebiles,
   seleccionarParaRepaso,
   conTextoDelContenido,

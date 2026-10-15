@@ -1,9 +1,10 @@
 const { ErrorApi } = require('../errores');
-const { ESTADOS, estaDesbloqueada, aplicarIntento } = require('./estado');
+const { ESTADOS, estaDesbloqueada, esTemaNuevo, aplicarIntento } = require('./estado');
 const { siguienteLeccion } = require('./contenido');
 const { acumularSenal } = require('./srs');
 const { consumirIntento } = require('./limite');
 const { leerResumenEnTx, aplicarEnTx } = require('../progreso/repositorio');
+const { fechaDeActividad } = require('../progreso/racha');
 
 /**
  * Persistencia por usuario en Firestore (docs/lecciones-diseno.md §5.2).
@@ -95,7 +96,9 @@ function construirRespuesta({ attemptId, leccion, resultado, progreso, xpGanado,
  * reintenta uno y ese ya encuentra el attempt_id procesado, así que el XP
  * nunca se duplica (RN-09 + idempotencia §6.2).
  */
-async function registrarIntento(db, { uid, leccion, attemptId, resultado, ahora = Date.now() }) {
+async function registrarIntento(db, { uid, leccion, attemptId, resultado, completadoEn = null, ahora = Date.now() }) {
+  // RN-08: la racha, el SRS y el evento usan el momento en que se contestó; los límites, el de llegada.
+  const fecha = fechaDeActividad(completadoEn, ahora);
   const refs = referencias(db, uid, leccion);
   const refIntento = refs.intento(attemptId);
   const refsSrs = resultado.conceptos.map((c) => refs.srs(c.concepto_id));
@@ -119,7 +122,7 @@ async function registrarIntento(db, { uid, leccion, attemptId, resultado, ahora 
     // 2. Reglas: lección desbloqueada (RN-06) y límite de intentos.
     exigirDesbloqueada(leccion, leido.prerequisito);
     const limite = consumirIntento(leido.progreso, ahora);
-    const { progreso, xpGanado, primeraAprobacion } = aplicarIntento(leido.progreso, leccion, resultado, ahora);
+    const { progreso, xpGanado, primeraAprobacion } = aplicarIntento(leido.progreso, leccion, resultado, fecha);
     const respuesta = construirRespuesta({ attemptId, leccion, resultado, progreso, xpGanado, primeraAprobacion });
     // Última lectura (antes de escribir): el resumen de progreso, solo si el intento cuenta como actividad.
     const resumen = resultado.aprobada ? (await leerResumenEnTx(tx, db, uid, ahora)).resumen : null;
@@ -127,7 +130,7 @@ async function registrarIntento(db, { uid, leccion, attemptId, resultado, ahora 
     // 3. Escrituras.
     tx.set(refs.progreso, { ...progreso, ...limite, uid });
     resultado.conceptos.forEach((conteo, i) => {
-      tx.set(refsSrs[i], acumularSenal(leido.srs[i], { uid, ...conteo }, leccion, ahora));
+      tx.set(refsSrs[i], acumularSenal(leido.srs[i], { uid, ...conteo }, leccion, fecha));
     });
     if (resultado.aprobada) {
       // "Actividad válida" para la racha (RN-08) y auditoría del XP otorgado.
@@ -138,11 +141,11 @@ async function registrarIntento(db, { uid, leccion, attemptId, resultado, ahora 
         attempt_id: attemptId,
         puntaje: resultado.puntaje,
         xp: xpGanado,
-        fecha: ahora,
+        fecha,
       });
       Object.assign(
         respuesta,
-        aplicarEnTx(tx, db, resumen, { tipo: 'leccion', xp: xpGanado, leccionId: leccion.id, nivel: leccion.nivel_mcer }, ahora)
+        aplicarEnTx(tx, db, resumen, { tipo: 'leccion', xp: xpGanado, leccionId: leccion.id, nivel: leccion.nivel_mcer }, fecha)
       );
     }
     // Serializada: Firestore no admite arrays anidados (los pares de "emparejar").
@@ -161,13 +164,20 @@ async function registrarIntento(db, { uid, leccion, attemptId, resultado, ahora 
 /**
  * RN-12 / CU-06 A2: guarda en qué sección de la teoría va el usuario para
  * retomarla. Una lección completada se queda completada.
+ *
+ * RN-07: empezar un tema nuevo (una lección sin progreso) no se permite mientras
+ * haya conceptos con alta tasa de error pendientes de repaso (`repasoPendiente`).
+ * Lo ya empezado se puede terminar.
  */
-async function guardarAvance(db, { uid, leccion, seccionActual, ahora = Date.now() }) {
+async function guardarAvance(db, { uid, leccion, seccionActual, repasoPendiente = false, ahora = Date.now() }) {
   const refs = referencias(db, uid, leccion);
 
   return db.runTransaction(async (tx) => {
     const leido = await leerEnTransaccion(tx, { progreso: refs.progreso, prerequisito: refs.prerequisito });
     exigirDesbloqueada(leccion, leido.prerequisito);
+    if (repasoPendiente && esTemaNuevo(leido.progreso)) {
+      throw new ErrorApi(409, 'REPASO_PENDIENTE', 'Antes de empezar un tema nuevo, repasa los conceptos que más se te dificultan.');
+    }
 
     const previo = leido.progreso || {};
     const estado = previo.aprobada ? ESTADOS.COMPLETADA : ESTADOS.EN_PROGRESO;

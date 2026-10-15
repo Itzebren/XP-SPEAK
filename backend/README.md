@@ -310,10 +310,11 @@ los guiones de `content/minijuegos/misiones/`. Se empaqueta dentro del APK
 ```bash
 npm run lint:content         # valida lecciones y misiones
 npm run exportar:minijuegos  # regenera app/src/main/assets/minijuegos/banco.json
+npm run exportar:lecciones   # regenera app/src/main/assets/lecciones/lecciones.json
 ```
 
 Después de cambiar una lección o una misión hay que volver a exportar; `npm test`
-falla si el banco del APK quedó viejo. Reglas de una misión (linter): una sola
+falla si el banco o las lecciones del APK quedaron viejos. Reglas de una misión (linter): una sola
 opción correcta por paso, feedback en cada incorrecta, cada objetivo se cumple
 exactamente una vez, solo conceptos ya enseñados en su lección o antes, frases de
 máximo 14 palabras y fuentes MCER como en las lecciones.

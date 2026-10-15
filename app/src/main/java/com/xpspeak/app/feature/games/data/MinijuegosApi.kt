@@ -26,7 +26,9 @@ data class ResultadoRequest(
     val aciertos: Int,
     val total: Int,
     @SerializedName("duracion_ms") val duracionMs: Long,
-    val conceptos: List<ConceptoResultadoDto>
+    val conceptos: List<ConceptoResultadoDto>,
+    /** Cuándo terminó la partida (ms epoch): una jugada sin conexión cuenta para ese día (RN-08). */
+    @SerializedName("completado_en") val completadoEn: Long? = null
 )
 
 data class ConceptoResultadoDto(

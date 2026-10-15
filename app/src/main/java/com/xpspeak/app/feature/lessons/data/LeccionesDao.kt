@@ -41,6 +41,23 @@ data class IntentoPendienteEntity(
     val creadoEn: Long
 )
 
+/**
+ * Lección a medias (RN-12, CU-06 A2): respuestas de la evaluación y posición en la pantalla,
+ * guardadas en cada cambio para retomarla tras un cierre inesperado. Se borra al enviar.
+ */
+@Entity(tableName = "lecciones_en_curso", primaryKeys = ["uid", "leccionId"])
+data class LeccionEnCursoEntity(
+    val uid: String,
+    val leccionId: String,
+    /** El mismo attempt_id al retomar: si ya se había enviado, el servidor no duplica el XP. */
+    val attemptId: String,
+    /** RespuestasCodec. */
+    val respuestasJson: String,
+    /** Desplazamiento vertical de la pantalla, en píxeles. */
+    val posicion: Int,
+    val actualizadaEn: Long
+)
+
 @Dao
 interface LeccionesDao {
 
@@ -73,6 +90,15 @@ interface LeccionesDao {
 
     @Query("DELETE FROM intentos_pendientes WHERE attemptId = :attemptId")
     suspend fun borrarIntento(attemptId: String)
+
+    @Query("SELECT * FROM lecciones_en_curso WHERE uid = :uid AND leccionId = :leccionId")
+    suspend fun leccionEnCurso(uid: String, leccionId: String): LeccionEnCursoEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun guardarLeccionEnCurso(enCurso: LeccionEnCursoEntity)
+
+    @Query("DELETE FROM lecciones_en_curso WHERE uid = :uid AND leccionId = :leccionId")
+    suspend fun borrarLeccionEnCurso(uid: String, leccionId: String)
 }
 
 data class VersionLeccion(val id: String, val version: Int)

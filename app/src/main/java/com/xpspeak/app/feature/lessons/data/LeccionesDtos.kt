@@ -11,7 +11,9 @@ enum class EstadoLeccion {
     @SerializedName("disponible") DISPONIBLE,
     @SerializedName("en_progreso") EN_PROGRESO,
     @SerializedName("reprobada") REPROBADA,
-    @SerializedName("completada") COMPLETADA
+    @SerializedName("completada") COMPLETADA,
+    /** RN-07: tema nuevo que espera a que se repasen los conceptos débiles vencidos. */
+    @SerializedName("repaso_pendiente") REPASO_PENDIENTE
 }
 
 enum class TipoSeccion {
@@ -31,7 +33,9 @@ enum class TipoEjercicio {
 // Catálogo — GET /api/lessons?level=A1
 data class CatalogoDto(
     val nivel: String,
-    val lecciones: List<LeccionResumenDto>
+    val lecciones: List<LeccionResumenDto>,
+    /** RN-07: conceptos que hay que repasar antes de empezar un tema nuevo. */
+    @SerializedName("repaso_requerido") val repasoRequerido: Int = 0
 )
 
 data class LeccionResumenDto(
@@ -105,7 +109,9 @@ data class EntradaManifiestoDto(val id: String, val version: Int)
 // Intento — POST /api/lessons/:id/attempt
 data class IntentoRequest(
     @SerializedName("attempt_id") val attemptId: String,
-    val respuestas: List<RespuestaDto>
+    val respuestas: List<RespuestaDto>,
+    /** Cuándo se contestó (ms epoch): un intento hecho sin conexión cuenta para ese día (RN-08). */
+    @SerializedName("completado_en") val completadoEn: Long? = null
 )
 
 /** `valor`: Int (opción múltiple), String (completar) o List<List<String>> (emparejar). */

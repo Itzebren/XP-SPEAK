@@ -9,7 +9,7 @@ const { registrarPartida } = require('../../lib/minijuegos/repositorio');
  * los aciertos/errores por concepto y marca la actividad del día (RN-08).
  * Idempotente por partida_id: la app reenvía su outbox sin duplicar XP.
  *
- * Body: { partida_id, juego, aciertos, total, duracion_ms, conceptos: [{ concepto_id, aciertos, errores }] }
+ * Body: { partida_id, juego, aciertos, total, duracion_ms, conceptos: [{ concepto_id, aciertos, errores }], completado_en?: <ms epoch> }
  */
 module.exports = crearEndpoint({ metodo: 'POST', nombre: 'games/result' }, async ({ req, res, uid, db }) => {
   const resultado = validarResultado(req.body);

@@ -28,7 +28,7 @@ function validarResultado(body) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     throw entradaInvalida('El cuerpo debe ser un objeto JSON');
   }
-  const { partida_id: partidaId, juego, aciertos, total, duracion_ms: duracionMs, conceptos = [] } = body;
+  const { partida_id: partidaId, juego, aciertos, total, duracion_ms: duracionMs, conceptos = [], completado_en: completadoEn } = body;
 
   if (typeof partidaId !== 'string' || !PATRON_UUID.test(partidaId)) {
     throw entradaInvalida('partida_id debe ser un UUID');
@@ -74,7 +74,12 @@ function validarResultado(body) {
     }
   }
 
-  return { partidaId, juego, aciertos, total, duracionMs, conceptos: validos };
+  if (completadoEn !== undefined && completadoEn !== null && !Number.isInteger(completadoEn)) {
+    throw entradaInvalida('completado_en debe ser una fecha en milisegundos');
+  }
+
+  // completadoEn: cuándo terminó la partida (RN-08); una hecha sin conexión llega después.
+  return { partidaId, juego, aciertos, total, duracionMs, conceptos: validos, completadoEn: completadoEn ?? null };
 }
 
 module.exports = { validarResultado };

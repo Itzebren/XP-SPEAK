@@ -30,9 +30,13 @@ Técnico del proyecto (RF/RN/CU) y en fuentes autorizadas del MCER (ver §9).
 | Registro por concepto y conceptos débiles (base SRS) | ✅ | `srs_conceptos`, `GET /api/srs/review` |
 | Pruebas: unitarias, API y emuladores | ✅ | `test/`, `scripts/probar-lecciones.sh` |
 | UI Android (catálogo, teoría, evaluación, resultado) | ✅ | `XP-SPEAK/app/.../feature/lessons/` |
-| **Caché offline en Room** (§3, RN-11) | ❌ pendiente | Android pide todo al servidor en cada pantalla |
-| **Calificación local + outbox** (§6.2) | ❌ pendiente | Hoy solo califica el servidor |
-| **Algoritmo SM-2** (intervalos) | ❌ pendiente (fuera de alcance, §2.2) | — |
+| **Lecciones dentro del APK** (RNF-08, RN-11, CU-06 paso 2) | ✅ | `npm run exportar:lecciones` → `app/src/main/assets/lecciones/lecciones.json`; Room solo guarda las que cambien después |
+| **Caché offline en Room** (§3, RN-11) | ✅ | `LeccionesDao`; sin conexión ni caché el catálogo se arma con el APK (`CatalogoLocal`) |
+| **Calificación local + outbox** (§6.2) | ✅ | `CalificadorLocal`, `SincronizarIntentosWorker`; aprobar sin conexión ya desbloquea la siguiente |
+| **Retomar una lección a medias** (RN-12, CU-06 A2) | ✅ | `lecciones_en_curso` (Room v6): respuestas y posición; diálogo "¿Retomar la lección?" |
+| **Algoritmo SM-2** (intervalos) | ✅ | `lib/lecciones/sm2.js`, `/api/srs/session` |
+| **RN-07: repaso antes de un tema nuevo** | ✅ | Estado `repaso_pendiente` en el catálogo y 409 `REPASO_PENDIENTE` en `/progress` mientras haya conceptos débiles vencidos (`conceptosQueBloquean`); lo ya empezado se puede terminar |
+| **RN-08 con la fecha real** | ✅ | Intentos y partidas mandan `completado_en`; el servidor lo acota a 7 días (`fechaDeActividad`) y une la racha si el día atrasado llena un hueco |
 | **CI** que corra el linter antes de desplegar (§4.5) | ❌ pendiente | Hoy se corre a mano |
 
 ---
