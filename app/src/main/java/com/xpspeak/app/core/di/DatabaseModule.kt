@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.xpspeak.app.core.data.local.AppDatabase
 import com.xpspeak.app.feature.auth.data.UsuarioDao
+import com.xpspeak.app.feature.games.data.MinijuegosDao
 import com.xpspeak.app.feature.lessons.data.LeccionesDao
+import com.xpspeak.app.feature.progress.data.ProgresoDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +26,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "xpspeak.db"
         )
-        .addMigrations(AppDatabase.MIGRACION_2_3)
+        .addMigrations(AppDatabase.MIGRACION_2_3, AppDatabase.MIGRACION_3_4, AppDatabase.MIGRACION_4_5)
         .fallbackToDestructiveMigration()
         .build()
 
@@ -33,4 +35,10 @@ object DatabaseModule {
 
     @Provides
     fun provideLeccionesDao(db: AppDatabase): LeccionesDao = db.leccionesDao()
+
+    @Provides
+    fun provideMinijuegosDao(db: AppDatabase): MinijuegosDao = db.minijuegosDao()
+
+    @Provides
+    fun provideProgresoDao(db: AppDatabase): ProgresoDao = db.progresoDao()
 }

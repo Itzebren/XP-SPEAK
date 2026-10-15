@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generado por docs/diseno-arte/a_vector.py: no editar a mano. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="160dp"
+    android:height="160dp"
+    android:viewportWidth="160"
+    android:viewportHeight="160">
+    <path
+        android:pathData="M28 0 H132 A28 28 0 0 1 160 28 V132 A28 28 0 0 1 132 160 H28 A28 28 0 0 1 0 132 V28 A28 28 0 0 1 28 0 Z"
+        android:fillColor="#FFFFF1C2"/>
+    <path
+        android:pathData="M80 30 L130 72 L30 72 Z"
+        android:fillColor="#FFFF8C00"
+        android:strokeColor="#FF232074"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M46 72 H114 A4 4 0 0 1 118 76 V120 A4 4 0 0 1 114 124 H46 A4 4 0 0 1 42 120 V76 A4 4 0 0 1 46 72 Z"
+        android:fillColor="#FFFFFFFF"
+        android:strokeColor="#FF232074"
+        android:strokeWidth="3.5"/>
+    <path
+        android:pathData="M74 92 H86 A4 4 0 0 1 90 96 V120 A4 4 0 0 1 86 124 H74 A4 4 0 0 1 70 120 V96 A4 4 0 0 1 74 92 Z"
+        android:fillColor="#FF4B7BBE"
+        android:strokeColor="#FF232074"
+        android:strokeWidth="3"/>
+    <path
+        android:pathData="M53 82 H61 A3 3 0 0 1 64 85 V93 A3 3 0 0 1 61 96 H53 A3 3 0 0 1 50 93 V85 A3 3 0 0 1 53 82 Z"
+        android:fillColor="#FFC0D6EB"
+        android:strokeColor="#FF232074"
+        android:strokeWidth="2.5"/>
+    <path
+        android:pathData="M99 82 H107 A3 3 0 0 1 110 85 V93 A3 3 0 0 1 107 96 H99 A3 3 0 0 1 96 93 V85 A3 3 0 0 1 99 82 Z"
+        android:fillColor="#FFC0D6EB"
+        android:strokeColor="#FF232074"
+        android:strokeWidth="2.5"/>
+</vector>

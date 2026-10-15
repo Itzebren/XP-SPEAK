@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.xpspeak.app.feature.auth.data.AuthRepository
 import com.xpspeak.app.feature.auth.data.PerfilRepository
+import com.xpspeak.app.feature.auth.domain.NombreUsuario
 import com.xpspeak.app.feature.auth.domain.PasswordValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +23,7 @@ enum class DestinoPostAuth { NINGUNO, SELECCIONAR_NIVEL, HOME }
 data class AuthUiState(
     val modo: AuthMode = AuthMode.LOGIN,
     val correo: String = "",
+    val nombre: String = "",
     val password: String = "",
     val confirmarPassword: String = "",
     val cargando: Boolean = false,
@@ -48,6 +50,10 @@ class AuthViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(correo = valor.filterNot { it.isWhitespace() }, error = null)
     }
 
+    fun onNombreChange(valor: String) {
+        _uiState.value = _uiState.value.copy(nombre = valor, error = null)
+    }
+
     fun onPasswordChange(valor: String) {
         _uiState.value = _uiState.value.copy(password = valor, error = null)
     }
@@ -65,6 +71,10 @@ class AuthViewModel @Inject constructor(
         }
 
         if (estado.modo == AuthMode.REGISTRO) {
+            NombreUsuario.validar(estado.nombre)?.let { mensaje ->
+                _uiState.value = estado.copy(error = mensaje)
+                return
+            }
             if (!PasswordValidator.esValida(estado.password)) {
                 _uiState.value = estado.copy(error = PasswordValidator.mensajeError())
                 return
@@ -79,7 +89,7 @@ class AuthViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(cargando = true, error = null)
 
             val resultado = if (estado.modo == AuthMode.REGISTRO) {
-                authRepository.registrar(estado.correo, estado.password)
+                authRepository.registrar(estado.correo, estado.password, estado.nombre)
             } else {
                 authRepository.iniciarSesion(estado.correo, estado.password)
             }

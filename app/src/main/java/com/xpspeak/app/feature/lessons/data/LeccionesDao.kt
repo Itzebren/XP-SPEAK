@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 
 /*
- * Caché offline de Lecciones (RN-11/RNF-08, docs/lecciones-diseno.md §3 y §6.2).
+ * Caché offline de Lecciones (RN-11/RNF-08, backend/docs/lecciones-diseno.md §3 y §6.2).
  * El contenido se guarda como el JSON que manda el backend: así un campo nuevo
  * en el esquema de la lección no obliga a migrar la base.
  */

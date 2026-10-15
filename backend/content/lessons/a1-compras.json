@@ -1,0 +1,162 @@
+{
+  "id": "a1-compras",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "De compras",
+  "orden": 12,
+  "prerequisito_id": "a1-clima-ahora",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo preguntar y entender precios y cantidades sencillas.",
+    "Puedo pedir algo en una tienda usando please y thank you."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Compras.",
+      "MCER, Interactuar para obtener bienes y servicios, A1 (p. 80): «Es capaz de pedirle a alguien alguna cosa, y viceversa. Se desenvuelve bien con números, cantidades, precios y horarios.»",
+      "MCER, Adecuación sociolingüística, A1 (p. 119): «Establece contactos sociales básicos utilizando las fórmulas de cortesía más sencillas y cotidianas relativas a saludos, despedidas y presentaciones, y utiliza expresiones del tipo «por favor», «gracias», «lo siento», etc.»",
+      "MCER, Interacción oral en general, A1 (p. 76): «Sabe plantear y contestar preguntas sencillas, realizar afirmaciones sencillas y responder a las afirmaciones que se le hacen en áreas de necesidad inmediata o sobre temas muy cotidianos.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Se repasan 'how many' (lección 3, mismo concepto_id), la ropa (lección 5) y this (lección 9). Límite A1/A2: 'Realiza compras sencillas diciendo lo que quiere y preguntando el precio' es A2 (p. 80). Aquí se practica solo el manejo de precios y pedir una cosa (A1). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Cuánto cuesta?",
+      "cuerpo": "Aprenderás a preguntar precios con how much, los números del 30 al 100 y a pedir algo de forma amable con I'd like."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "En la tienda",
+      "items": [
+        { "concepto_id": "voc.compras.store", "en": "store", "es": "tienda", "audio": "tts:store", "nota": "En Reino Unido se dice 'shop'." },
+        { "concepto_id": "voc.compras.money", "en": "money", "es": "dinero", "audio": "tts:money" },
+        { "concepto_id": "voc.compras.price", "en": "price", "es": "precio", "audio": "tts:price" },
+        { "concepto_id": "voc.compras.buy", "en": "buy", "es": "comprar", "audio": "tts:buy" },
+        { "concepto_id": "voc.compras.pay", "en": "pay", "es": "pagar", "audio": "tts:pay" },
+        { "concepto_id": "voc.compras.cheap", "en": "cheap", "es": "barato", "audio": "tts:cheap" },
+        { "concepto_id": "voc.compras.expensive", "en": "expensive", "es": "caro", "audio": "tts:expensive" },
+        { "concepto_id": "voc.compras.cash", "en": "cash", "es": "efectivo", "audio": "tts:cash" },
+        { "concepto_id": "voc.compras.card", "en": "card", "es": "tarjeta", "audio": "tts:Can I pay by card?", "nota": "Pagar con tarjeta = pay by card." },
+        { "concepto_id": "voc.compras.here_you_are", "en": "Here you are.", "es": "Aquí tiene. / Aquí está.", "audio": "tts:Here you are." }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Números del 30 al 100",
+      "items": [
+        { "concepto_id": "voc.compras.thirty_to_fifty", "en": "thirty, forty, fifty", "es": "treinta, cuarenta, cincuenta", "audio": "tts:thirty, forty, fifty", "nota": "Ojo: fifty (50) no es fifteen (15). Se escribe 'forty', sin u." },
+        { "concepto_id": "voc.compras.sixty_to_one_hundred", "en": "sixty, seventy, eighty, ninety, one hundred", "es": "sesenta, setenta, ochenta, noventa, cien", "audio": "tts:sixty, seventy, eighty, ninety, one hundred" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.how_much_price",
+      "titulo": "How much…? (¿Cuánto cuesta?)",
+      "explicacion": "Para preguntar el precio: How much is + una cosa? / How much are + varias cosas? Respuesta: It's 50 pesos. / They're 200 pesos. No confundas: 'how much' pregunta el precio; 'how many' pregunta cuántas cosas hay.",
+      "ejemplos": ["How much is this T-shirt? — It's ninety pesos.", "How much are the shoes? — They're five hundred pesos.", "How much is it?"]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.would_like",
+      "titulo": "I'd like… (quisiera)",
+      "explicacion": "'I would like' (I'd like) = quisiera. Es más amable que 'I want'. Para ofrecer algo: Would you like…? (¿Quieres…? / ¿Le gustaría…?). Respuestas: Yes, please. / No, thank you.",
+      "ejemplos": ["I'd like a coffee, please.", "Would you like some water? — Yes, please.", "We'd like two tickets."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "En una tienda de Puebla",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Vendedora", "en": "Hello! Can I help you?", "es": "¡Hola! ¿Te puedo ayudar?" },
+        { "hablante": "Luis", "en": "Yes, please. I'd like this white T-shirt. How much is it?", "es": "Sí, por favor. Quisiera esta playera blanca. ¿Cuánto cuesta?" },
+        { "hablante": "Vendedora", "en": "It's ninety pesos.", "es": "Cuesta noventa pesos." },
+        { "hablante": "Luis", "en": "Great, it's cheap! Can I pay by card?", "es": "¡Qué bien, está barata! ¿Puedo pagar con tarjeta?" },
+        { "hablante": "Vendedora", "en": "Yes, of course. Here you are. Would you like a bag?", "es": "Sí, claro. Aquí tienes. ¿Quieres una bolsa?" },
+        { "hablante": "Luis", "en": "No, thank you.", "es": "No, gracias." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.how_much_price",
+          "enunciado": "¿Cómo preguntas el precio de unos zapatos?",
+          "opciones": ["How many are the shoes?", "How much is the shoes?", "How much are the shoes?"],
+          "respuesta_correcta": 2,
+          "feedback_error": "Para el precio es 'how much'; 'shoes' es plural, así que va 'are'."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.how_much_price",
+          "enunciado": "How ___ is this jacket?",
+          "respuesta_correcta": "much",
+          "acepta": ["much"],
+          "feedback_error": "Para preguntar el precio usamos 'How much…?'."
+        },
+        {
+          "id": "q3",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.would_like",
+          "enunciado": "¿Cuál es la forma más amable de pedir un café?",
+          "opciones": ["I want a coffee.", "I'd like a coffee, please.", "Give me coffee."],
+          "respuesta_correcta": 1,
+          "feedback_error": "'I'd like…, please' es la forma amable de pedir algo."
+        },
+        {
+          "id": "q4",
+          "tipo": "completar",
+          "concepto_id": "gram.would_like",
+          "enunciado": "___ you like a bag?",
+          "respuesta_correcta": "Would",
+          "acepta": ["would"],
+          "feedback_error": "Para ofrecer algo preguntamos: Would you like…?"
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.compras.expensive",
+          "enunciado": "Cuesta mucho dinero. Es…",
+          "opciones": ["expensive", "cheap", "money"],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Expensive' = caro. 'Cheap' = barato."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.compras.thirty_to_fifty",
+          "enunciado": "¿Qué número es 'fifty'?",
+          "opciones": ["15", "50", "500"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Fifty' = 50. 'Fifteen' = 15."
+        },
+        {
+          "id": "q7",
+          "tipo": "completar",
+          "concepto_id": "gram.how_many_questions",
+          "enunciado": "How ___ students are there in your class?",
+          "respuesta_correcta": "many",
+          "acepta": ["many"],
+          "feedback_error": "Para contar cosas usamos 'how many'; 'how much' es para el precio."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa la tabla de la tienda.",
+          "pares": [
+            { "concepto_id": "voc.compras.buy", "izq": "buy", "der": "comprar" },
+            { "concepto_id": "voc.compras.pay", "izq": "pay", "der": "pagar" },
+            { "concepto_id": "voc.compras.cash", "izq": "cash", "der": "efectivo" },
+            { "concepto_id": "voc.compras.store", "izq": "store", "der": "tienda" }
+          ]
+        }
+      ]
+    }
+  ]
+}

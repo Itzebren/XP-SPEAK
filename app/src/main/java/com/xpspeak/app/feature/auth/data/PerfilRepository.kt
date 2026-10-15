@@ -8,7 +8,7 @@ class PerfilRepository @Inject constructor(
     suspend fun existePerfil(uid: String): Boolean =
         usuarioDao.buscarPorUid(uid) != null
 
-    suspend fun crearPerfil(uid: String, correo: String, nivel: String) {
-        usuarioDao.guardar(UsuarioEntity(uid = uid, correo = correo, nivel = nivel))
+    suspend fun crearPerfil(uid: String, correo: String, nivel: String, avatar: String? = null) {
+        usuarioDao.guardar(UsuarioEntity(uid = uid, correo = correo, nivel = nivel, avatar = avatar))
     }
 }

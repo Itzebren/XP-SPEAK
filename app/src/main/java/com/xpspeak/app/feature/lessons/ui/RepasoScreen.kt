@@ -1,5 +1,8 @@
 package com.xpspeak.app.feature.lessons.ui
 
+import androidx.compose.foundation.layout.statusBarsPadding
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
+import com.xpspeak.app.core.ui.theme.FormaBoton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,12 +20,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.xpspeak.app.feature.lessons.data.ItemDto
 import com.xpspeak.app.feature.lessons.data.RepasoResponse
 import com.xpspeak.app.feature.lessons.ui.components.EjercicioEvaluacion
+import com.xpspeak.app.feature.progress.ui.InsigniaNueva
 import java.text.DateFormat
 import java.util.Date
 
@@ -40,7 +47,7 @@ fun RepasoScreen(
     val resultado = uiState.resultado
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+        modifier = Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedButton(onClick = onVolver) { Text("← Lecciones") }
@@ -79,12 +86,14 @@ fun RepasoScreen(
                 if (sesion.totalVencidos > sesion.items.size) {
                     OutlinedButton(onClick = viewModel::cargar) { Text("Seguir repasando") }
                 }
-                Button(onClick = onVolver) { Text("Volver al catálogo") }
+                Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onVolver) { Text("Volver al catálogo") }
             }
         } else {
             // Un ejercicio sin responder no le dice nada a SM-2: se piden todos.
             val faltan = sesion.items.size - uiState.respuestas.size
             Button(
+                colors = coloresBotonPrincipal(),
+                shape = FormaBoton,
                 onClick = viewModel::enviar,
                 enabled = !uiState.enviando && faltan == 0,
                 modifier = Modifier.fillMaxWidth()
@@ -104,6 +113,8 @@ fun RepasoScreen(
 /** Puntaje y, por concepto, cuándo vuelve a salir según SM-2. */
 @Composable
 private fun ResultadoRepaso(resultado: RepasoResponse, items: List<ItemDto>) {
+    var festejar by remember(resultado) { mutableStateOf(true) }
+    if (festejar) InsigniaNueva(resultado.insigniasNuevas.orEmpty(), resultado.nivelXpNuevo, onCerrar = { festejar = false })
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text("${resultado.correctas}/${resultado.total} correctas", style = MaterialTheme.typography.titleLarge)

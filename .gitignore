@@ -9,3 +9,6 @@ local.properties
 /captures
 .externalNativeBuild
 .cxx
+
+# Documento del Trabajo Terminal: referencia local, no va en el repo
+Trabajo Terminal*.pdf

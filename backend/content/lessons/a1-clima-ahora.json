@@ -1,0 +1,137 @@
+{
+  "id": "a1-clima-ahora",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "El clima",
+  "orden": 11,
+  "prerequisito_id": "a1-tiempo-libre",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo describir el clima de hoy.",
+    "Puedo decir con frases sencillas qué está pasando ahora."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Condiciones atmosféricas.",
+      "MCER, Expresión oral en general, A1 (p. 62): «Puede expresarse con frases sencillas y aisladas relativas a personas y lugares.»",
+      "MCER, Interacción oral en general, A1 (p. 76): «Sabe plantear y contestar preguntas sencillas, realizar afirmaciones sencillas y responder a las afirmaciones que se le hacen en áreas de necesidad inmediata o sobre temas muy cotidianos.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Actividades de la lección 10 (watch TV, listen to music) se repasan en el diálogo. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Qué tal el clima?",
+      "cuerpo": "Aprenderás a hablar del clima y a describir lo que está pasando ahora con el presente continuo: It's raining. I'm watching TV."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "El clima",
+      "items": [
+        { "concepto_id": "voc.clima.weather", "en": "weather", "es": "clima / tiempo", "audio": "tts:weather", "nota": "'Weather' es el clima de hoy; 'time' es el tiempo del reloj." },
+        { "concepto_id": "voc.clima.whats_the_weather_like", "en": "What's the weather like?", "es": "¿Cómo está el clima?", "audio": "tts:What's the weather like?" },
+        { "concepto_id": "voc.clima.sunny", "en": "sunny", "es": "soleado", "audio": "tts:It's sunny." },
+        { "concepto_id": "voc.clima.cloudy", "en": "cloudy", "es": "nublado", "audio": "tts:It's cloudy." },
+        { "concepto_id": "voc.clima.windy", "en": "windy", "es": "con viento", "audio": "tts:It's windy.", "nota": "It's windy = Hace viento." },
+        { "concepto_id": "voc.clima.hot", "en": "hot", "es": "caluroso / caliente", "audio": "tts:It's hot.", "nota": "It's hot = Hace calor." },
+        { "concepto_id": "voc.clima.cold", "en": "cold", "es": "frío", "audio": "tts:It's cold.", "nota": "It's cold = Hace frío. I'm cold = Tengo frío." },
+        { "concepto_id": "voc.clima.rain", "en": "rain", "es": "lluvia / llover", "audio": "tts:It's raining." },
+        { "concepto_id": "voc.clima.snow", "en": "snow", "es": "nieve / nevar", "audio": "tts:It's snowing." },
+        { "concepto_id": "voc.clima.umbrella", "en": "umbrella", "es": "paraguas", "audio": "tts:umbrella" },
+        { "concepto_id": "voc.clima.now", "en": "now / right now", "es": "ahora / ahorita", "audio": "tts:right now" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.present_continuous",
+      "titulo": "Presente continuo (estoy haciendo)",
+      "explicacion": "Sirve para lo que pasa ahora mismo: am / is / are + verbo con -ing. I'm reading. She is cooking. Negativo: I'm not…, it isn't… Pregunta: Are you…? Is it…? Compara: I watch TV every day (rutina) vs. I'm watching TV now (ahora).",
+      "ejemplos": ["It's raining right now.", "Luis is playing soccer in the park.", "Are you listening to music? — No, I'm not.", "We aren't watching TV."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Una llamada",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Luis", "en": "Hi, Ana! What's the weather like in Oaxaca?", "es": "¡Hola, Ana! ¿Cómo está el clima en Oaxaca?" },
+        { "hablante": "Ana", "en": "It's sunny and hot. I'm sitting in the park now.", "es": "Está soleado y hace calor. Ahorita estoy sentada en el parque." },
+        { "hablante": "Luis", "en": "Here in Mexico City it's cloudy and cold. It's raining right now.", "es": "Aquí en la Ciudad de México está nublado y hace frío. Está lloviendo ahorita." },
+        { "hablante": "Ana", "en": "Oh no! Are you using your umbrella?", "es": "¡Ay, no! ¿Estás usando tu paraguas?" },
+        { "hablante": "Luis", "en": "No, I'm not. I'm at home. I'm watching TV and drinking coffee!", "es": "No. Estoy en casa. ¡Estoy viendo la tele y tomando café!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_continuous",
+          "enunciado": "¿Cuál describe algo que pasa AHORA?",
+          "opciones": ["I watch TV every day.", "I am watching TV now.", "I watching TV now."],
+          "respuesta_correcta": 1,
+          "feedback_error": "Lo que pasa ahora se dice con am/is/are + -ing: I am watching."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.present_continuous",
+          "enunciado": "She ___ reading a book now.",
+          "respuesta_correcta": "is",
+          "acepta": ["is"],
+          "feedback_error": "Con she usamos 'is' + verbo con -ing: she is reading."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.present_continuous",
+          "enunciado": "We are ___ soccer in the park. (play)",
+          "respuesta_correcta": "playing",
+          "acepta": ["playing"],
+          "feedback_error": "En el presente continuo el verbo lleva -ing: playing."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_continuous",
+          "enunciado": "___ you listening to music?",
+          "opciones": ["Is", "Do", "Are"],
+          "respuesta_correcta": 2,
+          "feedback_error": "La pregunta empieza con am/is/are; con 'you' es 'Are'."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.clima.whats_the_weather_like",
+          "enunciado": "¿Cómo preguntas '¿Cómo está el clima?'?",
+          "opciones": ["What's the weather like?", "How is the weather like?", "What weather is it?"],
+          "respuesta_correcta": 0,
+          "feedback_error": "Se pregunta: What's the weather like? (sin 'how')."
+        },
+        {
+          "id": "q6",
+          "tipo": "completar",
+          "concepto_id": "voc.clima.umbrella",
+          "enunciado": "It's raining. Take your ___! (paraguas)",
+          "respuesta_correcta": "umbrella",
+          "acepta": ["umbrella"],
+          "feedback_error": "'Umbrella' = paraguas."
+        },
+        {
+          "id": "q7",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su significado.",
+          "feedback_error": "Repasa la tabla del clima.",
+          "pares": [
+            { "concepto_id": "voc.clima.sunny", "izq": "sunny", "der": "soleado" },
+            { "concepto_id": "voc.clima.cloudy", "izq": "cloudy", "der": "nublado" },
+            { "concepto_id": "voc.clima.windy", "izq": "windy", "der": "con viento" },
+            { "concepto_id": "voc.clima.cold", "izq": "cold", "der": "frío" }
+          ]
+        }
+      ]
+    }
+  ]
+}

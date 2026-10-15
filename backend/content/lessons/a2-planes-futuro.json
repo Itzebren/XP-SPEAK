@@ -1,0 +1,160 @@
+{
+  "id": "a2-planes-futuro",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Planes y futuro",
+  "orden": 6,
+  "prerequisito_id": "a2-salud-ejercicio",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo hablar de mis planes para los próximos días.",
+    "Puedo dar mi opinión de forma sencilla sobre lo que va a pasar."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Tiempo libre y ocio (cine, teatro, conciertos; radio y televisión).",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe planes y citas, costumbres, actividades habituales o pertenecientes al pasado y experiencias personales.»",
+      "MCER, Adecuación sociolingüística, A2 (p. 119): «Sabe llevar a cabo funciones básicas de la lengua como, por ejemplo, intercambiar y solicitar información; asimismo, expresa opiniones y actitudes de forma sencilla.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Reutiliza voc.viajes.ticket (A2-2, mismo significado). Las predicciones se presentan como opinión sencilla (A2, Adecuación sociolingüística, p. 119). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Qué vas a hacer?",
+      "cuerpo": "Aprenderás palabras de espectáculos y medios, a hablar de planes con going to y a dar tu opinión sobre el futuro con will."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Espectáculos",
+      "items": [
+        { "concepto_id": "voc.planes.concert", "en": "concert", "es": "concierto", "audio": "tts:concert" },
+        { "concepto_id": "voc.planes.band", "en": "band", "es": "banda / grupo musical", "audio": "tts:band" },
+        { "concepto_id": "voc.planes.singer", "en": "singer", "es": "cantante", "audio": "tts:singer" },
+        { "concepto_id": "voc.planes.actor", "en": "actor", "es": "actor / actriz", "audio": "tts:actor" },
+        { "concepto_id": "voc.planes.famous", "en": "famous", "es": "famoso / famosa", "audio": "tts:famous" },
+        { "concepto_id": "voc.planes.show", "en": "show", "es": "espectáculo / programa", "audio": "tts:show" },
+        { "concepto_id": "voc.planes.news", "en": "news", "es": "noticias", "audio": "tts:the news", "nota": "Va en singular aunque termine en -s: The news is on TV." },
+        { "concepto_id": "voc.viajes.ticket", "en": "ticket", "es": "boleto", "audio": "tts:ticket" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "¿Cuándo?",
+      "items": [
+        { "concepto_id": "voc.planes.tonight", "en": "tonight", "es": "esta noche", "audio": "tts:tonight" },
+        { "concepto_id": "voc.planes.tomorrow", "en": "tomorrow", "es": "mañana", "audio": "tts:tomorrow", "nota": "'Tomorrow' es el día siguiente; 'in the morning' es 'en la mañana'." },
+        { "concepto_id": "voc.planes.next_week", "en": "next week", "es": "la próxima semana", "audio": "tts:next week" },
+        { "concepto_id": "voc.planes.maybe", "en": "maybe", "es": "quizá / a lo mejor", "audio": "tts:maybe" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.going_to_plans",
+      "titulo": "Going to (voy a…) para planes",
+      "explicacion": "am / is / are + going to + verbo en forma base. Sirve para planes que ya decidiste: I'm going to see a concert on Saturday. Negativo: I'm not going to… Pregunta: Are you going to…?",
+      "ejemplos": ["I'm going to visit my cousins next week.", "She is going to watch a movie tonight.", "Are you going to buy the tickets?"]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.will_predictions",
+      "titulo": "Will para opinar sobre el futuro",
+      "explicacion": "'Will' + verbo en forma base sirve para decir lo que crees que va a pasar, casi siempre con 'I think' o 'maybe'. Es igual para todas las personas. Contracción: I'll. Negativo: won't (will not).",
+      "ejemplos": ["I think the concert will be amazing.", "Maybe it will rain tomorrow.", "Don't worry, you won't be late."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "El concierto",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Laura", "en": "What are you going to do this weekend?", "es": "¿Qué vas a hacer este fin de semana?" },
+        { "hablante": "Luis", "en": "I'm going to see a concert with my sister. Our favorite band is playing!", "es": "Voy a ir a un concierto con mi hermana. ¡Toca nuestra banda favorita!" },
+        { "hablante": "Laura", "en": "Cool! Are you going to buy the tickets online?", "es": "¡Qué bien! ¿Van a comprar los boletos por internet?" },
+        { "hablante": "Luis", "en": "Yes, we are. I think it will be amazing.", "es": "Sí. Creo que va a estar increíble." },
+        { "hablante": "Laura", "en": "Maybe the singer will sing your favorite song!", "es": "¡A lo mejor el cantante canta tu canción favorita!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "completar",
+          "concepto_id": "gram.going_to_plans",
+          "enunciado": "I'm ___ to visit my cousins next week.",
+          "respuesta_correcta": "going",
+          "acepta": ["going"],
+          "feedback_error": "Para planes: am/is/are + going to + verbo."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.going_to_plans",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["She going to watch a movie tonight.", "She is going to watch a movie tonight.", "She is going watch a movie tonight."],
+          "respuesta_correcta": 1,
+          "feedback_error": "Necesitas 'is' y 'to': She is going to watch."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.going_to_plans",
+          "enunciado": "We ___ going to buy the tickets tomorrow.",
+          "respuesta_correcta": "are",
+          "acepta": ["are"],
+          "feedback_error": "Con 'we' usamos 'are going to'."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.will_predictions",
+          "enunciado": "Tu opinión sobre mañana: I think it ___ rain tomorrow.",
+          "opciones": ["will", "is", "going"],
+          "respuesta_correcta": 0,
+          "feedback_error": "Para decir lo que crees que pasará usamos will + verbo: it will rain."
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.will_predictions",
+          "enunciado": "No te preocupes, no será aburrido: Don't worry, the concert ___ be boring.",
+          "respuesta_correcta": "won't",
+          "acepta": ["won't", "will not"],
+          "feedback_error": "El negativo de 'will' es 'won't' (will not)."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.going_to_plans",
+          "enunciado": "Ya compraste los boletos para el sábado. Dices:",
+          "opciones": ["I think I will go to the festival.", "I go to the festival Saturday.", "I'm going to go to the festival on Saturday."],
+          "respuesta_correcta": 2,
+          "feedback_error": "Un plan ya decidido se dice con 'going to'."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.planes.famous",
+          "enunciado": "'A famous singer' es…",
+          "opciones": ["un cantante familiar", "un cantante famoso", "un cantante nuevo"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Famous' = famoso. 'Familiar' en inglés significa 'conocido'."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa las tablas de vocabulario.",
+          "pares": [
+            { "concepto_id": "voc.planes.concert", "izq": "concert", "der": "concierto" },
+            { "concepto_id": "voc.planes.band", "izq": "band", "der": "banda / grupo musical" },
+            { "concepto_id": "voc.planes.news", "izq": "news", "der": "noticias" },
+            { "concepto_id": "voc.planes.next_week", "izq": "next week", "der": "la próxima semana" }
+          ]
+        }
+      ]
+    }
+  ]
+}
