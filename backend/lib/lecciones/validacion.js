@@ -53,7 +53,7 @@ function validarIntento(body, evaluacion) {
     throw entradaInvalida('El cuerpo debe ser un objeto JSON');
   }
 
-  const { attempt_id: attemptId, respuestas } = body;
+  const { attempt_id: attemptId, respuestas, completado_en: completadoEn } = body;
   if (typeof attemptId !== 'string' || !PATRON_UUID.test(attemptId)) {
     throw entradaInvalida('attempt_id debe ser un UUID');
   }
@@ -82,10 +82,15 @@ function validarIntento(body, evaluacion) {
     }
     vistos.add(respuesta.id);
   }
+  if (completadoEn !== undefined && completadoEn !== null && !Number.isInteger(completadoEn)) {
+    throw entradaInvalida('completado_en debe ser una fecha en milisegundos');
+  }
 
   return {
     attemptId: attemptId.toLowerCase(),
     respuestas: respuestas.map(({ id, valor }) => ({ id, valor })),
+    // RN-08: cuándo se contestó (un intento hecho sin conexión llega después).
+    completadoEn: completadoEn ?? null,
   };
 }
 
