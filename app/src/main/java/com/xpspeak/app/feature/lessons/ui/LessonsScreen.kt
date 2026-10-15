@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -130,13 +131,24 @@ fun LessonsScreen(
                                 "${uiState.repasoPendiente} concepto(s) por repasar",
                                 style = MaterialTheme.typography.bodySmall
                             )
+                            if (uiState.repasoBloquea) {
+                                Text(
+                                    "Haz tu repaso para desbloquear los temas nuevos.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
                 }
             }
 
             items(uiState.lecciones, key = { it.id }) { leccion ->
-                TarjetaLeccion(leccion, onClick = { onAbrirLeccion(leccion.id) })
+                TarjetaLeccion(
+                    leccion,
+                    // RN-07: un tema nuevo en espera lleva al repaso, no a la lección.
+                    onClick = { if (leccion.estado == EstadoLeccion.REPASO_PENDIENTE) onAbrirRepaso() else onAbrirLeccion(leccion.id) }
+                )
             }
 
             if (uiState.conceptosDebiles.isNotEmpty()) {
@@ -169,6 +181,7 @@ private fun LazyGridScope.filaCompleta(content: @Composable () -> Unit) {
 @Composable
 private fun TarjetaLeccion(leccion: LeccionResumenDto, onClick: () -> Unit) {
     val bloqueada = leccion.estado == EstadoLeccion.BLOQUEADA
+    val enEspera = bloqueada || leccion.estado == EstadoLeccion.REPASO_PENDIENTE
     Column(
         modifier = Modifier
             .clickable(enabled = !bloqueada, role = Role.Button, onClick = onClick)
@@ -181,8 +194,8 @@ private fun TarjetaLeccion(leccion: LeccionResumenDto, onClick: () -> Unit) {
             Image(
                 painter = painterResource(if (portada != 0) portada else R.drawable.inicio_lecciones),
                 contentDescription = null,
-                colorFilter = if (bloqueada) ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) }) else null,
-                alpha = if (bloqueada) 0.55f else 1f,
+                colorFilter = if (enEspera) ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) }) else null,
+                alpha = if (enEspera) 0.55f else 1f,
                 modifier = Modifier.fillMaxWidth().aspectRatio(1f).clip(FormaPortada)
             )
             ChipEstado(leccion.estado, modifier = Modifier.padding(bottom = 8.dp))
@@ -211,6 +224,7 @@ private fun ChipEstado(estado: EstadoLeccion?, modifier: Modifier = Modifier) {
         EstadoLeccion.EN_PROGRESO -> Triple("En progreso", XPNaranja, XPMarino)
         EstadoLeccion.REPROBADA -> Triple("Repetir", XPAmarillo, XPMarino)
         EstadoLeccion.COMPLETADA -> Triple("Completada", XPVerdeExito, XPBlanco)
+        EstadoLeccion.REPASO_PENDIENTE -> Triple("Repasa primero", XPAmarillo, XPMarino)
         null -> return
     }
     Surface(color = fondo, shape = MaterialTheme.shapes.small, modifier = modifier) {
@@ -222,6 +236,7 @@ private fun ChipEstado(estado: EstadoLeccion?, modifier: Modifier = Modifier) {
             when (estado) {
                 EstadoLeccion.BLOQUEADA -> Icon(Icons.Filled.Lock, contentDescription = null, tint = tinta, modifier = Modifier.size(14.dp))
                 EstadoLeccion.COMPLETADA -> Icon(Icons.Filled.Check, contentDescription = null, tint = tinta, modifier = Modifier.size(14.dp))
+                EstadoLeccion.REPASO_PENDIENTE -> Icon(Icons.Filled.Refresh, contentDescription = null, tint = tinta, modifier = Modifier.size(14.dp))
                 else -> Unit
             }
             Text(texto, color = tinta, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)

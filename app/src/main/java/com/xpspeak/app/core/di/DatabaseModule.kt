@@ -26,7 +26,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "xpspeak.db"
         )
-        .addMigrations(AppDatabase.MIGRACION_2_3, AppDatabase.MIGRACION_3_4, AppDatabase.MIGRACION_4_5)
+        .addMigrations(AppDatabase.MIGRACION_2_3, AppDatabase.MIGRACION_3_4, AppDatabase.MIGRACION_4_5, AppDatabase.MIGRACION_5_6)
         .fallbackToDestructiveMigration()
         .build()
 

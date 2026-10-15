@@ -97,4 +97,20 @@ class LeccionesContratoTest {
             gson.toJson(request)
         )
     }
+
+    @Test
+    fun `lee el estado de repaso pendiente (RN-07) y cuantos conceptos faltan`() {
+        val json = """{"nivel":"A1","repaso_requerido":3,"lecciones":[""" +
+            """{"id":"a1-dos","orden":2,"titulo":"Dos","estado":"repaso_pendiente","intentos":0,"xp_recompensa":60,"mejor_puntaje":null}]}"""
+        val catalogo = gson.fromJson(json, CatalogoDto::class.java)
+
+        assertEquals(EstadoLeccion.REPASO_PENDIENTE, catalogo.lecciones[0].estado)
+        assertEquals(3, catalogo.repasoRequerido)
+    }
+
+    @Test
+    fun `el intento manda cuando se contesto para la racha (RN-08)`() {
+        val json = gson.toJson(IntentoRequest("id", emptyList(), completadoEn = 1_760_000_000_000))
+        assertEquals(true, json.contains(""""completado_en":1760000000000"""))
+    }
 }

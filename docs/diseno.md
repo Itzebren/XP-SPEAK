@@ -123,6 +123,7 @@ Ninguna pantalla del PDF queda sin implementar. Lo que sigue es de despliegue o 
 1. **Despliegue:** `api/account/delete` necesita las credenciales de administrador de Firebase
    en Vercel (las mismas de `verify-reset-code`).
 2. **Cuenta de prueba:** borrar `diseno.prueba@xpspeak.com` desde la consola de Firebase.
-3. **Arranque con sesión:** la app siempre abre en el login (ya pasaba antes de este cambio).
+3. ~~**Arranque con sesión**~~ ✅ (rama `feature/requisitos-tt`): `ArranqueViewModel` entra directo a Inicio
+   con la sesión guardada de Firebase, también sin conexión.
 4. **Resto de minijuegos y repaso:** usan los colores y el encabezado nuevos, pero su contenido
    conserva la maquetación anterior; pueden adoptar `TarjetaXP`.

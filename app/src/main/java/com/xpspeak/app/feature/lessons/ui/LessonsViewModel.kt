@@ -3,6 +3,7 @@ package com.xpspeak.app.feature.lessons.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xpspeak.app.feature.lessons.data.ConceptoDebilDto
+import com.xpspeak.app.feature.lessons.data.EstadoLeccion
 import com.xpspeak.app.feature.lessons.data.LeccionResumenDto
 import com.xpspeak.app.feature.lessons.data.LeccionesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,8 @@ data class LessonsUiState(
     val intentosPendientes: Int = 0,
     /** Conceptos que SM-2 marca para repasar hoy (RF-13). */
     val repasoPendiente: Int = 0,
+    /** RN-07: hay temas nuevos en espera hasta hacer el repaso. */
+    val repasoBloquea: Boolean = false,
     val error: String? = null
 )
 
@@ -44,6 +47,7 @@ class LessonsViewModel @Inject constructor(
                         cargando = false,
                         nivel = catalogo.dto.nivel,
                         lecciones = catalogo.dto.lecciones,
+                        repasoBloquea = catalogo.dto.lecciones.any { it.estado == EstadoLeccion.REPASO_PENDIENTE },
                         sinConexion = catalogo.sinConexion,
                         intentosPendientes = catalogo.intentosPendientes
                     )

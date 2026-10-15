@@ -203,7 +203,8 @@ class MinijuegosRepository @Inject constructor(
             aciertos = resultado.aciertos,
             total = resultado.total,
             duracionMs = resultado.duracionMs,
-            conceptos = leerConceptos(resultado.conceptosJson).map { (id, c) -> ConceptoResultadoDto(id, c.aciertos, c.errores) }
+            conceptos = leerConceptos(resultado.conceptosJson).map { (id, c) -> ConceptoResultadoDto(id, c.aciertos, c.errores) },
+            completadoEn = resultado.terminadaEn
         )
         return try {
             val respuesta = pedir { api.enviarResultado(it, request) }

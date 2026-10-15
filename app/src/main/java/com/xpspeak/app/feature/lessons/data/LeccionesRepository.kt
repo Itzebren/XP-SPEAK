@@ -36,16 +36,22 @@ sealed interface EnvioIntento {
 }
 
 /** El backend respondió con error HTTP (a diferencia de no poder conectarse). */
-class ErrorDelServidor(val codigo: Int, mensaje: String) : Exception(mensaje)
+class ErrorDelServidor(val codigo: Int, mensaje: String) : Exception(mensaje) {
+    /** RN-07: el servidor pide repasar antes de empezar un tema nuevo. */
+    val esRepasoPendiente get() = codigo == 409
+}
+
+/** Lección a medias guardada en el teléfono (RN-12, CU-06 A2). */
+data class LeccionEnCurso(val attemptId: String, val respuestas: Map<String, RespuestaUsuario>, val posicion: Int)
 
 /**
  * RF-10/RF-12/RF-13: consume el backend de Lecciones. El servidor saca el uid
  * del ID token de Firebase, así que cada llamada manda "Bearer <token>".
  *
- * Offline-first (backend/docs/lecciones-diseno.md §3 y §6.2): las lecciones y el último
- * catálogo se guardan en Room; sin conexión la evaluación se califica en el
- * teléfono y el intento se reenvía después con el mismo attempt_id, para que
- * el servidor no duplique el XP.
+ * Offline-first (backend/docs/lecciones-diseno.md §3 y §6.2): las lecciones vienen en el APK
+ * (LeccionesLocales) y las que cambien después se bajan a Room; el último catálogo también se
+ * guarda en Room. Sin conexión la evaluación se califica en el teléfono y el intento se
+ * reenvía después con el mismo attempt_id, para que el servidor no duplique el XP.
  */
 class LeccionesRepository @Inject constructor(
     private val api: LeccionesApi,
@@ -53,6 +59,7 @@ class LeccionesRepository @Inject constructor(
     private val usuarioDao: UsuarioDao,
     private val dao: LeccionesDao,
     private val registroActividad: RegistroActividad,
+    private val locales: LeccionesLocales,
     @ApplicationContext private val context: Context
 ) {
     private val gson = Gson()
@@ -76,38 +83,46 @@ class LeccionesRepository @Inject constructor(
             },
             onFailure = { error ->
                 if (!esSinConexion(error)) throw error
-                val cache = dao.catalogo(uid, nivel)
-                    ?: throw Exception("Sin conexión. Conéctate una vez para descargar tus lecciones.")
-                Catalogo(
-                    gson.fromJson(cache.json, CatalogoDto::class.java),
-                    sinConexion = true,
-                    intentosPendientes = dao.contarPendientes(uid)
-                )
+                Catalogo(catalogoGuardado(uid, nivel), sinConexion = true, intentosPendientes = dao.contarPendientes(uid))
             }
         )
     }
 
+    /** El último catálogo del servidor o, si nunca hubo conexión, el que se arma con el APK (RN-11). */
+    private suspend fun catalogoGuardado(uid: String, nivel: String): CatalogoDto =
+        dao.catalogo(uid, nivel)?.let { gson.fromJson(it.json, CatalogoDto::class.java) }
+            ?: CatalogoLocal.inicial(nivel, locales.entradas(nivel))
+
     /**
-     * Descarga las lecciones del nivel que falten o cambiaron según el manifiesto,
-     * para que después se puedan abrir sin conexión (RN-11).
+     * Descarga las lecciones del nivel que cambiaron en el servidor después de instalar la app
+     * (las demás ya vienen en el APK), para abrirlas sin conexión (RN-11).
      */
     suspend fun sincronizarContenido(): Result<Unit> = runCatching {
         val manifiesto = cuerpo(api.manifiesto())
         val vigentes = manifiesto.niveles.values.flatten().map { it.id }
         if (vigentes.isNotEmpty()) dao.borrarLeccionesExcepto(vigentes)
 
-        val locales = dao.versiones().associate { it.id to it.version }
+        val descargadas = dao.versiones().associate { it.id to it.version }
         manifiesto.niveles[nivelDelUsuario()].orEmpty()
-            .filter { locales[it.id] != it.version }
+            .filter { (descargadas[it.id] ?: locales.version(it.id)) != it.version }
             .forEach { entrada ->
                 val dto = pedir { api.leccion(it, entrada.id) }
                 dao.guardarLeccion(LeccionCacheEntity(entrada.id, entrada.version, gson.toJson(dto)))
             }
     }
 
-    /** Usa la copia local si existe; la sincronización del manifiesto la mantiene al día. */
+    /**
+     * La copia más nueva entre la descargada (Room) y la del APK; el servidor solo si la
+     * lección no existe en ninguna de las dos (una lección agregada después de instalar).
+     */
     suspend fun leccion(id: String): Result<LeccionDto> = runCatching {
-        dao.leccion(id)?.let { return@runCatching gson.fromJson(it.json, LeccionDto::class.java) }
+        val descargada = dao.leccion(id)
+        val versionApk = locales.version(id)
+        val json = when {
+            descargada != null && (versionApk == null || descargada.version >= versionApk) -> descargada.json
+            else -> locales.json(id)
+        }
+        json?.let { return@runCatching gson.fromJson(it, LeccionDto::class.java) }
         val dto = pedir { api.leccion(it, id) }
         dao.guardarLeccion(LeccionCacheEntity(id, version = 0, json = gson.toJson(dto)))
         dto
@@ -115,6 +130,29 @@ class LeccionesRepository @Inject constructor(
 
     suspend fun guardarAvance(id: String, seccion: Int): Result<AvanceResponse> =
         llamar { api.guardarAvance(it, id, AvanceRequest(seccion)) }
+
+    /** La lección a medias de este usuario, si la dejó hace menos de DIAS_EN_CURSO días. */
+    suspend fun leccionEnCurso(id: String): LeccionEnCurso? {
+        val uid = firebaseAuth.currentUser?.uid ?: return null
+        val guardada = dao.leccionEnCurso(uid, id) ?: return null
+        if (System.currentTimeMillis() - guardada.actualizadaEn > TimeUnit.DAYS.toMillis(DIAS_EN_CURSO)) {
+            dao.borrarLeccionEnCurso(uid, id)
+            return null
+        }
+        return LeccionEnCurso(guardada.attemptId, RespuestasCodec.decodificar(guardada.respuestasJson), guardada.posicion)
+    }
+
+    suspend fun guardarEnCurso(id: String, enCurso: LeccionEnCurso) {
+        val uid = firebaseAuth.currentUser?.uid ?: return
+        dao.guardarLeccionEnCurso(
+            LeccionEnCursoEntity(uid, id, enCurso.attemptId, RespuestasCodec.codificar(enCurso.respuestas), enCurso.posicion, System.currentTimeMillis())
+        )
+    }
+
+    suspend fun descartarEnCurso(id: String) {
+        val uid = firebaseAuth.currentUser?.uid ?: return
+        dao.borrarLeccionEnCurso(uid, id)
+    }
 
     suspend fun conceptosDebiles(): Result<ConceptosDebilesDto> =
         llamar { api.conceptosDebiles(it, nivelDelUsuario()) }
@@ -147,7 +185,8 @@ class LeccionesRepository @Inject constructor(
     ): Result<EnvioIntento> = runCatching {
         val request = IntentoRequest(
             attemptId = attemptId,
-            respuestas = respuestas.map { (itemId, respuesta) -> respuesta.aDto(itemId) }
+            respuestas = respuestas.map { (itemId, respuesta) -> respuesta.aDto(itemId) },
+            completadoEn = System.currentTimeMillis()
         )
         llamar { api.enviarIntento(it, leccionId, request) }.fold(
             onSuccess = { resultado ->
@@ -166,9 +205,20 @@ class LeccionesRepository @Inject constructor(
                 val calificado = CalificadorLocal.calificar(evaluacion, respuestas)
                 // La lección se aprobó hoy aunque el servidor se entere después: la racha sube ya.
                 if (calificado.aprobada) registroActividad.registrar(uidActual())
+                reflejarEnCatalogo(leccionId, calificado)
                 EnvioIntento.Pendiente(calificado)
             }
         )
+    }
+
+    /** Sin conexión, el catálogo guardado ya muestra la lección aprobada y la siguiente desbloqueada. */
+    private suspend fun reflejarEnCatalogo(leccionId: String, resultado: IntentoResponse) {
+        val uid = uidActual()
+        val nivel = nivelDelUsuario()
+        val entradas = locales.entradas(nivel)
+        if (entradas.none { it.id == leccionId }) return
+        val catalogo = CatalogoLocal.conIntento(catalogoGuardado(uid, nivel), entradas, leccionId, resultado.aprobada, resultado.puntaje)
+        dao.guardarCatalogo(CatalogoCacheEntity(uid, nivel, gson.toJson(catalogo)))
     }
 
     /**
@@ -231,6 +281,9 @@ class LeccionesRepository @Inject constructor(
     companion object {
         // Evita que la pantalla y el Worker reenvíen el mismo intento a la vez.
         private val sincronizando = Mutex()
+
+        /** Una lección a medias se ofrece para retomar durante una semana. */
+        private const val DIAS_EN_CURSO = 7L
 
         /** Sin red: OkHttp no conecta, o Firebase no puede renovar el token. */
         fun esSinConexion(error: Throwable) = error is IOException || error is FirebaseNetworkException
