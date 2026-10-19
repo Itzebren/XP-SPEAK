@@ -1,8 +1,8 @@
 {
   "functions": {
     "api/**/*.js": {
-      "runtime": "nodejs20.x",
-      "includeFiles": "content/**"
+      "includeFiles": "content/**",
+      "maxDuration": 30
     }
   }
 }

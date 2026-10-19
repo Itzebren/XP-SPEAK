@@ -1,6 +1,7 @@
 # XP-SPEAK — Backend serverless (Vercel)
 
-Incluye cuatro módulos:
+Incluye cinco módulos:
+- **Chat con IA y token de voz (RF-06, RF-07, RF-09)** — ver [Chat con IA](#chat-con-ia-cu-05).
 - **Recuperación de acceso (RF-03)** — esta sección.
 - **Lecciones (RF-10, RF-12, RF-13, RF-14)** — ver [Módulo de Lecciones](#módulo-de-lecciones) más abajo.
 - **Minijuegos (RF-11)** — ver [Módulo de Minijuegos](#módulo-de-minijuegos).
@@ -113,7 +114,9 @@ api/                         ← un archivo por endpoint; solo su lógica propia
   srs/session.js             GET  /api/srs/session[?level=A1]         sesión de repaso de hoy
                              POST /api/srs/session                    respuestas del repaso
   games/result.js            POST /api/games/result                   partida terminada de un minijuego
-  speech/token.js            GET  /api/speech/token                   token temporal de Azure AI Speech
+  speech/token.js            GET  /api/speech/token                   token temporal de Azure AI Speech (Eco Vocal)
+  speech-token.js            POST /api/speech-token                   el mismo token, para la pantalla de Pronunciación
+  chat.js                    POST /api/chat                           una vuelta de conversación con Azure OpenAI
 lib/
   endpoint.js     envoltura común: método HTTP, token y errores
   errores.js      ErrorApi + respuesta estándar { error, codigo }
@@ -134,6 +137,8 @@ lib/
     validacion.js   validación del resultado de una partida
     repositorio.js  Firestore: partida idempotente, tope diario, SRS y evento de actividad
   speech/azure.js   token de Azure AI Speech (la llave solo vive aquí)
+  speech/limite.js  límite de tokens por usuario (compartido por los dos endpoints de voz)
+  chat/azureOpenAI.js  validación del chat, system prompt por nivel y llamada a Azure OpenAI
 scripts/
   lint-content.js   linter de contenido (una función por regla; lecciones y misiones)
   exportar-banco-minijuegos.js  genera app/src/main/assets/minijuegos/banco.json
@@ -161,6 +166,7 @@ Errores: `{ "error": "mensaje legible", "codigo": "LECCION_BLOQUEADA" }`
 | HTTP | `codigo` |
 |---|---|
 | 400 | `ENTRADA_INVALIDA` |
+| 422 | `CONTENIDO_BLOQUEADO` (el filtro de contenido de Azure bloqueó el chat) |
 | 401 | `TOKEN_AUSENTE`, `TOKEN_INVALIDO` |
 | 403 | `LECCION_BLOQUEADA` |
 | 404 | `LECCION_NO_ENCONTRADA` |
@@ -168,8 +174,9 @@ Errores: `{ "error": "mensaje legible", "codigo": "LECCION_BLOQUEADA" }`
 | 409 | `ATTEMPT_ID_REUTILIZADO` (el mismo `attempt_id` en otra lección), `PARTIDA_ID_REUTILIZADO` |
 | 429 | `DEMASIADOS_INTENTOS` (más de 10 intentos/min en una lección), `DEMASIADAS_PARTIDAS`, `DEMASIADOS_TOKENS` |
 | 500 | `ERROR_INTERNO` |
-| 502 | `SPEECH_NO_DISPONIBLE` (Azure no respondió) |
-| 503 | `SPEECH_NO_CONFIGURADO` (faltan `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION`) |
+| 502 | `SPEECH_NO_DISPONIBLE` (Azure no respondió), `CHAT_NO_DISPONIBLE` |
+| 503 | `SPEECH_NO_CONFIGURADO` (faltan `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION`), `CHAT_NO_CONFIGURADO` (faltan `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY`) |
+| 504 | `CHAT_SIN_RESPUESTA` (Azure OpenAI tardó más de 25 s) |
 
 ## Contrato del intento
 
@@ -354,6 +361,24 @@ Sin esas variables el endpoint responde 503 y la app usa el reconocimiento de
 voz del teléfono como respaldo (sin puntaje fonético). Límite: 10 tokens por
 usuario por hora.
 
+
+## Chat con IA (CU-05)
+
+Venía del repo aparte `xp-speak-auth-backend` y ahora vive aquí, con el resto
+del backend. `POST /api/chat` recibe `{ mensaje, nivel: "A1" | "A2", historial: [{ role, content }] }`
+y responde `{ respuesta }`. El nivel va en el system prompt (RN-03); del historial
+solo se aceptan turnos `user`/`assistant` (los últimos 10), así que la app no puede
+colar otro mensaje `system`. Nada de la conversación se guarda.
+
+Variables de entorno en Vercel:
+
+- **`AZURE_OPENAI_ENDPOINT`** — p. ej. `https://xp-speak-bot.openai.azure.com/` (East US 2).
+- **`AZURE_OPENAI_API_KEY`** — llave del recurso.
+- **`AZURE_OPENAI_DEPLOYMENT`** — nombre del despliegue (`gpt-4.1-mini-2`; es el valor por omisión).
+
+`POST /api/speech-token` es la ruta que usa la pantalla de Pronunciación
+(`SpeechApi.kt`); responde lo mismo que `GET /api/speech/token` y comparte su
+límite de 10 tokens por hora.
 
 ---
 

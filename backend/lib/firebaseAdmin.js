@@ -22,6 +22,8 @@ function getFirebaseAdmin() {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
     });
+    // gRPC se queda colgado en el entorno serverless de Vercel (tabla 82 del TT): se usa REST.
+    admin.firestore().settings({ preferRest: true });
   }
   return admin;
 }
