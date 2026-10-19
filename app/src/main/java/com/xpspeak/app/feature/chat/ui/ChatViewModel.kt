@@ -7,6 +7,7 @@ import com.xpspeak.app.feature.chat.data.ChatRepository
 import com.xpspeak.app.feature.chat.data.MensajeChat
 import com.xpspeak.app.feature.progress.data.InsigniaDto
 import com.xpspeak.app.feature.progress.data.ProgresoRepository
+import com.xpspeak.app.feature.voice.data.ReconocedorVoz
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,6 +22,7 @@ data class ChatUiState(
     val mensajes: List<MensajeUi> = emptyList(),
     val entrada: String = "",
     val cargando: Boolean = false,
+    val escuchando: Boolean = false,
     val error: String? = null,
     /** "Habla con IA" y otras insignias ganadas al conversar (Progreso), para festejarlas. */
     val insigniasNuevas: List<InsigniaDto> = emptyList()
@@ -30,15 +32,12 @@ data class ChatUiState(
 class ChatViewModel @Inject constructor(
     private val repository: ChatRepository,
     private val progresoRepository: ProgresoRepository,
-    private val registroActividad: RegistroActividad
+    private val registroActividad: RegistroActividad,
+    private val reconocedor: ReconocedorVoz
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
-
-    // TODO: cuando conectemos el módulo de Perfil (RF-04/RF-05), tomar el
-    // nivel real guardado del usuario en vez de este valor fijo.
-    private val nivelUsuario = "A1"
 
     /** Una conversación por pantalla de chat; el servidor la registra una sola vez (Progreso). */
     private val sesionId = UUID.randomUUID().toString()
@@ -64,7 +63,8 @@ class ChatViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            repository.enviarMensaje(texto, nivelUsuario, historialParaApi)
+            // RF-06/RN-02: se lee en cada envío por si el usuario cambió de nivel.
+            repository.enviarMensaje(texto, repository.nivelDelUsuario(), historialParaApi)
                 .onSuccess { respuesta ->
                     _uiState.value = _uiState.value.copy(
                         mensajes = _uiState.value.mensajes + MensajeUi(respuesta, esUsuario = false),
@@ -89,5 +89,26 @@ class ChatViewModel @Inject constructor(
 
     fun cerrarFestejo() {
         _uiState.value = _uiState.value.copy(insigniasNuevas = emptyList())
+    }
+
+    fun escucharVoz() {
+        if (_uiState.value.escuchando || _uiState.value.cargando) return
+        _uiState.value = _uiState.value.copy(escuchando = true, error = null)
+
+        viewModelScope.launch {
+            reconocedor.reconocerUnaVez()
+                .onSuccess { texto ->
+                    _uiState.value = _uiState.value.copy(entrada = texto, escuchando = false)
+                }
+                .onFailure { excepcion ->
+                    _uiState.value = _uiState.value.copy(escuchando = false, error = excepcion.message)
+                }
+        }
+    }
+
+    fun onPermisoMicrofonoDenegado() {
+        _uiState.value = _uiState.value.copy(
+            error = "Necesitas permitir el micrófono para practicar con voz."
+        )
     }
 }

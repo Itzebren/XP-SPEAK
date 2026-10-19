@@ -7,6 +7,7 @@ import com.xpspeak.app.feature.chat.data.ChatApi
 import com.xpspeak.app.feature.games.data.MinijuegosApi
 import com.xpspeak.app.feature.lessons.data.LeccionesApi
 import com.xpspeak.app.feature.progress.data.ProgresoApi
+import com.xpspeak.app.feature.voice.data.SpeechApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,6 +51,11 @@ object NetworkModule {
     @Singleton
     fun provideRecuperacionApi(retrofit: Retrofit): RecuperacionApi =
         retrofit.create(RecuperacionApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideSpeechApi(retrofit: Retrofit): SpeechApi =
+        retrofit.create(SpeechApi::class.java)
 
     /**
      * Lecciones usa su propia base URL: en debug apunta al backend local

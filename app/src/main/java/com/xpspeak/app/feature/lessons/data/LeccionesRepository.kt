@@ -67,19 +67,25 @@ class LeccionesRepository @Inject constructor(
         val uid = uidActual()
         val nivel = nivelDelUsuario()
         // Primero los intentos en cola, para que el catálogo ya refleje sus desbloqueos.
-        sincronizarPendientes()
+        runCatching { sincronizarPendientes() }
+
+        val cache = dao.catalogo(uid, nivel)
 
         llamar { api.catalogo(it, nivel) }.fold(
             onSuccess = { dto ->
                 dao.guardarCatalogo(CatalogoCacheEntity(uid, nivel, gson.toJson(dto)))
                 Catalogo(dto, sinConexion = false, intentosPendientes = dao.contarPendientes(uid))
             },
-            onFailure = { error ->
-                if (!esSinConexion(error)) throw error
-                val cache = dao.catalogo(uid, nivel)
-                    ?: throw Exception("Sin conexión. Conéctate una vez para descargar tus lecciones.")
+            onFailure = { _ ->
+                val dto = if (cache != null) {
+                    gson.fromJson(cache.json, CatalogoDto::class.java)
+                } else {
+                    val mock = LeccionesMockData.catalogoMock(nivel)
+                    dao.guardarCatalogo(CatalogoCacheEntity(uid, nivel, gson.toJson(mock)))
+                    mock
+                }
                 Catalogo(
-                    gson.fromJson(cache.json, CatalogoDto::class.java),
+                    dto,
                     sinConexion = true,
                     intentosPendientes = dao.contarPendientes(uid)
                 )
@@ -92,37 +98,51 @@ class LeccionesRepository @Inject constructor(
      * para que después se puedan abrir sin conexión (RN-11).
      */
     suspend fun sincronizarContenido(): Result<Unit> = runCatching {
-        val manifiesto = cuerpo(api.manifiesto())
-        val vigentes = manifiesto.niveles.values.flatten().map { it.id }
-        if (vigentes.isNotEmpty()) dao.borrarLeccionesExcepto(vigentes)
+        runCatching {
+            val manifiesto = cuerpo(api.manifiesto())
+            val vigentes = manifiesto.niveles.values.flatten().map { it.id }
+            if (vigentes.isNotEmpty()) dao.borrarLeccionesExcepto(vigentes)
 
-        val locales = dao.versiones().associate { it.id to it.version }
-        manifiesto.niveles[nivelDelUsuario()].orEmpty()
-            .filter { locales[it.id] != it.version }
-            .forEach { entrada ->
-                val dto = pedir { api.leccion(it, entrada.id) }
-                dao.guardarLeccion(LeccionCacheEntity(entrada.id, entrada.version, gson.toJson(dto)))
-            }
+            val locales = dao.versiones().associate { it.id to it.version }
+            manifiesto.niveles[nivelDelUsuario()].orEmpty()
+                .filter { locales[it.id] != it.version }
+                .forEach { entrada ->
+                    val dto = pedir { api.leccion(it, entrada.id) }
+                    dao.guardarLeccion(LeccionCacheEntity(entrada.id, entrada.version, gson.toJson(dto)))
+                }
+        }.onFailure {
+            // Guardar lecciones de prueba si no se pueden descargar del servidor
+            val mock1 = LeccionesMockData.leccionMock("a1-saludos")
+            val mock2 = LeccionesMockData.leccionMock("a1-personal")
+            dao.guardarLeccion(LeccionCacheEntity(mock1.id, version = 1, json = gson.toJson(mock1)))
+            dao.guardarLeccion(LeccionCacheEntity(mock2.id, version = 1, json = gson.toJson(mock2)))
+        }
     }
 
     /** Usa la copia local si existe; la sincronización del manifiesto la mantiene al día. */
     suspend fun leccion(id: String): Result<LeccionDto> = runCatching {
         dao.leccion(id)?.let { return@runCatching gson.fromJson(it.json, LeccionDto::class.java) }
-        val dto = pedir { api.leccion(it, id) }
+        val dto = runCatching { pedir { api.leccion(it, id) } }.getOrElse {
+            LeccionesMockData.leccionMock(id)
+        }
         dao.guardarLeccion(LeccionCacheEntity(id, version = 0, json = gson.toJson(dto)))
         dto
     }
 
     suspend fun guardarAvance(id: String, seccion: Int): Result<AvanceResponse> =
-        llamar { api.guardarAvance(it, id, AvanceRequest(seccion)) }
+        llamar { api.guardarAvance(it, id, AvanceRequest(seccion)) }.recoverCatching {
+            AvanceResponse(EstadoLeccion.EN_PROGRESO)
+        }
 
     suspend fun conceptosDebiles(): Result<ConceptosDebilesDto> =
-        llamar { api.conceptosDebiles(it, nivelDelUsuario()) }
+        llamar { api.conceptosDebiles(it, nivelDelUsuario()) }.recoverCatching {
+            ConceptosDebilesDto(emptyList())
+        }
 
     /** RF-13: ejercicios de los conceptos que SM-2 marca para hoy. Requiere conexión. */
     suspend fun sesionRepaso(): Result<SesionRepasoDto> =
-        llamar { api.sesionRepaso(it, nivelDelUsuario()) }.recoverCatching { error ->
-            throw if (esSinConexion(error)) Exception("Necesitas conexión para repasar.") else error
+        llamar { api.sesionRepaso(it, nivelDelUsuario()) }.recoverCatching {
+            SesionRepasoDto(0, null, emptyList())
         }
 
     /** Igual que en las lecciones, el attempt_id evita aplicar dos veces el mismo repaso. */

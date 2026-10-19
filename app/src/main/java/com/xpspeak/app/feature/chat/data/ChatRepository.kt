@@ -2,13 +2,21 @@ package com.xpspeak.app.feature.chat.data
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import com.xpspeak.app.feature.auth.data.UsuarioDao
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ChatRepository @Inject constructor(
     private val api: ChatApi,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val usuarioDao: UsuarioDao
 ) {
+    /** RN-02: la IA responde con la complejidad del nivel elegido al registrarse (guardado en Room). */
+    suspend fun nivelDelUsuario(): String {
+        val uid = firebaseAuth.currentUser?.uid ?: return "A1"
+        return usuarioDao.buscarPorUid(uid)?.nivel ?: "A1"
+    }
+
     suspend fun enviarMensaje(
         mensaje: String,
         nivel: String,

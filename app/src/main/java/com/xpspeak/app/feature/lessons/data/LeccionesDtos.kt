@@ -55,29 +55,29 @@ data class LeccionDto(
 )
 
 data class SeccionDto(
-    val tipo: TipoSeccion?,
-    val titulo: String?,
-    val cuerpo: String?,
-    val explicacion: String?,
-    val ejemplos: List<String>?,
-    val lineas: List<LineaDialogoDto>?,
-    val items: List<ItemDto>?,
-    @SerializedName("umbral_aprobacion") val umbralAprobacion: Double?
+    val tipo: TipoSeccion? = null,
+    val titulo: String? = null,
+    val cuerpo: String? = null,
+    val explicacion: String? = null,
+    val ejemplos: List<String>? = null,
+    val lineas: List<LineaDialogoDto>? = null,
+    val items: List<ItemDto>? = null,
+    @SerializedName("umbral_aprobacion") val umbralAprobacion: Double? = null
 )
 
 data class LineaDialogoDto(val hablante: String, val en: String, val es: String)
 
 data class ItemDto(
     // vocabulario
-    val en: String?,
-    val es: String?,
-    val nota: String?,
+    val en: String? = null,
+    val es: String? = null,
+    val nota: String? = null,
     // evaluación. La clave de respuestas viene en el JSON para calificar sin conexión (§6.2).
-    val id: String?,
-    val tipo: TipoEjercicio?,
-    val enunciado: String?,
-    val opciones: List<String>?,
-    val pares: List<ParDto>?,
+    val id: String? = null,
+    val tipo: TipoEjercicio? = null,
+    val enunciado: String? = null,
+    val opciones: List<String>? = null,
+    val pares: List<ParDto>? = null,
     @SerializedName("concepto_id") val conceptoId: String? = null,
     /** Int (opción múltiple) o String (completar). */
     @SerializedName("respuesta_correcta") val respuestaCorrecta: JsonElement? = null,

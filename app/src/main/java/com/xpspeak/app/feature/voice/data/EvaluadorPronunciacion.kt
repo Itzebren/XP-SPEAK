@@ -1,0 +1,164 @@
+package com.xpspeak.app.feature.voice.data
+
+import android.util.Log
+import com.google.gson.JsonParser
+import com.microsoft.cognitiveservices.speech.CancellationDetails
+import com.microsoft.cognitiveservices.speech.NoMatchDetails
+import com.microsoft.cognitiveservices.speech.PronunciationAssessmentConfig
+import com.microsoft.cognitiveservices.speech.PronunciationAssessmentGradingSystem
+import com.microsoft.cognitiveservices.speech.PronunciationAssessmentGranularity
+import com.microsoft.cognitiveservices.speech.PronunciationAssessmentResult
+import com.microsoft.cognitiveservices.speech.PropertyId
+import com.microsoft.cognitiveservices.speech.ResultReason
+import com.microsoft.cognitiveservices.speech.SpeechConfig
+import com.microsoft.cognitiveservices.speech.SpeechRecognitionResult
+import com.microsoft.cognitiveservices.speech.SpeechRecognizer
+import com.microsoft.cognitiveservices.speech.audio.AudioConfig
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlin.math.roundToInt
+import javax.inject.Inject
+
+/**
+ * RF-09: evalúa la pronunciación del usuario comparándola con un texto de
+ * referencia usando Azure Pronunciation Assessment.
+ *
+ * Diferencias clave respecto a ReconocedorVoz:
+ *  - Se aplica PronunciationAssessmentConfig al recognizer ANTES de llamar
+ *    recognizeOnceAsync (orden exigido por el SDK).
+ *  - Se configuran los mismos timeouts de silencio que usa ReconocedorVoz
+ *    para evitar NoMatch por InitialSilenceTimeout.
+ *  - enableProsodyAssessment() está desactivado por ahora porque es el
+ *    componente más propenso a fallar en emulador / SDK preview.
+ */
+class EvaluadorPronunciacion @Inject constructor(
+    private val speechRepository: SpeechRepository
+) {
+    companion object {
+        private const val TAG = "EvaluadorPronunciacion"
+    }
+
+    data class ResultadoPronunciacion(
+        val textoReconocido: String,
+        val puntuacionGeneral: Double,
+        val puntuacionPrecision: Double,
+        val puntuacionFluidez: Double,
+        val puntuacionCompletitud: Double,
+        val palabras: List<PalabraEvaluada>,
+        /** 0–100, NBest[0].Confidence: por debajo de 30 el audio no fue legible (CU-05 A3). */
+        val confianza: Int = 100
+    )
+
+    data class PalabraEvaluada(
+        val palabra: String,
+        val puntuacionPrecision: Double,
+        val errorType: String,
+        val fonemas: List<FonemaEvaluado> = emptyList()
+    )
+
+    /** Fonema en IPA (p. ej. "θ") con su precisión 0–100. */
+    data class FonemaEvaluado(val fonema: String, val puntuacionPrecision: Double)
+
+    suspend fun evaluar(
+        textoReferencia: String,
+        idioma: String = "en-US"
+    ): Result<ResultadoPronunciacion> = withContext(Dispatchers.IO) {
+        runCatching {
+            val cred = speechRepository.obtenerCredenciales().getOrThrow()
+
+            val config = SpeechConfig.fromAuthorizationToken(cred.token, cred.region)
+            config.speechRecognitionLanguage = idioma
+            // ── Mismos timeouts que ReconocedorVoz ──
+            config.setProperty(
+                PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs,
+                "15000"
+            )
+            config.setProperty(
+                PropertyId.SpeechServiceConnection_EndSilenceTimeoutMs,
+                "3000"
+            )
+
+            val audio = AudioConfig.fromDefaultMicrophoneInput()
+
+            // ── Configuración de evaluación ──
+            val pronConfig = PronunciationAssessmentConfig(
+                textoReferencia,
+                PronunciationAssessmentGradingSystem.HundredMark,
+                PronunciationAssessmentGranularity.Phoneme,
+                true // enableMiscue
+            )
+            // IPA en vez de SAPI ("th"): es la notación de los diccionarios que conoce el estudiante.
+            pronConfig.setPhonemeAlphabet("IPA")
+            // Prosody desactivado: es opcional y el más propenso a fallar.
+            // pronConfig.enableProsodyAssessment()
+
+            val recognizer = SpeechRecognizer(config, audio)
+
+            // applyTo DEBE llamarse ANTES de recognizeOnceAsync
+            pronConfig.applyTo(recognizer)
+
+            try {
+                val resultado = recognizer.recognizeOnceAsync().get()
+
+                when (resultado.reason) {
+                    ResultReason.RecognizedSpeech -> {
+                        val pa = PronunciationAssessmentResult.fromResult(resultado)
+                        val palabras = pa.words.orEmpty()
+                            // Palabras de más que dijo el usuario: no forman parte de la frase a colorear.
+                            .filter { it.errorType != "Insertion" }
+                            .map { w ->
+                                PalabraEvaluada(
+                                    palabra = w.word,
+                                    puntuacionPrecision = w.accuracyScore,
+                                    errorType = w.errorType,
+                                    fonemas = w.phonemes.orEmpty().map { FonemaEvaluado(it.phoneme, it.accuracyScore) }
+                                )
+                            }
+
+                        ResultadoPronunciacion(
+                            textoReconocido = resultado.text,
+                            puntuacionGeneral = pa.pronunciationScore,
+                            puntuacionPrecision = pa.accuracyScore,
+                            puntuacionFluidez = pa.fluencyScore,
+                            puntuacionCompletitud = pa.completenessScore,
+                            palabras = palabras,
+                            confianza = confianza(resultado)
+                        )
+                    }
+
+                    ResultReason.NoMatch -> {
+                        val detalle = NoMatchDetails.fromResult(resultado)
+                        val motivo = detalle.reason
+                        Log.w(TAG, "NoMatch – motivo: $motivo")
+                        throw Exception(
+                            "No te escuché bien. Intenta de nuevo. (motivo: $motivo)"
+                        )
+                    }
+
+                    ResultReason.Canceled -> {
+                        val detalle = CancellationDetails.fromResult(resultado)
+                        Log.e(TAG, "Canceled: ${detalle.reason} – ${detalle.errorDetails}")
+                        throw Exception("Error de voz: ${detalle.errorDetails}")
+                    }
+
+                    else -> {
+                        Log.e(TAG, "Resultado inesperado: ${resultado.reason}")
+                        throw Exception("No se pudo evaluar la pronunciación.")
+                    }
+                }
+            } finally {
+                pronConfig.close()
+                recognizer.close()
+                audio.close()
+                config.close()
+            }
+        }
+    }
+
+    /** NBest[0].Confidence (0–1) del JSON detallado de Azure, igual que EvaluadorAzure de Eco Vocal. */
+    private fun confianza(resultado: SpeechRecognitionResult): Int = runCatching {
+        val json = resultado.properties.getProperty(PropertyId.SpeechServiceResponse_JsonResult)
+        val nBest = JsonParser.parseString(json).asJsonObject.getAsJsonArray("NBest")
+        (nBest[0].asJsonObject["Confidence"].asDouble * 100).roundToInt()
+    }.getOrDefault(100)
+}
