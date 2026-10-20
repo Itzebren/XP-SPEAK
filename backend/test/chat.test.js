@@ -7,7 +7,6 @@ const { db } = instalarFirebaseFalso({ 'token-ana': 'uid-ana' });
 
 const chat = require('../api/chat');
 const tokenPronunciacion = require('../api/speech-token');
-const tokenEcoVocal = require('../api/speech/token');
 const { MAX_HISTORIAL } = require('../lib/chat/azureOpenAI');
 
 const enviar = (body, token = 'token-ana') => llamar(chat, { method: 'POST', token, body });
@@ -141,9 +140,9 @@ test('chat: si Azure falla o tarda responde sin filtrar detalles (CU-05 A4)', as
   assert.equal(demora.body.codigo, 'CHAT_SIN_RESPUESTA');
 });
 
-// ── POST /api/speech-token ────────────────────────────────────────────────
+// ── GET|POST /api/speech-token ────────────────────────────────────────────
 
-test('token de pronunciación: POST con la misma respuesta que Eco Vocal y límite compartido', async (t) => {
+test('token de voz: GET (Eco Vocal) y POST (chat) dan la misma respuesta y comparten el límite', async (t) => {
   process.env.AZURE_SPEECH_KEY = 'llave-secreta';
   process.env.AZURE_SPEECH_REGION = 'eastus2';
   t.mock.method(globalThis, 'fetch', async () => ({ ok: true, status: 200, text: async () => 'token-azure' }));
@@ -152,8 +151,8 @@ test('token de pronunciación: POST con la misma respuesta que Eco Vocal y lími
     delete process.env.AZURE_SPEECH_REGION;
   });
 
-  const get = await llamar(tokenPronunciacion, { method: 'GET', token: 'token-ana' });
-  assert.equal(get.statusCode, 405);
+  const put = await llamar(tokenPronunciacion, { method: 'PUT', token: 'token-ana' });
+  assert.equal(put.statusCode, 405);
 
   const res = await llamar(tokenPronunciacion, { method: 'POST', token: 'token-ana' });
   assert.equal(res.statusCode, 200);
@@ -161,7 +160,11 @@ test('token de pronunciación: POST con la misma respuesta que Eco Vocal y lími
   assert.equal(res.body.region, 'eastus2');
   assert.ok(!JSON.stringify(res.body).includes('llave-secreta'));
 
-  for (let i = 1; i < tokenEcoVocal.MAX_TOKENS_POR_VENTANA; i++) await llamar(tokenEcoVocal, { token: 'token-ana' });
+  const get = await llamar(tokenPronunciacion, { method: 'GET', token: 'token-ana' });
+  assert.equal(get.statusCode, 200);
+  assert.deepEqual(Object.keys(get.body).sort(), Object.keys(res.body).sort());
+
+  for (let i = 2; i < tokenPronunciacion.MAX_TOKENS_POR_VENTANA; i++) await llamar(tokenPronunciacion, { token: 'token-ana' });
   const excedido = await llamar(tokenPronunciacion, { method: 'POST', token: 'token-ana' });
   assert.equal(excedido.statusCode, 429);
 });

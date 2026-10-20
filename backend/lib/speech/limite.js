@@ -3,8 +3,8 @@ const { ErrorApi } = require('../errores');
 /**
  * Rate limiting por uid de los tokens de Azure AI Speech. Cada token sirve 10
  * minutos, así que una app normal pide pocos; el límite protege el costo del
- * recurso de Azure. Lo comparten /api/speech/token (Eco Vocal) y
- * /api/speech-token (pantalla de Pronunciación): es el mismo recurso.
+ * recurso de Azure. Eco Vocal (GET) y la voz del chat / Pronunciación (POST)
+ * piden el token a /api/speech-token y comparten este límite.
  */
 const COLECCION_LIMITE = 'limite_speech';
 const MAX_TOKENS_POR_VENTANA = 10;

@@ -114,8 +114,8 @@ api/                         ← un archivo por endpoint; solo su lógica propia
   srs/session.js             GET  /api/srs/session[?level=A1]         sesión de repaso de hoy
                              POST /api/srs/session                    respuestas del repaso
   games/result.js            POST /api/games/result                   partida terminada de un minijuego
-  speech/token.js            GET  /api/speech/token                   token temporal de Azure AI Speech (Eco Vocal)
-  speech-token.js            POST /api/speech-token                   el mismo token, para la pantalla de Pronunciación
+  speech-token.js            GET  /api/speech-token                   token temporal de Azure AI Speech (Eco Vocal)
+                             POST /api/speech-token                   el mismo token, para la voz del chat / Pronunciación
   chat.js                    POST /api/chat                           una vuelta de conversación con Azure OpenAI
 lib/
   endpoint.js     envoltura común: método HTTP, token y errores
@@ -349,7 +349,7 @@ máximo 14 palabras y fuentes MCER como en las lecciones.
 
 ## Eco Vocal y Azure AI Speech
 
-`GET /api/speech/token` devuelve `{ token, region, expira_en }`: un token de
+`GET /api/speech-token` devuelve `{ token, region, expira_en }`: un token de
 Azure de 10 minutos para que la app evalúe la pronunciación en streaming (el
 audio no pasa por este backend ni se guarda, RN-04). Variables de entorno en
 Vercel:
@@ -376,9 +376,9 @@ Variables de entorno en Vercel:
 - **`AZURE_OPENAI_API_KEY`** — llave del recurso.
 - **`AZURE_OPENAI_DEPLOYMENT`** — nombre del despliegue (`gpt-4.1-mini-2`; es el valor por omisión).
 
-`POST /api/speech-token` es la ruta que usa la pantalla de Pronunciación
-(`SpeechApi.kt`); responde lo mismo que `GET /api/speech/token` y comparte su
-límite de 10 tokens por hora.
+La voz del chat y la pantalla de Pronunciación (`SpeechApi.kt`) piden el token
+con `POST /api/speech-token`: mismo archivo, misma respuesta y mismo límite de
+10 tokens por hora que el `GET` de Eco Vocal.
 
 ---
 
