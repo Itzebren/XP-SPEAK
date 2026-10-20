@@ -140,6 +140,87 @@ test('chat: si Azure falla o tarda responde sin filtrar detalles (CU-05 A4)', as
   assert.equal(demora.body.codigo, 'CHAT_SIN_RESPUESTA');
 });
 
+// ── POST /api/chat con stream (RNF-02) ────────────────────────────────────
+
+/** Simula el SSE de Azure; `trozos` se cortan donde caigan, como en la red. */
+function simularAzureEnFlujo(t, trozos) {
+  const llamadas = [];
+  const codificador = new TextEncoder();
+  t.mock.method(globalThis, 'fetch', async (url, opciones) => {
+    llamadas.push({ url, body: JSON.parse(opciones.body) });
+    return {
+      ok: true,
+      status: 200,
+      body: (async function* () {
+        for (const trozo of trozos) {
+          if (trozo instanceof Error) throw trozo;
+          yield codificador.encode(trozo);
+        }
+      })(),
+    };
+  });
+  return llamadas;
+}
+
+const chunkAzure = (contenido, extra = {}) => `data: ${JSON.stringify({ choices: [{ delta: { content: contenido }, ...extra }] })}\n\n`;
+
+/** Los eventos { delta } / { fin } / { error } que recibió la app. */
+const eventos = (res) =>
+  res.texto
+    .split('\n\n')
+    .filter(Boolean)
+    .map((linea) => JSON.parse(linea.replace(/^data: /, '')));
+
+test('chat en flujo: reenvía cada pedazo y cierra con fin, aunque Azure corte las líneas a la mitad', async (t) => {
+  configurarAzureOpenAI(t);
+  const sse = 'data: {"choices":[],"prompt_filter_results":[]}\n\n' + chunkAzure('Hi') + chunkAzure('! How') + chunkAzure(' are you?') + 'data: [DONE]\n\n';
+  const llamadas = simularAzureEnFlujo(t, [sse.slice(0, 50), sse.slice(50, 97), sse.slice(97)]);
+
+  const res = await enviar({ mensaje: 'Hello', nivel: 'A2', stream: true });
+
+  assert.equal(res.statusCode, 200);
+  assert.match(res.headers['content-type'], /text\/event-stream/);
+  assert.equal(res.headers['cache-control'], 'no-store');
+  assert.equal(llamadas[0].body.stream, true);
+  assert.match(llamadas[0].body.messages[0].content, /El nivel del usuario es A2\./);
+  assert.deepEqual(eventos(res), [{ delta: 'Hi' }, { delta: '! How' }, { delta: ' are you?' }, { fin: true }]);
+});
+
+test('chat en flujo: el filtro de contenido a media respuesta llega como evento de error (CU-05 A5)', async (t) => {
+  configurarAzureOpenAI(t);
+  simularAzureEnFlujo(t, [chunkAzure('Well'), chunkAzure('', { finish_reason: 'content_filter' })]);
+
+  const res = await enviar({ mensaje: 'algo', stream: true });
+
+  assert.deepEqual(eventos(res).at(-1).codigo, 'CONTENIDO_BLOQUEADO');
+  assert.ok(!eventos(res).some((e) => e.fin));
+});
+
+test('chat en flujo: si Azure se corta o no manda texto, el último evento es un error genérico', async (t) => {
+  configurarAzureOpenAI(t);
+  t.mock.method(console, 'error', () => {});
+  const timeout = Object.assign(new Error('detalle interno'), { name: 'TimeoutError' });
+  simularAzureEnFlujo(t, [chunkAzure('Hi'), timeout]);
+  const cortado = await enviar({ mensaje: 'Hello', stream: true });
+  assert.deepEqual(eventos(cortado).at(-1), { error: 'El chatbot tardó demasiado. Intenta de nuevo.', codigo: 'CHAT_SIN_RESPUESTA' });
+  assert.ok(!cortado.texto.includes('detalle interno'));
+
+  t.mock.restoreAll();
+  simularAzureEnFlujo(t, ['data: [DONE]\n\n']);
+  const vacio = await enviar({ mensaje: 'Hello', stream: true });
+  assert.equal(eventos(vacio).at(-1).codigo, 'CHAT_NO_DISPONIBLE');
+});
+
+test('chat en flujo: los errores antes de empezar salen como JSON con su código HTTP', async (t) => {
+  configurarAzureOpenAI(t);
+  t.mock.method(console, 'error', () => {});
+  simularAzure(t, { ok: false, status: 429, cuerpo: 'detalle interno' });
+  const res = await enviar({ mensaje: 'Hello', stream: true });
+  assert.equal(res.statusCode, 502);
+  assert.equal(res.body.codigo, 'CHAT_NO_DISPONIBLE');
+  assert.equal(res.texto, undefined);
+});
+
 // ── GET|POST /api/speech-token ────────────────────────────────────────────
 
 test('token de voz: GET (Eco Vocal) y POST (chat) dan la misma respuesta y comparten el límite', async (t) => {

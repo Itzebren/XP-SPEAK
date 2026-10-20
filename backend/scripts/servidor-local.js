@@ -66,6 +66,7 @@ http
         return res;
       },
       setHeader: (nombre, valor) => resNode.setHeader(nombre, valor),
+      write: (trozo) => resNode.write(trozo),
       end: () => resNode.end(),
     };
 

@@ -9,6 +9,7 @@ import com.xpspeak.app.feature.progress.data.InsigniaDto
 import com.xpspeak.app.feature.progress.data.ProgresoRepository
 import com.xpspeak.app.feature.voice.data.ReconocedorVoz
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,8 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-data class MensajeUi(val texto: String, val esUsuario: Boolean)
+/** [completo] es false mientras la respuesta de la IA sigue llegando (RNF-02). */
+data class MensajeUi(val texto: String, val esUsuario: Boolean, val completo: Boolean = true)
 
 data class ChatUiState(
     val mensajes: List<MensajeUi> = emptyList(),
@@ -63,18 +65,30 @@ class ChatViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            // RF-06/RN-02: se lee en cada envío por si el usuario cambió de nivel.
-            repository.enviarMensaje(texto, repository.nivelDelUsuario(), historialParaApi)
-                .onSuccess { respuesta ->
+            var respuesta = ""
+            try {
+                // RF-06/RN-02: se lee en cada envío por si el usuario cambió de nivel.
+                repository.enviarMensaje(texto, repository.nivelDelUsuario(), historialParaApi).collect { pedazo ->
+                    // RNF-02: la burbuja aparece con el primer pedazo y crece con cada uno.
+                    val anteriores = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
+                    respuesta += pedazo
                     _uiState.value = _uiState.value.copy(
-                        mensajes = _uiState.value.mensajes + MensajeUi(respuesta, esUsuario = false),
-                        cargando = false
+                        mensajes = anteriores + MensajeUi(respuesta, esUsuario = false, completo = false)
                     )
-                    registrarConversacion()
                 }
-                .onFailure { excepcion ->
-                    _uiState.value = _uiState.value.copy(cargando = false, error = excepcion.message)
-                }
+                if (respuesta.isEmpty()) throw IllegalStateException("Respuesta vacía del servidor")
+                _uiState.value = _uiState.value.copy(
+                    mensajes = _uiState.value.mensajes.dropLast(1) + MensajeUi(respuesta, esUsuario = false),
+                    cargando = false
+                )
+                registrarConversacion()
+            } catch (excepcion: CancellationException) {
+                throw excepcion
+            } catch (excepcion: Exception) {
+                // Una respuesta cortada no se queda en el historial: confundiría a la IA en el siguiente turno.
+                val mensajes = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
+                _uiState.value = _uiState.value.copy(mensajes = mensajes, cargando = false, error = excepcion.message)
+            }
         }
     }
 

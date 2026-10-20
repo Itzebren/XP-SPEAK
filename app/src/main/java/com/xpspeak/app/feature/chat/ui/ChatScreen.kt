@@ -89,16 +89,22 @@ fun ChatScreen(
 
     // RF-08: las respuestas de la IA se leen en voz alta para practicar la comprensión auditiva.
     val locutor = rememberLocutor()
-    // Arranca en el tamaño actual para no repetir la última respuesta al regresar a la pantalla.
-    var mensajesLeidos by rememberSaveable { mutableIntStateOf(uiState.mensajes.size) }
+    // Cuenta solo mensajes completos: con streaming (RNF-02) la respuesta se lee en voz alta
+    // hasta que termina de llegar. Arranca en el total actual para no repetirla al regresar.
+    val completos = uiState.mensajes.count { it.completo }
+    var mensajesLeidos by rememberSaveable { mutableIntStateOf(completos) }
 
-    LaunchedEffect(uiState.mensajes.size) {
+    LaunchedEffect(completos) {
+        if (completos > mensajesLeidos) {
+            uiState.mensajes.last().takeIf { !it.esUsuario && it.completo }?.let { locutor.decir(it.texto) }
+        }
+        mensajesLeidos = completos
+    }
+
+    // También sigue a la burbuja mientras crece.
+    LaunchedEffect(uiState.mensajes.size, uiState.mensajes.lastOrNull()?.texto?.length) {
         if (uiState.mensajes.isNotEmpty()) {
             scope.launch { listState.animateScrollToItem(uiState.mensajes.size - 1) }
-        }
-        if (uiState.mensajes.size > mensajesLeidos) {
-            uiState.mensajes.last().takeIf { !it.esUsuario }?.let { locutor.decir(it.texto) }
-            mensajesLeidos = uiState.mensajes.size
         }
     }
 
@@ -113,7 +119,8 @@ fun ChatScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(uiState.mensajes) { mensaje -> BurbujaMensaje(mensaje, onEscuchar = { locutor.decir(mensaje.texto) }) }
-            if (uiState.cargando) {
+            // El indicador solo mientras no llega el primer pedazo; después, la burbuja ya crece sola.
+            if (uiState.cargando && uiState.mensajes.lastOrNull()?.esUsuario == true) {
                 item {
                     Row(modifier = Modifier.fillMaxWidth()) {
                         CircularProgressIndicator(modifier = Modifier.size(20.dp))
@@ -193,7 +200,7 @@ private fun BurbujaMensaje(mensaje: MensajeUi, onEscuchar: () -> Unit) {
                 color = if (mensaje.esUsuario) XPBlanco else XPTexto
             )
         }
-        if (!mensaje.esUsuario) {
+        if (!mensaje.esUsuario && mensaje.completo) {
             IconButton(onClick = onEscuchar) {
                 Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Escuchar respuesta", tint = XPMarino)
             }

@@ -161,6 +161,11 @@ async function llamar(handler, { method = 'GET', token, query = {}, body, header
     setHeader(nombre, valor) {
       this.headers[nombre.toLowerCase()] = valor;
     },
+    /** Respuestas en flujo (chat con stream): se acumulan en `texto`. */
+    write(trozo) {
+      this.texto = (this.texto || '') + trozo;
+      return true;
+    },
     end() {
       return this;
     },

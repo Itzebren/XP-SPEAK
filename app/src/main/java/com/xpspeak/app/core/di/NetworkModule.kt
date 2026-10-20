@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -96,6 +97,18 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideChatApi(retrofit: Retrofit): ChatApi =
-        retrofit.create(ChatApi::class.java)
+    fun provideChatApi(retrofit: Retrofit, client: OkHttpClient): ChatApi {
+        // RNF-02: el log en nivel BODY lee la respuesta completa antes de entregarla y
+        // anularía el streaming; el chat solo registra cabeceras.
+        val clienteChat = client.newBuilder().apply {
+            interceptors().removeAll { it is HttpLoggingInterceptor }
+            addInterceptor(HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.HEADERS else HttpLoggingInterceptor.Level.NONE
+                redactHeader("Authorization")
+            })
+        }
+            .readTimeout(30, TimeUnit.SECONDS)
+            .build()
+        return retrofit.newBuilder().client(clienteChat).build().create(ChatApi::class.java)
+    }
 }
