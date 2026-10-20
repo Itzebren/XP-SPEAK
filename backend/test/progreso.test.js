@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
 const { randomUUID } = require('crypto');
-const { instalarFirebaseFalso, llamar } = require('./helpers/fakeFirebase');
+const { instalarFirebaseFalso, llamar, enRuta } = require('./helpers/fakeFirebase');
 
 // El doble debe instalarse antes de cargar los handlers.
 const { db } = instalarFirebaseFalso({ 'token-ana': 'uid-ana', 'token-beto': 'uid-beto' });
@@ -10,7 +10,7 @@ const { db } = instalarFirebaseFalso({ 'token-ana': 'uid-ana', 'token-beto': 'ui
 const progreso = require('../api/progress/index');
 const resultadoJuego = require('../api/games/result');
 const intento = require('../api/lessons/[id]/attempt');
-const sesionRepaso = require('../api/srs/session');
+const sesionRepaso = enRuta(require('../api/srs/[accion]'), { accion: 'session' });
 const { nivelPorXp, subioDeNivel, xpParaNivel } = require('../lib/progreso/niveles');
 const { diaLocal, registrarDia, rachaVigente, diasEnSemana, lunesDe } = require('../lib/progreso/racha');
 const { CATALOGO, evaluar } = require('../lib/progreso/insignias');

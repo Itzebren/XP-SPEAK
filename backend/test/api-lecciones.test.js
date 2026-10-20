@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { randomUUID } = require('crypto');
-const { instalarFirebaseFalso, llamar } = require('./helpers/fakeFirebase');
+const { instalarFirebaseFalso, llamar, enRuta } = require('./helpers/fakeFirebase');
 
 // El doble debe instalarse antes de cargar los handlers.
 const { db } = instalarFirebaseFalso({ 'token-ana': 'uid-ana', 'token-beto': 'uid-beto' });
@@ -11,7 +11,7 @@ const manifiesto = require('../api/lessons/manifest');
 const leccion = require('../api/lessons/[id]');
 const intento = require('../api/lessons/[id]/attempt');
 const avance = require('../api/lessons/[id]/progress');
-const repaso = require('../api/srs/review');
+const repaso = enRuta(require('../api/srs/[accion]'), { accion: 'review' });
 const { MAX_INTENTOS_POR_VENTANA } = require('../lib/lecciones/limite');
 
 const L1 = 'a1-saludos-presentaciones';

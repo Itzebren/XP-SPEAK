@@ -10,7 +10,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('crypto');
-const { llamar } = require('../helpers/fakeFirebase');
+const { llamar, enRuta } = require('../helpers/fakeFirebase');
 
 const PROYECTO = 'demo-xpspeak';
 const AUTH_HOST = process.env.FIREBASE_AUTH_EMULATOR_HOST;
@@ -24,7 +24,7 @@ const { getFirebaseAdmin } = require('../../lib/firebaseAdmin');
 const catalogo = require('../../api/lessons/index');
 const intento = require('../../api/lessons/[id]/attempt');
 const avance = require('../../api/lessons/[id]/progress');
-const repaso = require('../../api/srs/review');
+const repaso = enRuta(require('../../api/srs/[accion]'), { accion: 'review' });
 const progreso = require('../../api/progress/index');
 const resultadoJuego = require('../../api/games/result');
 const { migrarResumenes } = require('../../lib/progreso/repositorio');

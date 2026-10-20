@@ -110,9 +110,10 @@ api/                         ← un archivo por endpoint; solo su lógica propia
   lessons/[id].js            GET  /api/lessons/:id
   lessons/[id]/attempt.js    POST /api/lessons/:id/attempt
   lessons/[id]/progress.js   POST /api/lessons/:id/progress
-  srs/review.js              GET  /api/srs/review[?level=A1&limit=20]   conceptos débiles
-  srs/session.js             GET  /api/srs/session[?level=A1]         sesión de repaso de hoy
+  srs/[accion].js            GET  /api/srs/review[?level=A1&limit=20]   conceptos débiles
+                             GET  /api/srs/session[?level=A1]         sesión de repaso de hoy
                              POST /api/srs/session                    respuestas del repaso
+                             (cualquier otra acción → 404)
   games/result.js            POST /api/games/result                   partida terminada de un minijuego
   speech-token.js            GET  /api/speech-token                   token temporal de Azure AI Speech (Eco Vocal)
                              POST /api/speech-token                   el mismo token, para la voz del chat / Pronunciación
