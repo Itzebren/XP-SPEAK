@@ -8,7 +8,6 @@ const { instalarFirebaseFalso, llamar } = require('./helpers/fakeFirebase');
 const { db } = instalarFirebaseFalso({ 'token-ana': 'uid-ana', 'token-beto': 'uid-beto' });
 
 const progreso = require('../api/progress/index');
-const chat = require('../api/progress/chat');
 const resultadoJuego = require('../api/games/result');
 const intento = require('../api/lessons/[id]/attempt');
 const sesionRepaso = require('../api/srs/session');
@@ -56,7 +55,7 @@ const partida = (cambios = {}) => ({
 
 const verProgreso = (token = 'token-ana', { level = 'A1', headers } = {}) => llamar(progreso, { token, query: { level }, headers });
 const jugar = (body, token = 'token-ana') => llamar(resultadoJuego, { method: 'POST', token, body });
-const registrarChat = (sesionId, token = 'token-ana') => llamar(chat, { method: 'POST', token, body: { sesion_id: sesionId } });
+const registrarChat = (sesionId, token = 'token-ana') => llamar(progreso, { method: 'POST', token, body: { sesion_id: sesionId } });
 const insignia = (res, id) => res.body.insignias.find((i) => i.id === id);
 
 /** Historial de antes del módulo: eventos sin resumen (como en producción hoy). */
@@ -267,7 +266,7 @@ test('GET: responde 304 con el ETag correcto y 200 cuando el progreso cambia', a
 test('GET: valida el nivel, exige sesión y separa el progreso por usuario', async () => {
   assert.equal((await verProgreso('token-ana', { level: 'C2' })).statusCode, 400);
   assert.equal((await llamar(progreso, { query: {} })).statusCode, 401);
-  assert.equal((await llamar(progreso, { method: 'POST', token: 'token-ana' })).statusCode, 405);
+  assert.equal((await llamar(progreso, { method: 'PUT', token: 'token-ana' })).statusCode, 405);
 
   await jugar(partida());
   assert.equal((await verProgreso('token-beto')).body.sin_actividad, true);
@@ -401,7 +400,7 @@ test('repaso: actualiza el resumen sin dar XP', async () => {
   assert.equal(resumen.xp_total, xpAntes);
 });
 
-// ── POST /api/progress/chat ────────────────────────────────────────────────
+// ── POST /api/progress (chat) ──────────────────────────────────────────────
 
 test('chat: desbloquea "Habla con IA", cuenta para la racha y es idempotente', async () => {
   const res = await registrarChat('sesion-1');
@@ -424,13 +423,25 @@ test('chat: desbloquea "Habla con IA", cuenta para la racha y es idempotente', a
 
 test('chat: valida el sesion_id y limita las conversaciones por día', async () => {
   for (const malo of [undefined, '', 'a/b', 'x'.repeat(101), 42]) {
-    const res = await llamar(chat, { method: 'POST', token: 'token-ana', body: { sesion_id: malo } });
+    const res = await llamar(progreso, { method: 'POST', token: 'token-ana', body: { sesion_id: malo } });
     assert.equal(res.statusCode, 400, String(malo));
   }
   for (let i = 0; i < MAX_CHATS_POR_DIA; i++) assert.equal((await registrarChat(`s${i}`)).statusCode, 200);
   const res = await registrarChat('una-mas');
   assert.equal(res.statusCode, 429);
   assert.equal(res.body.codigo, 'DEMASIADOS_CHATS');
+});
+
+test('progress: un error inesperado se registra como progress/get o progress/chat', async (t) => {
+  const contextos = [];
+  t.mock.method(console, 'error', (mensaje) => contextos.push(mensaje));
+  const roto = new Proxy({}, { get() { throw new Error('falla interna'); } });
+
+  const get = await llamar(progreso, { token: 'token-ana', query: roto });
+  const post = await llamar(progreso, { method: 'POST', token: 'token-ana', body: roto });
+  assert.equal(get.statusCode, 500);
+  assert.equal(post.statusCode, 500);
+  assert.deepEqual(contextos, ['Error en progress/get:', 'Error en progress/chat:']);
 });
 
 // ── Migración y catálogo del APK ───────────────────────────────────────────

@@ -216,7 +216,7 @@ Errores: `{ "error": "mensaje legible", "codigo": "LECCION_BLOQUEADA" }`
 | `minijuegos_diario` | `<uid>_<AAAA-MM-DD>` | partidas del día por juego (hora de México), para el tope de XP |
 | `limite_speech` | `<uid>` | ventana de rate limiting de tokens de voz |
 | `resumen_usuario` | `<uid>` | XP total, racha, lecciones aprobadas, estadísticas por juego e insignias (Progreso) |
-| `chats_registrados` | `<uid>_<sesion_id>` | idempotencia de `POST /api/progress/chat` |
+| `chats_registrados` | `<uid>_<sesion_id>` | idempotencia de `POST /api/progress` |
 | `chats_diario` | `<uid>_<AAAA-MM-DD>` | conversaciones registradas en el día, para el tope |
 
 Las fechas se guardan en milisegundos epoch (igual que `password_reset_codes`).
@@ -413,7 +413,7 @@ que salen de la reconstrucción quedan como `retroactiva` (sin festejo).
                    "obtenida": false, "fecha": null, "retroactiva": false, "progreso": { "actual": 5, "meta": 7 } } ],
   "sin_actividad": false }
 
-// POST /api/progress/chat   — primera respuesta de la IA en una conversación
+// POST /api/progress   — primera respuesta de la IA en una conversación (antes /api/progress/chat)
 { "sesion_id": "<id de la conversación>" }
 // 200
 { "sesion_id": "…", "insignias_nuevas": [ … ], "nivel_xp_nuevo": null, "repetido": false }

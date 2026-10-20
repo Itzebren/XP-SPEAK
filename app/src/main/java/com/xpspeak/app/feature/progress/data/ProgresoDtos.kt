@@ -64,7 +64,7 @@ data class ProgresoInsigniaDto(val actual: Int, val meta: Int)
 /** assets/progreso/insignias.json (npm run exportar:insignias). */
 data class CatalogoInsigniasDto(val insignias: List<InsigniaDto>)
 
-// Chat — POST /api/progress/chat
+// Chat — POST /api/progress
 data class ChatProgresoRequest(@SerializedName("sesion_id") val sesionId: String)
 
 data class ChatProgresoResponse(
