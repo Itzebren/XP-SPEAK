@@ -134,6 +134,26 @@ class LeccionesRepository @Inject constructor(
             AvanceResponse(EstadoLeccion.EN_PROGRESO)
         }
 
+    /** RN-12: respuestas de la evaluación que quedó a medias, con su attempt_id original. */
+    suspend fun borrador(leccionId: String): Pair<String, Map<String, RespuestaUsuario>>? = runCatching {
+        val guardado = dao.borrador(uidActual(), leccionId) ?: return null
+        val respuestas = gson.fromJson(guardado.json, Array<BorradorRespuesta>::class.java)
+            .mapNotNull { r -> r.aRespuesta()?.let { r.id to it } }
+            .toMap()
+        guardado.attemptId to respuestas
+    }.getOrNull()
+
+    suspend fun guardarBorrador(leccionId: String, attemptId: String, respuestas: Map<String, RespuestaUsuario>) {
+        runCatching {
+            val json = gson.toJson(respuestas.map { (id, respuesta) -> respuesta.aBorrador(id) })
+            dao.guardarBorrador(BorradorLeccionEntity(uidActual(), leccionId, attemptId, json, System.currentTimeMillis()))
+        }
+    }
+
+    suspend fun descartarBorrador(leccionId: String) {
+        runCatching { dao.borrarBorrador(uidActual(), leccionId) }
+    }
+
     suspend fun conceptosDebiles(): Result<ConceptosDebilesDto> =
         llamar { api.conceptosDebiles(it, nivelDelUsuario()) }.recoverCatching {
             ConceptosDebilesDto(emptyList())

@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.UUID
 import javax.inject.Inject
 
@@ -40,11 +42,20 @@ class LeccionViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LeccionUiState())
     val uiState: StateFlow<LeccionUiState> = _uiState.asStateFlow()
 
+    private val guardandoBorrador = Mutex()
+
     init {
         viewModelScope.launch {
             repository.leccion(leccionId)
                 .onSuccess { leccion ->
-                    _uiState.value = _uiState.value.copy(cargando = false, leccion = leccion)
+                    // RN-12/RNF-10: si la evaluación quedó a medias, se retoma con las mismas respuestas.
+                    val borrador = repository.borrador(leccionId)
+                    _uiState.value = _uiState.value.copy(
+                        cargando = false,
+                        leccion = leccion,
+                        respuestas = borrador?.second ?: emptyMap(),
+                        attemptId = borrador?.first ?: _uiState.value.attemptId
+                    )
                     // RN-12: marca la lección como "en_progreso" al abrir la teoría.
                     repository.guardarAvance(leccionId, 0)
                 }
@@ -56,9 +67,18 @@ class LeccionViewModel @Inject constructor(
 
     fun responder(itemId: String, respuesta: RespuestaUsuario) {
         _uiState.value = _uiState.value.copy(respuestas = _uiState.value.respuestas + (itemId to respuesta))
+        // Al escribir en "completar" llega un cambio por tecla: el candado evita que un guardado
+        // viejo termine después de uno nuevo, y cada uno lee el estado más reciente.
+        viewModelScope.launch {
+            guardandoBorrador.withLock {
+                val estado = _uiState.value
+                if (estado.resultado == null) repository.guardarBorrador(leccionId, estado.attemptId, estado.respuestas)
+            }
+        }
     }
 
     fun reintentar() {
+        viewModelScope.launch { guardandoBorrador.withLock { repository.descartarBorrador(leccionId) } }
         _uiState.value = _uiState.value.copy(
             respuestas = emptyMap(),
             attemptId = UUID.randomUUID().toString(),
@@ -79,6 +99,8 @@ class LeccionViewModel @Inject constructor(
                         resultado = envio.resultado,
                         pendiente = envio is EnvioIntento.Pendiente
                     )
+                    // Ya calificado (o en la cola offline): no hay nada que retomar.
+                    guardandoBorrador.withLock { repository.descartarBorrador(leccionId) }
                 }
                 .onFailure { excepcion ->
                     _uiState.value = _uiState.value.copy(enviando = false, error = excepcion.message)

@@ -9,6 +9,7 @@ import com.xpspeak.app.feature.auth.data.UsuarioEntity
 import com.xpspeak.app.feature.games.data.MinijuegosDao
 import com.xpspeak.app.feature.games.data.PartidaGuardadaEntity
 import com.xpspeak.app.feature.games.data.ResultadoMinijuegoEntity
+import com.xpspeak.app.feature.lessons.data.BorradorLeccionEntity
 import com.xpspeak.app.feature.lessons.data.CatalogoCacheEntity
 import com.xpspeak.app.feature.lessons.data.IntentoPendienteEntity
 import com.xpspeak.app.feature.lessons.data.LeccionCacheEntity
@@ -30,9 +31,10 @@ import com.xpspeak.app.feature.progress.data.ProgresoDao
         IntentoPendienteEntity::class,
         PartidaGuardadaEntity::class,
         ResultadoMinijuegoEntity::class,
-        ProgresoCacheEntity::class
+        ProgresoCacheEntity::class,
+        BorradorLeccionEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -92,6 +94,17 @@ abstract class AppDatabase : RoomDatabase() {
                 db.execSQL(
                     "CREATE TABLE IF NOT EXISTS `progreso_cache` (`uid` TEXT NOT NULL, `nivel` TEXT NOT NULL, " +
                         "`json` TEXT NOT NULL, `etag` TEXT, `actualizadoEn` INTEGER NOT NULL, PRIMARY KEY(`uid`))"
+                )
+            }
+        }
+
+        /** v6: respuestas de la evaluación en curso, para recuperarlas tras un cierre (RN-12). */
+        val MIGRACION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `borradores_leccion` (`uid` TEXT NOT NULL, `leccionId` TEXT NOT NULL, " +
+                        "`attemptId` TEXT NOT NULL, `json` TEXT NOT NULL, `actualizadoEn` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`uid`, `leccionId`))"
                 )
             }
         }

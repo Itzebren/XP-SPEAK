@@ -41,8 +41,31 @@ data class IntentoPendienteEntity(
     val creadoEn: Long
 )
 
+/**
+ * Evaluación a medio contestar (RN-12/RNF-10): si la app se cierra, al volver a
+ * abrir la lección se recuperan las respuestas y el mismo attempt_id.
+ */
+@Entity(tableName = "borradores_leccion", primaryKeys = ["uid", "leccionId"])
+data class BorradorLeccionEntity(
+    val uid: String,
+    val leccionId: String,
+    val attemptId: String,
+    /** Lista de BorradorRespuesta serializada. */
+    val json: String,
+    val actualizadoEn: Long
+)
+
 @Dao
 interface LeccionesDao {
+
+    @Query("SELECT * FROM borradores_leccion WHERE uid = :uid AND leccionId = :leccionId")
+    suspend fun borrador(uid: String, leccionId: String): BorradorLeccionEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun guardarBorrador(borrador: BorradorLeccionEntity)
+
+    @Query("DELETE FROM borradores_leccion WHERE uid = :uid AND leccionId = :leccionId")
+    suspend fun borrarBorrador(uid: String, leccionId: String)
 
     @Query("SELECT * FROM lecciones_cache WHERE id = :id")
     suspend fun leccion(id: String): LeccionCacheEntity?
