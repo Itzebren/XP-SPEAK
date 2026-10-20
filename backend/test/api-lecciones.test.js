@@ -7,8 +7,8 @@ const { instalarFirebaseFalso, llamar, enRuta } = require('./helpers/fakeFirebas
 const { db } = instalarFirebaseFalso({ 'token-ana': 'uid-ana', 'token-beto': 'uid-beto' });
 
 const catalogo = require('../api/lessons/index');
-const manifiesto = require('../api/lessons/manifest');
 const leccion = require('../api/lessons/[id]');
+const manifiesto = enRuta(leccion, { id: 'manifest' });
 const intento = require('../api/lessons/[id]/attempt');
 const avance = require('../api/lessons/[id]/progress');
 const repaso = enRuta(require('../api/srs/[accion]'), { accion: 'review' });
@@ -87,6 +87,37 @@ test('contenido de lección: sin campos de autoría, con ETag, 404 si no existe'
   const noExiste = await llamar(leccion, { token: 'token-ana', query: { id: 'a1-nada' } });
   assert.equal(noExiste.statusCode, 404);
   assert.equal(noExiste.body.codigo, 'LECCION_NO_ENCONTRADA');
+});
+
+test('lessons/[id]: solo el manifiesto es público; las lecciones exigen token como antes', async () => {
+  // a) manifiesto sin token
+  const publico = await llamar(leccion, { query: { id: 'manifest' } });
+  assert.equal(publico.statusCode, 200);
+  assert.ok(publico.body.niveles.A1.length > 0);
+  assert.equal(publico.headers['cache-control'], 'public, max-age=0, s-maxage=300');
+  assert.equal((await llamar(leccion, { method: 'POST', query: { id: 'manifest' } })).statusCode, 405);
+
+  // b) lección real sin token, o con token inválido
+  const sinToken = await llamar(leccion, { query: { id: L1 } });
+  assert.equal(sinToken.statusCode, 401);
+  assert.equal(sinToken.body.codigo, 'TOKEN_AUSENTE');
+  assert.equal((await llamar(leccion, { token: 'falso', query: { id: L1 } })).body.codigo, 'TOKEN_INVALIDO');
+
+  // c) lección real con token
+  const conToken = await llamar(leccion, { token: 'token-ana', query: { id: L1 } });
+  assert.equal(conToken.statusCode, 200);
+  assert.equal(conToken.body.id, L1);
+
+  // d) lección inexistente: sin token 401 (el token va primero), con token 404
+  const inexistenteSinToken = await llamar(leccion, { query: { id: 'a1-nada' } });
+  assert.equal(inexistenteSinToken.statusCode, 401);
+  assert.equal(inexistenteSinToken.body.codigo, 'TOKEN_AUSENTE');
+  const inexistente = await llamar(leccion, { token: 'token-ana', query: { id: 'a1-nada' } });
+  assert.equal(inexistente.statusCode, 404);
+  assert.equal(inexistente.body.codigo, 'LECCION_NO_ENCONTRADA');
+
+  // Mayúsculas u otras variantes no son el manifiesto: exigen token.
+  assert.equal((await llamar(leccion, { query: { id: 'Manifest' } })).statusCode, 401);
 });
 
 test('catálogo: valida el nivel y arranca con solo la primera lección disponible', async () => {

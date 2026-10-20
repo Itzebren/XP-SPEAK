@@ -106,8 +106,8 @@ content/
   schema/mision.schema.json  ← JSON Schema de las misiones
 api/                         ← un archivo por endpoint; solo su lógica propia
   lessons/index.js           GET  /api/lessons?level=A1
-  lessons/manifest.js        GET  /api/lessons/manifest        (público)
   lessons/[id].js            GET  /api/lessons/:id
+                             GET  /api/lessons/manifest        (público; id = "manifest")
   lessons/[id]/attempt.js    POST /api/lessons/:id/attempt
   lessons/[id]/progress.js   POST /api/lessons/:id/progress
   srs/[accion].js            GET  /api/srs/review[?level=A1&limit=20]   conceptos débiles
