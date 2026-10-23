@@ -96,7 +96,7 @@ fun ChatScreen(
 
     LaunchedEffect(completos) {
         if (completos > mensajesLeidos) {
-            uiState.mensajes.last().takeIf { !it.esUsuario && it.completo }?.let { locutor.decir(it.texto) }
+            uiState.mensajes.last().takeIf { !it.esUsuario && it.completo }?.let { locutor.decirConIdiomas(it.texto) }
         }
         mensajesLeidos = completos
     }
@@ -118,7 +118,7 @@ fun ChatScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(uiState.mensajes) { mensaje -> BurbujaMensaje(mensaje, onEscuchar = { locutor.decir(mensaje.texto) }) }
+            items(uiState.mensajes) { mensaje -> BurbujaMensaje(mensaje, onEscuchar = { locutor.decirConIdiomas(mensaje.texto) }) }
             // El indicador solo mientras no llega el primer pedazo; después, la burbuja ya crece sola.
             if (uiState.cargando && uiState.mensajes.lastOrNull()?.esUsuario == true) {
                 item {

@@ -57,8 +57,11 @@ object Pronunciacion {
      */
     fun evaluarTranscripcion(referencia: String, alternativas: List<Pair<String, Float>>): EvaluacionVoz {
         val ref = Texto.palabras(referencia)
-        val (texto, confianza) = alternativas.maxByOrNull { Texto.similitud(referencia, it.first) }
+        val texto = alternativas.maxByOrNull { Texto.similitud(referencia, it.first) }?.first
             ?: return EvaluacionVoz(0, 0, ref.map { PalabraEvaluada(it, 0, "Omission") }, "", FuenteEvaluacion.DISPOSITIVO)
+        // La legibilidad es del audio, no de la alternativa: Google solo reporta la confianza
+        // de la primera y deja las demás en 0.0, así que se toma la mayor.
+        val confianza = alternativas.maxOf { it.second }
         val dichas = Texto.coincidencias(ref, Texto.palabras(texto))
         return EvaluacionVoz(
             puntaje = (Texto.similitud(referencia, texto) * 100).roundToInt(),

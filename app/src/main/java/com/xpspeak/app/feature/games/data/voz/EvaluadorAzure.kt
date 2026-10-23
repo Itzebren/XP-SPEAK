@@ -38,6 +38,10 @@ class EvaluadorAzure @Inject constructor() {
     suspend fun evaluar(referencia: String, token: TokenVozDto): EvaluacionVoz = withContext(Dispatchers.IO) {
         val config = SpeechConfig.fromAuthorizationToken(token.token, token.region).apply {
             speechRecognitionLanguage = "en-US"
+            // Mismos tiempos que EvaluadorPronunciacion: con los de fábrica Azure se rinde si el
+            // usuario tarda en empezar y corta en la primera pausa, y todo sale "no legible".
+            setProperty(PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, "15000")
+            setProperty(PropertyId.SpeechServiceConnection_EndSilenceTimeoutMs, "3000")
         }
         val audio = AudioConfig.fromDefaultMicrophoneInput()
         val reconocedor = SpeechRecognizer(config, audio)
