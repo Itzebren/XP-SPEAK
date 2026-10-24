@@ -1,0 +1,67 @@
+{
+ "insignias": [
+  {
+   "id": "primer-logro",
+   "nombre": "Primer Logro",
+   "descripcion": "¡Diste el primer paso en tu aprendizaje!",
+   "criterio": "Termina tu primera actividad: una lección, un repaso, un minijuego o una conversación.",
+   "icono": "estrella"
+  },
+  {
+   "id": "habla-con-ia",
+   "nombre": "Habla con IA",
+   "descripcion": "Practicaste tu inglés conversando con el chatbot.",
+   "criterio": "Ten tu primera conversación con el chatbot.",
+   "icono": "chat"
+  },
+  {
+   "id": "estrella-minijuego",
+   "nombre": "Estrella del Minijuego",
+   "descripcion": "Una partida perfecta, sin un solo error.",
+   "criterio": "Logra 100 % de precisión en una partida de cualquier minijuego.",
+   "icono": "juego"
+  },
+  {
+   "id": "racha-7",
+   "nombre": "Racha de 7 Días",
+   "descripcion": "Una semana entera practicando sin faltar un día.",
+   "criterio": "Practica 7 días seguidos.",
+   "icono": "fuego"
+  },
+  {
+   "id": "explorador-a1",
+   "nombre": "Explorador A1",
+   "descripcion": "Completaste todo el nivel Principiante.",
+   "criterio": "Aprueba las 12 lecciones del nivel A1.",
+   "icono": "brujula"
+  },
+  {
+   "id": "graduado-a2",
+   "nombre": "Graduado A2",
+   "descripcion": "Completaste todo el nivel Elemental.",
+   "criterio": "Aprueba las 12 lecciones del nivel A2.",
+   "icono": "birrete"
+  },
+  {
+   "id": "maestro-speaking",
+   "nombre": "Maestro Speaking",
+   "descripcion": "Tu pronunciación es cada vez más clara.",
+   "criterio": "Juega 10 partidas de Eco Vocal con 80 % de precisión o más.",
+   "icono": "microfono"
+  },
+  {
+   "id": "jugador-experto",
+   "nombre": "Jugador Experto",
+   "descripcion": "Dominas todos los minijuegos.",
+   "criterio": "Juega los 4 minijuegos y 25 partidas en total.",
+   "icono": "trofeo"
+  },
+  {
+   "id": "desafio-semanal",
+   "nombre": "Desafío Semanal",
+   "descripcion": "Practicaste casi toda la semana.",
+   "criterio": "Practica 5 días distintos de una misma semana (lunes a domingo).",
+   "icono": "calendario"
+  }
+ ]
+}

@@ -1,0 +1,162 @@
+{
+  "id": "a2-trabajo-profesiones",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Trabajo y profesiones",
+  "orden": 4,
+  "prerequisito_id": "a2-anecdotas",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo hablar de mi trabajo o mis estudios.",
+    "Puedo decir con qué frecuencia hago algo y qué estoy haciendo estos días."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Identificación personal (a lo que se dedican).",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe a su familia, sus condiciones de vida, sus estudios y su trabajo actual, o el último que tuvo.»",
+      "MCER, Intercambiar información, A2 (p. 80): «Plantea y sabe cómo responder a preguntas relativas a lo que se hace en el trabajo y en el tiempo libre.»",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe planes y citas, costumbres, actividades habituales o pertenecientes al pasado y experiencias personales.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Como el usuario A2 no pasó por A1, el presente simple y el continuo se repasan dentro de gram.present_simple_vs_continuous (guía §2.4). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿A qué te dedicas?",
+      "cuerpo": "Aprenderás profesiones y palabras del trabajo, los adverbios de frecuencia (always, usually, never) y cuándo usar presente simple o presente continuo."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Profesiones",
+      "items": [
+        { "concepto_id": "voc.trabajo.job", "en": "job", "es": "trabajo / empleo", "audio": "tts:job", "nota": "'Job' es el empleo; 'work' también es el verbo trabajar." },
+        { "concepto_id": "voc.trabajo.work", "en": "work", "es": "trabajar / trabajo", "audio": "tts:work" },
+        { "concepto_id": "voc.trabajo.doctor", "en": "doctor", "es": "médico / médica", "audio": "tts:doctor" },
+        { "concepto_id": "voc.trabajo.nurse", "en": "nurse", "es": "enfermero / enfermera", "audio": "tts:nurse" },
+        { "concepto_id": "voc.trabajo.engineer", "en": "engineer", "es": "ingeniero / ingeniera", "audio": "tts:engineer" },
+        { "concepto_id": "voc.trabajo.waiter", "en": "waiter / waitress", "es": "mesero / mesera", "audio": "tts:waiter, waitress" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "En el trabajo",
+      "items": [
+        { "concepto_id": "voc.trabajo.office", "en": "office", "es": "oficina", "audio": "tts:office" },
+        { "concepto_id": "voc.trabajo.company", "en": "company", "es": "empresa", "audio": "tts:company", "nota": "Ojo: también significa 'compañía' de estar con alguien." },
+        { "concepto_id": "voc.trabajo.boss", "en": "boss", "es": "jefe / jefa", "audio": "tts:boss" },
+        { "concepto_id": "voc.trabajo.meeting", "en": "meeting", "es": "reunión / junta", "audio": "tts:meeting" },
+        { "concepto_id": "voc.trabajo.customer", "en": "customer", "es": "cliente", "audio": "tts:customer" },
+        { "concepto_id": "voc.trabajo.part_time", "en": "part-time", "es": "de medio tiempo", "audio": "tts:a part-time job", "nota": "Lo contrario es 'full-time' (de tiempo completo)." }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.adverbs_of_frequency",
+      "titulo": "Adverbios de frecuencia",
+      "explicacion": "Dicen qué tan seguido haces algo: always (siempre), usually (normalmente), often (a menudo), sometimes (a veces), never (nunca). Van antes del verbo principal (I usually work on Saturdays), pero después de 'to be' (She is always late).",
+      "ejemplos": ["I always have coffee in the morning.", "My boss is never late.", "We sometimes work from home."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.present_simple_vs_continuous",
+      "titulo": "Presente simple vs. presente continuo",
+      "explicacion": "Presente simple para hábitos y cosas permanentes: I work in an office. Con he/she el verbo lleva -s: she works. Presente continuo (am/is/are + -ing) para lo que pasa ahora o solo por un tiempo: I'm working from home this week.",
+      "ejemplos": ["My father works in a hospital.", "Look! The waiter is coming.", "She usually drives, but this week she's taking the bus."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Trabajo de medio tiempo",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Laura", "en": "What do you do, Luis?", "es": "¿A qué te dedicas, Luis?" },
+        { "hablante": "Luis", "en": "I'm a student, but I have a part-time job. I work at a restaurant.", "es": "Soy estudiante, pero tengo un trabajo de medio tiempo. Trabajo en un restaurante." },
+        { "hablante": "Laura", "en": "Are you a waiter?", "es": "¿Eres mesero?" },
+        { "hablante": "Luis", "en": "Yes. I usually work on weekends, but this week I'm working every night.", "es": "Sí. Normalmente trabajo los fines de semana, pero esta semana estoy trabajando todas las noches." },
+        { "hablante": "Laura", "en": "Wow! Is your boss nice?", "es": "¡Guau! ¿Tu jefa es agradable?" },
+        { "hablante": "Luis", "en": "Yes, she is. She's always friendly with the customers.", "es": "Sí. Siempre es amable con los clientes." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.adverbs_of_frequency",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["I go usually to work by bus.", "I usually go to work by bus.", "I go to work usually by bus."],
+          "respuesta_correcta": 1,
+          "feedback_error": "El adverbio de frecuencia va antes del verbo principal: I usually go."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.adverbs_of_frequency",
+          "enunciado": "Ella nunca llega tarde: She is ___ late.",
+          "respuesta_correcta": "never",
+          "acepta": ["never"],
+          "feedback_error": "'Never' = nunca. Con 'to be' va después del verbo: She is never late."
+        },
+        {
+          "id": "q3",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.adverbs_of_frequency",
+          "enunciado": "'Sometimes' significa…",
+          "opciones": ["a veces", "siempre", "nunca"],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Sometimes' = a veces. 'Always' = siempre, 'never' = nunca."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.present_simple_vs_continuous",
+          "enunciado": "Look! Ana ___ on the phone now.",
+          "opciones": ["talks", "is talking", "talk"],
+          "respuesta_correcta": 1,
+          "feedback_error": "Algo que pasa ahora (Look!, now) va en presente continuo: is talking."
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.present_simple_vs_continuous",
+          "enunciado": "My father ___ in an office. (work)",
+          "respuesta_correcta": "works",
+          "acepta": ["works"],
+          "feedback_error": "Es un hábito (presente simple) y con he el verbo lleva -s: works."
+        },
+        {
+          "id": "q6",
+          "tipo": "completar",
+          "concepto_id": "gram.present_simple_vs_continuous",
+          "enunciado": "This week I'm ___ from home. (work)",
+          "respuesta_correcta": "working",
+          "acepta": ["working"],
+          "feedback_error": "Algo temporal (this week) va en presente continuo: I'm working."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.trabajo.part_time",
+          "enunciado": "'A part-time job' es…",
+          "opciones": ["un trabajo de tiempo completo", "un trabajo en una fiesta", "un trabajo de medio tiempo"],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Part-time' = de medio tiempo. 'Full-time' = de tiempo completo."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa las tablas del trabajo.",
+          "pares": [
+            { "concepto_id": "voc.trabajo.nurse", "izq": "nurse", "der": "enfermero / enfermera" },
+            { "concepto_id": "voc.trabajo.engineer", "izq": "engineer", "der": "ingeniero / ingeniera" },
+            { "concepto_id": "voc.trabajo.office", "izq": "office", "der": "oficina" },
+            { "concepto_id": "voc.trabajo.boss", "izq": "boss", "der": "jefe / jefa" }
+          ]
+        }
+      ]
+    }
+  ]
+}

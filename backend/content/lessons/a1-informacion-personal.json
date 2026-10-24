@@ -1,0 +1,144 @@
+{
+  "id": "a1-informacion-personal",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "Información personal",
+  "orden": 2,
+  "prerequisito_id": "a1-saludos-presentaciones",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo dar y pedir datos personales básicos: nombre, país, ciudad y edad.",
+    "Puedo hacer y responder preguntas sencillas sobre dónde vivo."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Identificación personal.",
+      "MCER, Cuadro 1 (escala global), A1 (p. 26): «Puede presentarse a sí mismo y a otros, pedir y dar información personal básica sobre su domicilio, sus pertenencias y las personas que conoce.»",
+      "MCER, Intercambiar información, A1 (p. 80): «Plantea y contesta preguntas sobre sí mismo y sobre otras personas: dónde vive, personas a las que conoce, cosas que tiene.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos y ejercicios originales. 'to be' se repasa en espiral desde la lección 1 (mismo concepto_id). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿De dónde eres? ¿Cuántos años tienes?",
+      "cuerpo": "Aquí aprenderás a hablar de ti: de dónde eres, dónde vives, tu edad y a qué te dedicas. También aprenderás las preguntas con what, where y how old."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Datos personales",
+      "items": [
+        { "concepto_id": "voc.personal.name", "en": "name", "es": "nombre", "audio": "tts:name" },
+        { "concepto_id": "voc.personal.country", "en": "country", "es": "país", "audio": "tts:country" },
+        { "concepto_id": "voc.personal.city", "en": "city", "es": "ciudad", "audio": "tts:city" },
+        { "concepto_id": "voc.personal.age", "en": "age", "es": "edad", "audio": "tts:age" },
+        { "concepto_id": "voc.personal.years_old", "en": "… years old", "es": "… años (de edad)", "audio": "tts:I am twenty years old.", "nota": "En inglés la edad se dice con 'be', no con 'have': I am 20 years old." },
+        { "concepto_id": "voc.personal.be_from", "en": "to be from…", "es": "ser de…", "audio": "tts:I am from Mexico." },
+        { "concepto_id": "voc.personal.live_in", "en": "to live in…", "es": "vivir en…", "audio": "tts:I live in Monterrey." },
+        { "concepto_id": "voc.personal.student", "en": "student", "es": "estudiante", "audio": "tts:student" },
+        { "concepto_id": "voc.personal.teacher", "en": "teacher", "es": "maestro / maestra", "audio": "tts:teacher" },
+        { "concepto_id": "voc.personal.phone_number", "en": "phone number", "es": "número de teléfono", "audio": "tts:phone number" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.wh_questions_basic",
+      "titulo": "Preguntas con What, Where, How old",
+      "explicacion": "Para pedir información ponemos la palabra interrogativa al inicio y después el verbo 'to be': What is your name? · Where are you from? · How old are you? Se responde con una oración completa o solo con el dato.",
+      "ejemplos": ["What is your name? — My name is Sofía.", "Where are you from? — I'm from Mexico.", "How old are you? — I'm nineteen."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.have_got",
+      "titulo": "Have got (tener)",
+      "explicacion": "'Have got' expresa posesión: I have got / I've got (yo tengo), she has got / she's got (ella tiene). ¡Ojo! Para la edad NO se usa 'have': se dice I am 20 years old.",
+      "ejemplos": ["I've got a new phone.", "She has got two brothers.", "We have got a big class."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Un nuevo compañero",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Sofía", "en": "Hi! What is your name?", "es": "¡Hola! ¿Cómo te llamas?" },
+        { "hablante": "Mateo", "en": "My name is Mateo. I'm a student.", "es": "Me llamo Mateo. Soy estudiante." },
+        { "hablante": "Sofía", "en": "Where are you from, Mateo?", "es": "¿De dónde eres, Mateo?" },
+        { "hablante": "Mateo", "en": "I'm from Mexico. I live in Guadalajara. And you?", "es": "Soy de México. Vivo en Guadalajara. ¿Y tú?" },
+        { "hablante": "Sofía", "en": "I'm from Colombia. How old are you?", "es": "Soy de Colombia. ¿Cuántos años tienes?" },
+        { "hablante": "Mateo", "en": "I'm eighteen years old. I've got a sister in Colombia!", "es": "Tengo dieciocho años. ¡Tengo una hermana en Colombia!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.wh_questions_basic",
+          "enunciado": "Quieres saber de qué país es alguien. ¿Qué preguntas?",
+          "opciones": ["How old are you?", "Where are you from?", "What is your name?"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Where are you from?' pregunta por el lugar de origen."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "voc.personal.years_old",
+          "enunciado": "I am twenty ___ old.",
+          "respuesta_correcta": "years",
+          "acepta": ["years"],
+          "feedback_error": "La edad se dice: I am twenty years old."
+        },
+        {
+          "id": "q3",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.personal.years_old",
+          "enunciado": "¿Cuál oración es correcta para decir tu edad?",
+          "opciones": ["I have 20 years.", "I am 20 years old.", "I have got 20 years old."],
+          "respuesta_correcta": 1,
+          "feedback_error": "En inglés la edad va con 'to be': I am 20 years old."
+        },
+        {
+          "id": "q4",
+          "tipo": "completar",
+          "concepto_id": "gram.have_got",
+          "enunciado": "She ___ got two brothers.",
+          "respuesta_correcta": "has",
+          "acepta": ["has"],
+          "feedback_error": "Con he/she/it se usa 'has got'."
+        },
+        {
+          "id": "q5",
+          "tipo": "completar",
+          "concepto_id": "gram.verb_to_be_present",
+          "enunciado": "Where ___ you from?",
+          "respuesta_correcta": "are",
+          "acepta": ["are"],
+          "feedback_error": "Con 'you' usamos 'are'."
+        },
+        {
+          "id": "q6",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "pares": [
+            { "concepto_id": "voc.personal.country", "izq": "country", "der": "país" },
+            { "concepto_id": "voc.personal.city", "izq": "city", "der": "ciudad" },
+            { "concepto_id": "voc.personal.teacher", "izq": "teacher", "der": "maestro / maestra" },
+            { "concepto_id": "voc.personal.phone_number", "izq": "phone number", "der": "número de teléfono" }
+          ],
+          "feedback_error": "Repasa el vocabulario de datos personales."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.personal.live_in",
+          "enunciado": "Completa: I ___ in Monterrey.",
+          "opciones": ["live", "am", "from"],
+          "respuesta_correcta": 0,
+          "feedback_error": "'I live in…' = 'Vivo en…'."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "mision-a1-tienda",
+  "version": 1,
+  "nivel": "A1",
+  "leccion_id": "a1-compras",
+  "titulo": "Una playera nueva",
+  "escenario": "Estás en una tienda de ropa y te gusta una playera azul. La vendedora se acerca.",
+  "personaje": "Vendedora",
+  "objetivos": [
+    { "id": "pedir", "texto": "Pide la playera" },
+    { "id": "precio", "texto": "Pregunta el precio" },
+    { "id": "pagar", "texto": "Pregunta cómo pagar" }
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Compras.",
+      "MCER, Interactuar para obtener bienes y servicios, A1 (p. 80): «Es capaz de pedirle a alguien alguna cosa, y viceversa. Se desenvuelve bien con números, cantidades, precios y horarios.»"
+    ],
+    "notas": "Guion original basado en el diálogo de la lección a1-compras; repasa colores y ropa de a1-ropa-colores."
+  },
+  "pasos": [
+    {
+      "npc": "Hello! Can I help you?",
+      "npc_es": "¡Hola! ¿Te puedo ayudar?",
+      "opciones": [
+        { "en": "Yes, please. I'd like this blue T-shirt.", "correcta": true, "cumple": "pedir", "concepto_id": "gram.would_like" },
+        { "en": "Yes, please. I like would this T-shirt.", "correcta": false, "feedback": "Para pedir algo con cortesía se dice 'I'd like…' (I would like)." },
+        { "en": "Yes, I'm hungry!", "correcta": false, "feedback": "Estás en una tienda de ropa: pide la playera." }
+      ]
+    },
+    {
+      "npc": "Here you are.",
+      "npc_es": "Aquí tienes.",
+      "opciones": [
+        { "en": "How much are it?", "correcta": false, "feedback": "Con una sola cosa (it) se usa 'is': How much is it?" },
+        { "en": "It's ninety pesos.", "correcta": false, "feedback": "Tú preguntas el precio; la vendedora es quien te lo dice." },
+        { "en": "Thank you. How much is it?", "correcta": true, "cumple": "precio", "concepto_id": "gram.how_much_price" }
+      ]
+    },
+    {
+      "npc": "It's ninety pesos.",
+      "npc_es": "Son noventa pesos.",
+      "opciones": [
+        { "en": "Great, it's cheap! Can I pay by card?", "correcta": true, "cumple": "pagar", "concepto_id": "voc.compras.card" },
+        { "en": "Great, it's cheaps!", "correcta": false, "feedback": "Los adjetivos no tienen plural en inglés: it's cheap." },
+        { "en": "Turn left on Reforma Street.", "correcta": false, "feedback": "Eso es una indicación para llegar a un lugar, no tiene que ver con la compra." }
+      ]
+    },
+    {
+      "npc": "Yes, of course. Would you like a bag?",
+      "npc_es": "Sí, claro. ¿Quieres una bolsa?",
+      "opciones": [
+        { "en": "No, I'd like.", "correcta": false, "feedback": "Para decir que no con cortesía: No, thank you." },
+        { "en": "No, thank you.", "correcta": true, "concepto_id": "gram.would_like" },
+        { "en": "Yes, I'm a bag.", "correcta": false, "feedback": "'I'm a bag' es 'soy una bolsa'. Responde 'Yes, please' o 'No, thank you'." }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.XPSPEAK" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.XPSPEAK" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Lo que se ve antes de que Compose dibuje la primera pantalla. -->
+        <item name="android:windowBackground">@color/xp_fondo</item>
+    </style>
 </resources>

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -22,7 +23,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            isCrunchPngs = false
+            // Backend de Lecciones corriendo en la Mac (cd backend && npm run dev:app).
+            // Se usa localhost + `adb reverse tcp:3000 tcp:3000` (emulador o teléfono físico):
+            // con targetSdk 37 Android bloquea a las apps las IPs de red local como 10.0.2.2.
+            val leccionesBaseUrl = (project.findProperty("leccionesBaseUrl") as String?) ?: "http://localhost:3000/"
+            buildConfigField("String", "LECCIONES_BASE_URL", "\"$leccionesBaseUrl\"")
+        }
         release {
+            buildConfigField("String", "LECCIONES_BASE_URL", "\"https://xp-speak-auth-backend.vercel.app/\"")
             optimization {
                 enable = false
             }
@@ -34,7 +44,21 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/io.netty.versions.properties"
+        }
+    }
+}
+
+ksp {
+    arg("dagger.fastInit", "enabled")
+    arg("dagger.formatGeneratedSource", "disabled")
+    arg("room.generateKotlin", "true")
 }
 
 dependencies {
@@ -64,12 +88,32 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    // WorkManager (envía los intentos pendientes al volver la conexión)
+    implementation(libs.androidx.work.runtime.ktx)
+
+    // Azure AI Speech: evaluación de pronunciación de Eco Vocal (minijuegos-diseno.md §5.1)
+    implementation(libs.azure.speech)
+
     // OkHttp (red base - módulo NetworkModule)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
 
+    // Retrofit & Gson
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.gson)
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+
+    // Azure Speech SDK
+    implementation("com.microsoft.cognitiveservices.speech:client-sdk:1.51.0")
+
     // Testing
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)

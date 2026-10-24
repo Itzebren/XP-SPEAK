@@ -1,0 +1,161 @@
+{
+  "id": "a1-ciudad-lugares",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "La ciudad",
+  "orden": 9,
+  "prerequisito_id": "a1-comida-bebida",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo nombrar lugares comunes de mi ciudad.",
+    "Puedo pedir indicaciones y entender indicaciones breves y sencillas para llegar a un lugar."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Lugares.",
+      "MCER, Intercambiar información, A1 (p. 80): «Comprende preguntas e instrucciones que se le formulan despacio y con cuidado, y comprende indicaciones breves y sencillas sobre cómo ir a un lugar.»",
+      "MCER, Leer instrucciones, A1 (p. 73): «Comprende indicaciones escritas si son breves y sencillas (por ejemplo, cómo ir de un lugar a otro).»",
+      "MCER, Interacción oral en general, A1 (p. 76): «Sabe plantear y contestar preguntas sencillas, realizar afirmaciones sencillas y responder a las afirmaciones que se le hacen en áreas de necesidad inmediata o sobre temas muy cotidianos.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Se repasan 'there is' (lección 3) y las preposiciones de lugar (lección 6, mismo concepto_id). Dar indicaciones es A2 (Intercambiar información, p. 80); en A1 los ejercicios piden entender las indicaciones, no producirlas. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Cómo llego?",
+      "cuerpo": "Aprenderás lugares de la ciudad, a pedir indicaciones y a entender indicaciones sencillas (turn left, go straight), y a señalar cosas con this, that, these y those."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Lugares",
+      "items": [
+        { "concepto_id": "voc.ciudad.street", "en": "street", "es": "calle", "audio": "tts:street" },
+        { "concepto_id": "voc.ciudad.park", "en": "park", "es": "parque", "audio": "tts:park" },
+        { "concepto_id": "voc.ciudad.bank", "en": "bank", "es": "banco", "audio": "tts:bank" },
+        { "concepto_id": "voc.ciudad.supermarket", "en": "supermarket", "es": "supermercado", "audio": "tts:supermarket" },
+        { "concepto_id": "voc.ciudad.hospital", "en": "hospital", "es": "hospital", "audio": "tts:hospital" },
+        { "concepto_id": "voc.ciudad.restaurant", "en": "restaurant", "es": "restaurante", "audio": "tts:restaurant" },
+        { "concepto_id": "voc.ciudad.bus_stop", "en": "bus stop", "es": "parada de autobús", "audio": "tts:bus stop" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Indicaciones",
+      "items": [
+        { "concepto_id": "voc.ciudad.excuse_me", "en": "Excuse me", "es": "Disculpe", "audio": "tts:Excuse me", "nota": "Para llamar la atención de alguien antes de preguntar." },
+        { "concepto_id": "voc.ciudad.near", "en": "near", "es": "cerca (de)", "audio": "tts:near", "nota": "Lo contrario es 'far' (lejos)." },
+        { "concepto_id": "voc.ciudad.turn_left", "en": "turn left", "es": "dar vuelta a la izquierda", "audio": "tts:turn left" },
+        { "concepto_id": "voc.ciudad.turn_right", "en": "turn right", "es": "dar vuelta a la derecha", "audio": "tts:turn right" },
+        { "concepto_id": "voc.ciudad.go_straight", "en": "go straight", "es": "seguir derecho", "audio": "tts:go straight" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.imperatives",
+      "titulo": "Entender indicaciones (imperativo)",
+      "explicacion": "Las indicaciones y las instrucciones usan el verbo en su forma base, sin persona: Turn left (da vuelta a la izquierda). Go straight (sigue derecho). Si empiezan con 'Don't', dicen que NO hagas algo: Don't turn here (no des vuelta aquí). Con 'please' suenan más amables.",
+      "ejemplos": ["Go straight and turn right.", "Please take the bus.", "Don't cross here."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.this_that_these_those",
+      "titulo": "This, that, these, those",
+      "explicacion": "Sirven para señalar. Cerca de ti: this (este, esta) con una cosa y these (estos, estas) con varias. Lejos de ti: that (ese, esa, aquel) con una cosa y those (esos, aquellos) con varias.",
+      "ejemplos": ["This street is very quiet.", "That is the hospital.", "These books are my brother's.", "Those restaurants are new."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Buscando el banco",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Laura", "en": "Excuse me, is there a bank near here?", "es": "Disculpe, ¿hay un banco cerca de aquí?" },
+        { "hablante": "Señor", "en": "Yes, there is. Go straight and turn left on Reforma Street.", "es": "Sí, hay uno. Siga derecho y dé vuelta a la izquierda en la calle Reforma." },
+        { "hablante": "Laura", "en": "Is that the bank, next to the park?", "es": "¿Ese es el banco, al lado del parque?" },
+        { "hablante": "Señor", "en": "No, that is a restaurant. The bank is next to the supermarket.", "es": "No, ese es un restaurante. El banco está al lado del supermercado." },
+        { "hablante": "Laura", "en": "Thank you very much!", "es": "¡Muchas gracias!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.imperatives",
+          "enunciado": "Te dicen 'Turn right'. ¿Qué tienes que hacer?",
+          "opciones": ["Dar vuelta a la izquierda.", "Dar vuelta a la derecha.", "Seguir derecho."],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Turn right' = da vuelta a la derecha. 'Left' es izquierda."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.imperatives",
+          "enunciado": "¿Qué significa 'Don't turn left'?",
+          "opciones": ["No des vuelta a la izquierda.", "Da vuelta a la izquierda.", "Sigue a la izquierda."],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Don't' al inicio indica que NO hagas algo: Don't turn = no des vuelta."
+        },
+        {
+          "id": "q3",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.this_that_these_those",
+          "enunciado": "Tienes varios libros en la mano: ___ are my books.",
+          "opciones": ["This", "That", "Those", "These"],
+          "respuesta_correcta": 3,
+          "feedback_error": "Varias cosas cerca de ti = 'these'. 'Those' es para cosas lejos."
+        },
+        {
+          "id": "q4",
+          "tipo": "completar",
+          "concepto_id": "gram.this_that_these_those",
+          "enunciado": "Señalas un edificio lejos de ti: ___ is the hospital.",
+          "respuesta_correcta": "That",
+          "acepta": ["that"],
+          "feedback_error": "Una sola cosa lejos de ti = 'that'."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.ciudad.go_straight",
+          "enunciado": "¿Qué significa 'Go straight'?",
+          "opciones": ["Da vuelta.", "Sigue derecho.", "Regresa."],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Go straight' = sigue derecho, sin dar vuelta."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.ciudad.near",
+          "enunciado": "'The park is near my house' significa…",
+          "opciones": ["El parque está lejos de mi casa.", "El parque está dentro de mi casa.", "El parque está cerca de mi casa."],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Near' = cerca. Lo contrario es 'far' (lejos)."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.prepositions_of_place",
+          "enunciado": "El banco está al lado del parque: The bank is ___ the park.",
+          "opciones": ["in front of", "next to", "behind"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Next to' = al lado de. Lo viste en la lección de la casa."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada lugar con su traducción.",
+          "feedback_error": "Repasa la tabla de lugares.",
+          "pares": [
+            { "concepto_id": "voc.ciudad.street", "izq": "street", "der": "calle" },
+            { "concepto_id": "voc.ciudad.bank", "izq": "bank", "der": "banco" },
+            { "concepto_id": "voc.ciudad.bus_stop", "izq": "bus stop", "der": "parada de autobús" },
+            { "concepto_id": "voc.ciudad.supermarket", "izq": "supermarket", "der": "supermercado" }
+          ]
+        }
+      ]
+    }
+  ]
+}

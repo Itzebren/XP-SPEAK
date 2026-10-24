@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generado por docs/diseno-arte/a_vector.py: no editar a mano. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="160dp"
+    android:height="160dp"
+    android:viewportWidth="160"
+    android:viewportHeight="160">
+    <path
+        android:pathData="M28 0 H132 A28 28 0 0 1 160 28 V132 A28 28 0 0 1 132 160 H28 A28 28 0 0 1 0 132 V28 A28 28 0 0 1 28 0 Z"
+        android:fillColor="#FFFFF1C2"/>
+    <path
+        android:pathData="M80 70 C68 62 48 62 32 66 L32 122 C48 118 68 118 80 126 Z"
+        android:fillColor="#FFFFFFFF"
+        android:strokeColor="#FF232074"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M 80 70 C 92 62 112 62 128 66 L 128 122 C 112 118 92 118 80 126 Z"
+        android:fillColor="#FFFFFFFF"
+        android:strokeColor="#FF232074"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M86 22 L126 22 Q134 22 134 30 L134 46 Q134 54 126 54 L100 54 L90 63 L92 54 L86 54 Q78 54 78 46 L78 30 Q78 22 86 22 Z"
+        android:fillColor="#FFC0D6EB"
+        android:strokeColor="#FF232074"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M91 38 A3 3 0 1 0 97 38 A3 3 0 1 0 91 38 Z"
+        android:fillColor="#FF232074"/>
+    <path
+        android:pathData="M103 38 A3 3 0 1 0 109 38 A3 3 0 1 0 103 38 Z"
+        android:fillColor="#FF232074"/>
+    <path
+        android:pathData="M115 38 A3 3 0 1 0 121 38 A3 3 0 1 0 115 38 Z"
+        android:fillColor="#FF232074"/>
+</vector>

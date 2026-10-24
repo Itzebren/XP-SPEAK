@@ -1,0 +1,157 @@
+{
+  "id": "a2-anecdotas",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Anécdotas",
+  "orden": 3,
+  "prerequisito_id": "a2-viajes-transporte",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo contar algo que me pasó y qué estaba haciendo en ese momento.",
+    "Puedo decir cómo me sentí.",
+    "Puedo decir lo que me gusta y lo que no me gusta hacer."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Relaciones con otras personas.",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Narra historias o describe algo mediante una relación sencilla de elementos.»",
+      "MCER, Conversación, A2 (p. 77): «Expresa cómo se siente en términos sencillos y sabe cómo dar las gracias.»",
+      "MCER, Conversación, A2 (p. 77): «Sabe expresar lo que le gusta y lo que no le gusta.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. El pasado simple (A2-1 y A2-2) se repasa en ejemplos y diálogo; 'like + -ing' viene de A1-10. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Qué te pasó?",
+      "cuerpo": "Aprenderás a decir cómo te sientes, el pasado continuo (I was walking…) para contar qué estabas haciendo cuando pasó algo, y like / love / hate + -ing para tus gustos."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Sentimientos",
+      "items": [
+        { "concepto_id": "voc.sentimientos.feel", "en": "feel", "es": "sentirse", "audio": "tts:I feel happy.", "nota": "Pasado irregular: felt. I felt tired = Me sentí cansado." },
+        { "concepto_id": "voc.sentimientos.happy", "en": "happy", "es": "feliz / contento", "audio": "tts:happy" },
+        { "concepto_id": "voc.sentimientos.sad", "en": "sad", "es": "triste", "audio": "tts:sad" },
+        { "concepto_id": "voc.sentimientos.angry", "en": "angry", "es": "enojado / enojada", "audio": "tts:angry" },
+        { "concepto_id": "voc.sentimientos.tired", "en": "tired", "es": "cansado / cansada", "audio": "tts:tired" },
+        { "concepto_id": "voc.sentimientos.bored", "en": "bored", "es": "aburrido / aburrida", "audio": "tts:bored", "nota": "'Bored' es cómo te sientes. 'Boring' es algo que aburre: a boring movie." },
+        { "concepto_id": "voc.sentimientos.excited", "en": "excited", "es": "emocionado / emocionada", "audio": "tts:excited", "nota": "Ojo: no significa 'excitado'." },
+        { "concepto_id": "voc.sentimientos.worried", "en": "worried", "es": "preocupado / preocupada", "audio": "tts:worried" },
+        { "concepto_id": "voc.sentimientos.nervous", "en": "nervous", "es": "nervioso / nerviosa", "audio": "tts:nervous" },
+        { "concepto_id": "voc.sentimientos.surprised", "en": "surprised", "es": "sorprendido / sorprendida", "audio": "tts:surprised" },
+        { "concepto_id": "voc.sentimientos.afraid", "en": "afraid", "es": "con miedo", "audio": "tts:I'm afraid of dogs.", "nota": "Se usa con 'to be': I'm afraid of… = Tengo miedo de…" },
+        { "concepto_id": "voc.sentimientos.suddenly", "en": "suddenly", "es": "de repente", "audio": "tts:suddenly" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.past_continuous",
+      "titulo": "Pasado continuo (estaba haciendo)",
+      "explicacion": "Se forma con was / were + verbo con -ing y describe una acción que estaba en progreso en el pasado: I was studying at nine. Para contar que algo interrumpió esa acción usamos 'when' + pasado simple: I was walking home when it started to rain.",
+      "ejemplos": ["I was sleeping when you called.", "They were watching a movie at ten o'clock.", "What were you doing yesterday at five?", "She wasn't listening to the teacher."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.like_ing",
+      "titulo": "Like, love, hate + -ing (gustos)",
+      "explicacion": "Después de like (gustar), love (encantar), hate (odiar) y don't like, el verbo lleva -ing: I love dancing. Si el verbo termina en -e, se quita la e: dance → dancing. Algunos verbos cortos doblan la última letra: swim → swimming, run → running.",
+      "ejemplos": ["I love listening to music.", "She hates walking in the rain.", "We don't like getting up early."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Un día loco",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Ana", "en": "You look tired, Diego. What happened yesterday?", "es": "Te ves cansado, Diego. ¿Qué pasó ayer?" },
+        { "hablante": "Diego", "en": "I was walking home when it suddenly started to rain.", "es": "Iba caminando a mi casa cuando de repente empezó a llover." },
+        { "hablante": "Ana", "en": "Oh no! Did you have an umbrella?", "es": "¡Ay, no! ¿Tenías paraguas?" },
+        { "hablante": "Diego", "en": "No, I didn't. I was wet and angry. I hate walking in the rain! But then my friend Luis saw me from his car.", "es": "No. Estaba mojado y enojado. ¡Odio caminar bajo la lluvia! Pero entonces mi amigo Luis me vio desde su carro." },
+        { "hablante": "Ana", "en": "What was he doing there?", "es": "¿Qué estaba haciendo ahí?" },
+        { "hablante": "Diego", "en": "He was driving to the supermarket! He took me home. I felt so happy.", "es": "¡Iba al supermercado! Me llevó a mi casa. Me sentí muy feliz." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "completar",
+          "concepto_id": "gram.past_continuous",
+          "enunciado": "I ___ sleeping when you called.",
+          "respuesta_correcta": "was",
+          "acepta": ["was"],
+          "feedback_error": "Pasado continuo: was/were + -ing. Con 'I' se usa 'was'."
+        },
+        {
+          "id": "q2",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.past_continuous",
+          "enunciado": "They ___ watching TV at nine o'clock last night.",
+          "opciones": ["was", "were", "are"],
+          "respuesta_correcta": 1,
+          "feedback_error": "Es pasado ('last night') y con 'they' se usa 'were'."
+        },
+        {
+          "id": "q3",
+          "tipo": "completar",
+          "concepto_id": "gram.past_continuous",
+          "enunciado": "She was ___ when the phone rang. (read)",
+          "respuesta_correcta": "reading",
+          "acepta": ["reading"],
+          "feedback_error": "En el pasado continuo el verbo lleva -ing: was reading."
+        },
+        {
+          "id": "q4",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.past_continuous",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["I cooking when my mom arrived.", "I was cook when my mom arrived.", "I was cooking when my mom arrived."],
+          "respuesta_correcta": 2,
+          "feedback_error": "Necesitas was/were y el verbo con -ing: I was cooking."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.sentimientos.bored",
+          "enunciado": "No hay nada que hacer y no te diviertes. Estás…",
+          "opciones": ["boring", "bored", "tired"],
+          "respuesta_correcta": 1,
+          "feedback_error": "Cómo te sientes = 'bored'. 'Boring' describe algo que aburre."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.sentimientos.worried",
+          "enunciado": "Tu hermano no llega y ya es muy tarde. Estás…",
+          "opciones": ["worried", "excited", "surprised"],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Worried' = preocupado."
+        },
+        {
+          "id": "q7",
+          "tipo": "completar",
+          "concepto_id": "gram.like_ing",
+          "enunciado": "Odio caminar bajo la lluvia: I hate ___ in the rain. (walk)",
+          "respuesta_correcta": "walking",
+          "acepta": ["walking"],
+          "feedback_error": "Después de like, love o hate el verbo lleva -ing: hate walking."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su significado.",
+          "feedback_error": "Repasa la tabla de sentimientos.",
+          "pares": [
+            { "concepto_id": "voc.sentimientos.tired", "izq": "tired", "der": "cansado / cansada" },
+            { "concepto_id": "voc.sentimientos.angry", "izq": "angry", "der": "enojado / enojada" },
+            { "concepto_id": "voc.sentimientos.excited", "izq": "excited", "der": "emocionado / emocionada" },
+            { "concepto_id": "voc.sentimientos.afraid", "izq": "afraid", "der": "con miedo" }
+          ]
+        }
+      ]
+    }
+  ]
+}

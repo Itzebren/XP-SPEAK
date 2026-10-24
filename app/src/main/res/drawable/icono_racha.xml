@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generado por docs/diseno-arte/a_vector.py: no editar a mano. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <group android:translateX="-5.2" android:translateY="-3.96" android:scaleX="0.62" android:scaleY="0.62">
+        <path
+            android:pathData="M60 20 C67 35 85 44 85 67 C85 84 74 96 60 96 C46 96 35 84 35 67 C35 55 43 48 46 39 C50 47 52 51 56 53 C56 41 56 31 60 20 Z"
+            android:fillColor="#FFFF8C00"
+            android:strokeColor="#FF232074"
+            android:strokeWidth="3"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"/>
+        <path
+            android:pathData="M60 50 C64 60 75 64 75 77 C75 86 68 92 60 92 C52 92 45 86 45 77 C45 68 54 62 60 50 Z"
+            android:fillColor="#FFFFC107"/>
+    </group>
+</vector>
