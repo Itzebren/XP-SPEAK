@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -51,6 +52,7 @@ import com.xpspeak.app.feature.lessons.ui.LeccionScreen
 import com.xpspeak.app.feature.lessons.ui.LessonsScreen
 import com.xpspeak.app.feature.lessons.ui.RepasoScreen
 import com.xpspeak.app.feature.progress.ui.ProgressScreen
+import com.xpspeak.app.feature.voice.ui.PronunciacionScreen
 import com.xpspeak.app.core.ui.theme.XPAzulClaro
 import com.xpspeak.app.core.ui.theme.XPBlanco
 import com.xpspeak.app.core.ui.theme.XPMarino
@@ -88,10 +90,11 @@ fun XPSpeakNavHost(
 
     // La barra inferior no se muestra en las pantallas de acceso.
     val hideBottomBar = currentRoute?.hierarchy?.any {
-        it.route == Routes.AUTH || it.route == Routes.SELECCIONAR_NIVEL || it.route == Routes.RECUPERAR_ACCESO
+        it.route == Routes.AUTH || it.route == Routes.SELECCIONAR_NIVEL || it.route == Routes.RECUPERAR_ACCESO || it.route == Routes.PRONUNCIACION
     } == true
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         // Sin el inset de arriba: cada pantalla pone su encabezado azul debajo de la barra
         // de estado (statusBarsPadding dentro del encabezado), como en las Ilustraciones 31–41.
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -182,7 +185,13 @@ fun XPSpeakNavHost(
                 composable(Routes.NOTIFICACIONES) {
                     NotificacionesScreen(onVolver = { navController.popBackStack() })
                 }
-                composable(Routes.CHAT) { ChatScreen() }
+                composable(Routes.CHAT) {
+                    ChatScreen(
+                        onNavigateToPronunciacion = {
+                            navController.navigate(Routes.PRONUNCIACION)
+                        }
+                    )
+                }
                 composable(Routes.LESSONS) {
                     LessonsScreen(
                         onAbrirLeccion = { id -> navController.navigate(Routes.leccion(id)) },
@@ -223,6 +232,11 @@ fun XPSpeakNavHost(
                                 popUpTo(0) { inclusive = true }
                             }
                         }
+                    )
+                }
+                composable(Routes.PRONUNCIACION) {
+                    PronunciacionScreen(
+                        onBack = { navController.popBackStack() }
                     )
                 }
             }

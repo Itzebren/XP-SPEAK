@@ -74,7 +74,7 @@ class LeccionesRepository @Inject constructor(
         val uid = uidActual()
         val nivel = nivelDelUsuario()
         // Primero los intentos en cola, para que el catálogo ya refleje sus desbloqueos.
-        sincronizarPendientes()
+        runCatching { sincronizarPendientes() }
 
         llamar { api.catalogo(it, nivel) }.fold(
             onSuccess = { dto ->

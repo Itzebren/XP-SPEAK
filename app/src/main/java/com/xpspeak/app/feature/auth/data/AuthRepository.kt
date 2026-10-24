@@ -27,7 +27,22 @@ open class AuthRepository @Inject constructor(
         if (!nombre.isNullOrBlank()) {
             usuario.updateProfile(userProfileChangeRequest { displayName = nombre.trim() }).await()
         }
+        // RN-01: si el envío falla, la cuenta ya existe; el usuario puede reenviarlo desde el aviso.
+        runCatching { usuario.sendEmailVerification().await() }
         usuario
+    }
+
+    /** RN-01: vuelve a mandar el enlace de verificación al correo de la sesión actual. */
+    open suspend fun reenviarVerificacion(): Result<Unit> = runCatching {
+        val usuario = requireNotNull(usuarioActual) { "Inicia sesión para verificar tu correo." }
+        usuario.sendEmailVerification().await()
+    }
+
+    /** Recarga el usuario desde Firebase: `isEmailVerified` no cambia solo al abrir el enlace. */
+    open suspend fun correoVerificado(): Result<Boolean> = runCatching {
+        val usuario = requireNotNull(usuarioActual) { "Inicia sesión para verificar tu correo." }
+        usuario.reload().await()
+        usuarioActual?.isEmailVerified == true
     }
 
     /** Ajustes de perfil (Ilustración 35): cambia el nombre que se muestra. */

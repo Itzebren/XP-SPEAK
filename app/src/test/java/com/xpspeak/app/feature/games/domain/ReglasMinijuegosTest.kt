@@ -103,6 +103,19 @@ class ReglasMinijuegosTest {
     }
 
     @Test
+    fun `sin conexion la confianza es la del audio aunque la mejor alternativa venga en cero`() {
+        // Google reporta la confianza solo de la primera alternativa; las demás llegan en 0.0.
+        val evaluacion = Pronunciacion.evaluarTranscripcion(
+            "Nice to meet you",
+            listOf("nice to me too" to 0.85f, "nice to meet you" to 0.0f)
+        )
+        assertEquals(100, evaluacion.puntaje)
+        assertEquals(85, evaluacion.confianza)
+        assertTrue(Pronunciacion.esLegible(evaluacion))
+        assertTrue(Pronunciacion.esAcierto(evaluacion))
+    }
+
+    @Test
     fun `si no se oyo nada el audio no es legible y no cuenta como intento`() {
         val evaluacion = Pronunciacion.evaluarTranscripcion("Hello, how are you?", emptyList())
         assertFalse(Pronunciacion.esLegible(evaluacion))

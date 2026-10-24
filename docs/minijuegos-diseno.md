@@ -28,7 +28,7 @@ a cambio (ver §9).
 | Misión Situacional | ✅ | `feature/games/ui/mision/` |
 | Eco Vocal (Azure + respaldo del teléfono) | ✅ | `feature/games/ui/ecovocal/`, `feature/games/data/voz/` |
 | `POST /api/games/result` + worker + SRS + racha | ✅ | §6 · `backend/api/games/result.js`, `SincronizarPartidasWorker.kt` |
-| `GET /api/speech/token` | ✅ | `backend/api/speech/token.js` |
+| `GET|POST /api/speech-token` | ✅ | `backend/api/speech-token.js` (compartido con la voz del chat) |
 | Imágenes del catálogo y sonidos (fase 8) | ❌ | Pendiente de assets |
 | Recurso de Azure Speech en producción | ❌ | Configurar `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION` en Vercel (ver `backend/README.md`) |
 
@@ -268,11 +268,13 @@ Regla simple y común: si el usuario lleva 3 aciertos seguidos, la siguiente ron
 | Pieza | Propuesta |
 |---|---|
 | Evaluación | **Azure AI Speech – Pronunciation Assessment** (SDK `com.microsoft.cognitiveservices.speech:client-sdk`), con `PronunciationAssessmentConfig(textoReferencia, HundredMark, Phoneme)`. Devuelve AccuracyScore, FluencyScore, CompletenessScore y detalle por palabra/fonema. |
-| Credenciales | La llave de Azure **no va en la app** (RNF-06, RN-13). Endpoint nuevo `GET /api/speech/token` en el backend que pide un token de 10 min a Azure (`issueToken`) para el usuario autenticado. |
+| Credenciales | La llave de Azure **no va en la app** (RNF-06, RN-13). Endpoint `GET /api/speech-token` en el backend que pide un token de 10 min a Azure (`issueToken`) para el usuario autenticado. |
 | Audio | Captura con el SDK desde el micrófono en streaming; no se guarda archivo (RN-04). Azure no almacena el audio por defecto. |
 | Sin conexión | Respaldo con `SpeechRecognizer` de Android (`EXTRA_PREFER_OFFLINE`): compara la transcripción con el texto de referencia (acierto si coincide normalizado). Sin puntaje fonético; se avisa al usuario. |
 | Permiso | `RECORD_AUDIO` en el manifiesto y se pide en tiempo de ejecución al tocar el micrófono por primera vez. |
 | Latencia | Frases cortas para cumplir RN-05 (≤ 2.5 s). |
+
+> **Ruta del token:** antes era `GET /api/speech/token`; ahora es `/api/speech-token`, que acepta GET (Eco Vocal) y POST (voz del chat / Pronunciación) con la misma respuesta `{ token, region, expira_en }` y el mismo límite de 10 tokens por hora. Se unificaron para no pasar del límite de 12 funciones de Vercel.
 
 **Riesgos:** costo de Azure (capa gratuita F0: ~5 h de audio/mes; suficiente para pruebas); necesidad de red para el puntaje fonético. Comparte trabajo con RF-07/RF-09 del chat.
 
@@ -385,7 +387,7 @@ El servidor:
 3. Actualiza `srs_conceptos` con los aciertos/errores por concepto (RF-13).
 4. Marca la actividad del día para la racha (RN-08).
 
-Más `GET /api/speech/token` para Eco Vocal (§5.1).
+Más `GET /api/speech-token` para Eco Vocal (§5.1).
 
 En Android, `SincronizarPartidasWorker` (WorkManager, con restricción de red) envía la outbox, igual que `SincronizarIntentosWorker` de lecciones.
 
@@ -402,7 +404,7 @@ En Android, `SincronizarPartidasWorker` (WorkManager, con restricción de red) e
 | 4 | **Ráfaga de Palabras** | — |
 | 5 | `POST /api/games/result` + worker de sincronización + SRS + racha | — |
 | 6 | **Misión Situacional** (guiones de 3–4 temas A1 primero) | Contenido nuevo |
-| 7 | **Eco Vocal** con Azure + respaldo offline | SDK de Azure Speech, recurso Azure, `/api/speech/token` |
+| 7 | **Eco Vocal** con Azure + respaldo offline | SDK de Azure Speech, recurso Azure, `/api/speech-token` |
 | 8 | Imágenes del catálogo, sonidos, pulido visual | Assets |
 
 Pruebas: `CalculadorXp`, validación de Orden Maestro y selección de rondas son funciones puras → pruebas unitarias. Endpoint con las mismas utilidades de `backend/test/`.

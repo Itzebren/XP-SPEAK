@@ -161,6 +161,11 @@ async function llamar(handler, { method = 'GET', token, query = {}, body, header
     setHeader(nombre, valor) {
       this.headers[nombre.toLowerCase()] = valor;
     },
+    /** Respuestas en flujo (chat con stream): se acumulan en `texto`. */
+    write(trozo) {
+      this.texto = (this.texto || '') + trozo;
+      return true;
+    },
     end() {
       return this;
     },
@@ -169,4 +174,7 @@ async function llamar(handler, { method = 'GET', token, query = {}, body, header
   return res;
 }
 
-module.exports = { crearFirestoreFalso, instalarFirebaseFalso, llamar };
+/** Fija el segmento dinámico de la URL, como lo hace Vercel ([accion].js → req.query.accion). */
+const enRuta = (handler, parametros) => (req, res) => handler({ ...req, query: { ...req.query, ...parametros } }, res);
+
+module.exports = { crearFirestoreFalso, instalarFirebaseFalso, llamar, enRuta };

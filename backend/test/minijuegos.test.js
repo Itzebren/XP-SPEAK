@@ -8,7 +8,7 @@ const { instalarFirebaseFalso, llamar } = require('./helpers/fakeFirebase');
 const { db } = instalarFirebaseFalso({ 'token-ana': 'uid-ana', 'token-beto': 'uid-beto' });
 
 const resultado = require('../api/games/result');
-const tokenVoz = require('../api/speech/token');
+const tokenVoz = require('../api/speech-token');
 const { calcularXp, PARTIDAS_CON_XP_COMPLETA } = require('../lib/minijuegos/xp');
 const { COLECCIONES, MAX_PARTIDAS_POR_DIA, diaLocal } = require('../lib/minijuegos/repositorio');
 const { COLECCIONES: COLECCIONES_LECCIONES } = require('../lib/lecciones/repositorio');
@@ -148,7 +148,7 @@ test('resultado: exige sesión', async () => {
   assert.equal(res.statusCode, 401);
 });
 
-// ── GET /api/speech/token ──────────────────────────────────────────────────
+// ── GET /api/speech-token ──────────────────────────────────────────────────
 
 test('token de voz: 503 si Azure no está configurado (la app usa el reconocedor del teléfono)', async () => {
   delete process.env.AZURE_SPEECH_KEY;

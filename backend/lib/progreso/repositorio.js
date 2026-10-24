@@ -73,7 +73,7 @@ function obtenerResumen(db, uid, ahora = Date.now()) {
 }
 
 /**
- * Núcleo de POST /api/progress/chat: la primera respuesta de la IA en una
+ * Núcleo de POST /api/progress (chat): la primera respuesta de la IA en una
  * conversación cuenta como actividad (RN-08) y desbloquea "Habla con IA".
  * Idempotente por sesion_id; no da XP.
  */

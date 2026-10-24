@@ -1,6 +1,7 @@
 # XP-SPEAK — Backend serverless (Vercel)
 
-Incluye cuatro módulos:
+Incluye cinco módulos:
+- **Chat con IA y token de voz (RF-06, RF-07, RF-09)** — ver [Chat con IA](#chat-con-ia-cu-05).
 - **Recuperación de acceso (RF-03)** — esta sección.
 - **Lecciones (RF-10, RF-12, RF-13, RF-14)** — ver [Módulo de Lecciones](#módulo-de-lecciones) más abajo.
 - **Minijuegos (RF-11)** — ver [Módulo de Minijuegos](#módulo-de-minijuegos).
@@ -105,15 +106,18 @@ content/
   schema/mision.schema.json  ← JSON Schema de las misiones
 api/                         ← un archivo por endpoint; solo su lógica propia
   lessons/index.js           GET  /api/lessons?level=A1
-  lessons/manifest.js        GET  /api/lessons/manifest        (público)
   lessons/[id].js            GET  /api/lessons/:id
+                             GET  /api/lessons/manifest        (público; id = "manifest")
   lessons/[id]/attempt.js    POST /api/lessons/:id/attempt
   lessons/[id]/progress.js   POST /api/lessons/:id/progress
-  srs/review.js              GET  /api/srs/review[?level=A1&limit=20]   conceptos débiles
-  srs/session.js             GET  /api/srs/session[?level=A1]         sesión de repaso de hoy
+  srs/[accion].js            GET  /api/srs/review[?level=A1&limit=20]   conceptos débiles
+                             GET  /api/srs/session[?level=A1]         sesión de repaso de hoy
                              POST /api/srs/session                    respuestas del repaso
+                             (cualquier otra acción → 404)
   games/result.js            POST /api/games/result                   partida terminada de un minijuego
-  speech/token.js            GET  /api/speech/token                   token temporal de Azure AI Speech
+  speech-token.js            GET  /api/speech-token                   token temporal de Azure AI Speech (Eco Vocal)
+                             POST /api/speech-token                   el mismo token, para la voz del chat / Pronunciación
+  chat.js                    POST /api/chat                           una vuelta de conversación con Azure OpenAI
 lib/
   endpoint.js     envoltura común: método HTTP, token y errores
   errores.js      ErrorApi + respuesta estándar { error, codigo }
@@ -134,6 +138,8 @@ lib/
     validacion.js   validación del resultado de una partida
     repositorio.js  Firestore: partida idempotente, tope diario, SRS y evento de actividad
   speech/azure.js   token de Azure AI Speech (la llave solo vive aquí)
+  speech/limite.js  límite de tokens por usuario (compartido por los dos endpoints de voz)
+  chat/azureOpenAI.js  validación del chat, system prompt por nivel y llamada a Azure OpenAI
 scripts/
   lint-content.js   linter de contenido (una función por regla; lecciones y misiones)
   exportar-banco-minijuegos.js  genera app/src/main/assets/minijuegos/banco.json
@@ -161,6 +167,7 @@ Errores: `{ "error": "mensaje legible", "codigo": "LECCION_BLOQUEADA" }`
 | HTTP | `codigo` |
 |---|---|
 | 400 | `ENTRADA_INVALIDA` |
+| 422 | `CONTENIDO_BLOQUEADO` (el filtro de contenido de Azure bloqueó el chat) |
 | 401 | `TOKEN_AUSENTE`, `TOKEN_INVALIDO` |
 | 403 | `LECCION_BLOQUEADA` |
 | 404 | `LECCION_NO_ENCONTRADA` |
@@ -168,8 +175,9 @@ Errores: `{ "error": "mensaje legible", "codigo": "LECCION_BLOQUEADA" }`
 | 409 | `ATTEMPT_ID_REUTILIZADO` (el mismo `attempt_id` en otra lección), `PARTIDA_ID_REUTILIZADO` |
 | 429 | `DEMASIADOS_INTENTOS` (más de 10 intentos/min en una lección), `DEMASIADAS_PARTIDAS`, `DEMASIADOS_TOKENS` |
 | 500 | `ERROR_INTERNO` |
-| 502 | `SPEECH_NO_DISPONIBLE` (Azure no respondió) |
-| 503 | `SPEECH_NO_CONFIGURADO` (faltan `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION`) |
+| 502 | `SPEECH_NO_DISPONIBLE` (Azure no respondió), `CHAT_NO_DISPONIBLE` |
+| 503 | `SPEECH_NO_CONFIGURADO` (faltan `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION`), `CHAT_NO_CONFIGURADO` (faltan `AZURE_OPENAI_ENDPOINT` / `AZURE_OPENAI_API_KEY`) |
+| 504 | `CHAT_SIN_RESPUESTA` (Azure OpenAI tardó más de 25 s) |
 
 ## Contrato del intento
 
@@ -209,7 +217,7 @@ Errores: `{ "error": "mensaje legible", "codigo": "LECCION_BLOQUEADA" }`
 | `minijuegos_diario` | `<uid>_<AAAA-MM-DD>` | partidas del día por juego (hora de México), para el tope de XP |
 | `limite_speech` | `<uid>` | ventana de rate limiting de tokens de voz |
 | `resumen_usuario` | `<uid>` | XP total, racha, lecciones aprobadas, estadísticas por juego e insignias (Progreso) |
-| `chats_registrados` | `<uid>_<sesion_id>` | idempotencia de `POST /api/progress/chat` |
+| `chats_registrados` | `<uid>_<sesion_id>` | idempotencia de `POST /api/progress` |
 | `chats_diario` | `<uid>_<AAAA-MM-DD>` | conversaciones registradas en el día, para el tope |
 
 Las fechas se guardan en milisegundos epoch (igual que `password_reset_codes`).
@@ -343,7 +351,7 @@ máximo 14 palabras y fuentes MCER como en las lecciones.
 
 ## Eco Vocal y Azure AI Speech
 
-`GET /api/speech/token` devuelve `{ token, region, expira_en }`: un token de
+`GET /api/speech-token` devuelve `{ token, region, expira_en }`: un token de
 Azure de 10 minutos para que la app evalúe la pronunciación en streaming (el
 audio no pasa por este backend ni se guarda, RN-04). Variables de entorno en
 Vercel:
@@ -355,6 +363,24 @@ Sin esas variables el endpoint responde 503 y la app usa el reconocimiento de
 voz del teléfono como respaldo (sin puntaje fonético). Límite: 10 tokens por
 usuario por hora.
 
+
+## Chat con IA (CU-05)
+
+Venía del repo aparte `xp-speak-auth-backend` y ahora vive aquí, con el resto
+del backend. `POST /api/chat` recibe `{ mensaje, nivel: "A1" | "A2", historial: [{ role, content }] }`
+y responde `{ respuesta }`. El nivel va en el system prompt (RN-03); del historial
+solo se aceptan turnos `user`/`assistant` (los últimos 10), así que la app no puede
+colar otro mensaje `system`. Nada de la conversación se guarda.
+
+Variables de entorno en Vercel:
+
+- **`AZURE_OPENAI_ENDPOINT`** — p. ej. `https://xp-speak-bot.openai.azure.com/` (East US 2).
+- **`AZURE_OPENAI_API_KEY`** — llave del recurso.
+- **`AZURE_OPENAI_DEPLOYMENT`** — nombre del despliegue (`gpt-4.1-mini-2`; es el valor por omisión).
+
+La voz del chat y la pantalla de Pronunciación (`SpeechApi.kt`) piden el token
+con `POST /api/speech-token`: mismo archivo, misma respuesta y mismo límite de
+10 tokens por hora que el `GET` de Eco Vocal.
 
 ---
 
@@ -389,7 +415,7 @@ que salen de la reconstrucción quedan como `retroactiva` (sin festejo).
                    "obtenida": false, "fecha": null, "retroactiva": false, "progreso": { "actual": 5, "meta": 7 } } ],
   "sin_actividad": false }
 
-// POST /api/progress/chat   — primera respuesta de la IA en una conversación
+// POST /api/progress   — primera respuesta de la IA en una conversación (antes /api/progress/chat)
 { "sesion_id": "<id de la conversación>" }
 // 200
 { "sesion_id": "…", "insignias_nuevas": [ … ], "nivel_xp_nuevo": null, "repetido": false }

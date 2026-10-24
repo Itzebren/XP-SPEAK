@@ -15,6 +15,7 @@ object Routes {
     const val ACCOUNT = "account"
     const val NOTIFICACIONES = "notificaciones"
     const val ELIMINAR_CUENTA = "account/eliminar"
+    const val PRONUNCIACION = "pronunciacion"
 
     fun leccion(id: String) = "lessons/$id"
     fun minijuego(id: String) = "games/$id"

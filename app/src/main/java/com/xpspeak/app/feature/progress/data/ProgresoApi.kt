@@ -17,7 +17,7 @@ interface ProgresoApi {
         @Query("level") nivel: String
     ): Response<ProgresoDto>
 
-    @POST("api/progress/chat")
+    @POST("api/progress")
     suspend fun registrarChat(
         @Header("Authorization") auth: String,
         @Body request: ChatProgresoRequest

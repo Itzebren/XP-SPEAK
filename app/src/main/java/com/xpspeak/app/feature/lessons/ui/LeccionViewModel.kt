@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.UUID
 import javax.inject.Inject
 
@@ -50,6 +52,8 @@ class LeccionViewModel @Inject constructor(
 
     /** Último desplazamiento de la pantalla, para guardarlo junto con las respuestas. */
     private var posicion = 0
+
+    private val guardandoEnCurso = Mutex()
 
     init {
         viewModelScope.launch {
@@ -106,11 +110,17 @@ class LeccionViewModel @Inject constructor(
 
     /** RN-12: cada cambio queda en Room; un cierre inesperado no pierde lo contestado. */
     private fun guardarEnCurso() {
-        val estado = _uiState.value
-        // Mientras se pregunta si retomar no se pisa la sesión anterior; con resultado ya no hay nada a medias.
-        if (estado.leccion == null || estado.porRetomar != null || estado.resultado != null || estado.requiereRepaso) return
+        // Al escribir en "completar" llega un cambio por tecla: el candado evita que un guardado
+        // viejo termine después de uno nuevo, y cada uno lee el estado más reciente.
         viewModelScope.launch {
-            repository.guardarEnCurso(leccionId, LeccionEnCurso(estado.attemptId, estado.respuestas, posicion))
+            guardandoEnCurso.withLock {
+                val estado = _uiState.value
+                // Mientras se pregunta si retomar no se pisa la sesión anterior; al enviar ya no hay nada a medias.
+                if (estado.leccion == null || estado.porRetomar != null || estado.resultado != null ||
+                    estado.enviando || estado.requiereRepaso
+                ) return@withLock
+                repository.guardarEnCurso(leccionId, LeccionEnCurso(estado.attemptId, estado.respuestas, posicion))
+            }
         }
     }
 
@@ -131,7 +141,7 @@ class LeccionViewModel @Inject constructor(
             repository.enviarIntento(leccionId, estado.attemptId, estado.respuestas)
                 .onSuccess { envio ->
                     // Calificado (o en la cola de envío): ya no hay una lección a medias que retomar.
-                    repository.descartarEnCurso(leccionId)
+                    guardandoEnCurso.withLock { repository.descartarEnCurso(leccionId) }
                     _uiState.value = _uiState.value.copy(
                         enviando = false,
                         resultado = envio.resultado,

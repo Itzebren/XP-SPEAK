@@ -7,7 +7,9 @@ import com.xpspeak.app.feature.chat.data.ChatRepository
 import com.xpspeak.app.feature.chat.data.MensajeChat
 import com.xpspeak.app.feature.progress.data.InsigniaDto
 import com.xpspeak.app.feature.progress.data.ProgresoRepository
+import com.xpspeak.app.feature.voice.data.ReconocedorVoz
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,12 +17,14 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-data class MensajeUi(val texto: String, val esUsuario: Boolean)
+/** [completo] es false mientras la respuesta de la IA sigue llegando (RNF-02). */
+data class MensajeUi(val texto: String, val esUsuario: Boolean, val completo: Boolean = true)
 
 data class ChatUiState(
     val mensajes: List<MensajeUi> = emptyList(),
     val entrada: String = "",
     val cargando: Boolean = false,
+    val escuchando: Boolean = false,
     val error: String? = null,
     /** "Habla con IA" y otras insignias ganadas al conversar (Progreso), para festejarlas. */
     val insigniasNuevas: List<InsigniaDto> = emptyList()
@@ -30,15 +34,12 @@ data class ChatUiState(
 class ChatViewModel @Inject constructor(
     private val repository: ChatRepository,
     private val progresoRepository: ProgresoRepository,
-    private val registroActividad: RegistroActividad
+    private val registroActividad: RegistroActividad,
+    private val reconocedor: ReconocedorVoz
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
-
-    // TODO: cuando conectemos el módulo de Perfil (RF-04/RF-05), tomar el
-    // nivel real guardado del usuario en vez de este valor fijo.
-    private val nivelUsuario = "A1"
 
     /** Una conversación por pantalla de chat; el servidor la registra una sola vez (Progreso). */
     private val sesionId = UUID.randomUUID().toString()
@@ -64,17 +65,30 @@ class ChatViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            repository.enviarMensaje(texto, nivelUsuario, historialParaApi)
-                .onSuccess { respuesta ->
+            var respuesta = ""
+            try {
+                // RF-06/RN-02: se lee en cada envío por si el usuario cambió de nivel.
+                repository.enviarMensaje(texto, repository.nivelDelUsuario(), historialParaApi).collect { pedazo ->
+                    // RNF-02: la burbuja aparece con el primer pedazo y crece con cada uno.
+                    val anteriores = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
+                    respuesta += pedazo
                     _uiState.value = _uiState.value.copy(
-                        mensajes = _uiState.value.mensajes + MensajeUi(respuesta, esUsuario = false),
-                        cargando = false
+                        mensajes = anteriores + MensajeUi(respuesta, esUsuario = false, completo = false)
                     )
-                    registrarConversacion()
                 }
-                .onFailure { excepcion ->
-                    _uiState.value = _uiState.value.copy(cargando = false, error = excepcion.message)
-                }
+                if (respuesta.isEmpty()) throw IllegalStateException("Respuesta vacía del servidor")
+                _uiState.value = _uiState.value.copy(
+                    mensajes = _uiState.value.mensajes.dropLast(1) + MensajeUi(respuesta, esUsuario = false),
+                    cargando = false
+                )
+                registrarConversacion()
+            } catch (excepcion: CancellationException) {
+                throw excepcion
+            } catch (excepcion: Exception) {
+                // Una respuesta cortada no se queda en el historial: confundiría a la IA en el siguiente turno.
+                val mensajes = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
+                _uiState.value = _uiState.value.copy(mensajes = mensajes, cargando = false, error = excepcion.message)
+            }
         }
     }
 
@@ -89,5 +103,26 @@ class ChatViewModel @Inject constructor(
 
     fun cerrarFestejo() {
         _uiState.value = _uiState.value.copy(insigniasNuevas = emptyList())
+    }
+
+    fun escucharVoz() {
+        if (_uiState.value.escuchando || _uiState.value.cargando) return
+        _uiState.value = _uiState.value.copy(escuchando = true, error = null)
+
+        viewModelScope.launch {
+            reconocedor.reconocerUnaVez()
+                .onSuccess { texto ->
+                    _uiState.value = _uiState.value.copy(entrada = texto, escuchando = false)
+                }
+                .onFailure { excepcion ->
+                    _uiState.value = _uiState.value.copy(escuchando = false, error = excepcion.message)
+                }
+        }
+    }
+
+    fun onPermisoMicrofonoDenegado() {
+        _uiState.value = _uiState.value.copy(
+            error = "Necesitas permitir el micrófono para practicar con voz."
+        )
     }
 }

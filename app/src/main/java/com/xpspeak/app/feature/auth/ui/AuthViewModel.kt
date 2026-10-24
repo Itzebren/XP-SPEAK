@@ -28,6 +28,9 @@ data class AuthUiState(
     val confirmarPassword: String = "",
     val cargando: Boolean = false,
     val error: String? = null,
+    val aviso: String? = null,
+    /** RN-01: la cuenta existe pero su correo aún no se confirma con el enlace. */
+    val pendienteVerificacion: Boolean = false,
     val destino: DestinoPostAuth = DestinoPostAuth.NINGUNO
 )
 
@@ -96,14 +99,56 @@ class AuthViewModel @Inject constructor(
 
             resultado
                 .onSuccess { usuario ->
-                    val tienePerfil = perfilRepository.existePerfil(usuario.uid)
-                    val destino = if (tienePerfil) DestinoPostAuth.HOME else DestinoPostAuth.SELECCIONAR_NIVEL
-                    _uiState.value = _uiState.value.copy(cargando = false, destino = destino)
+                    if (usuario.isEmailVerified) {
+                        continuar(usuario.uid)
+                    } else {
+                        _uiState.value = _uiState.value.copy(cargando = false, pendienteVerificacion = true, password = "", confirmarPassword = "")
+                    }
                 }
                 .onFailure { excepcion ->
                     _uiState.value = _uiState.value.copy(cargando = false, error = mapearError(excepcion))
                 }
         }
+    }
+
+    /** "Ya verifiqué": deja pasar solo si Firebase ya marca el correo como confirmado. */
+    fun comprobarVerificacion() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(cargando = true, error = null, aviso = null)
+            authRepository.correoVerificado()
+                .onSuccess { verificado ->
+                    val uid = authRepository.usuarioActual?.uid
+                    if (verificado && uid != null) {
+                        continuar(uid)
+                    } else {
+                        _uiState.value = _uiState.value.copy(cargando = false, error = "Tu correo aún no está verificado. Abre el enlace que te enviamos.")
+                    }
+                }
+                .onFailure {
+                    _uiState.value = _uiState.value.copy(cargando = false, error = "No pudimos comprobarlo. Revisa tu conexión.")
+                }
+        }
+    }
+
+    fun reenviarVerificacion() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(cargando = true, error = null, aviso = null)
+            authRepository.reenviarVerificacion()
+                .onSuccess { _uiState.value = _uiState.value.copy(cargando = false, aviso = "Te enviamos un nuevo enlace.") }
+                .onFailure { _uiState.value = _uiState.value.copy(cargando = false, error = "No se pudo reenviar. Espera un momento e intenta de nuevo.") }
+        }
+    }
+
+    /** Sale del aviso de verificación sin dejar la sesión abierta. */
+    fun usarOtraCuenta() {
+        authRepository.cerrarSesion()
+        _uiState.value = AuthUiState(correo = _uiState.value.correo)
+    }
+
+    private suspend fun continuar(uid: String) {
+        val tienePerfil = perfilRepository.existePerfil(uid)
+        val destino = if (tienePerfil) DestinoPostAuth.HOME else DestinoPostAuth.SELECCIONAR_NIVEL
+        _uiState.value = _uiState.value.copy(cargando = false, pendienteVerificacion = false, destino = destino)
     }
 
     private fun mapearError(excepcion: Throwable): String = when (excepcion) {

@@ -1,13 +1,14 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { randomUUID } = require('crypto');
-const { instalarFirebaseFalso, llamar } = require('./helpers/fakeFirebase');
+const { instalarFirebaseFalso, llamar, enRuta } = require('./helpers/fakeFirebase');
 
 // El doble debe instalarse antes de cargar los handlers.
 const { db } = instalarFirebaseFalso({ 'token-ana': 'uid-ana', 'token-beto': 'uid-beto' });
 
 const intento = require('../api/lessons/[id]/attempt');
-const sesion = require('../api/srs/session');
+const srs = require('../api/srs/[accion]');
+const sesion = enRuta(srs, { accion: 'session' });
 const { aplicarSm2, DIA_MS } = require('../lib/lecciones/sm2');
 const { seleccionarParaRepaso } = require('../lib/lecciones/srs');
 const { construirIndice, resolverEjercicio } = require('../lib/lecciones/repaso');
@@ -177,6 +178,23 @@ test('responder la sesión valida el body', async () => {
   assert.equal((await llamar(sesion, { method: 'POST', body: { attempt_id: randomUUID(), respuestas: [valido] } })).statusCode, 401);
   assert.equal((await llamar(sesion, { method: 'PUT', token: 'token-ana' })).statusCode, 405);
   assert.equal((await enviarSesion([valido])).statusCode, 200);
+});
+
+test('srs/[accion]: solo session y review; otra acción responde 404 sin pedir token ni escribir', async () => {
+  const body = { attempt_id: randomUUID(), respuestas: [{ id: `${L1}:q1`, valor: 1 }] };
+  for (const accion of ['otra', 'constructor', '__proto__', undefined]) {
+    for (const method of ['GET', 'POST', 'PUT']) {
+      const res = await llamar(srs, { method, token: 'token-ana', query: { accion }, body });
+      assert.equal(res.statusCode, 404, `${method} ${accion}`);
+      assert.equal(res.body.codigo, 'RUTA_NO_ENCONTRADA');
+    }
+    assert.equal((await llamar(srs, { query: { accion } })).statusCode, 404, 'sin token también es 404');
+  }
+  assert.equal(db._docs('srs_conceptos').length, 0);
+
+  const review = enRuta(srs, { accion: 'review' });
+  assert.equal((await llamar(review, { method: 'POST', token: 'token-ana' })).statusCode, 405);
+  assert.equal((await llamar(review)).statusCode, 401);
 });
 
 test('repetir la lección el mismo día no alarga los intervalos; fallar sí los reinicia', async () => {

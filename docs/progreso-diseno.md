@@ -9,7 +9,7 @@
 | Pieza | Estado | Dónde |
 |---|---|---|
 | Fase 1: reglas puras (niveles, racha, insignias, resumen) | ✅ | `backend/lib/progreso/{niveles,racha,insignias,resumen}.js` |
-| Fase 2: resumen en las transacciones, `GET /api/progress` (ETag), `POST /api/progress/chat` | ✅ | `backend/lib/progreso/{repositorio,vista}.js`, `backend/api/progress/` |
+| Fase 2: resumen en las transacciones, `GET /api/progress` (ETag), `POST /api/progress` | ✅ | `backend/lib/progreso/{repositorio,vista}.js`, `backend/api/progress/` |
 | Scripts `migrar:resumen` y `exportar:insignias` | ✅ | `backend/scripts/`, `app/src/main/assets/progreso/insignias.json` |
 | Fase 3: datos en Android (API, Room v5, repositorio, catálogo local) | ✅ | `feature/progress/data/`, `core/sesion/SesionActual.kt` |
 | Fase 4: pantalla Progreso, detalle de insignia, festejo `InsigniaNueva` | ✅ | `feature/progress/ui/` (también en lección, minijuego, repaso y chat) |
@@ -37,7 +37,7 @@ de 136 XP sembrado sin resumen):
 | Progreso reconstruye desde eventos | 136 XP, nivel 2 (36/200), racha de 2 días, dominio 1/12 |
 | Insignias que ya merecía | "Primer Logro" a color, sin diálogo |
 | Orden Maestro al 100 % | Festejo "Estrella del Minijuego", +10 XP; en Progreso: 146 XP y racha de 3 días |
-| Primera respuesta del chat | Festejo "Habla con IA" (`POST /api/progress/chat` → 200) |
+| Primera respuesta del chat | Festejo "Habla con IA" (`POST /api/progress` → 200) |
 | Sin conexión con caché | Aviso "Sin conexión · datos de hace un momento" |
 | Sin conexión y sin caché | 9 insignias en gris desde el catálogo empaquetado, más la XP y la racha del perfil local |
 | Usuario nuevo (A1) | Mensaje motivacional; "Haz tu primera lección" lleva a Lecciones |
@@ -213,7 +213,7 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
     `{nivel, dominio:{aprobadas,total,porcentaje}, xp:{total,nivel,xp_en_nivel,xp_para_siguiente}, racha:{actual,maxima}, habilidades:[{id,nombre,porcentaje|null}], insignias:[{id,nombre,descripcion,criterio,icono,obtenida,fecha?,retroactiva?,progreso:{actual,meta}}], sin_actividad}`.
   - Responde con **ETag** usando `responderConEtag` de `backend/lib/http.js`, para no
     descargar el progreso completo cada vez que se entra a la pestaña.
-- **`POST /api/progress/chat`** con body `{sesion_id}`, idempotente: la app lo llama al
+- **`POST /api/progress`** con body `{sesion_id}`, idempotente: la app lo llama al
   recibir la primera respuesta de la IA en una conversación. Registra el evento
   `chat_completado` (0 XP), cuenta para la racha (RN-08) y desbloquea "Habla con IA". Va aquí
   porque el backend del chat vive en otro proyecto. Límite: 20 por día.
@@ -231,7 +231,7 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
 
 ## Fase 3 — Android: datos (`feature/progress/data/`)
 
-- `ProgresoApi` (`GET api/progress`, `POST api/progress/chat`) en el retrofit
+- `ProgresoApi` (`GET api/progress`, `POST api/progress`) en el retrofit
   `@Named("lecciones")` de `core/di/NetworkModule.kt`, más DTOs con `@SerializedName`.
 - Room v5 con `MIGRACION_4_5`: tabla `progreso_cache(uid PK, nivel, json, actualizadoEn)`,
   con el mismo patrón que `catalogos_cache`. Registrarla en `core/di/DatabaseModule.kt`.
@@ -311,7 +311,7 @@ Cada insignia expone `progreso` (por ejemplo 3/7) para que la tarjeta bloqueada 
 ## Archivos clave
 
 - **Backend nuevos:** `backend/lib/progreso/{niveles,racha,insignias,resumen,repositorio}.js`,
-  `backend/api/progress/index.js`, `backend/api/progress/chat.js`,
+  `backend/api/progress/index.js` (GET y POST),
   `backend/scripts/{migrar-resumen,exportar-insignias}.js`, `backend/test/progreso.test.js`.
 - **Backend modificados:** `backend/lib/lecciones/repositorio.js`,
   `backend/lib/minijuegos/repositorio.js`, `backend/README.md`.

@@ -16,7 +16,7 @@ interface MinijuegosApi {
         @Body request: ResultadoRequest
     ): Response<ResultadoResponse>
 
-    @GET("api/speech/token")
+    @GET("api/speech-token")
     suspend fun tokenVoz(@Header("Authorization") auth: String): Response<TokenVozDto>
 }
 

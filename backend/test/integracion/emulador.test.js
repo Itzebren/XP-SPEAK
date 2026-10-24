@@ -10,7 +10,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('crypto');
-const { llamar } = require('../helpers/fakeFirebase');
+const { llamar, enRuta } = require('../helpers/fakeFirebase');
 
 const PROYECTO = 'demo-xpspeak';
 const AUTH_HOST = process.env.FIREBASE_AUTH_EMULATOR_HOST;
@@ -24,9 +24,8 @@ const { getFirebaseAdmin } = require('../../lib/firebaseAdmin');
 const catalogo = require('../../api/lessons/index');
 const intento = require('../../api/lessons/[id]/attempt');
 const avance = require('../../api/lessons/[id]/progress');
-const repaso = require('../../api/srs/review');
+const repaso = enRuta(require('../../api/srs/[accion]'), { accion: 'review' });
 const progreso = require('../../api/progress/index');
-const chat = require('../../api/progress/chat');
 const resultadoJuego = require('../../api/games/result');
 const { migrarResumenes } = require('../../lib/progreso/repositorio');
 
@@ -130,7 +129,7 @@ test('progreso: reconstrucción en la transacción, ETag, chat y migración cont
   assert.equal((await llamar(progreso, { token, query: { level: 'A1' }, headers: { 'if-none-match': vista.headers.etag } })).statusCode, 304);
 
   // Chat: dos registros simultáneos de la misma conversación cuentan una vez.
-  const chats = await Promise.all([1, 2].map(() => llamar(chat, { method: 'POST', token, body: { sesion_id: 'conv-1' } })));
+  const chats = await Promise.all([1, 2].map(() => llamar(progreso, { method: 'POST', token, body: { sesion_id: 'conv-1' } })));
   assert.ok(chats.every((r) => r.statusCode === 200));
   assert.equal(chats.filter((r) => !r.body.repetido).length, 1);
   const resumen = (await db.collection('resumen_usuario').doc(uid).get()).data();
