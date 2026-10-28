@@ -113,7 +113,8 @@
 | `inicio_lecciones`, `inicio_minijuegos`, `inicio_ia`, `inicio_progreso` | Accesos del Inicio |
 | `juego_<id>` (4) | Catálogo de minijuegos |
 | `leccion_<id>` (24) | Catálogo de lecciones; si falta una, se usa `inicio_lecciones` |
-| `avatar_<id>` (8) | Personalización y ajustes (`UsuarioEntity.avatar`) |
+| `avatar_<id>` (8) | Personalización y ajustes (`UsuarioEntity.avatar`); salen de `node docs/diseno-arte/avatares.js` |
+| `avatar_robot` | El tutor en el chat |
 | `moneda_xp`, `icono_racha` | Tarjetas de XP y racha, Inicio |
 
 ## 4. Pendiente

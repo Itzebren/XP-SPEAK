@@ -337,52 +337,6 @@ def ficha(x, y, w, color):
     return rect(x, y, w, 18, 6, color, MARINO, 2.5) + trazo(f"M{x + 8} {y + 9} L{x + w - 8} {y + 9}", BLANCO, 3)
 
 
-def cara(piel, pelo_atras="", pelo_frente="", extra="", camisa=AZUL):
-    """Avatar de persona en un lienzo de 100 x 100 (sin el círculo de fondo)."""
-    return (pelo_atras
-            + p("M18.3 86 C24 76 36 72 50 72 C64 72 76 76 81.7 86 A48 48 0 0 1 18.3 86 Z", camisa, MARINO, 2.5)
-            + rect(44, 60, 12, 14, 4, piel)
-            + f'<ellipse cx="50" cy="48" rx="21" ry="23" fill="{piel}" stroke="{MARINO}" stroke-width="2.5"/>'
-            + pelo_frente
-            + circulo(42, 50, 2.6, MARINO) + circulo(58, 50, 2.6, MARINO)
-            + f'<ellipse cx="37" cy="58" rx="3.5" ry="2.2" fill="{MEJILLA}"/><ellipse cx="63" cy="58" rx="3.5" ry="2.2" fill="{MEJILLA}"/>'
-            + trazo("M44 60 Q50 66 56 60", MARINO, 2.2) + extra)
-
-
-AVATARES = {
-    "robot": (AZUL_CLARO, grupo(cabeza(), 50 - 100 * .4, 52 - 66 * .4, .4)),
-    "lectora": ("#F3C9A5", cara("#F2C7A0",
-                                p("M28 48 C26 22 74 22 72 48 L74 82 L26 82 Z", "#7A4A2A", MARINO, 2.5),
-                                p("M29 44 C32 26 68 26 71 44 C60 36 44 34 29 44 Z", "#7A4A2A", MARINO, 2.5),
-                                circulo(42, 50, 6, "none", MARINO, 2) + circulo(58, 50, 6, "none", MARINO, 2) + trazo("M48 50 L52 50", MARINO, 2),
-                                NARANJA)),
-    "chongos": ("#FFD6A0", cara("#E8B48A",
-                                circulo(30, 28, 10, "#5A3418", MARINO, 2.5) + circulo(70, 28, 10, "#5A3418", MARINO, 2.5),
-                                p("M29 46 C30 24 70 24 71 46 C62 38 40 36 29 46 Z", "#5A3418", MARINO, 2.5),
-                                camisa="#E2565F")),
-    "zorro": ("#FFE3BF", p("M26 40 L30 14 L46 30 Z", NARANJA, MARINO, 2.5) + p("M74 40 L70 14 L54 30 Z", NARANJA, MARINO, 2.5)
-              + f'<ellipse cx="50" cy="52" rx="26" ry="24" fill="{NARANJA}" stroke="{MARINO}" stroke-width="2.5"/>'
-              + p("M30 56 C36 74 64 74 70 56 C62 62 56 60 50 66 C44 60 38 62 30 56 Z", BLANCO)
-              + circulo(41, 48, 2.8, MARINO) + circulo(59, 48, 2.8, MARINO) + circulo(50, 62, 3.4, MARINO)),
-    "rizos": ("#BFE3D0", cara("#8D5A3B", "",
-                              p("M28 44 C24 28 34 20 42 24 C46 16 58 16 62 24 C70 20 78 30 72 44 C64 36 38 36 28 44 Z", "#2B1B12", MARINO, 2.5),
-                              camisa="#2E9E5B")),
-    "abuelo": ("#F7C6C6", cara("#F0C29C",
-                               p("M28 50 C24 44 26 36 30 34 L30 50 Z M72 50 C76 44 74 36 70 34 L70 50 Z", "#E0E0E0", MARINO, 2),
-                               p("M28 38 C28 18 72 18 72 38 L72 40 L28 40 Z", "#4B7BBE", MARINO, 2.5) + rect(26, 36, 48, 8, 4, AZUL_CLARO, MARINO, 2.5),
-                               p("M36 60 C38 76 62 76 64 60 C58 66 42 66 36 60 Z", "#E0E0E0", MARINO, 2),
-                               "#7A6CC4")),
-    "panuelo": ("#C9E6F7", cara("#6B4129",
-                                circulo(50, 36, 26, "#1E120B", MARINO, 2.5),
-                                p("M27 40 C30 22 70 22 73 40 C62 34 38 34 27 40 Z", "#E2565F", MARINO, 2.5) + p(destello(64, 32, 3), AMARILLO),
-                                camisa=AMARILLO)),
-    "guitarra": ("#D9CCF5", cara("#F2C7A0", "",
-                                 p("M29 44 C28 26 48 20 62 24 C72 28 74 36 71 44 C60 34 44 40 29 44 Z", "#A0612E", MARINO, 2.5),
-                                 p("M58 96 L66 76 C68 70 78 70 80 76 C84 84 78 92 70 92 Z", NARANJA, MARINO, 2) + circulo(72, 82, 3, MARINO),
-                                 "#2E9E5B")),
-}
-
-
 PIEL = "#F2C7A0"
 CREMA = "#FFE3BF"
 AMARILLO_CLARO = "#FFF1C2"
@@ -488,8 +442,9 @@ def generar():
     svg("ic_launcher_foreground", 108, 108, cabeza_robot(54, 56, .46) + p(estrella(82, 28, 5, 2.2), AMARILLO, MARINO, 1.2))
     for nombre, (fondo, cuerpo) in LECCIONES.items():
         portada("leccion_" + nombre, fondo, cuerpo)
-    for nombre, (fondo, cuerpo) in AVATARES.items():
-        svg("avatar_" + nombre, 100, 100, circulo(50, 50, 48, fondo) + cuerpo + circulo(50, 50, 48, "none", MARINO, 2.5))
+    # Avatar del tutor en el chat. Los de los usuarios se generan aparte: node docs/diseno-arte/avatares.js
+    svg("avatar_robot", 100, 100, circulo(50, 50, 48, AZUL_CLARO) + grupo(cabeza(), 50 - 100 * .4, 52 - 66 * .4, .4)
+        + circulo(50, 50, 48, "none", MARINO, 2.5))
     svg("mascota", 200, 220, mascota())
     svg("mascota_preocupada", 200, 220, mascota("preocupada"))
     defs_logo = (f'<radialGradient id="aura" gradientUnits="userSpaceOnUse" cx="120" cy="100" r="130">'
