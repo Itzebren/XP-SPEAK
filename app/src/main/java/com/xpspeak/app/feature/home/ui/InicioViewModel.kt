@@ -21,7 +21,7 @@ data class InicioUiState(
     val racha: Int = 0,
     /** Lunes a domingo de esta semana: true si el día cuenta para la racha. */
     val semana: List<Boolean> = List(7) { false },
-    val avatar: Avatar = Avatar.ROBOT
+    val avatar: Avatar = Avatar.COHETE
 )
 
 /** Pantalla de Inicio (Ilustración 32): la racha sale del perfil local, así funciona sin red. */

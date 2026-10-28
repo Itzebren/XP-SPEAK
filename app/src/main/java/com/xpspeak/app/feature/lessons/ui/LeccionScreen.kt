@@ -4,14 +4,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,7 +34,8 @@ import com.xpspeak.app.feature.lessons.ui.components.ResultadoIntento
 import com.xpspeak.app.feature.lessons.ui.components.SeccionTeoria
 
 /**
- * CU-06: teoría de la lección + evaluación corta (Ilustración 39). La calificación
+ * CU-06: teoría de la lección + evaluación corta (Ilustración 39). La evaluación
+ * aparece al pulsar "Empezar evaluación", después de la teoría. La calificación
  * la hace el servidor (autoritativa); sin conexión se califica en el teléfono y el
  * intento se envía después (§6.2).
  */
@@ -40,9 +48,17 @@ fun LeccionScreen(
     val leccion = uiState.leccion
     val resultado = uiState.resultado
     val locutor = rememberLocutor()
+    var evaluando by rememberSaveable { mutableStateOf(false) }
+    val irAEvaluacion = remember { BringIntoViewRequester() }
+
+    LaunchedEffect(evaluando) { if (evaluando) irAEvaluacion.bringIntoView() }
 
     Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        EncabezadoXP(titulo = leccion?.let { "Lección: ${it.moduloTematico}" } ?: "Lección", onVolver = onVolver)
+        EncabezadoXP(
+            titulo = leccion?.let { "Lección: ${it.moduloTematico}" } ?: "Lección",
+            onVolver = onVolver,
+            mascotaAlInicio = true
+        )
 
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             if (uiState.cargando) CircularProgressIndicator()
@@ -51,14 +67,29 @@ fun LeccionScreen(
 
             val portada = recursoDrawable("leccion_${leccion.id.replace('-', '_')}")
                 .takeIf { it != 0 } ?: R.drawable.inicio_lecciones
-            leccion.canDo.forEach { Text("✓ $it", style = MaterialTheme.typography.bodyMedium, color = XPTextoSecundario) }
+            val (evaluaciones, teoria) = leccion.secciones.partition { it.tipo == TipoSeccion.EVALUACION }
 
-            leccion.secciones.forEach { seccion ->
-                if (seccion.tipo != TipoSeccion.EVALUACION) {
-                    SeccionTeoria(seccion, nivel = leccion.nivelMcer, portada = portada, onEscuchar = locutor::decir)
-                    return@forEach
-                }
-                Text("Evaluación", style = MaterialTheme.typography.headlineSmall)
+            teoria.forEach { seccion ->
+                SeccionTeoria(
+                    seccion,
+                    nivel = leccion.nivelMcer,
+                    portada = portada,
+                    canDo = leccion.canDo,
+                    onEscuchar = locutor::decir
+                )
+            }
+
+            if (!evaluando) {
+                BotonPrincipal(texto = "Empezar evaluación", onClick = { evaluando = true })
+                return@Column
+            }
+
+            evaluaciones.forEach { seccion ->
+                Text(
+                    "Evaluación",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.bringIntoViewRequester(irAEvaluacion)
+                )
                 Text(
                     "Necesitas ${((seccion.umbralAprobacion ?: 0.7) * 100).toInt()} % para aprobar.",
                     style = MaterialTheme.typography.bodyMedium,
