@@ -17,12 +17,28 @@ data class ChatRequest(
     val stream: Boolean = true
 )
 
-/** Cuerpo de error JSON (antes de empezar el flujo). */
-data class ChatResponse(val respuesta: String? = null, val error: String? = null)
+/** Respuesta JSON (backend sin streaming) o cuerpo de error antes de empezar el flujo. */
+data class ChatResponse(
+    val respuesta: String? = null,
+    val correccion: CorreccionDto? = null,
+    val error: String? = null
+)
 
-/** Un evento "data:" del flujo: { delta }, { fin: true } o { error, codigo }. */
+/**
+ * RF-09: errores del mensaje del usuario, que el backend pide aparte de la respuesta.
+ * Es efímera: solo se muestra, no se guarda ni vuelve a la IA en el historial.
+ */
+data class CorreccionDto(
+    val corregido: String? = null,
+    val errores: List<ErrorGramaticalDto> = emptyList()
+)
+
+data class ErrorGramaticalDto(val original: String, val correccion: String, val explicacion: String)
+
+/** Un evento "data:" del flujo: { delta }, { correccion }, { fin: true } o { error, codigo }. */
 data class EventoChat(
     val delta: String? = null,
+    val correccion: CorreccionDto? = null,
     val fin: Boolean? = null,
     val error: String? = null,
     val codigo: String? = null

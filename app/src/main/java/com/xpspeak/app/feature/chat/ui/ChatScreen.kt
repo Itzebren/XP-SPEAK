@@ -79,6 +79,16 @@ import androidx.compose.material.icons.filled.Stop
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.draw.alpha
 import com.xpspeak.app.feature.progress.ui.InsigniaNueva
+import com.xpspeak.app.feature.chat.data.CorreccionDto
+import com.xpspeak.app.core.ui.theme.XPFondo
+import com.xpspeak.app.core.ui.theme.XPNaranjaTexto
+import com.xpspeak.app.core.ui.theme.XPRojoError
+import com.xpspeak.app.core.ui.theme.XPTextoSecundario
+import com.xpspeak.app.core.ui.theme.XPVerdeExito
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import kotlinx.coroutines.launch
 
 @Composable
@@ -150,6 +160,7 @@ fun ChatScreen(
             items(uiState.mensajes) { mensaje ->
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     BurbujaMensaje(mensaje, onEscuchar = { locutor.decirConIdiomas(mensaje.texto) })
+                    mensaje.correccion?.let { CorreccionMensaje(it, locutor) }
                     mensaje.pronunciacion?.let { PronunciacionMensaje(it, locutor) }
                 }
             }
@@ -234,6 +245,55 @@ fun ChatScreen(
                 modifier = Modifier.padding(start = 8.dp).size(52.dp)
             ) {
                 Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Enviar")
+            }
+        }
+    }
+}
+
+/**
+ * RF-09 en el chat: los errores de gramática del mensaje, aparte de la respuesta de la IA.
+ * Cada uno muestra lo que se escribió tachado, la forma correcta y por qué.
+ */
+@Composable
+private fun CorreccionMensaje(correccion: CorreccionDto, locutor: Locutor) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+        Surface(
+            color = XPFondo,
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, XPNaranja),
+            modifier = Modifier.widthIn(max = 300.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Text(
+                    "✏️ Corrección",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = XPNaranjaTexto
+                )
+                correccion.corregido?.let { corregido ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(corregido, color = XPTexto, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f, fill = false))
+                        IconButton(onClick = { locutor.decir(corregido) }, modifier = Modifier.size(32.dp)) {
+                            Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Escuchar la oración corregida", tint = XPMarino)
+                        }
+                    }
+                }
+                correccion.errores.forEach { error ->
+                    Column {
+                        Text(
+                            buildAnnotatedString {
+                                withStyle(SpanStyle(color = XPRojoError, textDecoration = TextDecoration.LineThrough)) { append(error.original) }
+                                append("  →  ")
+                                withStyle(SpanStyle(color = XPVerdeExito, fontWeight = FontWeight.Bold)) { append(error.correccion) }
+                            },
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(error.explicacion, style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
+                    }
+                }
             }
         }
     }

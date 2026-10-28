@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xpspeak.app.core.actividad.RegistroActividad
 import com.xpspeak.app.feature.chat.data.ChatRepository
+import com.xpspeak.app.feature.chat.data.CorreccionDto
+import com.xpspeak.app.feature.chat.data.EventoRespuesta
 import com.xpspeak.app.feature.chat.data.MensajeChat
 import com.xpspeak.app.feature.progress.data.InsigniaDto
 import com.xpspeak.app.feature.progress.data.ProgresoRepository
@@ -23,12 +25,14 @@ import javax.inject.Inject
 /**
  * [completo] es false mientras la respuesta de la IA sigue llegando (RNF-02).
  * [pronunciacion] solo en mensajes dichos con voz: cómo los pronunció el usuario (RF-09).
+ * [correccion] solo en mensajes del usuario con errores de gramática (RF-09); no va al historial.
  */
 data class MensajeUi(
     val texto: String,
     val esUsuario: Boolean,
     val completo: Boolean = true,
-    val pronunciacion: ResultadoPronunciacion? = null
+    val pronunciacion: ResultadoPronunciacion? = null,
+    val correccion: CorreccionDto? = null
 )
 
 data class ChatUiState(
@@ -80,6 +84,8 @@ class ChatViewModel @Inject constructor(
             MensajeChat(role = if (it.esUsuario) "user" else "assistant", content = it.texto)
         }
 
+        // Dónde queda el mensaje del usuario, para colgarle su corrección cuando llegue.
+        val indiceUsuario = _uiState.value.mensajes.size
         _uiState.value = _uiState.value.copy(
             mensajes = _uiState.value.mensajes + MensajeUi(texto, esUsuario = true, pronunciacion = pronunciacion),
             entrada = "",
@@ -91,13 +97,22 @@ class ChatViewModel @Inject constructor(
             var respuesta = ""
             try {
                 // RF-06/RN-02: se lee en cada envío por si el usuario cambió de nivel.
-                repository.enviarMensaje(texto, repository.nivelDelUsuario(), historialParaApi).collect { pedazo ->
-                    // RNF-02: la burbuja aparece con el primer pedazo y crece con cada uno.
-                    val anteriores = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
-                    respuesta += pedazo
-                    _uiState.value = _uiState.value.copy(
-                        mensajes = anteriores + MensajeUi(respuesta, esUsuario = false, completo = false)
-                    )
+                repository.enviarMensaje(texto, repository.nivelDelUsuario(), historialParaApi).collect { evento ->
+                    when (evento) {
+                        is EventoRespuesta.Correccion -> _uiState.value = _uiState.value.copy(
+                            mensajes = _uiState.value.mensajes.mapIndexed { i, mensaje ->
+                                if (i == indiceUsuario) mensaje.copy(correccion = evento.correccion) else mensaje
+                            }
+                        )
+                        is EventoRespuesta.Pedazo -> {
+                            // RNF-02: la burbuja aparece con el primer pedazo y crece con cada uno.
+                            val anteriores = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
+                            respuesta += evento.texto
+                            _uiState.value = _uiState.value.copy(
+                                mensajes = anteriores + MensajeUi(respuesta, esUsuario = false, completo = false)
+                            )
+                        }
+                    }
                 }
                 if (respuesta.isEmpty()) throw IllegalStateException("Respuesta vacía del servidor")
                 _uiState.value = _uiState.value.copy(
