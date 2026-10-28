@@ -2,6 +2,7 @@ package com.xpspeak.app.feature.lessons.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xpspeak.app.feature.lessons.data.AscensoRepository
 import com.xpspeak.app.feature.lessons.data.ConceptoDebilDto
 import com.xpspeak.app.feature.lessons.data.LeccionResumenDto
 import com.xpspeak.app.feature.lessons.data.LeccionesRepository
@@ -26,12 +27,15 @@ data class LessonsUiState(
     val repasoPendiente: Int = 0,
     /** De esos, los de alta tasa de error: mientras haya, no se empieza un tema nuevo (RN-07). */
     val repasoPrioritario: Int = 0,
+    /** Acaba de completar su nivel y pasó a este (A1 → A2), para felicitarlo. */
+    val ascendioA: String? = null,
     val error: String? = null
 )
 
 @HiltViewModel
 class LessonsViewModel @Inject constructor(
-    private val repository: LeccionesRepository
+    private val repository: LeccionesRepository,
+    private val ascenso: AscensoRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LessonsUiState())
@@ -60,6 +64,12 @@ class LessonsViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(repasoPendiente = 0, repasoPrioritario = 0)
                 return@launch
             }
+            // Completó todo A1: pasa a A2 y se carga su catálogo.
+            ascenso.ascenderSiCorresponde(catalogo)?.let { nuevo ->
+                _uiState.value = _uiState.value.copy(ascendioA = nuevo)
+                cargar()
+                return@launch
+            }
 
             repository.conceptosDebiles().onSuccess { dto ->
                 _uiState.value = _uiState.value.copy(conceptosDebiles = dto.conceptos)
@@ -73,5 +83,9 @@ class LessonsViewModel @Inject constructor(
             // En segundo plano: deja descargadas las lecciones del nivel para usarlas sin conexión.
             repository.sincronizarContenido()
         }
+    }
+
+    fun cerrarAscenso() {
+        _uiState.value = _uiState.value.copy(ascendioA = null)
     }
 }
