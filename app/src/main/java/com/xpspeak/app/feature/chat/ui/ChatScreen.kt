@@ -58,6 +58,26 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import com.xpspeak.app.feature.games.domain.Pronunciacion
+import com.xpspeak.app.feature.games.ui.comun.Locutor
+import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion.ResultadoPronunciacion
+import com.xpspeak.app.feature.voice.domain.Retroalimentacion
+import com.xpspeak.app.feature.voice.ui.DetallePalabra
+import com.xpspeak.app.feature.voice.ui.colorPorNivel
+import kotlin.math.roundToInt
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.draw.alpha
 import com.xpspeak.app.feature.progress.ui.InsigniaNueva
 import kotlinx.coroutines.launch
 
@@ -77,18 +97,23 @@ fun ChatScreen(
     val permisoLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { concedido ->
-        if (concedido) viewModel.escucharVoz() else viewModel.onPermisoMicrofonoDenegado()
+        if (concedido) viewModel.alternarEnVivo() else viewModel.onPermisoMicrofonoDenegado()
     }
+    // RF-08: las respuestas de la IA se leen en voz alta para practicar la comprensión auditiva.
+    val locutor = rememberLocutor()
     val onMicClick = {
         val tienePermiso = ContextCompat.checkSelfPermission(
             context, Manifest.permission.RECORD_AUDIO
         ) == PackageManager.PERMISSION_GRANTED
-        if (tienePermiso) viewModel.escucharVoz()
-        else permisoLauncher.launch(Manifest.permission.RECORD_AUDIO)
+        when {
+            // Detener también corta a la IA si está hablando.
+            uiState.enVivo -> { viewModel.detenerEnVivo(); locutor.callar() }
+            tienePermiso -> viewModel.alternarEnVivo()
+            else -> permisoLauncher.launch(Manifest.permission.RECORD_AUDIO)
+        }
     }
-
-    // RF-08: las respuestas de la IA se leen en voz alta para practicar la comprensión auditiva.
-    val locutor = rememberLocutor()
+    // Al salir del chat no se deja el micrófono abierto.
+    DisposableEffect(Unit) { onDispose { viewModel.detenerEnVivo() } }
     // Cuenta solo mensajes completos: con streaming (RNF-02) la respuesta se lee en voz alta
     // hasta que termina de llegar. Arranca en el total actual para no repetirla al regresar.
     val completos = uiState.mensajes.count { it.completo }
@@ -96,15 +121,19 @@ fun ChatScreen(
 
     LaunchedEffect(completos) {
         if (completos > mensajesLeidos) {
-            uiState.mensajes.last().takeIf { !it.esUsuario && it.completo }?.let { locutor.decirConIdiomas(it.texto) }
+            uiState.mensajes.last().takeIf { !it.esUsuario && it.completo }?.let {
+                // En vivo, al terminar de hablar la IA se vuelve a abrir el micrófono.
+                locutor.decirConIdiomas(it.texto, alTerminar = viewModel::onRespuestaLeida)
+            }
         }
         mensajesLeidos = completos
     }
 
-    // También sigue a la burbuja mientras crece.
-    LaunchedEffect(uiState.mensajes.size, uiState.mensajes.lastOrNull()?.texto?.length) {
-        if (uiState.mensajes.isNotEmpty()) {
-            scope.launch { listState.animateScrollToItem(uiState.mensajes.size - 1) }
+    // También sigue a la burbuja mientras crece, y a la del usuario mientras habla.
+    LaunchedEffect(uiState.mensajes.size, uiState.mensajes.lastOrNull()?.texto?.length, uiState.parcial) {
+        val total = uiState.mensajes.size + if (uiState.parcial.isNotBlank()) 1 else 0
+        if (total > 0) {
+            scope.launch { listState.animateScrollToItem(total - 1) }
         }
     }
 
@@ -118,7 +147,20 @@ fun ChatScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(uiState.mensajes) { mensaje -> BurbujaMensaje(mensaje, onEscuchar = { locutor.decirConIdiomas(mensaje.texto) }) }
+            items(uiState.mensajes) { mensaje ->
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    BurbujaMensaje(mensaje, onEscuchar = { locutor.decirConIdiomas(mensaje.texto) })
+                    mensaje.pronunciacion?.let { PronunciacionMensaje(it, locutor) }
+                }
+            }
+            // Lo que el usuario va diciendo, palabra por palabra, antes de enviarse.
+            if (uiState.escuchando && uiState.parcial.isNotBlank()) {
+                item {
+                    Box(modifier = Modifier.alpha(0.6f)) {
+                        BurbujaMensaje(MensajeUi(uiState.parcial, esUsuario = true, completo = false), onEscuchar = {})
+                    }
+                }
+            }
             // El indicador solo mientras no llega el primer pedazo; después, la burbuja ya crece sola.
             if (uiState.cargando && uiState.mensajes.lastOrNull()?.esUsuario == true) {
                 item {
@@ -134,6 +176,19 @@ fun ChatScreen(
                 mensajeError,
                 modifier = Modifier.padding(horizontal = 16.dp),
                 color = MaterialTheme.colorScheme.error
+            )
+        }
+
+        if (uiState.enVivo) {
+            Text(
+                when {
+                    uiState.escuchando -> "🎙 Te escucho… habla en inglés y haz una pausa al terminar."
+                    uiState.cargando -> "💭 La IA está pensando…"
+                    else -> "🔊 La IA está hablando…"
+                },
+                style = MaterialTheme.typography.labelLarge,
+                color = XPMarino,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
             )
         }
 
@@ -155,11 +210,22 @@ fun ChatScreen(
                 shape = MaterialTheme.shapes.extraLarge,
                 colors = OutlinedTextFieldDefaults.colors(focusedContainerColor = XPBlanco, unfocusedContainerColor = XPBlanco),
                 placeholder = {
-                    Text(if (uiState.escuchando) "Escuchando..." else "Escribe en inglés...")
+                    Text(if (uiState.enVivo) "O escribe en inglés..." else "Escribe o habla en inglés...")
                 }
             )
-            IconButton(onClick = onMicClick, enabled = !uiState.cargando && !uiState.escuchando) {
-                Icon(Icons.Filled.Mic, contentDescription = "Hablar")
+            // Un toque inicia la conversación en vivo; otro la detiene.
+            FilledIconButton(
+                onClick = onMicClick,
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = if (uiState.enVivo) MaterialTheme.colorScheme.error else XPAzulClaro,
+                    contentColor = if (uiState.enVivo) XPBlanco else XPMarino
+                ),
+                modifier = Modifier.padding(start = 8.dp).size(52.dp)
+            ) {
+                Icon(
+                    if (uiState.enVivo) Icons.Filled.Stop else Icons.Filled.Mic,
+                    contentDescription = if (uiState.enVivo) "Detener conversación en vivo" else "Conversar en vivo"
+                )
             }
             FilledIconButton(
                 onClick = viewModel::enviar,
@@ -168,6 +234,52 @@ fun ChatScreen(
                 modifier = Modifier.padding(start = 8.dp).size(52.dp)
             ) {
                 Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Enviar")
+            }
+        }
+    }
+}
+
+/** RF-09 en el chat: cómo pronunció el usuario lo que dijo; toca una palabra para ver sus sonidos. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun PronunciacionMensaje(resultado: ResultadoPronunciacion, locutor: Locutor) {
+    var seleccionada by remember(resultado) { mutableStateOf<Int?>(null) }
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        val general = resultado.puntuacionGeneral.roundToInt()
+        Text(
+            "Pronunciación $general/100 · Fluidez ${resultado.puntuacionFluidez.roundToInt()}",
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = colorPorNivel(Pronunciacion.nivelDe(general))
+        )
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.widthIn(max = 300.dp)
+        ) {
+            resultado.palabras.forEachIndexed { i, palabra ->
+                Text(
+                    palabra.palabra,
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier
+                        .background(colorPorNivel(Retroalimentacion.nivelDe(palabra)), RoundedCornerShape(6.dp))
+                        .then(
+                            if (seleccionada == i) Modifier.border(BorderStroke(2.dp, XPMarino), RoundedCornerShape(6.dp))
+                            else Modifier
+                        )
+                        .clickable { seleccionada = if (seleccionada == i) null else i }
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                )
+            }
+        }
+        seleccionada?.let { resultado.palabras.getOrNull(it) }?.let { palabra ->
+            Column(modifier = Modifier.widthIn(max = 300.dp)) {
+                DetallePalabra(palabra, onEscuchar = { locutor.decir(palabra.palabra, lento = true) })
             }
         }
     }

@@ -7,9 +7,12 @@ import com.xpspeak.app.feature.chat.data.ChatRepository
 import com.xpspeak.app.feature.chat.data.MensajeChat
 import com.xpspeak.app.feature.progress.data.InsigniaDto
 import com.xpspeak.app.feature.progress.data.ProgresoRepository
-import com.xpspeak.app.feature.voice.data.ReconocedorVoz
+import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion
+import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion.ResultadoPronunciacion
+import com.xpspeak.app.feature.voice.domain.Retroalimentacion
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,14 +20,27 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
-/** [completo] es false mientras la respuesta de la IA sigue llegando (RNF-02). */
-data class MensajeUi(val texto: String, val esUsuario: Boolean, val completo: Boolean = true)
+/**
+ * [completo] es false mientras la respuesta de la IA sigue llegando (RNF-02).
+ * [pronunciacion] solo en mensajes dichos con voz: cómo los pronunció el usuario (RF-09).
+ */
+data class MensajeUi(
+    val texto: String,
+    val esUsuario: Boolean,
+    val completo: Boolean = true,
+    val pronunciacion: ResultadoPronunciacion? = null
+)
 
 data class ChatUiState(
     val mensajes: List<MensajeUi> = emptyList(),
     val entrada: String = "",
     val cargando: Boolean = false,
+    /** Modo conversación: escuchar → responder en voz alta → volver a escuchar, sin tocar nada. */
+    val enVivo: Boolean = false,
+    /** El micrófono está abierto (en vivo, mientras la IA no habla ni piensa). */
     val escuchando: Boolean = false,
+    /** Lo que Azure va oyendo mientras el usuario habla. */
+    val parcial: String = "",
     val error: String? = null,
     /** "Habla con IA" y otras insignias ganadas al conversar (Progreso), para festejarlas. */
     val insigniasNuevas: List<InsigniaDto> = emptyList()
@@ -35,7 +51,7 @@ class ChatViewModel @Inject constructor(
     private val repository: ChatRepository,
     private val progresoRepository: ProgresoRepository,
     private val registroActividad: RegistroActividad,
-    private val reconocedor: ReconocedorVoz
+    private val evaluador: EvaluadorPronunciacion
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ChatUiState())
@@ -44,6 +60,7 @@ class ChatViewModel @Inject constructor(
     /** Una conversación por pantalla de chat; el servidor la registra una sola vez (Progreso). */
     private val sesionId = UUID.randomUUID().toString()
     private var conversacionRegistrada = false
+    private var escucha: Job? = null
 
     fun onEntradaChange(valor: String) {
         _uiState.value = _uiState.value.copy(entrada = valor)
@@ -52,13 +69,19 @@ class ChatViewModel @Inject constructor(
     fun enviar() {
         val texto = _uiState.value.entrada.trim()
         if (texto.isBlank()) return
+        // Escribió en pleno modo en vivo: se cierra el micrófono para no oír la respuesta leída.
+        escucha?.cancel()
+        _uiState.value = _uiState.value.copy(escuchando = false, parcial = "")
+        enviarTexto(texto, pronunciacion = null)
+    }
 
+    private fun enviarTexto(texto: String, pronunciacion: ResultadoPronunciacion?) {
         val historialParaApi = _uiState.value.mensajes.map {
             MensajeChat(role = if (it.esUsuario) "user" else "assistant", content = it.texto)
         }
 
         _uiState.value = _uiState.value.copy(
-            mensajes = _uiState.value.mensajes + MensajeUi(texto, esUsuario = true),
+            mensajes = _uiState.value.mensajes + MensajeUi(texto, esUsuario = true, pronunciacion = pronunciacion),
             entrada = "",
             cargando = true,
             error = null
@@ -87,7 +110,8 @@ class ChatViewModel @Inject constructor(
             } catch (excepcion: Exception) {
                 // Una respuesta cortada no se queda en el historial: confundiría a la IA en el siguiente turno.
                 val mensajes = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
-                _uiState.value = _uiState.value.copy(mensajes = mensajes, cargando = false, error = excepcion.message)
+                // Sin respuesta que leer, el modo en vivo se quedaría esperando: se pausa.
+                _uiState.value = _uiState.value.copy(mensajes = mensajes, cargando = false, enVivo = false, error = excepcion.message)
             }
         }
     }
@@ -105,17 +129,50 @@ class ChatViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(insigniasNuevas = emptyList())
     }
 
-    fun escucharVoz() {
-        if (_uiState.value.escuchando || _uiState.value.cargando) return
-        _uiState.value = _uiState.value.copy(escuchando = true, error = null)
+    fun alternarEnVivo() {
+        if (_uiState.value.enVivo) {
+            detenerEnVivo()
+        } else {
+            _uiState.value = _uiState.value.copy(enVivo = true, error = null)
+            escucharTurno()
+        }
+    }
 
-        viewModelScope.launch {
-            reconocedor.reconocerUnaVez()
-                .onSuccess { texto ->
-                    _uiState.value = _uiState.value.copy(entrada = texto, escuchando = false)
+    fun detenerEnVivo() {
+        escucha?.cancel()
+        escucha = null
+        _uiState.value = _uiState.value.copy(enVivo = false, escuchando = false, parcial = "")
+    }
+
+    /** La IA terminó de leer su respuesta en voz alta: le toca al usuario. */
+    fun onRespuestaLeida() {
+        escucharTurno()
+    }
+
+    /** Un turno del usuario: se oye en vivo, se califica (RF-09) y se envía solo a la IA (RF-07). */
+    private fun escucharTurno() {
+        val estado = _uiState.value
+        if (!estado.enVivo || estado.cargando || escucha?.isActive == true) return
+        _uiState.value = estado.copy(escuchando = true, parcial = "")
+
+        escucha = viewModelScope.launch {
+            val resultado = evaluador.escucharFrase { parcial ->
+                _uiState.value = _uiState.value.copy(parcial = parcial, error = null)
+            }
+            _uiState.value = _uiState.value.copy(escuchando = false, parcial = "")
+            resultado
+                .onSuccess { frase ->
+                    if (Retroalimentacion.esLegible(frase)) {
+                        enviarTexto(frase.textoReconocido.trim(), frase)
+                    } else {
+                        // CU-05 A3: audio poco claro, se pide repetir en vez de mandar algo que no dijo.
+                        _uiState.value = _uiState.value.copy(error = "No te escuché bien. Repítelo, por favor.")
+                        escucha = null
+                        escucharTurno()
+                    }
                 }
                 .onFailure { excepcion ->
-                    _uiState.value = _uiState.value.copy(escuchando = false, error = excepcion.message)
+                    _uiState.value = _uiState.value.copy(enVivo = false, error = excepcion.message)
                 }
         }
     }
