@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.xpspeak.app.feature.lessons.data.ConceptoDebilDto
 import com.xpspeak.app.feature.lessons.data.LeccionResumenDto
 import com.xpspeak.app.feature.lessons.data.LeccionesRepository
+import com.xpspeak.app.feature.lessons.domain.RepasoPrimero
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +24,8 @@ data class LessonsUiState(
     val intentosPendientes: Int = 0,
     /** Conceptos que SM-2 marca para repasar hoy (RF-13). */
     val repasoPendiente: Int = 0,
+    /** De esos, los de alta tasa de error: mientras haya, no se empieza un tema nuevo (RN-07). */
+    val repasoPrioritario: Int = 0,
     val error: String? = null
 )
 
@@ -52,13 +55,20 @@ class LessonsViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(cargando = false, error = excepcion.message)
                 }
                 .getOrNull()
-            if (catalogo == null || catalogo.sinConexion) return@launch
+            if (catalogo == null || catalogo.sinConexion) {
+                // Sin red el repaso no se puede hacer: no se deja el candado de RN-07 de la carga anterior.
+                _uiState.value = _uiState.value.copy(repasoPendiente = 0, repasoPrioritario = 0)
+                return@launch
+            }
 
             repository.conceptosDebiles().onSuccess { dto ->
                 _uiState.value = _uiState.value.copy(conceptosDebiles = dto.conceptos)
             }
             repository.sesionRepaso().onSuccess { sesion ->
-                _uiState.value = _uiState.value.copy(repasoPendiente = sesion.totalVencidos)
+                _uiState.value = _uiState.value.copy(
+                    repasoPendiente = sesion.totalVencidos,
+                    repasoPrioritario = RepasoPrimero.prioritarios(sesion)
+                )
             }
             // En segundo plano: deja descargadas las lecciones del nivel para usarlas sin conexión.
             repository.sincronizarContenido()
