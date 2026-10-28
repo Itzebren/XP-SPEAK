@@ -73,6 +73,8 @@ fun EncabezadoXP(
     modifier: Modifier = Modifier,
     onVolver: (() -> Unit)? = null,
     @DrawableRes mascota: Int? = R.drawable.mascota,
+    /** La mascota a la izquierda del título, como en la lección (Ilustración 39). */
+    mascotaAlInicio: Boolean = false,
     acciones: @Composable RowScope.() -> Unit = {},
     contenido: @Composable ColumnScope.() -> Unit = {}
 ) {
@@ -95,11 +97,18 @@ fun EncabezadoXP(
             Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.End, content = acciones)
         }
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 8.dp)) {
+            if (mascota != null && mascotaAlInicio) {
+                Image(
+                    painter = painterResource(mascota),
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 12.dp).size(width = 76.dp, height = 84.dp)
+                )
+            }
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(titulo, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.semantics { heading() })
                 contenido()
             }
-            if (mascota != null) {
+            if (mascota != null && !mascotaAlInicio) {
                 Image(
                     painter = painterResource(mascota),
                     contentDescription = null,
