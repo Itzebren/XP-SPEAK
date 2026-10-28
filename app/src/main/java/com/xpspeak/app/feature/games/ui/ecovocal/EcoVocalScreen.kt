@@ -143,7 +143,8 @@ fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltView
                 }
             }
 
-            aviso?.let { TarjetaFeedback(Veredicto.ERROR, "Micrófono", it) }
+            // Un aviso del micrófono no es una respuesta equivocada: sin sonido de error.
+            aviso?.let { TarjetaFeedback(Veredicto.ERROR, "Micrófono", it, sonido = false) }
         }
 
         if (revision != null) {
