@@ -221,6 +221,109 @@ test('chat en flujo: los errores antes de empezar salen como JSON con su código
   assert.equal(res.texto, undefined);
 });
 
+// ── Corrección gramatical (RF-09) ────────────────────────────────────────
+
+const { normalizarCorreccion, MAX_ERRORES } = require('../lib/chat/correccion');
+
+const CORRECCION = {
+  corregido: 'I went to the park yesterday.',
+  errores: [{ original: 'I go', correccion: 'I went', explicacion: 'Con "yesterday" se usa el pasado.' }],
+};
+
+/**
+ * Azure con dos papeles: la consulta con response_format es la del corrector,
+ * la otra es la del tutor (en JSON o en flujo).
+ */
+function simularTutorYCorrector(t, { tutor = 'Nice! What did you do there?', corrector = CORRECCION, flujo = false } = {}) {
+  const llamadas = { tutor: [], corrector: [] };
+  const codificador = new TextEncoder();
+  t.mock.method(globalThis, 'fetch', async (url, opciones) => {
+    const body = JSON.parse(opciones.body);
+    if (body.response_format) {
+      llamadas.corrector.push(body);
+      if (corrector instanceof Error) throw corrector;
+      return { ok: true, status: 200, json: async () => ({ choices: [{ message: { content: typeof corrector === 'string' ? corrector : JSON.stringify(corrector) } }] }) };
+    }
+    llamadas.tutor.push(body);
+    if (!flujo) return { ok: true, status: 200, json: async () => ({ choices: [{ message: { content: tutor } }] }) };
+    return {
+      ok: true,
+      status: 200,
+      body: (async function* () {
+        yield codificador.encode(chunkAzure(tutor) + 'data: [DONE]\n\n');
+      })(),
+    };
+  });
+  return llamadas;
+}
+
+test('corrección: el chat devuelve los errores del mensaje aparte de la respuesta (RF-09)', async (t) => {
+  configurarAzureOpenAI(t);
+  const llamadas = simularTutorYCorrector(t);
+
+  const res = await enviar({ mensaje: 'I go to the park yesterday', nivel: 'A2', historial: [{ role: 'assistant', content: 'What did you do?' }] });
+
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(res.body, { respuesta: 'Nice! What did you do there?', correccion: CORRECCION });
+  const corrector = llamadas.corrector[0];
+  assert.equal(corrector.temperature, 0);
+  assert.deepEqual(corrector.response_format, { type: 'json_object' });
+  assert.match(corrector.messages[0].content, /nivel A2/);
+  assert.match(corrector.messages[1].content, /What did you do\?/);
+  assert.match(corrector.messages[1].content, /I go to the park yesterday/);
+  // El tutor ya no explica los errores dentro de su respuesta.
+  assert.match(llamadas.tutor[0].messages[0].content, /la app le muestra las correcciones aparte/);
+});
+
+test('corrección: en flujo llega como evento propio antes del fin', async (t) => {
+  configurarAzureOpenAI(t);
+  simularTutorYCorrector(t, { flujo: true });
+
+  const res = await enviar({ mensaje: 'I go to the park yesterday', stream: true });
+
+  const recibidos = eventos(res);
+  assert.deepEqual(recibidos.at(-1), { fin: true });
+  assert.deepEqual(recibidos.find((e) => e.correccion), { correccion: CORRECCION });
+  assert.ok(recibidos.some((e) => e.delta));
+});
+
+test('corrección: sin errores, con respuesta inválida o si el corrector falla, el chat sigue sin correccion', async (t) => {
+  configurarAzureOpenAI(t);
+  t.mock.method(console, 'error', () => {});
+  for (const corrector of [{ corregido: 'I like pizza.', errores: [] }, 'esto no es JSON', new Error('caído')]) {
+    t.mock.restoreAll();
+    t.mock.method(console, 'error', () => {});
+    simularTutorYCorrector(t, { corrector });
+    const res = await enviar({ mensaje: 'I like pizza' });
+    assert.equal(res.statusCode, 200);
+    assert.deepEqual(res.body, { respuesta: 'Nice! What did you do there?' });
+
+    simularTutorYCorrector(t, { corrector, flujo: true });
+    const enFlujo = await enviar({ mensaje: 'I like pizza', stream: true });
+    assert.ok(!eventos(enFlujo).some((e) => e.correccion));
+    assert.deepEqual(eventos(enFlujo).at(-1), { fin: true });
+  }
+});
+
+test('corrección: un mensaje de una sola palabra no se manda al corrector', async (t) => {
+  configurarAzureOpenAI(t);
+  const llamadas = simularTutorYCorrector(t);
+  const res = await enviar({ mensaje: 'Hello' });
+  assert.equal(llamadas.corrector.length, 0);
+  assert.equal(res.body.correccion, undefined);
+});
+
+test('corrección: descarta cambios de mayúsculas o puntuación, campos vacíos y recorta a MAX_ERRORES', () => {
+  const error = (original, correccion) => ({ original, correccion, explicacion: 'Explicación.' });
+  assert.equal(normalizarCorreccion(JSON.stringify({ errores: [error('i like', 'I like.'), error('', 'x'), { original: 'a' }] })), null);
+  assert.equal(normalizarCorreccion('{"errores": "no"}'), null);
+
+  const muchos = Array.from({ length: 5 }, (_, i) => error(`he go ${i}`, `he goes ${i}`));
+  const normalizada = normalizarCorreccion(JSON.stringify({ corregido: 'x'.repeat(500), errores: muchos }));
+  assert.equal(normalizada.errores.length, MAX_ERRORES);
+  assert.equal(normalizada.corregido.length, 200);
+});
+
 // ── GET|POST /api/speech-token ────────────────────────────────────────────
 
 test('token de voz: GET (Eco Vocal) y POST (chat) dan la misma respuesta y comparten el límite', async (t) => {

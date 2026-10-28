@@ -49,11 +49,27 @@ object Texto {
     }
 
     /** 0.0–1.0: palabras de la referencia dichas en orden, penalizando las que sobran. */
-    fun similitud(referencia: String, dicho: String): Double {
-        val ref = palabras(referencia)
-        val dichas = palabras(dicho)
+    fun similitud(referencia: String, dicho: String): Double = similitud(palabras(referencia), palabras(dicho))
+
+    fun similitud(ref: List<String>, dichas: List<String>): Double {
         if (ref.isEmpty()) return 0.0
         val aciertos = coincidencias(ref, dichas).count { it }
         return aciertos.toDouble() / maxOf(ref.size, dichas.size)
     }
+
+    /** "7" → "seven", "21" → "twenty", "one": así escribe el reconocedor lo que en la frase va con letra. */
+    fun numerosEnPalabras(palabras: List<String>): List<String> = palabras.flatMap { palabra ->
+        val n = palabra.toIntOrNull()?.takeIf { it in 0..99 } ?: return@flatMap listOf(palabra)
+        when {
+            n < 20 -> listOf(UNIDADES[n])
+            n % 10 == 0 -> listOf(DECENAS[n / 10])
+            else -> listOf(DECENAS[n / 10], UNIDADES[n % 10])
+        }
+    }
+
+    private val UNIDADES = listOf(
+        "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+        "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
+    )
+    private val DECENAS = listOf("", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety")
 }

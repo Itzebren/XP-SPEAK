@@ -8,12 +8,17 @@ import com.xpspeak.app.feature.games.domain.Dificultad
 import com.xpspeak.app.feature.games.domain.GeneradorRondas
 import com.xpspeak.app.feature.games.domain.Marcador
 import com.xpspeak.app.feature.games.domain.Minijuego
+import com.xpspeak.app.feature.games.domain.RespuestaVoz
 import com.xpspeak.app.feature.games.domain.RondaRafaga
 import com.xpspeak.app.feature.games.ui.comun.EstadoPartida
 import com.xpspeak.app.feature.games.ui.comun.PartidaViewModel
+import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,17 +44,33 @@ data class EstadoRafaga(
     val multiplicador: Int get() = if (combo >= RafagaViewModel.COMBO_PARA_DOBLE) 2 else 1
 }
 
+/** El micrófono de Ráfaga: no se guarda con la partida, cada sesión decide si juega con voz. */
+data class MicrofonoRafaga(
+    val activo: Boolean = false,
+    /** Lo que Azure va oyendo, para que el usuario vea que lo escucha. */
+    val oyendo: String = "",
+    val error: String? = null
+)
+
 /**
  * Ráfaga de Palabras (§5.3), variante de la Ilustración 37: aparece una
  * palabra con una traducción y el usuario dice si coinciden o la manda al
- * bote. 60 s en el reloj; acertar suma 1 s, fallar resta 3 s.
+ * bote. 60 s en el reloj; acertar suma 1 s, fallar resta 3 s. También se
+ * puede responder en voz alta ("yes" / "no") con el Azure Speech del chat.
  */
 @HiltViewModel
 class RafagaViewModel @Inject constructor(
-    repository: MinijuegosRepository
+    repository: MinijuegosRepository,
+    private val evaluador: EvaluadorPronunciacion
 ) : PartidaViewModel<EstadoRafaga>(repository, Minijuego.RAFAGA_PALABRAS, EstadoRafaga::class.java) {
 
     private var reloj: Job? = null
+    private var escucha: Job? = null
+    /** Inicio (en el audio) de la última frase que ya se usó: los parciales y el final llegan con el mismo. */
+    private var fraseUsada: Long? = null
+
+    private val _microfono = MutableStateFlow(MicrofonoRafaga())
+    val microfono: StateFlow<MicrofonoRafaga> = _microfono.asStateFlow()
 
     override fun crearPartida(contenido: ContenidoJuegos, partidaId: String): EstadoRafaga? {
         val pares = GeneradorRondas.paresRafaga(contenido, random)
@@ -78,11 +99,58 @@ class RafagaViewModel @Inject constructor(
         }
         // Retomada justo durante el feedback: se pasa al siguiente par.
         if (estado.respondido != null) siguiente()
+        if (_microfono.value.activo) escuchar()
     }
 
     override fun alPausar() {
         reloj?.cancel()
         reloj = null
+        // En segundo plano o al terminar no se deja el micrófono abierto.
+        escucha?.cancel()
+        escucha = null
+        _microfono.value = _microfono.value.copy(oyendo = "")
+    }
+
+    fun alternarVoz() {
+        if (_microfono.value.activo) {
+            escucha?.cancel()
+            escucha = null
+            _microfono.value = MicrofonoRafaga()
+        } else {
+            _microfono.value = MicrofonoRafaga(activo = true)
+            if (estadoActual != null) escuchar()
+        }
+    }
+
+    fun onPermisoMicrofonoDenegado() {
+        _microfono.value = MicrofonoRafaga(error = "Necesitas permitir el micrófono para responder con voz.")
+    }
+
+    private fun escuchar() {
+        if (escucha?.isActive == true) return
+        // Cada reconocedor cuenta el audio desde cero.
+        fraseUsada = null
+        escucha = viewModelScope.launch {
+            val resultado = evaluador.escucharContinuo(RespuestaVoz.FRASES) { inicio, texto ->
+                // Llega en un hilo del SDK: se procesa en el principal, igual que un toque.
+                viewModelScope.launch { oir(inicio, texto) }
+            }
+            // Solo vuelve si Azure canceló (sin red, token rechazado…): se apaga el micrófono.
+            resultado.exceptionOrNull()?.let {
+                _microfono.value = MicrofonoRafaga(error = "${it.message ?: "No pude usar el micrófono"}. Sigue con los botones.")
+                escucha = null
+            }
+        }
+    }
+
+    private fun oir(inicio: Long, texto: String) {
+        if (!_microfono.value.activo) return
+        _microfono.value = _microfono.value.copy(oyendo = texto)
+        if (inicio == fraseUsada) return
+        val coinciden = RespuestaVoz.interpretar(texto) ?: return
+        // Dicha durante el feedback también se consume: si no, su resultado final contestaría el par siguiente.
+        fraseUsada = inicio
+        responder(coinciden)
     }
 
     fun responder(coinciden: Boolean) {

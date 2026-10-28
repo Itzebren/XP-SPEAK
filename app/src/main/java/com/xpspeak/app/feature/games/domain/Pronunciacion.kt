@@ -57,16 +57,19 @@ object Pronunciacion {
      */
     fun evaluarTranscripcion(referencia: String, alternativas: List<Pair<String, Float>>): EvaluacionVoz {
         val ref = Texto.palabras(referencia)
-        val texto = alternativas.maxByOrNull { Texto.similitud(referencia, it.first) }?.first
+        // El reconocedor escribe "7" donde la frase dice "seven": se compara la forma hablada.
+        fun dichasDe(texto: String) = Texto.numerosEnPalabras(Texto.palabras(texto))
+        val texto = alternativas.filter { it.first.isNotBlank() }.maxByOrNull { Texto.similitud(ref, dichasDe(it.first)) }?.first
             ?: return EvaluacionVoz(0, 0, ref.map { PalabraEvaluada(it, 0, "Omission") }, "", FuenteEvaluacion.DISPOSITIVO)
         // La legibilidad es del audio, no de la alternativa: Google solo reporta la confianza
         // de la primera y deja las demás en 0.0, así que se toma la mayor.
         val confianza = alternativas.maxOf { it.second }
-        val dichas = Texto.coincidencias(ref, Texto.palabras(texto))
+        val dichas = Texto.coincidencias(ref, dichasDe(texto))
         return EvaluacionVoz(
-            puntaje = (Texto.similitud(referencia, texto) * 100).roundToInt(),
-            // Muchos motores no reportan confianza: si oyó algo, se considera legible.
-            confianza = if (confianza >= 0f) (confianza * 100).roundToInt() else 100,
+            puntaje = (Texto.similitud(ref, dichasDe(texto)) * 100).roundToInt(),
+            // Muchos motores no reportan confianza (-1) o la dejan en 0.0 aunque sí entendieron:
+            // si oyó algo, se considera legible.
+            confianza = if (confianza > 0f) (confianza * 100).roundToInt() else 100,
             palabras = ref.mapIndexed { i, palabra ->
                 if (dichas[i]) PalabraEvaluada(palabra, 100) else PalabraEvaluada(palabra, 0, "Mispronunciation")
             },

@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.util.concurrent.ExecutionException
+import com.xpspeak.app.feature.voice.data.MedidorVoz
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -35,6 +36,11 @@ class EvaluadorAzure @Inject constructor() {
     /** Error de Azure que no es "no se entendió" (red, token vencido…): se usa el respaldo. */
     class FalloAzure(mensaje: String) : Exception(mensaje)
 
+    private companion object {
+        /** Silencio con el que recognizeOnce da por terminada la frase. */
+        const val PAUSA_FIN_FRASE_MS = 1500L
+    }
+
     suspend fun evaluar(referencia: String, token: TokenVozDto): EvaluacionVoz = withContext(Dispatchers.IO) {
         val config = SpeechConfig.fromAuthorizationToken(token.token, token.region).apply {
             speechRecognitionLanguage = "en-US"
@@ -42,9 +48,13 @@ class EvaluadorAzure @Inject constructor() {
             // usuario tarda en empezar y corta en la primera pausa, y todo sale "no legible".
             setProperty(PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, "15000")
             setProperty(PropertyId.SpeechServiceConnection_EndSilenceTimeoutMs, "3000")
+            // recognizeOnce termina la frase con esta pausa (≈500 ms de fábrica): una respiración a
+            // media oración la cortaba y el resto salía como "omitido".
+            setProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, PAUSA_FIN_FRASE_MS.toString())
         }
         val audio = AudioConfig.fromDefaultMicrophoneInput()
         val reconocedor = SpeechRecognizer(config, audio)
+        val medidor = MedidorVoz(reconocedor, "voz.eco_vocal", PAUSA_FIN_FRASE_MS)
         val evaluacion = PronunciationAssessmentConfig(
             referencia,
             PronunciationAssessmentGradingSystem.HundredMark,
@@ -64,7 +74,7 @@ class EvaluadorAzure @Inject constructor() {
             }
             resultado.use {
                 when (it.reason) {
-                    ResultReason.RecognizedSpeech -> convertir(referencia, it)
+                    ResultReason.RecognizedSpeech -> convertir(referencia, it).also { _ -> medidor.registrar(it) }
                     // Silencio o ruido: "no fue legible", se pide repetir (CU-05 A1).
                     ResultReason.NoMatch -> noLegible(referencia)
                     else -> throw FalloAzure("Azure canceló el reconocimiento (${it.reason})")
