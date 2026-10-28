@@ -2,6 +2,8 @@ package com.xpspeak.app.feature.lessons.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xpspeak.app.core.medicion.Meta
+import com.xpspeak.app.core.medicion.Tiempos
 import com.xpspeak.app.feature.lessons.data.LeccionesRepository
 import com.xpspeak.app.feature.lessons.data.RepasoResponse
 import com.xpspeak.app.feature.lessons.data.SesionRepasoDto
@@ -56,8 +58,12 @@ class RepasoViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(enviando = true, error = null)
             val estado = _uiState.value
+            val enviado = Tiempos.ahora()
             repository.enviarRepaso(estado.attemptId, estado.respuestas)
-                .onSuccess { resultado -> _uiState.value = _uiState.value.copy(enviando = false, resultado = resultado) }
+                .onSuccess { resultado ->
+                    Tiempos.desde("repaso.calificacion", enviado, Meta.RN05)
+                    _uiState.value = _uiState.value.copy(enviando = false, resultado = resultado)
+                }
                 .onFailure { excepcion -> _uiState.value = _uiState.value.copy(enviando = false, error = excepcion.message) }
         }
     }

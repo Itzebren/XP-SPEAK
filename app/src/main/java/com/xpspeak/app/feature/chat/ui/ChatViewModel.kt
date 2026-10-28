@@ -3,6 +3,8 @@ package com.xpspeak.app.feature.chat.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xpspeak.app.core.actividad.RegistroActividad
+import com.xpspeak.app.core.medicion.Meta
+import com.xpspeak.app.core.medicion.Tiempos
 import com.xpspeak.app.feature.chat.data.ChatRepository
 import com.xpspeak.app.feature.chat.data.CorreccionDto
 import com.xpspeak.app.feature.chat.data.EventoRespuesta
@@ -95,16 +97,22 @@ class ChatViewModel @Inject constructor(
 
         viewModelScope.launch {
             var respuesta = ""
+            // Tabla 93: desde que se envía el mensaje (con voz, ya evaluada la pronunciación).
+            val enviado = Tiempos.ahora()
             try {
                 // RF-06/RN-02: se lee en cada envío por si el usuario cambió de nivel.
                 repository.enviarMensaje(texto, repository.nivelDelUsuario(), historialParaApi).collect { evento ->
                     when (evento) {
-                        is EventoRespuesta.Correccion -> _uiState.value = _uiState.value.copy(
-                            mensajes = _uiState.value.mensajes.mapIndexed { i, mensaje ->
-                                if (i == indiceUsuario) mensaje.copy(correccion = evento.correccion) else mensaje
-                            }
-                        )
+                        is EventoRespuesta.Correccion -> {
+                            Tiempos.desde("chat.correccion", enviado, Meta.RN05)
+                            _uiState.value = _uiState.value.copy(
+                                mensajes = _uiState.value.mensajes.mapIndexed { i, mensaje ->
+                                    if (i == indiceUsuario) mensaje.copy(correccion = evento.correccion) else mensaje
+                                }
+                            )
+                        }
                         is EventoRespuesta.Pedazo -> {
+                            if (respuesta.isEmpty()) Tiempos.desde("chat.primer_pedazo", enviado, Meta.RNF02)
                             // RNF-02: la burbuja aparece con el primer pedazo y crece con cada uno.
                             val anteriores = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
                             respuesta += evento.texto
@@ -115,6 +123,7 @@ class ChatViewModel @Inject constructor(
                     }
                 }
                 if (respuesta.isEmpty()) throw IllegalStateException("Respuesta vacía del servidor")
+                Tiempos.desde("chat.respuesta_completa", enviado, Meta.RNF02)
                 _uiState.value = _uiState.value.copy(
                     mensajes = _uiState.value.mensajes.dropLast(1) + MensajeUi(respuesta, esUsuario = false),
                     cargando = false

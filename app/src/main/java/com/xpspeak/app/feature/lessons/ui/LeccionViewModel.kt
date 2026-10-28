@@ -3,6 +3,8 @@ package com.xpspeak.app.feature.lessons.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xpspeak.app.core.medicion.Meta
+import com.xpspeak.app.core.medicion.Tiempos
 import com.xpspeak.app.feature.lessons.data.EnvioIntento
 import com.xpspeak.app.feature.lessons.data.IntentoResponse
 import com.xpspeak.app.feature.lessons.data.LeccionDto
@@ -92,8 +94,14 @@ class LeccionViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(enviando = true, error = null)
             val estado = _uiState.value
+            val enviado = Tiempos.ahora()
             repository.enviarIntento(leccionId, estado.attemptId, estado.respuestas)
                 .onSuccess { envio ->
+                    // RN-05: la retroalimentación gramatical de la evaluación (sin red se califica en el teléfono).
+                    Tiempos.desde(
+                        "leccion.calificacion", enviado, Meta.RN05,
+                        if (envio is EnvioIntento.Pendiente) "sin conexión, calificada en el teléfono" else null
+                    )
                     _uiState.value = _uiState.value.copy(
                         enviando = false,
                         resultado = envio.resultado,
