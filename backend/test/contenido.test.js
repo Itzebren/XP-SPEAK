@@ -98,3 +98,20 @@ for (const nivel of ['A1', 'A2']) {
     assert.ok(final.body.lecciones.every((l) => l.estado === 'completada'));
   });
 }
+
+test('APK: assets/lecciones/contenido.json está al día con las lecciones (npm run exportar:lecciones)', () => {
+  const fs = require('fs');
+  const { RUTA_CONTENIDO, construirContenido, serializarContenido } = require('../scripts/exportar-lecciones');
+  // Git en Windows (core.autocrlf) puede dejar el archivo con \r\n; el contenido es el mismo.
+  const actual = fs.readFileSync(RUTA_CONTENIDO, 'utf-8').replace(/\r\n/g, '\n');
+  assert.equal(actual, serializarContenido(construirContenido()), 'Las lecciones del APK están viejas: corre `npm run exportar:lecciones`');
+});
+
+test('APK: el contenido empaquetado trae todas las lecciones, sin la autoría', () => {
+  const { construirContenido } = require('../scripts/exportar-lecciones');
+  const contenido = construirContenido();
+  const enManifiesto = Object.values(contenido.niveles).flat().map((e) => e.id);
+  assert.deepEqual(contenido.lecciones.map((l) => l.id), enManifiesto);
+  assert.equal(contenido.lecciones.length, leerLeccionesDeDisco().length);
+  assert.ok(contenido.lecciones.every((l) => !('autoria' in l)));
+});

@@ -42,8 +42,9 @@ class ErrorDelServidor(val codigo: Int, mensaje: String) : Exception(mensaje)
  * RF-10/RF-12/RF-13: consume el backend de Lecciones. El servidor saca el uid
  * del ID token de Firebase, así que cada llamada manda "Bearer <token>".
  *
- * Offline-first (backend/docs/lecciones-diseno.md §3 y §6.2): las lecciones y el último
- * catálogo se guardan en Room; sin conexión la evaluación se califica en el
+ * Offline-first (backend/docs/lecciones-diseno.md §3 y §6.2): las lecciones vienen en el
+ * APK (LeccionesLocales), las versiones más nuevas y el último catálogo se guardan
+ * en Room; sin conexión la evaluación se califica en el
  * teléfono y el intento se reenvía después con el mismo attempt_id, para que
  * el servidor no duplique el XP.
  */
@@ -52,6 +53,7 @@ class LeccionesRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val usuarioDao: UsuarioDao,
     private val dao: LeccionesDao,
+    private val leccionesLocales: LeccionesLocales,
     private val registroActividad: RegistroActividad,
     @ApplicationContext private val context: Context
 ) {
@@ -77,13 +79,10 @@ class LeccionesRepository @Inject constructor(
                 Catalogo(dto, sinConexion = false, intentosPendientes = dao.contarPendientes(uid))
             },
             onFailure = { _ ->
-                val dto = if (cache != null) {
-                    gson.fromJson(cache.json, CatalogoDto::class.java)
-                } else {
-                    val mock = LeccionesMockData.catalogoMock(nivel)
-                    dao.guardarCatalogo(CatalogoCacheEntity(uid, nivel, gson.toJson(mock)))
-                    mock
-                }
+                // Sin caché (primer uso sin red): el catálogo del APK, como el de un usuario nuevo.
+                // No se guarda, para que no tape el progreso real cuando vuelva la red.
+                val dto = cache?.let { gson.fromJson(it.json, CatalogoDto::class.java) }
+                    ?: leccionesLocales.catalogo(nivel)
                 Catalogo(
                     dto,
                     sinConexion = true,
@@ -94,37 +93,35 @@ class LeccionesRepository @Inject constructor(
     }
 
     /**
-     * Descarga las lecciones del nivel que falten o cambiaron según el manifiesto,
-     * para que después se puedan abrir sin conexión (RN-11).
+     * Descarga a Room solo las lecciones del nivel que el servidor tenga más nuevas
+     * que el APK y que la caché; las demás ya vienen empaquetadas (RN-11).
      */
     suspend fun sincronizarContenido(): Result<Unit> = runCatching {
-        runCatching {
-            val manifiesto = cuerpo(api.manifiesto())
-            val vigentes = manifiesto.niveles.values.flatten().map { it.id }
-            if (vigentes.isNotEmpty()) dao.borrarLeccionesExcepto(vigentes)
+        val manifiesto = cuerpo(api.manifiesto())
+        val vigentes = manifiesto.niveles.values.flatten().map { it.id }
+        if (vigentes.isNotEmpty()) dao.borrarLeccionesExcepto(vigentes)
 
-            val locales = dao.versiones().associate { it.id to it.version }
-            manifiesto.niveles[nivelDelUsuario()].orEmpty()
-                .filter { locales[it.id] != it.version }
-                .forEach { entrada ->
-                    val dto = pedir { api.leccion(it, entrada.id) }
-                    dao.guardarLeccion(LeccionCacheEntity(entrada.id, entrada.version, gson.toJson(dto)))
-                }
-        }.onFailure {
-            // Guardar lecciones de prueba si no se pueden descargar del servidor
-            val mock1 = LeccionesMockData.leccionMock("a1-saludos")
-            val mock2 = LeccionesMockData.leccionMock("a1-personal")
-            dao.guardarLeccion(LeccionCacheEntity(mock1.id, version = 1, json = gson.toJson(mock1)))
-            dao.guardarLeccion(LeccionCacheEntity(mock2.id, version = 1, json = gson.toJson(mock2)))
-        }
+        val enApk = leccionesLocales.versiones()
+        val enRoom = dao.versiones().associate { it.id to it.version }
+        manifiesto.niveles[nivelDelUsuario()].orEmpty()
+            .filter { it.version > maxOf(enApk[it.id] ?: 0, enRoom[it.id] ?: 0) }
+            .forEach { entrada ->
+                val dto = pedir { api.leccion(it, entrada.id) }
+                dao.guardarLeccion(LeccionCacheEntity(entrada.id, entrada.version, gson.toJson(dto)))
+            }
     }
 
-    /** Usa la copia local si existe; la sincronización del manifiesto la mantiene al día. */
+    /**
+     * La copia de Room solo gana si es más nueva que la del APK (la bajó el manifiesto);
+     * si la lección no está en ninguna de las dos, se pide al servidor.
+     */
     suspend fun leccion(id: String): Result<LeccionDto> = runCatching {
-        dao.leccion(id)?.let { return@runCatching gson.fromJson(it.json, LeccionDto::class.java) }
-        val dto = runCatching { pedir { api.leccion(it, id) } }.getOrElse {
-            LeccionesMockData.leccionMock(id)
+        val cache = dao.leccion(id)
+        if (cache != null && cache.version > (leccionesLocales.versiones()[id] ?: -1)) {
+            return@runCatching gson.fromJson(cache.json, LeccionDto::class.java)
         }
+        leccionesLocales.leccion(id)?.let { return@runCatching it }
+        val dto = pedir { api.leccion(it, id) }
         dao.guardarLeccion(LeccionCacheEntity(id, version = 0, json = gson.toJson(dto)))
         dto
     }
