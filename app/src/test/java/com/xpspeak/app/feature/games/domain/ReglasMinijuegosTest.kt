@@ -116,10 +116,39 @@ class ReglasMinijuegosTest {
     }
 
     @Test
+    fun `sin conexion una confianza de cero en todas no vuelve ilegible lo que si se entendio`() {
+        val evaluacion = Pronunciacion.evaluarTranscripcion("Nice to meet you", listOf("nice to meet you" to 0.0f))
+        assertTrue(Pronunciacion.esLegible(evaluacion))
+        assertTrue(Pronunciacion.esAcierto(evaluacion))
+    }
+
+    @Test
+    fun `sin conexion los numeros en cifra cuentan como la palabra de la frase`() {
+        val evaluacion = Pronunciacion.evaluarTranscripcion(
+            "I usually have breakfast at seven o'clock.",
+            listOf("I usually have breakfast at 7 o'clock" to 0.9f)
+        )
+        assertEquals(100, evaluacion.puntaje)
+        assertTrue(evaluacion.palabras.all { it.error == null })
+    }
+
+    @Test
     fun `si no se oyo nada el audio no es legible y no cuenta como intento`() {
         val evaluacion = Pronunciacion.evaluarTranscripcion("Hello, how are you?", emptyList())
         assertFalse(Pronunciacion.esLegible(evaluacion))
         assertFalse(Pronunciacion.esAcierto(evaluacion))
         assertEquals(4, evaluacion.palabras.size)
+    }
+
+    @Test
+    fun `en Rafaga yes acepta el par, no lo manda al bote y lo demas se ignora`() {
+        assertEquals(true, RespuestaVoz.interpretar("Yes."))
+        assertEquals(true, RespuestaVoz.interpretar("yeah"))
+        assertEquals(false, RespuestaVoz.interpretar("No!"))
+        assertEquals(false, RespuestaVoz.interpretar("Wrong"))
+        // Cuenta la primera que dijo.
+        assertEquals(false, RespuestaVoz.interpretar("no, yes"))
+        assertEquals(null, RespuestaVoz.interpretar("Hmm"))
+        assertEquals(null, RespuestaVoz.interpretar(""))
     }
 }

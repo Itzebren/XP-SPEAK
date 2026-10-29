@@ -197,7 +197,7 @@ private fun Resultado(
 }
 
 @Composable
-private fun DetallePalabra(palabra: PalabraEvaluada, onEscuchar: () -> Unit) {
+internal fun DetallePalabra(palabra: PalabraEvaluada, onEscuchar: () -> Unit) {
     Surface(color = XPBlanco, shape = MaterialTheme.shapes.small, modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -236,7 +236,7 @@ private fun Metrica(nombre: String, valor: Double) {
 
 /** Mismos colores que Eco Vocal (verde/amarillo/rojo). */
 @Composable
-private fun colorPorNivel(nivel: Pronunciacion.Nivel): Color = when (nivel) {
+internal fun colorPorNivel(nivel: Pronunciacion.Nivel): Color = when (nivel) {
     Pronunciacion.Nivel.BUENO -> XPVerdeExito
     Pronunciacion.Nivel.REGULAR -> Color(0xFFF9A825)
     Pronunciacion.Nivel.MALO -> MaterialTheme.colorScheme.error

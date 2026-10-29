@@ -42,6 +42,9 @@ class EvaluadorAzure @Inject constructor() {
             // usuario tarda en empezar y corta en la primera pausa, y todo sale "no legible".
             setProperty(PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, "15000")
             setProperty(PropertyId.SpeechServiceConnection_EndSilenceTimeoutMs, "3000")
+            // recognizeOnce termina la frase con esta pausa (≈500 ms de fábrica): una respiración a
+            // media oración la cortaba y el resto salía como "omitido".
+            setProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, "1500")
         }
         val audio = AudioConfig.fromDefaultMicrophoneInput()
         val reconocedor = SpeechRecognizer(config, audio)

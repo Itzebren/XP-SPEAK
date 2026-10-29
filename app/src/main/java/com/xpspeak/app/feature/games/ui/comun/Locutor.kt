@@ -1,6 +1,7 @@
 package com.xpspeak.app.feature.games.ui.comun
 
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
@@ -22,28 +23,55 @@ class Locutor internal constructor() {
         hablar(listOf(Fragmento(texto, esEspanol = false)), lento)
     }
 
+    /** Aviso pendiente de "ya terminé" y el id de la última frase encolada que lo dispara. */
+    private var alTerminar: (() -> Unit)? = null
+    @Volatile private var ultimaFrase: String? = null
+
+    internal val progreso = object : UtteranceProgressListener() {
+        override fun onStart(utteranceId: String?) {}
+        override fun onDone(utteranceId: String?) {
+            if (utteranceId == ultimaFrase) avisarFin()
+        }
+        @Deprecated("Deprecated in Java")
+        override fun onError(utteranceId: String?) {
+            if (utteranceId == ultimaFrase) avisarFin()
+        }
+    }
+
     /**
      * Para el chat: la IA a veces explica en español. Cada oración se lee con la
      * voz de su idioma; con la voz en inglés el español no se entiende.
+     * [alTerminar] se llama al acabar de hablar (chat en vivo: vuelve a abrir el micrófono).
      */
-    fun decirConIdiomas(texto: String) {
-        hablar(fragmentosPorIdioma(texto), lento = false)
+    fun decirConIdiomas(texto: String, alTerminar: (() -> Unit)? = null) {
+        hablar(fragmentosPorIdioma(texto), lento = false, alTerminar)
     }
 
-    private fun hablar(fragmentos: List<Fragmento>, lento: Boolean) {
-        val motor = tts?.takeIf { listo } ?: return
+    private fun hablar(fragmentos: List<Fragmento>, lento: Boolean, alTerminar: (() -> Unit)? = null) {
+        // Si se repite otra frase mientras hay un aviso pendiente, el aviso espera a que acabe la nueva.
+        synchronized(this) { if (alTerminar != null) this.alTerminar = alTerminar }
+        val motor = tts?.takeIf { listo }
+        if (motor == null || fragmentos.isEmpty()) return avisarFin()
         // 0.5: a 0.7 la diferencia casi no se notaba en palabras sueltas.
         motor.setSpeechRate(if (lento) 0.5f else 0.95f)
         fragmentos.forEachIndexed { i, fragmento ->
             // El idioma se toma al encolar cada frase, así que puede cambiar entre una y otra.
             motor.language = espanol?.takeIf { fragmento.esEspanol } ?: Locale.US
             val modo = if (i == 0) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD
-            motor.speak(fragmento.texto, modo, null, "${fragmento.texto.hashCode()}-$i")
+            val id = "${fragmento.texto.hashCode()}-$i-${System.nanoTime()}"
+            if (i == fragmentos.lastIndex) ultimaFrase = id
+            motor.speak(fragmento.texto, modo, null, id)
         }
     }
 
     fun callar() {
         tts?.stop()
+        avisarFin()
+    }
+
+    private fun avisarFin() {
+        val aviso = synchronized(this) { alTerminar.also { alTerminar = null } }
+        aviso?.invoke()
     }
 }
 
@@ -90,6 +118,7 @@ fun rememberLocutor(): Locutor {
             if (estado == TextToSpeech.SUCCESS) {
                 val motor = locutor.tts ?: return@TextToSpeech
                 motor.language = Locale.US
+                motor.setOnUtteranceProgressListener(locutor.progreso)
                 locutor.espanol = listOf("es-MX", "es-US", "es-ES", "es")
                     .map(Locale::forLanguageTag)
                     .firstOrNull { motor.isLanguageAvailable(it) >= TextToSpeech.LANG_AVAILABLE }
