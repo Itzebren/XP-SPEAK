@@ -33,6 +33,8 @@ data class AuthUiState(
     val aviso: String? = null,
     /** RN-01: la cuenta existe pero su correo aún no se confirma con el enlace. */
     val pendienteVerificacion: Boolean = false,
+    /** Al abrir la app con una sesión guardada: se decide a dónde ir sin mostrar el formulario. */
+    val retomandoSesion: Boolean = false,
     val destino: DestinoPostAuth = DestinoPostAuth.NINGUNO
 )
 
@@ -44,6 +46,27 @@ class AuthViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
+
+    init {
+        retomarSesion()
+    }
+
+    /**
+     * Firebase guarda la sesión en el teléfono: si ya hay una, no se vuelve a pedir
+     * iniciar sesión. Funciona sin conexión (el perfil está en Room); si el correo
+     * aún no se verifica, se va directo al aviso de verificación (RN-01).
+     */
+    private fun retomarSesion() {
+        val usuario = authRepository.usuarioActual ?: return
+        _uiState.value = _uiState.value.copy(retomandoSesion = true, correo = usuario.email.orEmpty())
+        viewModelScope.launch {
+            if (usuario.isEmailVerified) {
+                continuar(usuario.uid)
+            } else {
+                _uiState.value = _uiState.value.copy(retomandoSesion = false, pendienteVerificacion = true)
+            }
+        }
+    }
 
     fun cambiarModo(modo: AuthMode) {
         _uiState.value = _uiState.value.copy(modo = modo, error = null)
@@ -155,7 +178,7 @@ class AuthViewModel @Inject constructor(
     private suspend fun continuar(uid: String) {
         val tienePerfil = perfilRepository.existePerfil(uid)
         val destino = if (tienePerfil) DestinoPostAuth.HOME else DestinoPostAuth.SELECCIONAR_NIVEL
-        _uiState.value = _uiState.value.copy(cargando = false, pendienteVerificacion = false, destino = destino)
+        _uiState.value = _uiState.value.copy(cargando = false, retomandoSesion = false, pendienteVerificacion = false, destino = destino)
     }
 
     private fun mapearError(excepcion: Throwable): String = when (excepcion) {
