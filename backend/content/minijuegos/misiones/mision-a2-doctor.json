@@ -24,7 +24,7 @@
       "npc_es": "Buenos días. ¿Cómo te sientes?",
       "opciones": [
         { "en": "I feel sick. My head is a headache.", "correcta": false, "feedback": "Se dice 'I've got a headache' (tengo dolor de cabeza)." },
-        { "en": "I feel sick. I've got a headache.", "correcta": true, "cumple": "sintomas", "concepto_id": "voc.salud.headache" },
+        { "en": "I feel sick. I've got a headache.", "correcta": true, "aceptadas": ["I feel sick. I have got a headache.", "I feel sick. I have a headache.", "I've got a headache.", "I don't feel well. I've got a headache."], "cumple": "sintomas", "concepto_id": "voc.salud.headache" },
         { "en": "I went to the beach by bus.", "correcta": false, "feedback": "La doctora te pregunta cómo te sientes hoy." }
       ]
     },
@@ -32,7 +32,7 @@
       "npc": "Have you got a sore throat too?",
       "npc_es": "¿También te duele la garganta?",
       "opciones": [
-        { "en": "Yes, I have. It hurts a lot.", "correcta": true, "concepto_id": "voc.salud.hurt" },
+        { "en": "Yes, I have. It hurts a lot.", "correcta": true, "aceptadas": ["Yes, I have got a sore throat. It hurts a lot.", "Yes, it hurts a lot.", "Yes, I've got a sore throat.", "Yes, I have. It hurts."], "concepto_id": "voc.salud.hurt" },
         { "en": "Yes, I have. It hurt a lot.", "correcta": false, "feedback": "Hablas de ahora, y con 'it' el presente lleva -s: It hurts." },
         { "en": "No, I'm a dentist.", "correcta": false, "feedback": "No responde a la pregunta sobre tu garganta." }
       ]
@@ -43,14 +43,14 @@
       "opciones": [
         { "en": "OK. Do I should go to work tomorrow?", "correcta": false, "feedback": "Con 'should' no se usa 'do': Should I go…?" },
         { "en": "OK. I should eat a lot of sugar.", "correcta": false, "feedback": "Eso no es lo que te recomendó la doctora." },
-        { "en": "OK. Should I go to work tomorrow?", "correcta": true, "cumple": "consejo", "concepto_id": "gram.should_advice" }
+        { "en": "OK. Should I go to work tomorrow?", "correcta": true, "aceptadas": ["Should I go to work tomorrow?", "OK. Can I go to work tomorrow?", "OK, thanks. Should I go to work tomorrow?"], "cumple": "consejo", "concepto_id": "gram.should_advice" }
       ]
     },
     {
       "npc": "No, you shouldn't. You should stay at home.",
       "npc_es": "No, no deberías. Deberías quedarte en casa.",
       "opciones": [
-        { "en": "Do I have to take any medicine?", "correcta": true, "cumple": "medicina", "concepto_id": "gram.have_to_obligation" },
+        { "en": "Do I have to take any medicine?", "correcta": true, "aceptadas": ["Do I need to take any medicine?", "Do I have to take medicine?", "Should I take any medicine?", "Do I have to take some medicine?"], "cumple": "medicina", "concepto_id": "gram.have_to_obligation" },
         { "en": "Do I has to take any medicine?", "correcta": false, "feedback": "Con 'I' se usa 'have': Do I have to…?" },
         { "en": "I have to go to the airport.", "correcta": false, "feedback": "La doctora te dijo que te quedes en casa." }
       ]
@@ -59,7 +59,7 @@
       "npc": "Yes. You have to take this medicine every eight hours.",
       "npc_es": "Sí. Tienes que tomar esta medicina cada ocho horas.",
       "opciones": [
-        { "en": "OK, every eight hours. Thank you, doctor!", "correcta": true, "concepto_id": "voc.salud.medicine" },
+        { "en": "OK, every eight hours. Thank you, doctor!", "correcta": true, "aceptadas": ["Every eight hours. Thank you, doctor!", "OK, thank you, doctor!", "OK, every eight hours. Thanks!", "Thank you very much, doctor!"], "concepto_id": "voc.salud.medicine" },
         { "en": "OK, every eight days. Thank you!", "correcta": false, "feedback": "Dijo 'every eight hours': cada ocho horas, no días." },
         { "en": "You should rest, doctor.", "correcta": false, "feedback": "Tú eres quien está enfermo: agradece el consejo." }
       ]

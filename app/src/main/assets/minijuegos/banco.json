@@ -1,6 +1,6 @@
 {
  "version": 1,
- "version_contenido": "2aa673a922b6",
+ "version_contenido": "4692500d5333",
  "lecciones": [
   {
    "id": "a1-saludos-presentaciones",
@@ -3127,6 +3127,12 @@
       {
        "en": "Yes, I'm hungry!",
        "correcta": true,
+       "aceptadas": [
+        "Yes, I am hungry.",
+        "Yes, I'm very hungry.",
+        "Yes, I am.",
+        "Yes, a little."
+       ],
        "concepto_id": "voc.comida.hungry"
       },
       {
@@ -3143,6 +3149,12 @@
       {
        "en": "I want some bread and an egg, please.",
        "correcta": true,
+       "aceptadas": [
+        "Some bread and an egg, please.",
+        "Bread and an egg, please.",
+        "I'd like some bread and an egg, please.",
+        "Can I have some bread and an egg, please?"
+       ],
        "cumple": "comida",
        "concepto_id": "gram.some_any"
       },
@@ -3175,6 +3187,13 @@
       {
        "en": "No, I don't. I want some juice.",
        "correcta": true,
+       "aceptadas": [
+        "No, thank you. I want some juice.",
+        "No, thanks. I want some juice.",
+        "No, I want some juice.",
+        "No, I'd like some juice, please.",
+        "No. Some juice, please."
+       ],
        "cumple": "bebida",
        "concepto_id": "gram.present_simple_negative_questions"
       }
@@ -3192,6 +3211,13 @@
       {
        "en": "No, I don't. Thank you!",
        "correcta": true,
+       "aceptadas": [
+        "No, thank you.",
+        "No, thanks.",
+        "No, I don't.",
+        "No, thank you very much.",
+        "No, I don't, thanks."
+       ],
        "cumple": "agradecer",
        "concepto_id": "gram.present_simple_negative_questions"
       },
@@ -3244,6 +3270,12 @@
       {
        "en": "Excuse me, is there a bank near here?",
        "correcta": true,
+       "aceptadas": [
+        "Is there a bank near here?",
+        "Excuse me, where is the bank?",
+        "Where is the bank, please?",
+        "Excuse me, is there a bank nearby?"
+       ],
        "cumple": "preguntar",
        "concepto_id": "voc.ciudad.excuse_me"
       }
@@ -3256,6 +3288,12 @@
       {
        "en": "OK. Go straight and turn left.",
        "correcta": true,
+       "aceptadas": [
+        "Go straight and turn left.",
+        "OK, go straight and then turn left.",
+        "OK, straight and then left.",
+        "Straight and turn left. Thank you!"
+       ],
        "cumple": "indicaciones",
        "concepto_id": "gram.imperatives"
       },
@@ -3283,6 +3321,13 @@
       {
        "en": "Great! Thank you very much!",
        "correcta": true,
+       "aceptadas": [
+        "Thank you very much!",
+        "Thank you!",
+        "Thanks a lot!",
+        "Great, thanks!",
+        "OK, thank you!"
+       ],
        "cumple": "agradecer",
        "concepto_id": "gram.this_that_these_those"
       },
@@ -3325,6 +3370,11 @@
       {
        "en": "Good morning!",
        "correcta": true,
+       "aceptadas": [
+        "Good morning to you!",
+        "Hello, good morning!",
+        "Hi! Good morning!"
+       ],
        "cumple": "saludar",
        "concepto_id": "voc.saludos.good_morning"
       },
@@ -3352,6 +3402,12 @@
       {
        "en": "My name is Diego.",
        "correcta": true,
+       "aceptadas": [
+        "I'm Diego.",
+        "I am Diego.",
+        "My name's Diego.",
+        "Diego. My name is Diego."
+       ],
        "cumple": "presentarte",
        "concepto_id": "voc.saludos.my_name_is"
       },
@@ -3379,6 +3435,13 @@
       {
        "en": "I'm fine, thank you.",
        "correcta": true,
+       "aceptadas": [
+        "I am fine, thank you.",
+        "I'm fine, thanks.",
+        "Fine, thank you.",
+        "I'm good, thank you.",
+        "I'm very well, thank you."
+       ],
        "concepto_id": "voc.saludos.fine_thank_you"
       }
      ]
@@ -3390,6 +3453,13 @@
       {
        "en": "Goodbye! See you later!",
        "correcta": true,
+       "aceptadas": [
+        "See you later!",
+        "Bye! See you later!",
+        "Goodbye!",
+        "See you!",
+        "Bye, see you later!"
+       ],
        "cumple": "despedirte",
        "concepto_id": "voc.saludos.goodbye"
       },
@@ -3437,6 +3507,12 @@
       {
        "en": "Yes, please. I'd like this blue T-shirt.",
        "correcta": true,
+       "aceptadas": [
+        "Yes, please. I would like this blue T-shirt.",
+        "Yes, I'd like this blue T-shirt.",
+        "Yes, please. This blue T-shirt.",
+        "I'd like this blue T-shirt, please."
+       ],
        "cumple": "pedir",
        "concepto_id": "gram.would_like"
       },
@@ -3469,6 +3545,12 @@
       {
        "en": "Thank you. How much is it?",
        "correcta": true,
+       "aceptadas": [
+        "How much is it?",
+        "Thanks. How much is it?",
+        "Thank you. How much does it cost?",
+        "How much is this T-shirt?"
+       ],
        "cumple": "precio",
        "concepto_id": "gram.how_much_price"
       }
@@ -3481,6 +3563,12 @@
       {
        "en": "Great, it's cheap! Can I pay by card?",
        "correcta": true,
+       "aceptadas": [
+        "It's cheap! Can I pay by card?",
+        "Can I pay by card?",
+        "Great! Can I pay by card, please?",
+        "OK, can I pay by card?"
+       ],
        "cumple": "pagar",
        "concepto_id": "voc.compras.card"
       },
@@ -3508,6 +3596,12 @@
       {
        "en": "No, thank you.",
        "correcta": true,
+       "aceptadas": [
+        "No, thanks.",
+        "No, thank you very much.",
+        "No, I don't need a bag.",
+        "No bag, thank you."
+       ],
        "concepto_id": "gram.would_like"
       },
       {
@@ -3554,6 +3648,12 @@
       {
        "en": "I feel sick. I've got a headache.",
        "correcta": true,
+       "aceptadas": [
+        "I feel sick. I have got a headache.",
+        "I feel sick. I have a headache.",
+        "I've got a headache.",
+        "I don't feel well. I've got a headache."
+       ],
        "cumple": "sintomas",
        "concepto_id": "voc.salud.headache"
       },
@@ -3571,6 +3671,12 @@
       {
        "en": "Yes, I have. It hurts a lot.",
        "correcta": true,
+       "aceptadas": [
+        "Yes, I have got a sore throat. It hurts a lot.",
+        "Yes, it hurts a lot.",
+        "Yes, I've got a sore throat.",
+        "Yes, I have. It hurts."
+       ],
        "concepto_id": "voc.salud.hurt"
       },
       {
@@ -3602,6 +3708,11 @@
       {
        "en": "OK. Should I go to work tomorrow?",
        "correcta": true,
+       "aceptadas": [
+        "Should I go to work tomorrow?",
+        "OK. Can I go to work tomorrow?",
+        "OK, thanks. Should I go to work tomorrow?"
+       ],
        "cumple": "consejo",
        "concepto_id": "gram.should_advice"
       }
@@ -3614,6 +3725,12 @@
       {
        "en": "Do I have to take any medicine?",
        "correcta": true,
+       "aceptadas": [
+        "Do I need to take any medicine?",
+        "Do I have to take medicine?",
+        "Should I take any medicine?",
+        "Do I have to take some medicine?"
+       ],
        "cumple": "medicina",
        "concepto_id": "gram.have_to_obligation"
       },
@@ -3636,6 +3753,12 @@
       {
        "en": "OK, every eight hours. Thank you, doctor!",
        "correcta": true,
+       "aceptadas": [
+        "Every eight hours. Thank you, doctor!",
+        "OK, thank you, doctor!",
+        "OK, every eight hours. Thanks!",
+        "Thank you very much, doctor!"
+       ],
        "concepto_id": "voc.salud.medicine"
       },
       {
@@ -3687,6 +3810,12 @@
       {
        "en": "I went to Oaxaca.",
        "correcta": true,
+       "aceptadas": [
+        "I went to Oaxaca on vacation.",
+        "To Oaxaca.",
+        "I traveled to Oaxaca.",
+        "We went to Oaxaca."
+       ],
        "cumple": "destino",
        "concepto_id": "gram.past_simple_irregular"
       },
@@ -3714,6 +3843,12 @@
       {
        "en": "No, I didn't. I went by bus.",
        "correcta": true,
+       "aceptadas": [
+        "No, I went by bus.",
+        "No, I didn't. I took the bus.",
+        "No, by bus.",
+        "No, I traveled by bus."
+       ],
        "cumple": "transporte",
        "concepto_id": "gram.past_simple_negative_questions"
       }
@@ -3726,6 +3861,12 @@
       {
        "en": "Yes, I did. It was near the beach.",
        "correcta": true,
+       "aceptadas": [
+        "Yes, it was near the beach.",
+        "Yes, I did. The hotel was near the beach.",
+        "Yes, I stayed in a hotel near the beach.",
+        "Yes, I did."
+       ],
        "concepto_id": "voc.viajes.hotel"
       },
       {
@@ -3752,6 +3893,12 @@
       {
        "en": "Yes, I took a lot of photos!",
        "correcta": true,
+       "aceptadas": [
+        "Yes, I took many photos!",
+        "Yes, I did. I took a lot of photos!",
+        "Yes, a lot of photos!",
+        "Yes, I took lots of photos."
+       ],
        "cumple": "actividad",
        "concepto_id": "voc.viajes.take_a_photo"
       },

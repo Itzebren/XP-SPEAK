@@ -23,7 +23,7 @@
       "npc": "Hello! Can I help you?",
       "npc_es": "¡Hola! ¿Te puedo ayudar?",
       "opciones": [
-        { "en": "Yes, please. I'd like this blue T-shirt.", "correcta": true, "cumple": "pedir", "concepto_id": "gram.would_like" },
+        { "en": "Yes, please. I'd like this blue T-shirt.", "correcta": true, "aceptadas": ["Yes, please. I would like this blue T-shirt.", "Yes, I'd like this blue T-shirt.", "Yes, please. This blue T-shirt.", "I'd like this blue T-shirt, please."], "cumple": "pedir", "concepto_id": "gram.would_like" },
         { "en": "Yes, please. I like would this T-shirt.", "correcta": false, "feedback": "Para pedir algo con cortesía se dice 'I'd like…' (I would like)." },
         { "en": "Yes, I'm hungry!", "correcta": false, "feedback": "Estás en una tienda de ropa: pide la playera." }
       ]
@@ -34,14 +34,14 @@
       "opciones": [
         { "en": "How much are it?", "correcta": false, "feedback": "Con una sola cosa (it) se usa 'is': How much is it?" },
         { "en": "It's ninety pesos.", "correcta": false, "feedback": "Tú preguntas el precio; la vendedora es quien te lo dice." },
-        { "en": "Thank you. How much is it?", "correcta": true, "cumple": "precio", "concepto_id": "gram.how_much_price" }
+        { "en": "Thank you. How much is it?", "correcta": true, "aceptadas": ["How much is it?", "Thanks. How much is it?", "Thank you. How much does it cost?", "How much is this T-shirt?"], "cumple": "precio", "concepto_id": "gram.how_much_price" }
       ]
     },
     {
       "npc": "It's ninety pesos.",
       "npc_es": "Son noventa pesos.",
       "opciones": [
-        { "en": "Great, it's cheap! Can I pay by card?", "correcta": true, "cumple": "pagar", "concepto_id": "voc.compras.card" },
+        { "en": "Great, it's cheap! Can I pay by card?", "correcta": true, "aceptadas": ["It's cheap! Can I pay by card?", "Can I pay by card?", "Great! Can I pay by card, please?", "OK, can I pay by card?"], "cumple": "pagar", "concepto_id": "voc.compras.card" },
         { "en": "Great, it's cheaps!", "correcta": false, "feedback": "Los adjetivos no tienen plural en inglés: it's cheap." },
         { "en": "Turn left on Reforma Street.", "correcta": false, "feedback": "Eso es una indicación para llegar a un lugar, no tiene que ver con la compra." }
       ]
@@ -51,7 +51,7 @@
       "npc_es": "Sí, claro. ¿Quieres una bolsa?",
       "opciones": [
         { "en": "No, I'd like.", "correcta": false, "feedback": "Para decir que no con cortesía: No, thank you." },
-        { "en": "No, thank you.", "correcta": true, "concepto_id": "gram.would_like" },
+        { "en": "No, thank you.", "correcta": true, "aceptadas": ["No, thanks.", "No, thank you very much.", "No, I don't need a bag.", "No bag, thank you."], "concepto_id": "gram.would_like" },
         { "en": "Yes, I'm a bag.", "correcta": false, "feedback": "'I'm a bag' es 'soy una bolsa'. Responde 'Yes, please' o 'No, thank you'." }
       ]
     }

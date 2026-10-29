@@ -3,7 +3,10 @@ package com.xpspeak.app.feature.games.ui.mision
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -59,6 +62,7 @@ import com.xpspeak.app.feature.games.ui.comun.TarjetaJuego
 import com.xpspeak.app.feature.games.ui.comun.Veredicto
 import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MisionScreen(onVolver: () -> Unit, viewModel: MisionViewModel = hiltViewModel()) {
     val fase by viewModel.fase.collectAsState()
@@ -76,7 +80,18 @@ fun MisionScreen(onVolver: () -> Unit, viewModel: MisionViewModel = hiltViewMode
         // El personaje "habla" cada línea nueva (§5.2 paso 2).
         LaunchedEffect(estado.paso) { locutor.decir(estado.pasoActual.npc) }
 
+        // Con el teclado abierto la misión se resume en una línea para que se vea la conversación.
+        val tecladoAbierto = WindowInsets.isImeVisible
         TarjetaJuego {
+            if (tecladoAbierto) {
+                Text(
+                    "${mision.titulo} · ${estado.cumplidos.size} de ${mision.objetivos.size} objetivos",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = XPMarino
+                )
+                return@TarjetaJuego
+            }
             EtiquetaJuego("Tu misión")
             Text(mision.titulo, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = XPMarino)
             Text(mision.escenario, style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
