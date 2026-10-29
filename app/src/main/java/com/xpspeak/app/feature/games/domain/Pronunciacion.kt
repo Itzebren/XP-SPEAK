@@ -10,7 +10,9 @@ data class PalabraEvaluada(
     /** 0–100 */
     val puntaje: Int,
     /** "Omission", "Mispronunciation"… de Azure, o null si se dijo bien. */
-    val error: String? = null
+    val error: String? = null,
+    /** Sonidos mal dichos (IPA), p. ej. "/ɹ/ sonó como /ɾ/"; vacío si no hay detalle. */
+    val sonidos: List<String> = emptyList()
 )
 
 /**
