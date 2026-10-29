@@ -1,0 +1,59 @@
+{
+  "id": "mision-a1-cafeteria",
+  "version": 1,
+  "nivel": "A1",
+  "leccion_id": "a1-comida-bebida",
+  "titulo": "En la cafetería",
+  "escenario": "Llegas a una cafetería con mucha hambre. El mesero se acerca a tu mesa.",
+  "personaje": "Mesero",
+  "objetivos": [
+    { "id": "comida", "texto": "Pide algo de comer" },
+    { "id": "bebida", "texto": "Pide algo de beber" },
+    { "id": "agradecer", "texto": "Termina tu pedido con cortesía" }
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Comidas y bebidas.",
+      "MCER, Interactuar para obtener bienes y servicios, A1 (p. 80): «Es capaz de pedirle a alguien alguna cosa, y viceversa. Se desenvuelve bien con números, cantidades, precios y horarios.»"
+    ],
+    "notas": "Guion original. Usa 'want' para pedir, como la lección a1-comida-bebida; 'I'd like' se practica en la misión de compras."
+  },
+  "pasos": [
+    {
+      "npc": "Hi! Are you hungry?",
+      "npc_es": "¡Hola! ¿Tienes hambre?",
+      "opciones": [
+        { "en": "Yes, I hungry.", "correcta": false, "feedback": "'Hungry' va con to be: Yes, I'm hungry." },
+        { "en": "Yes, I'm hungry!", "correcta": true, "concepto_id": "voc.comida.hungry" },
+        { "en": "Yes, I'm water.", "correcta": false, "feedback": "No tiene sentido: 'I'm water' es 'soy agua'." }
+      ]
+    },
+    {
+      "npc": "OK! What do you want?",
+      "npc_es": "¡Bien! ¿Qué quieres?",
+      "opciones": [
+        { "en": "I want some bread and an egg, please.", "correcta": true, "cumple": "comida", "concepto_id": "gram.some_any" },
+        { "en": "I want any bread, please.", "correcta": false, "feedback": "En oraciones afirmativas se usa 'some': I want some bread." },
+        { "en": "Goodbye! See you later!", "correcta": false, "feedback": "Acabas de llegar: primero pide tu comida." }
+      ]
+    },
+    {
+      "npc": "Do you want some coffee?",
+      "npc_es": "¿Quieres café?",
+      "opciones": [
+        { "en": "No, I doesn't. I want some juice.", "correcta": false, "feedback": "Con 'I' el negativo es 'don't': No, I don't." },
+        { "en": "Yes, I am.", "correcta": false, "feedback": "Si la pregunta empieza con 'Do', la respuesta corta es 'Yes, I do' o 'No, I don't'." },
+        { "en": "No, I don't. I want some juice.", "correcta": true, "cumple": "bebida", "concepto_id": "gram.present_simple_negative_questions" }
+      ]
+    },
+    {
+      "npc": "Juice, bread and an egg. Do you want any fruit?",
+      "npc_es": "Jugo, pan y un huevo. ¿Quieres fruta?",
+      "opciones": [
+        { "en": "Yes, I want any fruit.", "correcta": false, "feedback": "En oraciones afirmativas se usa 'some': Yes, I want some fruit." },
+        { "en": "No, I don't. Thank you!", "correcta": true, "cumple": "agradecer", "concepto_id": "gram.present_simple_negative_questions" },
+        { "en": "No, I'm not fruit.", "correcta": false, "feedback": "La pregunta usa 'Do you want…?', así que la respuesta es 'No, I don't'." }
+      ]
+    }
+  ]
+}

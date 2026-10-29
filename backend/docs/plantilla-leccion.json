@@ -1,0 +1,134 @@
+{
+  "id": "a1-familia-amigos",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "Familia y amigos",
+  "orden": 4,
+  "prerequisito_id": "a1-numeros-hora",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo presentar a los miembros de mi familia.",
+    "Puedo decir de quién es algo con my, your, his, her y 's."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Identificación personal; Relaciones con otras personas.",
+      "MCER, Cuadro 1 (escala global), A1 (p. 26): «Puede presentarse a sí mismo y a otros, pedir y dar información personal básica sobre su domicilio, sus pertenencias y las personas que conoce.»",
+      "MCER, Cuadro 2 (autoevaluación), Comprensión auditiva, A1 (p. 30): «Reconozco palabras y expresiones muy básicas que se usan habitualmente, relativas a mí mismo, a mi familia y a mi entorno inmediato cuando se habla despacio y con claridad.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. 'to be' se repasa en espiral (mismo concepto_id que la lección 1). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¡Presenta a tu familia!",
+      "cuerpo": "En esta lección aprenderás los nombres de los miembros de la familia y cómo decir de quién es algo: my mother, your brother, Ana's sister."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "La familia",
+      "items": [
+        { "concepto_id": "voc.familia.family", "en": "family", "es": "familia", "audio": "tts:family" },
+        { "concepto_id": "voc.familia.mother", "en": "mother", "es": "mamá / madre", "audio": "tts:mother", "nota": "'Mom' es más informal." },
+        { "concepto_id": "voc.familia.father", "en": "father", "es": "papá / padre", "audio": "tts:father", "nota": "'Dad' es más informal." },
+        { "concepto_id": "voc.familia.parents", "en": "parents", "es": "papás / padres", "audio": "tts:parents", "nota": "Ojo: 'parents' no significa 'parientes'." },
+        { "concepto_id": "voc.familia.brother", "en": "brother", "es": "hermano", "audio": "tts:brother" },
+        { "concepto_id": "voc.familia.sister", "en": "sister", "es": "hermana", "audio": "tts:sister" },
+        { "concepto_id": "voc.familia.son", "en": "son", "es": "hijo", "audio": "tts:son" },
+        { "concepto_id": "voc.familia.daughter", "en": "daughter", "es": "hija", "audio": "tts:daughter" },
+        { "concepto_id": "voc.familia.grandmother", "en": "grandmother", "es": "abuela", "audio": "tts:grandmother" },
+        { "concepto_id": "voc.familia.friend", "en": "friend", "es": "amigo / amiga", "audio": "tts:friend" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.possessive_adjectives",
+      "titulo": "Adjetivos posesivos (my, your, his, her…)",
+      "explicacion": "Van antes del sustantivo y no cambian en plural: my (mi/mis), your (tu/tus, su/sus de usted), his (su, de él), her (su, de ella), our (nuestro), their (su, de ellos). En inglés distinguimos si el dueño es hombre (his) o mujer (her).",
+      "ejemplos": ["This is my brother.", "Her name is Ana.", "His parents are from Oaxaca."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.possessive_s",
+      "titulo": "El posesivo 's (Ana's sister)",
+      "explicacion": "Para decir de quién es algo con un nombre, agregamos 's al dueño y después va la cosa: Ana's sister = la hermana de Ana. El orden es al revés que en español.",
+      "ejemplos": ["Diego's father is a teacher.", "My friend's name is Luis."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "Fotos de la familia",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Ana", "en": "Look! This is my family.", "es": "¡Mira! Esta es mi familia." },
+        { "hablante": "Diego", "en": "Who is she?", "es": "¿Quién es ella?" },
+        { "hablante": "Ana", "en": "She's my sister. Her name is Sofía.", "es": "Es mi hermana. Se llama Sofía." },
+        { "hablante": "Diego", "en": "And is he your father?", "es": "¿Y él es tu papá?" },
+        { "hablante": "Ana", "en": "No, he's my grandmother's brother!", "es": "¡No, es el hermano de mi abuela!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.familia.parents",
+          "enunciado": "¿Qué significa 'parents'?",
+          "opciones": ["papás", "parientes", "hermanos"],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Parents' son el papá y la mamá. 'Parientes' en inglés es 'relatives'."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.possessive_adjectives",
+          "enunciado": "Sofía is my sister. ___ name is Sofía.",
+          "respuesta_correcta": "Her",
+          "acepta": ["her"],
+          "feedback_error": "Sofía es mujer, así que usamos 'her'. 'His' es para un hombre."
+        },
+        {
+          "id": "q3",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.possessive_s",
+          "enunciado": "¿Cómo dices 'el papá de Diego'?",
+          "opciones": ["the father of Diego's", "Diego father", "Diego's father"],
+          "respuesta_correcta": 2,
+          "feedback_error": "Primero va el dueño con 's y después la cosa: Diego's father."
+        },
+        {
+          "id": "q4",
+          "tipo": "completar",
+          "concepto_id": "gram.verb_to_be_present",
+          "enunciado": "My brothers ___ students.",
+          "respuesta_correcta": "are",
+          "acepta": ["are"],
+          "feedback_error": "'My brothers' es plural, así que usamos 'are'."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.possessive_adjectives",
+          "enunciado": "Luis y Marta tienen una casa. ___ house is big.",
+          "opciones": ["His", "Their", "Her", "Our"],
+          "respuesta_correcta": 1,
+          "feedback_error": "El dueño son dos personas (ellos), así que usamos 'their'."
+        },
+        {
+          "id": "q6",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su significado.",
+          "feedback_error": "Repasa la tabla de la familia.",
+          "pares": [
+            { "concepto_id": "voc.familia.brother", "izq": "brother", "der": "hermano" },
+            { "concepto_id": "voc.familia.daughter", "izq": "daughter", "der": "hija" },
+            { "concepto_id": "voc.familia.grandmother", "izq": "grandmother", "der": "abuela" },
+            { "concepto_id": "voc.familia.friend", "izq": "friend", "der": "amigo / amiga" }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "mision-a2-vacaciones",
+  "version": 1,
+  "nivel": "A2",
+  "leccion_id": "a2-viajes-transporte",
+  "titulo": "¿Qué tal tus vacaciones?",
+  "escenario": "Regresaste de vacaciones y tu amigo Luis quiere saber cómo te fue.",
+  "personaje": "Luis",
+  "objetivos": [
+    { "id": "destino", "texto": "Di a dónde fuiste" },
+    { "id": "transporte", "texto": "Di cómo viajaste" },
+    { "id": "actividad", "texto": "Cuenta qué hiciste" }
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Viajes.",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe planes y citas, costumbres, actividades habituales o pertenecientes al pasado y experiencias personales.»"
+    ],
+    "notas": "Guion original basado en el diálogo de la lección a2-viajes-transporte."
+  },
+  "pasos": [
+    {
+      "npc": "Hi! Where did you go on vacation?",
+      "npc_es": "¡Hola! ¿A dónde fuiste de vacaciones?",
+      "opciones": [
+        { "en": "I goed to Oaxaca.", "correcta": false, "feedback": "'Go' es irregular: en pasado es 'went'." },
+        { "en": "I went to Oaxaca.", "correcta": true, "cumple": "destino", "concepto_id": "gram.past_simple_irregular" },
+        { "en": "I go to Oaxaca every day.", "correcta": false, "feedback": "Luis pregunta por el pasado (did), así que responde en pasado: I went…" }
+      ]
+    },
+    {
+      "npc": "Cool! Did you go by plane?",
+      "npc_es": "¡Qué padre! ¿Fuiste en avión?",
+      "opciones": [
+        { "en": "No, I didn't went by plane.", "correcta": false, "feedback": "Después de 'didn't' el verbo va en forma base: I didn't go." },
+        { "en": "Yes, I am.", "correcta": false, "feedback": "A 'Did you…?' se responde 'Yes, I did' o 'No, I didn't'." },
+        { "en": "No, I didn't. I went by bus.", "correcta": true, "cumple": "transporte", "concepto_id": "gram.past_simple_negative_questions" }
+      ]
+    },
+    {
+      "npc": "Did you stay in a hotel?",
+      "npc_es": "¿Te quedaste en un hotel?",
+      "opciones": [
+        { "en": "Yes, I did. It was near the beach.", "correcta": true, "concepto_id": "voc.viajes.hotel" },
+        { "en": "Yes, I do. It was near the beach.", "correcta": false, "feedback": "La pregunta está en pasado (Did), así que la respuesta es 'Yes, I did'." },
+        { "en": "My suitcase is blue.", "correcta": false, "feedback": "No responde a la pregunta sobre el hotel." }
+      ]
+    },
+    {
+      "npc": "Great! Did you take any photos?",
+      "npc_es": "¡Genial! ¿Tomaste fotos?",
+      "opciones": [
+        { "en": "Yes, I taked a lot of photos!", "correcta": false, "feedback": "'Take' es irregular: en pasado es 'took'." },
+        { "en": "Yes, I took a lot of photos!", "correcta": true, "cumple": "actividad", "concepto_id": "voc.viajes.take_a_photo" },
+        { "en": "No, I didn't. I took a lot of photos.", "correcta": false, "feedback": "Si dices 'No, I didn't', no puedes decir después que tomaste fotos." }
+      ]
+    }
+  ]
+}
