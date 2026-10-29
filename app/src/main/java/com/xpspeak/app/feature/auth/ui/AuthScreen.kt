@@ -33,6 +33,7 @@ import com.xpspeak.app.core.ui.componentes.BotonSecundario
 import com.xpspeak.app.core.ui.componentes.CampoTexto
 import com.xpspeak.app.core.ui.componentes.Logotipo
 import com.xpspeak.app.core.ui.theme.XPMarino
+import com.xpspeak.app.feature.auth.domain.PasswordValidator
 
 /** Iniciar sesión y Crear cuenta (Ilustraciones 28 y 29). */
 @Composable
@@ -101,6 +102,7 @@ fun AuthScreen(
             icono = Icons.Filled.Lock,
             esContrasena = true
         )
+        if (!esLogin) RequisitosContrasena(uiState.password)
         if (!esLogin) {
             CampoTexto(
                 valor = uiState.confirmarPassword,
@@ -117,7 +119,8 @@ fun AuthScreen(
             }
         }
 
-        uiState.error?.let { mensaje ->
+        // El aviso de requisitos ya está bajo el campo: no se repite aquí.
+        uiState.error?.takeIf { esLogin || uiState.password.isEmpty() || it != PasswordValidator.mensajeError(uiState.password) }?.let { mensaje ->
             Text(mensaje, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
         }
 

@@ -104,7 +104,7 @@ class AuthViewModel @Inject constructor(
                 return
             }
             if (!PasswordValidator.esValida(estado.password)) {
-                _uiState.value = estado.copy(error = PasswordValidator.mensajeError())
+                _uiState.value = estado.copy(error = PasswordValidator.mensajeError(estado.password))
                 return
             }
             if (estado.password != estado.confirmarPassword) {
