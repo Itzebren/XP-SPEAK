@@ -24,7 +24,7 @@
       "npc_es": "¡Hola! ¿Tienes hambre?",
       "opciones": [
         { "en": "Yes, I hungry.", "correcta": false, "feedback": "'Hungry' va con to be: Yes, I'm hungry." },
-        { "en": "Yes, I'm hungry!", "correcta": true, "concepto_id": "voc.comida.hungry" },
+        { "en": "Yes, I'm hungry!", "correcta": true, "aceptadas": ["Yes, I am hungry.", "Yes, I'm very hungry.", "Yes, I am.", "Yes, a little."], "concepto_id": "voc.comida.hungry" },
         { "en": "Yes, I'm water.", "correcta": false, "feedback": "No tiene sentido: 'I'm water' es 'soy agua'." }
       ]
     },
@@ -32,7 +32,7 @@
       "npc": "OK! What do you want?",
       "npc_es": "¡Bien! ¿Qué quieres?",
       "opciones": [
-        { "en": "I want some bread and an egg, please.", "correcta": true, "cumple": "comida", "concepto_id": "gram.some_any" },
+        { "en": "I want some bread and an egg, please.", "correcta": true, "aceptadas": ["Some bread and an egg, please.", "Bread and an egg, please.", "I'd like some bread and an egg, please.", "Can I have some bread and an egg, please?"], "cumple": "comida", "concepto_id": "gram.some_any" },
         { "en": "I want any bread, please.", "correcta": false, "feedback": "En oraciones afirmativas se usa 'some': I want some bread." },
         { "en": "Goodbye! See you later!", "correcta": false, "feedback": "Acabas de llegar: primero pide tu comida." }
       ]
@@ -43,7 +43,7 @@
       "opciones": [
         { "en": "No, I doesn't. I want some juice.", "correcta": false, "feedback": "Con 'I' el negativo es 'don't': No, I don't." },
         { "en": "Yes, I am.", "correcta": false, "feedback": "Si la pregunta empieza con 'Do', la respuesta corta es 'Yes, I do' o 'No, I don't'." },
-        { "en": "No, I don't. I want some juice.", "correcta": true, "cumple": "bebida", "concepto_id": "gram.present_simple_negative_questions" }
+        { "en": "No, I don't. I want some juice.", "correcta": true, "aceptadas": ["No, thank you. I want some juice.", "No, thanks. I want some juice.", "No, I want some juice.", "No, I'd like some juice, please.", "No. Some juice, please."], "cumple": "bebida", "concepto_id": "gram.present_simple_negative_questions" }
       ]
     },
     {
@@ -51,7 +51,7 @@
       "npc_es": "Jugo, pan y un huevo. ¿Quieres fruta?",
       "opciones": [
         { "en": "Yes, I want any fruit.", "correcta": false, "feedback": "En oraciones afirmativas se usa 'some': Yes, I want some fruit." },
-        { "en": "No, I don't. Thank you!", "correcta": true, "cumple": "agradecer", "concepto_id": "gram.present_simple_negative_questions" },
+        { "en": "No, I don't. Thank you!", "correcta": true, "aceptadas": ["No, thank you.", "No, thanks.", "No, I don't.", "No, thank you very much.", "No, I don't, thanks."], "cumple": "agradecer", "concepto_id": "gram.present_simple_negative_questions" },
         { "en": "No, I'm not fruit.", "correcta": false, "feedback": "La pregunta usa 'Do you want…?', así que la respuesta es 'No, I don't'." }
       ]
     }

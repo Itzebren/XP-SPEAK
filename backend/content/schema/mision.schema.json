@@ -58,6 +58,12 @@
               "properties": {
                 "en": { "type": "string", "minLength": 1 },
                 "correcta": { "type": "boolean" },
+                "aceptadas": {
+                  "type": "array",
+                  "items": { "type": "string", "minLength": 1 },
+                  "uniqueItems": true,
+                  "description": "Otras formas correctas de responder cuando se escribe (solo en la correcta)"
+                },
                 "cumple": { "type": "string", "description": "id del objetivo que cumple (solo en la correcta)" },
                 "concepto_id": { "type": "string", "pattern": "^(voc|gram)\\.[a-z0-9_.]+$" },
                 "feedback": { "type": "string", "minLength": 1, "description": "Por qué está mal (obligatorio en las incorrectas)" }

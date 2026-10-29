@@ -54,6 +54,8 @@ data class PasoMision(
 data class OpcionMision(
     val en: String,
     val correcta: Boolean,
+    /** Otras formas correctas de responder cuando se escribe (solo en la correcta). */
+    val aceptadas: List<String>? = null,
     val cumple: String? = null,
     @SerializedName("concepto_id") val conceptoId: String? = null,
     val feedback: String? = null

@@ -25,14 +25,14 @@
       "opciones": [
         { "en": "Excuse me, are there a bank near here?", "correcta": false, "feedback": "Con un solo lugar (a bank) se usa 'is there': Is there a bank near here?" },
         { "en": "Turn left, please.", "correcta": false, "feedback": "Tú eres quien busca el banco: primero pregunta dónde está." },
-        { "en": "Excuse me, is there a bank near here?", "correcta": true, "cumple": "preguntar", "concepto_id": "voc.ciudad.excuse_me" }
+        { "en": "Excuse me, is there a bank near here?", "correcta": true, "aceptadas": ["Is there a bank near here?", "Excuse me, where is the bank?", "Where is the bank, please?", "Excuse me, is there a bank nearby?"], "cumple": "preguntar", "concepto_id": "voc.ciudad.excuse_me" }
       ]
     },
     {
       "npc": "Yes, there is. Go straight and turn left.",
       "npc_es": "Sí, hay uno. Sigue derecho y da vuelta a la izquierda.",
       "opciones": [
-        { "en": "OK. Go straight and turn left.", "correcta": true, "cumple": "indicaciones", "concepto_id": "gram.imperatives" },
+        { "en": "OK. Go straight and turn left.", "correcta": true, "aceptadas": ["Go straight and turn left.", "OK, go straight and then turn left.", "OK, straight and then left.", "Straight and turn left. Thank you!"], "cumple": "indicaciones", "concepto_id": "gram.imperatives" },
         { "en": "OK. Go straight and turn right.", "correcta": false, "feedback": "Te dijo 'turn left': left es izquierda y right es derecha." },
         { "en": "OK. Don't go straight.", "correcta": false, "feedback": "Te dijo 'Go straight' (sigue derecho), no 'Don't go'." }
       ]
@@ -42,7 +42,7 @@
       "npc_es": "¡Mira! Ese es el parque. El banco está cerca del parque.",
       "opciones": [
         { "en": "Those is the park.", "correcta": false, "feedback": "'Those' es plural; con un solo lugar se usa 'That is'." },
-        { "en": "Great! Thank you very much!", "correcta": true, "cumple": "agradecer", "concepto_id": "gram.this_that_these_those" },
+        { "en": "Great! Thank you very much!", "correcta": true, "aceptadas": ["Thank you very much!", "Thank you!", "Thanks a lot!", "Great, thanks!", "OK, thank you!"], "cumple": "agradecer", "concepto_id": "gram.this_that_these_those" },
         { "en": "Go straight, please!", "correcta": false, "feedback": "El señor ya te ayudó; ahora agradécele." }
       ]
     }
