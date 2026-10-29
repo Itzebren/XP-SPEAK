@@ -21,3 +21,5 @@ TT_*.docx
 /patches_remotos/
 screenshot_test.png
 window_dump.xml
+.vercel
+.env*
