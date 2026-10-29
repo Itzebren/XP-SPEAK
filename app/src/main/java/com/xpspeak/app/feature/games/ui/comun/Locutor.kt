@@ -83,7 +83,7 @@ class Locutor internal constructor() {
 
 internal data class Fragmento(val texto: String, val esEspanol: Boolean)
 
-/** Silencio entre palabras en modo lento ("🐢 Más lento" de Eco Vocal). */
+/** Silencio entre palabras en modo lento ("Más lento" de Eco Vocal). */
 internal const val PAUSA_ENTRE_PALABRAS_MS = 350L
 
 /** "Good morning!" → ["Good", "morning!"]: la puntuación se queda pegada para conservar la entonación. */
