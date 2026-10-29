@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.xpspeak.app.core.ui.componentes.BotonPrincipal
 import com.xpspeak.app.core.ui.componentes.CampoTexto
 import com.xpspeak.app.core.ui.componentes.Logotipo
+import com.xpspeak.app.feature.auth.domain.PasswordValidator
 
 /** Recuperar contraseña (Ilustración 30), en dos pasos: correo y código. */
 @Composable
@@ -89,6 +90,7 @@ fun RecuperarAccesoScreen(
                     icono = Icons.Filled.Lock,
                     esContrasena = true
                 )
+                RequisitosContrasena(uiState.nuevaPassword)
                 CampoTexto(
                     valor = uiState.confirmarPassword,
                     onCambio = viewModel::onConfirmarPasswordChange,
@@ -96,7 +98,7 @@ fun RecuperarAccesoScreen(
                     icono = Icons.Filled.Lock,
                     esContrasena = true
                 )
-                Error(uiState.error)
+                Error(uiState.error?.takeIf { uiState.nuevaPassword.isEmpty() || it != PasswordValidator.mensajeError(uiState.nuevaPassword) })
                 BotonPrincipal("Restablecer contraseña", onClick = viewModel::confirmarNuevaPassword, cargando = uiState.cargando)
             }
         }
