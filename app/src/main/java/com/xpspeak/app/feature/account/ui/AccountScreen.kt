@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -83,7 +84,7 @@ fun AccountScreen(
     var nombre by rememberSaveable(uiState.nombre) { mutableStateOf(uiState.nombre) }
     var nuevoCorreo by rememberSaveable(correo) { mutableStateOf(correo) }
 
-    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+    Column(modifier = Modifier.fillMaxSize().imePadding().verticalScroll(rememberScrollState())) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

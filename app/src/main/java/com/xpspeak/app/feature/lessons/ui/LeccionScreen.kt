@@ -3,6 +3,7 @@ package com.xpspeak.app.feature.lessons.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
@@ -53,7 +54,7 @@ fun LeccionScreen(
 
     LaunchedEffect(evaluando) { if (evaluando) irAEvaluacion.bringIntoView() }
 
-    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+    Column(modifier = Modifier.fillMaxSize().imePadding().verticalScroll(rememberScrollState())) {
         EncabezadoXP(
             titulo = leccion?.let { "Lección: ${it.moduloTematico}" } ?: "Lección",
             onVolver = onVolver,
