@@ -2,12 +2,17 @@ const { getFirebaseAdmin } = require('../lib/firebaseAdmin');
 
 const MAX_INTENTOS = 5;
 
+/**
+ * Mismas reglas que PasswordValidator de la app: 8 caracteres, una letra y un
+ * número. Letra es cualquiera (ñ y acentos incluidos), igual que isLetter() en
+ * Kotlin; con [a-zA-Z] la app aceptaba "ñññ12345" y aquí se rechazaba.
+ */
 function contraseñaEsValida(password) {
   return (
     typeof password === 'string' &&
     password.length >= 8 &&
-    /[a-zA-Z]/.test(password) &&
-    /[0-9]/.test(password)
+    /\p{L}/u.test(password) &&
+    /\p{Nd}/u.test(password)
   );
 }
 
@@ -70,3 +75,5 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'Ocurrió un error. Intenta más tarde.' });
   }
 };
+
+module.exports.contraseñaEsValida = contraseñaEsValida;
