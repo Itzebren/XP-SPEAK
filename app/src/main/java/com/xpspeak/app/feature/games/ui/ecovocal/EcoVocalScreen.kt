@@ -311,6 +311,15 @@ private fun PuntajePronunciacion(evaluacion: EvaluacionVoz) {
                 )
             }
         }
+        // Qué sonido falló en cada palabra en rojo (AnalisisFonemas): "party: /ɹ/ sonó como /d/".
+        evaluacion.palabras.filter { it.sonidos.isNotEmpty() }.take(3).forEach { palabra ->
+            Text(
+                "${palabra.palabra}: ${palabra.sonidos.joinToString(" · ")}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
         if (evaluacion.transcripcion.isNotBlank()) {
             Text("Oímos: “${evaluacion.transcripcion}”", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
         }
