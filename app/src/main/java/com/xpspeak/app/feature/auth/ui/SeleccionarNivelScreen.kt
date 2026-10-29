@@ -58,7 +58,7 @@ fun SeleccionarNivelScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var nivel by rememberSaveable { mutableStateOf<String?>(null) }
-    var avatar by rememberSaveable { mutableStateOf(Avatar.ROBOT.id) }
+    var avatar by rememberSaveable { mutableStateOf(Avatar.COHETE.id) }
 
     LaunchedEffect(uiState.listo) {
         if (uiState.listo) onNivelSeleccionado()

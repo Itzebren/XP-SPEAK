@@ -5,19 +5,20 @@ import com.xpspeak.app.R
 
 /**
  * Avatares de la pantalla de Personalización (Ilustración 31). El id es lo que se
- * guarda en `UsuarioEntity.avatar`; sin avatar se muestra el robot.
+ * guarda en `UsuarioEntity.avatar`; sin avatar, o con uno que ya no existe, se
+ * muestra el cohete. Los dibujos salen de docs/diseno-arte/avatares.js.
  */
 enum class Avatar(val id: String, val descripcion: String, @DrawableRes val dibujo: Int) {
-    ROBOT("robot", "Robot", R.drawable.avatar_robot),
-    LECTORA("lectora", "Lectora con lentes", R.drawable.avatar_lectora),
-    CHONGOS("chongos", "Chica con chongos", R.drawable.avatar_chongos),
-    ZORRO("zorro", "Zorro", R.drawable.avatar_zorro),
-    RIZOS("rizos", "Chico de rizos", R.drawable.avatar_rizos),
-    ABUELO("abuelo", "Abuelo con gorro", R.drawable.avatar_abuelo),
-    PANUELO("panuelo", "Chica con pañuelo", R.drawable.avatar_panuelo),
-    GUITARRA("guitarra", "Guitarrista", R.drawable.avatar_guitarra);
+    COHETE("cohete", "Cohete", R.drawable.avatar_cohete),
+    ZORRO("zorro", "Zorro con audífonos", R.drawable.avatar_zorro),
+    ASTRONAUTA("astronauta", "Astronauta", R.drawable.avatar_astronauta),
+    MONSTRUO("monstruo", "Monstruo gamer", R.drawable.avatar_monstruo),
+    PINGUINO("pinguino", "Pingüino con gorro", R.drawable.avatar_pinguino),
+    CHICA("chica", "Chica con audífonos", R.drawable.avatar_chica),
+    CHICO("chico", "Chico con gorra", R.drawable.avatar_chico),
+    ESTRELLA("estrella", "Estrella", R.drawable.avatar_estrella);
 
     companion object {
-        fun porId(id: String?): Avatar = entries.firstOrNull { it.id == id } ?: ROBOT
+        fun porId(id: String?): Avatar = entries.firstOrNull { it.id == id } ?: COHETE
     }
 }
