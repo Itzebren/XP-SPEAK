@@ -10,6 +10,15 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+/** Lo que va llegando de una vuelta del chat. */
+sealed interface EventoRespuesta {
+    /** Un pedazo de la respuesta de la IA (RNF-02). */
+    data class Pedazo(val texto: String) : EventoRespuesta
+
+    /** Los errores del mensaje del usuario (RF-09); puede llegar antes, durante o después de la respuesta. */
+    data class Correccion(val correccion: CorreccionDto) : EventoRespuesta
+}
+
 class ChatRepository @Inject constructor(
     private val api: ChatApi,
     private val firebaseAuth: FirebaseAuth,
@@ -24,15 +33,15 @@ class ChatRepository @Inject constructor(
     }
 
     /**
-     * RNF-02: emite cada pedazo de la respuesta conforme llega del backend y termina
-     * cuando llega { fin }. Un error (antes o a media respuesta) se lanza como excepción
-     * con el mensaje que manda el servidor.
+     * RNF-02: emite cada pedazo de la respuesta conforme llega del backend, y la
+     * corrección del mensaje si la hay (RF-09); termina cuando llega { fin }. Un error
+     * (antes o a media respuesta) se lanza como excepción con el mensaje que manda el servidor.
      */
     fun enviarMensaje(
         mensaje: String,
         nivel: String,
         historial: List<MensajeChat>
-    ): Flow<String> = flow {
+    ): Flow<EventoRespuesta> = flow {
         val usuario = firebaseAuth.currentUser
             ?: throw IllegalStateException("No hay sesión activa")
 
@@ -52,8 +61,9 @@ class ChatRepository @Inject constructor(
         val cuerpo = respuesta.body() ?: throw IllegalStateException("Respuesta vacía del servidor")
         // Un backend sin streaming contesta { respuesta } en JSON: se muestra completa de una vez.
         if (cuerpo.contentType()?.subtype == "json") {
-            val completa = cuerpo.use { gson.fromJson(it.string(), ChatResponse::class.java)?.respuesta }
-            emit(completa ?: throw IllegalStateException("Respuesta vacía del servidor"))
+            val completa = cuerpo.use { gson.fromJson(it.string(), ChatResponse::class.java) }
+            emit(EventoRespuesta.Pedazo(completa?.respuesta ?: throw IllegalStateException("Respuesta vacía del servidor")))
+            completa.correccion?.takeIf { it.errores.isNotEmpty() }?.let { emit(EventoRespuesta.Correccion(it)) }
             return@flow
         }
         cuerpo.use {
@@ -66,7 +76,8 @@ class ChatRepository @Inject constructor(
                 when {
                     evento.error != null -> throw Exception(evento.error)
                     evento.fin == true -> return@flow
-                    !evento.delta.isNullOrEmpty() -> emit(evento.delta)
+                    !evento.delta.isNullOrEmpty() -> emit(EventoRespuesta.Pedazo(evento.delta))
+                    !evento.correccion?.errores.isNullOrEmpty() -> emit(EventoRespuesta.Correccion(evento.correccion!!))
                 }
             }
         }

@@ -1,5 +1,9 @@
 package com.xpspeak.app.feature.games.ui.rafaga
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import com.xpspeak.app.core.ui.theme.FormaBoton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,11 +15,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.MicOff
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +32,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,7 +50,22 @@ import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
 @Composable
 fun RafagaScreen(onVolver: () -> Unit, viewModel: RafagaViewModel = hiltViewModel()) {
     val fase by viewModel.fase.collectAsState()
+    val microfono by viewModel.microfono.collectAsState()
     val locutor = rememberLocutor()
+
+    val context = LocalContext.current
+    val permisoLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { concedido ->
+        if (concedido) viewModel.alternarVoz() else viewModel.onPermisoMicrofonoDenegado()
+    }
+    val onMicClick = {
+        val tienePermiso = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.RECORD_AUDIO
+        ) == PackageManager.PERMISSION_GRANTED
+        if (microfono.activo || tienePermiso) viewModel.alternarVoz()
+        else permisoLauncher.launch(Manifest.permission.RECORD_AUDIO)
+    }
 
     PantallaPartida(
         juego = Minijuego.RAFAGA_PALABRAS,
@@ -102,6 +126,27 @@ fun RafagaScreen(onVolver: () -> Unit, viewModel: RafagaViewModel = hiltViewMode
             }
         } else {
             Spacer(Modifier.height(72.dp))
+        }
+
+        // Responder con voz: Azure Speech, el mismo del chat.
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+            FilledIconToggleButton(checked = microfono.activo, onCheckedChange = { onMicClick() }) {
+                Icon(
+                    if (microfono.activo) Icons.Filled.Mic else Icons.Filled.MicOff,
+                    contentDescription = if (microfono.activo) "Dejar de responder con voz" else "Responder con voz"
+                )
+            }
+            Text(
+                when {
+                    microfono.error != null -> microfono.error!!
+                    !microfono.activo -> "Toca el micrófono para responder con voz"
+                    microfono.oyendo.isNotBlank() -> "🎤 \"${microfono.oyendo}\""
+                    else -> "Di \"yes\" si coinciden o \"no\" para el bote"
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (microfono.error != null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 8.dp)
+            )
         }
 
         Spacer(Modifier.weight(1f))

@@ -16,7 +16,9 @@ const TIEMPO_ESPERA_MS = 25000;
 const SYSTEM_PROMPT_BASE =
   'Eres un tutor de inglés conversacional dentro de la app XP-SPEAK. ' +
   'Ayudas al usuario a practicar inglés hablado y escrito de forma natural, ' +
-  'corrigiendo errores con amabilidad y adaptando tu vocabulario al nivel indicado. ' +
+  'adaptando tu vocabulario al nivel indicado. ' +
+  'No expliques los errores del usuario en tu respuesta: la app le muestra las correcciones aparte (RF-09). ' +
+  'Si cometió alguno, puedes usar la forma correcta de manera natural al contestar. ' +
   'Responde siempre en inglés, salvo que el usuario pida explícitamente una explicación en español.';
 
 function configuracionChat(entorno = process.env) {
@@ -67,15 +69,18 @@ const contenidoBloqueado = () =>
 const sinRespuesta = () => new ErrorApi(504, 'CHAT_SIN_RESPUESTA', 'El chatbot tardó demasiado. Intenta de nuevo.');
 const noDisponible = () => new ErrorApi(502, 'CHAT_NO_DISPONIBLE', 'El chatbot no pudo responder. Intenta de nuevo.');
 
-/** Llama a Azure y lanza ErrorApi si no contesta bien; devuelve la respuesta HTTP sin leer. */
-async function llamarAzure({ endpoint, clave, deployment }, mensajes, { stream = false } = {}) {
+/**
+ * Llama a Azure y lanza ErrorApi si no contesta bien; devuelve la respuesta HTTP sin leer.
+ * `parametros` se suman al body (stream, temperature, response_format…).
+ */
+async function llamarAzure({ endpoint, clave, deployment }, mensajes, { tiempoEsperaMs = TIEMPO_ESPERA_MS, ...parametros } = {}) {
   let respuesta;
   try {
     respuesta = await fetch(`${endpoint}/openai/v1/chat/completions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'api-key': clave },
-      body: JSON.stringify({ model: deployment, messages: mensajes, temperature: 0.7, max_tokens: 300, ...(stream && { stream: true }) }),
-      signal: AbortSignal.timeout(TIEMPO_ESPERA_MS),
+      body: JSON.stringify({ model: deployment, messages: mensajes, temperature: 0.7, max_tokens: 300, ...parametros }),
+      signal: AbortSignal.timeout(tiempoEsperaMs),
     });
   } catch (error) {
     // CU-05 A4 (riesgo R01): la app avisa la demora y ofrece reintentar.
@@ -164,6 +169,7 @@ module.exports = {
   MAX_CARACTERES_MENSAJE,
   configuracionChat,
   construirMensajes,
+  llamarAzure,
   pedirRespuesta,
   pedirRespuestaEnFlujo,
   noDisponible,
