@@ -54,13 +54,19 @@ class Locutor internal constructor() {
         if (motor == null || fragmentos.isEmpty()) return avisarFin()
         // 0.5: a 0.7 la diferencia casi no se notaba en palabras sueltas.
         motor.setSpeechRate(if (lento) 0.5f else 0.95f)
-        fragmentos.forEachIndexed { i, fragmento ->
+        // Varios motores (Samsung, algunas voces de Google) ignoran setSpeechRate: en modo
+        // lento además se dice palabra por palabra con una pausa, que sí se nota en cualquiera.
+        val piezas = if (lento) fragmentos.flatMap { f -> palabrasDe(f.texto).map { Fragmento(it, f.esEspanol) } } else fragmentos
+        piezas.forEachIndexed { i, fragmento ->
             // El idioma se toma al encolar cada frase, así que puede cambiar entre una y otra.
             motor.language = espanol?.takeIf { fragmento.esEspanol } ?: Locale.US
             val modo = if (i == 0) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD
             val id = "${fragmento.texto.hashCode()}-$i-${System.nanoTime()}"
-            if (i == fragmentos.lastIndex) ultimaFrase = id
+            if (i == piezas.lastIndex) ultimaFrase = id
             motor.speak(fragmento.texto, modo, null, id)
+            if (lento && i < piezas.lastIndex) {
+                motor.playSilentUtterance(PAUSA_ENTRE_PALABRAS_MS, TextToSpeech.QUEUE_ADD, "pausa-$i-${System.nanoTime()}")
+            }
         }
     }
 
@@ -76,6 +82,12 @@ class Locutor internal constructor() {
 }
 
 internal data class Fragmento(val texto: String, val esEspanol: Boolean)
+
+/** Silencio entre palabras en modo lento ("🐢 Más lento" de Eco Vocal). */
+internal const val PAUSA_ENTRE_PALABRAS_MS = 350L
+
+/** "Good morning!" → ["Good", "morning!"]: la puntuación se queda pegada para conservar la entonación. */
+internal fun palabrasDe(texto: String): List<String> = texto.split(Regex("\\s+")).filter { it.isNotBlank() }
 
 private val PALABRAS_ES = setOf(
     "el", "la", "los", "las", "de", "del", "que", "en", "y", "es", "son", "un", "una", "por", "para", "con",
