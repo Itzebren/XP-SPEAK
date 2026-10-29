@@ -2,6 +2,8 @@ package com.xpspeak.app.feature.auth.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -102,7 +104,12 @@ class AuthViewModel @Inject constructor(
                     if (usuario.isEmailVerified) {
                         continuar(usuario.uid)
                     } else {
-                        _uiState.value = _uiState.value.copy(cargando = false, pendienteVerificacion = true, password = "", confirmarPassword = "")
+                        // Al registrarse, si el correo no salió se dice por qué (antes se callaba).
+                        val falloEnvio = authRepository.falloEnvioVerificacion.takeIf { estado.modo == AuthMode.REGISTRO }
+                        _uiState.value = _uiState.value.copy(
+                            cargando = false, pendienteVerificacion = true, password = "", confirmarPassword = "",
+                            error = falloEnvio?.let(::mensajeEnvio)
+                        )
                     }
                 }
                 .onFailure { excepcion ->
@@ -135,7 +142,7 @@ class AuthViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(cargando = true, error = null, aviso = null)
             authRepository.reenviarVerificacion()
                 .onSuccess { _uiState.value = _uiState.value.copy(cargando = false, aviso = "Te enviamos un nuevo enlace.") }
-                .onFailure { _uiState.value = _uiState.value.copy(cargando = false, error = "No se pudo reenviar. Espera un momento e intenta de nuevo.") }
+                .onFailure { _uiState.value = _uiState.value.copy(cargando = false, error = mensajeEnvio(it)) }
         }
     }
 
@@ -157,5 +164,13 @@ class AuthViewModel @Inject constructor(
         is FirebaseAuthInvalidCredentialsException -> "Correo o contraseña incorrectos."
         is FirebaseAuthInvalidUserException -> "No existe una cuenta con ese correo."
         else -> "Ocurrió un error. Intenta de nuevo."
+    }
+
+    /** Por qué no salió el correo de verificación (RN-01). */
+    private fun mensajeEnvio(excepcion: Throwable): String = when (excepcion) {
+        is FirebaseTooManyRequestsException ->
+            "Firebase pausó los envíos por demasiados intentos seguidos. Espera unos minutos y toca «Reenviar correo»."
+        is FirebaseNetworkException -> "No se pudo enviar el correo: revisa tu conexión y toca «Reenviar correo»."
+        else -> "No se pudo enviar el correo de verificación. Toca «Reenviar correo» en un momento."
     }
 }
