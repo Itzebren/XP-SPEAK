@@ -30,4 +30,10 @@ class LocutorIdiomaTest {
         assertEquals(listOf("es", "es"), idiomas("Muy bien, lo dijiste correctamente. OK!"))
         assertEquals(listOf("en", "en"), idiomas("That is correct. OK!"))
     }
+
+    @Test
+    fun `en modo lento la frase se dice palabra por palabra con su puntuacion`() {
+        assertEquals(listOf("Good", "morning!", "I'm", "Diego."), palabrasDe("  Good morning!  I'm Diego. "))
+        assertEquals(listOf("Hello!"), palabrasDe("Hello!"))
+    }
 }
