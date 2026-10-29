@@ -33,6 +33,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -77,22 +78,25 @@ fun <E : EstadoPartida<E>> PantallaPartida(
     LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) { viewModel.pausar() }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { viewModel.reanudar() }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        EncabezadoJuego(juego.titulo, onVolver, (fase as? FasePartida.Jugando<E>)?.estado?.let(progreso))
-        Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            when (fase) {
-                FasePartida.Cargando, FasePartida.Guardando -> Centrado { CircularProgressIndicator() }
-                is FasePartida.Retomar -> DialogoRetomar(
-                    onRetomar = viewModel::retomar,
-                    onNueva = viewModel::empezarDeNuevo
-                )
-                is FasePartida.Jugando -> contenido(fase.estado)
-                is FasePartida.Terminada -> PantallaResultado(fase.resultado, viewModel::jugarOtraVez, onVolver)
-                is FasePartida.SinContenido -> Mensaje("🔒", fase.mensaje, onVolver)
-                is FasePartida.Error -> Mensaje("⚠️", fase.mensaje, onVolver)
+    // Un solo SoundPool por partida: así los sonidos ya están cargados en la primera acción.
+    CompositionLocalProvider(LocalSonidos provides rememberSonidos()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            EncabezadoJuego(juego.titulo, onVolver, (fase as? FasePartida.Jugando<E>)?.estado?.let(progreso))
+            Column(
+                modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                when (fase) {
+                    FasePartida.Cargando, FasePartida.Guardando -> Centrado { CircularProgressIndicator() }
+                    is FasePartida.Retomar -> DialogoRetomar(
+                        onRetomar = viewModel::retomar,
+                        onNueva = viewModel::empezarDeNuevo
+                    )
+                    is FasePartida.Jugando -> contenido(fase.estado)
+                    is FasePartida.Terminada -> PantallaResultado(fase.resultado, viewModel::jugarOtraVez, onVolver)
+                    is FasePartida.SinContenido -> Mensaje("🔒", fase.mensaje, onVolver)
+                    is FasePartida.Error -> Mensaje("⚠️", fase.mensaje, onVolver)
+                }
             }
         }
     }
@@ -231,19 +235,24 @@ fun formatearDuracion(ms: Long): String {
 enum class Veredicto { ACIERTO, ERROR }
 
 /**
- * Feedback visual y háptico de cada acción (§4.5): verde y vibración corta
- * si acierta; color de error y la explicación si no. Los errores se explican,
- * no se castigan (filtro afectivo, PDF §2.4).
+ * Feedback visual, háptico y auditivo de cada acción (§4.5, CU-07 paso 6):
+ * verde, vibración corta y sonido de acierto si acierta; color de error, su
+ * sonido y la explicación si no. Los errores se explican, no se castigan
+ * (filtro afectivo, PDF §2.4). [sonido] en false para avisos que no son una
+ * respuesta del jugador (p. ej. el micrófono).
  */
 @Composable
-fun TarjetaFeedback(veredicto: Veredicto?, titulo: String, detalle: String? = null) {
+fun TarjetaFeedback(veredicto: Veredicto?, titulo: String, detalle: String? = null, sonido: Boolean = true) {
     val haptica = LocalHapticFeedback.current
-    LaunchedEffect(veredicto, titulo) {
+    val sonidos = LocalSonidos.current
+    // Con el detalle en la llave, dos errores seguidos con el mismo título también suenan.
+    LaunchedEffect(veredicto, titulo, detalle) {
         when (veredicto) {
             Veredicto.ACIERTO -> haptica.performHapticFeedback(HapticFeedbackType.Confirm)
             Veredicto.ERROR -> haptica.performHapticFeedback(HapticFeedbackType.Reject)
             null -> Unit
         }
+        if (sonido && veredicto != null) sonidos?.reproducir(veredicto)
     }
     val color by animateColorAsState(colorDe(veredicto), label = "feedback")
     Card(
