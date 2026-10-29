@@ -58,6 +58,14 @@ import com.xpspeak.app.core.ui.theme.XPTextoSecundario
 import com.xpspeak.app.core.ui.theme.XPVerdeExito
 import com.xpspeak.app.feature.lessons.data.EstadoLeccion
 import com.xpspeak.app.feature.lessons.data.LeccionResumenDto
+import com.xpspeak.app.feature.lessons.domain.RepasoPrimero
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.xpspeak.app.core.ui.theme.FormaBoton
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
 
 /**
  * RF-10: catálogo de lecciones del nivel del usuario en cuadrícula de 2 columnas
@@ -71,8 +79,17 @@ fun LessonsScreen(
     viewModel: LessonsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var avisoRepaso by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { viewModel.cargar() }
+
+    if (avisoRepaso) {
+        DialogoRepasoPrimero(
+            conceptos = uiState.repasoPrioritario,
+            onRepasar = { avisoRepaso = false; onAbrirRepaso() },
+            onCerrar = { avisoRepaso = false }
+        )
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         EncabezadoXP(
@@ -130,13 +147,23 @@ fun LessonsScreen(
                                 "${uiState.repasoPendiente} concepto(s) por repasar",
                                 style = MaterialTheme.typography.bodySmall
                             )
+                            if (uiState.repasoPrioritario > 0) {
+                                Text(
+                                    "Termínalo para empezar lecciones nuevas.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
                 }
             }
 
             items(uiState.lecciones, key = { it.id }) { leccion ->
-                TarjetaLeccion(leccion, onClick = { onAbrirLeccion(leccion.id) })
+                TarjetaLeccion(leccion, onClick = {
+                    if (RepasoPrimero.retiene(leccion, uiState.repasoPrioritario)) avisoRepaso = true
+                    else onAbrirLeccion(leccion.id)
+                })
             }
 
             if (uiState.conceptosDebiles.isNotEmpty()) {
@@ -159,6 +186,23 @@ fun LessonsScreen(
 
         }
     }
+}
+
+/** RN-07: se tocó una lección nueva con conceptos de alta tasa de error pendientes. */
+@Composable
+private fun DialogoRepasoPrimero(conceptos: Int, onRepasar: () -> Unit, onCerrar: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onCerrar,
+        title = { Text("Primero, un repaso") },
+        text = {
+            Text(
+                "Tienes $conceptos concepto(s) que te han costado y toca repasar hoy. " +
+                    "Repásalos antes de empezar un tema nuevo; las lecciones que ya empezaste siguen abiertas."
+            )
+        },
+        confirmButton = { Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onRepasar) { Text("Repasar ahora") } },
+        dismissButton = { TextButton(onClick = onCerrar) { Text("Ahora no") } }
+    )
 }
 
 /** Elemento que ocupa las dos columnas de la cuadrícula (encabezados, avisos). */
