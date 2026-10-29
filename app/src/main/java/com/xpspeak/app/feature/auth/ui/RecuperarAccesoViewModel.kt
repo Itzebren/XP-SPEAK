@@ -76,7 +76,7 @@ class RecuperarAccesoViewModel @Inject constructor(
             return
         }
         if (!PasswordValidator.esValida(estado.nuevaPassword)) {
-            _uiState.value = estado.copy(error = PasswordValidator.mensajeError())
+            _uiState.value = estado.copy(error = PasswordValidator.mensajeError(estado.nuevaPassword))
             return
         }
         if (estado.nuevaPassword != estado.confirmarPassword) {
