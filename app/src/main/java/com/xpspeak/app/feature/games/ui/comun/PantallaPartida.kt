@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -103,7 +104,9 @@ fun <E : EstadoPartida<E>> PantallaPartida(
 
     // Un solo SoundPool por partida: así los sonidos ya están cargados en la primera acción.
     CompositionLocalProvider(LocalSonidos provides rememberSonidos(), LocalTemaJuego provides tema) {
-        Column(modifier = Modifier.fillMaxSize().background(tema.suave)) {
+        // imePadding: con edge-to-edge (targetSdk 37) adjustResize ya no encoge la pantalla y
+        // el teclado tapaba la respuesta escrita de Misión.
+        Column(modifier = Modifier.fillMaxSize().background(tema.suave).imePadding()) {
             EncabezadoJuego(juego, onVolver, (fase as? FasePartida.Jugando<E>)?.estado?.let(progreso))
             Column(
                 modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 14.dp),

@@ -168,6 +168,12 @@ function opcionesDePaso(mision) {
       if (!opcion.correcta && !opcion.feedback) errores.push(error(`'${opcion.en}' es incorrecta y no tiene feedback`));
       if (!opcion.correcta && opcion.cumple) errores.push(error(`'${opcion.en}' es incorrecta y no puede cumplir un objetivo`));
       if (opcion.correcta && !opcion.concepto_id) errores.push(error('la opción correcta debe tener concepto_id (SRS)'));
+      if (!opcion.correcta && opcion.aceptadas) errores.push(error(`'${opcion.en}' es incorrecta y no puede tener respuestas aceptadas`));
+    }
+    // Una respuesta aceptada no puede ser igual a una incorrecta: el juego no sabría cuál es.
+    const incorrectas = new Set(paso.opciones.filter((o) => !o.correcta).map((o) => normalizarTexto(o.en)));
+    for (const aceptada of correctas.flatMap((o) => o.aceptadas || [])) {
+      if (incorrectas.has(normalizarTexto(aceptada))) errores.push(error(`'${aceptada}' está aceptada y también es una opción incorrecta`));
     }
     for (const frase of [paso.npc, ...paso.opciones.map((o) => o.en)]) {
       if (contarPalabras(frase) > MAX_PALABRAS_FRASE) errores.push(error(`'${frase}' tiene más de ${MAX_PALABRAS_FRASE} palabras`));

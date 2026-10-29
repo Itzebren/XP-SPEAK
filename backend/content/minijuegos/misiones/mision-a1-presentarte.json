@@ -23,7 +23,7 @@
       "npc": "Good morning!",
       "npc_es": "¡Buenos días!",
       "opciones": [
-        { "en": "Good morning!", "correcta": true, "cumple": "saludar", "concepto_id": "voc.saludos.good_morning" },
+        { "en": "Good morning!", "correcta": true, "aceptadas": ["Good morning to you!", "Hello, good morning!", "Hi! Good morning!"], "cumple": "saludar", "concepto_id": "voc.saludos.good_morning" },
         { "en": "Morning good!", "correcta": false, "feedback": "En inglés el orden es 'Good morning!'." },
         { "en": "See you later!", "correcta": false, "feedback": "'See you later' es para despedirte, y Laura te está saludando." }
       ]
@@ -33,7 +33,7 @@
       "npc_es": "Me llamo Laura. ¿Cómo te llamas?",
       "opciones": [
         { "en": "My name are Diego.", "correcta": false, "feedback": "Con 'my name' se usa 'is': My name is Diego." },
-        { "en": "My name is Diego.", "correcta": true, "cumple": "presentarte", "concepto_id": "voc.saludos.my_name_is" },
+        { "en": "My name is Diego.", "correcta": true, "aceptadas": ["I'm Diego.", "I am Diego.", "My name's Diego.", "Diego. My name is Diego."], "cumple": "presentarte", "concepto_id": "voc.saludos.my_name_is" },
         { "en": "I'm fine, thank you.", "correcta": false, "feedback": "Laura te pregunta tu nombre, no cómo estás." }
       ]
     },
@@ -43,14 +43,14 @@
       "opciones": [
         { "en": "I is fine, thank you.", "correcta": false, "feedback": "Con 'I' el verbo to be es 'am': I am fine (I'm fine)." },
         { "en": "My name is fine.", "correcta": false, "feedback": "Te preguntan cómo estás: I'm fine, thank you." },
-        { "en": "I'm fine, thank you.", "correcta": true, "concepto_id": "voc.saludos.fine_thank_you" }
+        { "en": "I'm fine, thank you.", "correcta": true, "aceptadas": ["I am fine, thank you.", "I'm fine, thanks.", "Fine, thank you.", "I'm good, thank you.", "I'm very well, thank you."], "concepto_id": "voc.saludos.fine_thank_you" }
       ]
     },
     {
       "npc": "Great! See you later!",
       "npc_es": "¡Qué bien! ¡Nos vemos luego!",
       "opciones": [
-        { "en": "Goodbye! See you later!", "correcta": true, "cumple": "despedirte", "concepto_id": "voc.saludos.goodbye" },
+        { "en": "Goodbye! See you later!", "correcta": true, "aceptadas": ["See you later!", "Bye! See you later!", "Goodbye!", "See you!", "Bye, see you later!"], "cumple": "despedirte", "concepto_id": "voc.saludos.goodbye" },
         { "en": "Hello! Nice to meet you!", "correcta": false, "feedback": "'Hello' es para saludar; para despedirte di 'Goodbye!'." },
         { "en": "You is my friend.", "correcta": false, "feedback": "Con 'you' se usa 'are': You are my friend." }
       ]
