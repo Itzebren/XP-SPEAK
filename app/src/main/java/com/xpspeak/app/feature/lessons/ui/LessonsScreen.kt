@@ -90,6 +90,7 @@ fun LessonsScreen(
             onCerrar = { avisoRepaso = false }
         )
     }
+    uiState.ascendioA?.let { nivel -> DialogoAscenso(nivel, onCerrar = viewModel::cerrarAscenso) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         EncabezadoXP(
@@ -202,6 +203,23 @@ private fun DialogoRepasoPrimero(conceptos: Int, onRepasar: () -> Unit, onCerrar
         },
         confirmButton = { Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onRepasar) { Text("Repasar ahora") } },
         dismissButton = { TextButton(onClick = onCerrar) { Text("Ahora no") } }
+    )
+}
+
+/** Completó todas las lecciones de su nivel y pasó al siguiente (AscensoNivel). */
+@Composable
+private fun DialogoAscenso(nivel: String, onCerrar: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onCerrar,
+        icon = { DistintivoNivel(nivel, tamano = 48.dp) },
+        title = { Text("¡Subiste a $nivel!") },
+        text = {
+            Text(
+                "Completaste todas las lecciones de tu nivel. Desde ahora tus lecciones, el chat y los " +
+                    "minijuegos son de nivel $nivel. Si quieres repasar, puedes volver al nivel anterior en Cuenta."
+            )
+        },
+        confirmButton = { Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onCerrar) { Text("¡Vamos!") } }
     )
 }
 
