@@ -45,21 +45,31 @@ object Pronunciacion {
 
     fun esLegible(evaluacion: EvaluacionVoz) = evaluacion.confianza >= CONFIANZA_MINIMA
 
-    fun esAcierto(evaluacion: EvaluacionVoz) = esLegible(evaluacion) && evaluacion.puntaje >= UMBRAL_ACIERTO
+    /**
+     * Acierto: buen puntaje general y ninguna palabra mal dicha u omitida. Con solo el
+     * promedio, una frase larga pasaba aunque una palabra saliera en rojo.
+     */
+    fun esAcierto(evaluacion: EvaluacionVoz) =
+        esLegible(evaluacion) && evaluacion.puntaje >= UMBRAL_ACIERTO && evaluacion.palabras.none(::esPalabraFallida)
+
+    private fun esPalabraFallida(palabra: PalabraEvaluada) =
+        palabra.error == "Mispronunciation" || palabra.error == "Omission" || palabra.puntaje < UMBRAL_PALABRA_REGULAR
 
     /**
      * Respaldo sin conexión: el reconocedor del teléfono no mide fonemas, así
-     * que se compara la transcripción con la referencia palabra por palabra
-     * y se elige la alternativa que más se parece.
+     * que se compara la transcripción con la referencia palabra por palabra.
+     * Se usa solo la primera alternativa (lo que el reconocedor cree que se dijo):
+     * buscar entre las cinco la más parecida a la frase aprobaba pronunciaciones
+     * malas en cuanto alguna alternativa coincidía.
      *
      * @param alternativas lo que oyó el reconocedor y su confianza (0–1, o
-     *   negativa si el motor no la reporta).
+     *   negativa si el motor no la reporta), en el orden del reconocedor.
      */
     fun evaluarTranscripcion(referencia: String, alternativas: List<Pair<String, Float>>): EvaluacionVoz {
         val ref = Texto.palabras(referencia)
         // El reconocedor escribe "7" donde la frase dice "seven": se compara la forma hablada.
         fun dichasDe(texto: String) = Texto.numerosEnPalabras(Texto.palabras(texto))
-        val texto = alternativas.filter { it.first.isNotBlank() }.maxByOrNull { Texto.similitud(ref, dichasDe(it.first)) }?.first
+        val texto = alternativas.firstOrNull { it.first.isNotBlank() }?.first
             ?: return EvaluacionVoz(0, 0, ref.map { PalabraEvaluada(it, 0, "Omission") }, "", FuenteEvaluacion.DISPOSITIVO)
         // La legibilidad es del audio, no de la alternativa: Google solo reporta la confianza
         // de la primera y deja las demás en 0.0, así que se toma la mayor.

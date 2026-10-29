@@ -95,7 +95,9 @@ class EvaluadorAzure @Inject constructor() {
             .filter { it.errorType != "Insertion" }
             .map { PalabraEvaluada(it.word, it.accuracyScore.roundToInt(), it.errorType.takeIf { e -> e != "None" }) }
         return EvaluacionVoz(
-            puntaje = (pa?.pronunciationScore ?: pa?.accuracyScore ?: 0.0).roundToInt(),
+            // Precisión de los sonidos, no el PronScore: ese promedia también fluidez y
+            // completitud, y una frase dicha de corrido pero mal pronunciada pasaba de 70.
+            puntaje = (pa?.accuracyScore ?: 0.0).roundToInt(),
             confianza = confianza(resultado),
             palabras = palabras.ifEmpty { Texto.palabras(referencia).map { PalabraEvaluada(it, 0, "Omission") } },
             transcripcion = resultado.text.orEmpty(),
