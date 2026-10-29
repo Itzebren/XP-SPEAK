@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -61,6 +62,12 @@ fun AuthScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
+        // Sesión guardada: solo el logo mientras se decide a dónde ir.
+        if (uiState.retomandoSesion) {
+            Logotipo(tamano = 190.dp)
+            CircularProgressIndicator(color = XPMarino)
+            return@Column
+        }
         if (uiState.pendienteVerificacion) {
             AvisoVerificacion(uiState, viewModel)
             return@Column

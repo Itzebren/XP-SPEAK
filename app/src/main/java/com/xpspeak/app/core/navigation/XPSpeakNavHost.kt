@@ -70,9 +70,8 @@ private val bottomTabs = listOf(
 )
 
 /**
- * Grafo de navegación raíz. Por ahora arranca directo en AUTH; cuando
- * construyamos el módulo de autenticación (Fase 2) esto cambiará para
- * decidir el destino inicial según si hay una sesión guardada.
+ * Grafo de navegación raíz. Arranca en AUTH, que con una sesión guardada salta
+ * sola a Inicio o a elegir nivel (AuthViewModel.retomarSesion).
  */
 @Composable
 fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
