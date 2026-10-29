@@ -1,5 +1,6 @@
 package com.xpspeak.app.feature.games.data.voz
 
+import android.util.Log
 import com.google.gson.JsonParser
 import com.microsoft.cognitiveservices.speech.PronunciationAssessmentConfig
 import com.microsoft.cognitiveservices.speech.PronunciationAssessmentGradingSystem
@@ -39,6 +40,8 @@ class EvaluadorAzure @Inject constructor() {
     private companion object {
         /** Silencio con el que recognizeOnce da por terminada la frase. */
         const val PAUSA_FIN_FRASE_MS = 1500L
+        /** Logcat: qué sonidos salieron mal en cada intento (para revisar la calificación). */
+        const val TAG = "XPS-FONEMAS"
     }
 
     suspend fun evaluar(referencia: String, token: TokenVozDto): EvaluacionVoz = withContext(Dispatchers.IO) {
@@ -61,6 +64,9 @@ class EvaluadorAzure @Inject constructor() {
             PronunciationAssessmentGranularity.Phoneme,
             true // miscue: marca palabras omitidas o de más
         )
+        // Qué sonido se oyó en lugar de cada sonido esperado (AnalisisFonemas).
+        evaluacion.setPhonemeAlphabet("IPA")
+        evaluacion.setNBestPhonemeCount(5)
         try {
             evaluacion.applyTo(reconocedor)
             val futuro = reconocedor.recognizeOnceAsync()
@@ -89,6 +95,18 @@ class EvaluadorAzure @Inject constructor() {
     }
 
     private fun convertir(referencia: String, resultado: com.microsoft.cognitiveservices.speech.SpeechRecognitionResult): EvaluacionVoz {
+        val json = resultado.properties.getProperty(PropertyId.SpeechServiceResponse_JsonResult).orEmpty()
+        AnalisisFonemas.palabras(json)?.let { palabras ->
+            palabras.filter { it.sonidos.isNotEmpty() }.forEach { Log.d(TAG, "${it.palabra} (${it.puntaje}): ${it.sonidos}") }
+            return EvaluacionVoz(
+                puntaje = AnalisisFonemas.puntaje(palabras),
+                confianza = confianza(resultado),
+                palabras = palabras,
+                transcripcion = resultado.text.orEmpty(),
+                fuente = FuenteEvaluacion.AZURE
+            )
+        }
+        // Sin fonemas en el JSON: calificación por palabra del SDK.
         val pa = PronunciationAssessmentResult.fromResult(resultado)
         val palabras = pa?.words.orEmpty()
             // Palabras de más que dijo el usuario: no forman parte de la frase a colorear.
