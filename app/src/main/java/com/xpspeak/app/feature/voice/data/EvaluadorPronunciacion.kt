@@ -44,6 +44,9 @@ class EvaluadorPronunciacion @Inject constructor(
 ) {
     companion object {
         private const val TAG = "EvaluadorPronunciacion"
+
+        /** Silencio con el que Azure da por terminada una frase en el chat en vivo. */
+        private const val PAUSA_FIN_FRASE_MS = 1500L
     }
 
     /** Nadie habló en el tiempo de espera: el chat en vivo se pausa para no dejar el micrófono abierto. */
@@ -107,12 +110,14 @@ class EvaluadorPronunciacion @Inject constructor(
 
             // applyTo DEBE llamarse ANTES de recognizeOnceAsync
             pronConfig.applyTo(recognizer)
+            // La pausa de fin de frase es la de fábrica de Azure: no se conoce y no se descuenta.
+            val medidor = MedidorVoz(recognizer, "voz.pronunciacion", pausaMs = null)
 
             try {
                 val resultado = recognizer.recognizeOnceAsync().get()
 
                 when (resultado.reason) {
-                    ResultReason.RecognizedSpeech -> convertir(resultado)
+                    ResultReason.RecognizedSpeech -> convertir(resultado).also { medidor.registrar(resultado) }
 
                     ResultReason.NoMatch -> {
                         val detalle = NoMatchDetails.fromResult(resultado)
@@ -160,7 +165,7 @@ class EvaluadorPronunciacion @Inject constructor(
             val config = SpeechConfig.fromAuthorizationToken(cred.token, cred.region)
             config.speechRecognitionLanguage = idioma
             // En una conversación la pausa natural entre ideas es más larga que al leer una frase.
-            config.setProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, "1500")
+            config.setProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, PAUSA_FIN_FRASE_MS.toString())
 
             val audio = AudioConfig.fromDefaultMicrophoneInput()
             val pronConfig = PronunciationAssessmentConfig(
@@ -172,6 +177,7 @@ class EvaluadorPronunciacion @Inject constructor(
             pronConfig.setPhonemeAlphabet("IPA")
             val recognizer = SpeechRecognizer(config, audio)
             pronConfig.applyTo(recognizer)
+            val medidor = MedidorVoz(recognizer, "voz.chat_en_vivo", PAUSA_FIN_FRASE_MS)
 
             val empezoAHablar = CompletableDeferred<Unit>()
             recognizer.recognizing.addEventListener { _, evento ->
@@ -190,7 +196,7 @@ class EvaluadorPronunciacion @Inject constructor(
                                     resultado.text.isNotBlank() && continuacion.isActive
                                 ) {
                                     // Corre en un hilo del SDK: un error aquí debe llegar a la corrutina, no tumbar la app.
-                                    runCatching { convertir(resultado) }
+                                    runCatching { convertir(resultado).also { medidor.registrar(resultado) } }
                                         .onSuccess { continuacion.resume(it) }
                                         .onFailure { continuacion.resumeWithException(it) }
                                 }
