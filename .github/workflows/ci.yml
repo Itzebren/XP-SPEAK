@@ -1,0 +1,51 @@
+# CI del TT 2026-B162 (backend/docs/lecciones-diseno.md §4.5): en cada push y PR a
+# main/develop se corren las pruebas del backend (incluyen el linter de contenido y
+# la verificación de que los assets del APK estén al día) y las unitarias de Android.
+# Vercel despliega backend/ desde git, así que esta es la revisión previa al despliegue.
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (npm test · linter de contenido)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run lint:content
+      - run: npm test
+
+  android:
+    name: Android (testDebugUnitTest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+      # El wrapper no es ejecutable en el repo; se invoca con sh.
+      - run: sh ./gradlew :app:testDebugUnitTest --console=plain --no-daemon
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: resultados-pruebas-android
+          path: app/build/reports/tests/testDebugUnitTest

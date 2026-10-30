@@ -1,0 +1,161 @@
+{
+  "id": "a2-describir-personas-cosas",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Describir personas y cosas",
+  "orden": 12,
+  "prerequisito_id": "a2-servicios-compras",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo describir a una persona: cómo es y cómo es su carácter.",
+    "Puedo explicar qué es algo y para qué sirve."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Identificación personal; Relaciones con otras personas.",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe personas, lugares y posesiones en términos sencillos.»",
+      "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Utiliza un lenguaje sencillo y descriptivo para realizar breves declaraciones sobre objetos y posesiones y para hacer comparaciones.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Lección de cierre de A2: repasa en diálogo el present continuous (A2-4) y el pasado irregular (A2-2). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¿Cómo es?",
+      "cuerpo": "Aprenderás a describir a las personas, a dar más detalles con who, which y that, y a decir para qué sirve algo con to + verbo."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "¿Cómo es físicamente?",
+      "items": [
+        { "concepto_id": "voc.descripcion.tall", "en": "tall", "es": "alto / alta", "audio": "tts:tall" },
+        { "concepto_id": "voc.descripcion.short", "en": "short", "es": "bajo / corto", "audio": "tts:short", "nota": "Para personas es 'bajo' (a short man); para el cabello es 'corto' (short hair)." },
+        { "concepto_id": "voc.descripcion.slim", "en": "slim", "es": "delgado / delgada", "audio": "tts:slim" },
+        { "concepto_id": "voc.descripcion.curly_hair", "en": "curly hair", "es": "cabello rizado / chino", "audio": "tts:curly hair", "nota": "Lo contrario es 'straight hair' (cabello lacio)." },
+        { "concepto_id": "voc.descripcion.beard", "en": "beard", "es": "barba", "audio": "tts:beard" },
+        { "concepto_id": "voc.descripcion.glasses", "en": "glasses", "es": "lentes / anteojos", "audio": "tts:glasses", "nota": "Siempre en plural: He wears glasses." },
+        { "concepto_id": "voc.descripcion.look_like", "en": "look like", "es": "parecerse a", "audio": "tts:She looks like her mother." }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "¿Cómo es su carácter?",
+      "items": [
+        { "concepto_id": "voc.descripcion.friendly", "en": "friendly", "es": "amable / amigable", "audio": "tts:friendly" },
+        { "concepto_id": "voc.descripcion.shy", "en": "shy", "es": "tímido / tímida", "audio": "tts:shy" },
+        { "concepto_id": "voc.descripcion.funny", "en": "funny", "es": "divertido / chistoso", "audio": "tts:funny" },
+        { "concepto_id": "voc.descripcion.useful", "en": "useful", "es": "útil", "audio": "tts:useful" },
+        { "concepto_id": "voc.descripcion.thing", "en": "thing", "es": "cosa", "audio": "tts:thing" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.relative_clauses_basic",
+      "titulo": "Who, which, that (que)",
+      "explicacion": "Sirven para dar más información sobre una persona o cosa, como 'que' en español. 'Who' es para personas: the man who lives next door. 'Which' es para cosas: the phone which I bought. 'That' sirve para las dos: the girl that plays soccer, the book that I read.",
+      "ejemplos": ["The woman who lives next door is a doctor.", "This is the laptop which I use for school.", "He's the singer that I told you about."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.infinitive_of_purpose",
+      "titulo": "To + verbo (para…)",
+      "explicacion": "Para decir para qué hacemos algo o para qué sirve una cosa usamos to + verbo en forma base: I study English to travel (para viajar). ¡Ojo! No se dice 'for travel' ni 'for to travel'.",
+      "ejemplos": ["I went to the store to buy bread.", "We use a dictionary to find new words.", "She's saving money to buy a laptop."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "En la fiesta",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Sofía", "en": "Who is the man who is talking to your sister?", "es": "¿Quién es el señor que está hablando con tu hermana?" },
+        { "hablante": "Diego", "en": "The tall man with glasses? He's my cousin Luis.", "es": "¿El alto de lentes? Es mi primo Luis." },
+        { "hablante": "Sofía", "en": "He looks friendly! Is he the one who plays the guitar?", "es": "¡Se ve amable! ¿Es el que toca la guitarra?" },
+        { "hablante": "Diego", "en": "Yes! He came to the party to play some songs.", "es": "¡Sí! Vino a la fiesta para tocar unas canciones." },
+        { "hablante": "Sofía", "en": "And what is that small thing in his hand?", "es": "¿Y qué es esa cosa pequeña que tiene en la mano?" },
+        { "hablante": "Diego", "en": "It's a speaker. It's a thing that you use to play music from your phone.", "es": "Es una bocina. Es una cosa que usas para poner música desde tu celular." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.relative_clauses_basic",
+          "enunciado": "The woman ___ lives next door is a doctor.",
+          "opciones": ["which", "who", "where"],
+          "respuesta_correcta": 1,
+          "feedback_error": "Para personas usamos 'who' (o 'that'). 'Which' es para cosas."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.relative_clauses_basic",
+          "enunciado": "This is the book ___ I read last week.",
+          "respuesta_correcta": "that",
+          "acepta": ["that", "which"],
+          "feedback_error": "Para cosas usamos 'which' o 'that'."
+        },
+        {
+          "id": "q3",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.relative_clauses_basic",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["I have a friend who speaks French.", "I have a friend which speaks French.", "I have a friend who speak French."],
+          "respuesta_correcta": 0,
+          "feedback_error": "Para personas es 'who', y con 'a friend' el verbo lleva -s: who speaks."
+        },
+        {
+          "id": "q4",
+          "tipo": "completar",
+          "concepto_id": "gram.infinitive_of_purpose",
+          "enunciado": "Fui a la tienda para comprar pan: I went to the store ___ buy bread.",
+          "respuesta_correcta": "to",
+          "acepta": ["to"],
+          "feedback_error": "'Para' + verbo se dice con 'to': to buy."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.infinitive_of_purpose",
+          "enunciado": "¿Cómo dices 'Estudio inglés para viajar'?",
+          "opciones": ["I study English for travel.", "I study English for to travel.", "I study English to travel."],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Para' + verbo se dice con 'to': to travel. No uses 'for' antes de un verbo."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.descripcion.short",
+          "enunciado": "'She has short hair' significa…",
+          "opciones": ["Ella es baja.", "Tiene el cabello corto.", "Tiene el cabello rizado."],
+          "respuesta_correcta": 1,
+          "feedback_error": "Con el cabello, 'short' es corto. Con personas, 'short' es bajo."
+        },
+        {
+          "id": "q7",
+          "tipo": "completar",
+          "concepto_id": "voc.descripcion.look_like",
+          "enunciado": "Sofía se parece a su mamá: Sofía ___ like her mother.",
+          "respuesta_correcta": "looks",
+          "acepta": ["looks"],
+          "feedback_error": "'Look like' = parecerse a. Con she el verbo lleva -s: looks like."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su significado.",
+          "feedback_error": "Repasa las tablas de descripción.",
+          "pares": [
+            { "concepto_id": "voc.descripcion.beard", "izq": "beard", "der": "barba" },
+            { "concepto_id": "voc.descripcion.glasses", "izq": "glasses", "der": "lentes / anteojos" },
+            { "concepto_id": "voc.descripcion.shy", "izq": "shy", "der": "tímido / tímida" },
+            { "concepto_id": "voc.descripcion.useful", "izq": "useful", "der": "útil" }
+          ]
+        }
+      ]
+    }
+  ]
+}

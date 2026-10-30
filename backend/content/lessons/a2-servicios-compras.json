@@ -1,0 +1,161 @@
+{
+  "id": "a2-servicios-compras",
+  "version": 1,
+  "nivel_mcer": "A2",
+  "modulo_tematico": "Servicios y compras",
+  "orden": 11,
+  "prerequisito_id": "a2-clima-excursiones",
+  "xp_recompensa": 80,
+  "can_do": [
+    "Puedo resolver trámites y compras sencillas con cantidades.",
+    "Puedo entender reglas: lo que se debe y lo que no se debe hacer."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Servicios públicos; Compras.",
+      "MCER, Interactuar para obtener bienes y servicios, A2 (p. 80): «Pregunta sobre cosas y realiza transacciones sencillas en tiendas, oficinas de correo o bancos. Ofrece y recibe información relativa a cantidades, números, precios, etc.»",
+      "MCER, Leer instrucciones, A2 (p. 73): «Comprende normas, por ejemplo de seguridad, que estén expresadas con un nivel de lengua sencillo.»",
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. Se repasan 'have to' (A2-5) en la explicación de must y la salud (A2-5) en el diálogo. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "Trámites y compras",
+      "cuerpo": "Aprenderás lugares de servicios y medidas, cuándo usar much y many, y cómo entender reglas con must y mustn't."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Servicios",
+      "items": [
+        { "concepto_id": "voc.servicios.post_office", "en": "post office", "es": "oficina de correos", "audio": "tts:post office" },
+        { "concepto_id": "voc.servicios.pharmacy", "en": "pharmacy", "es": "farmacia", "audio": "tts:pharmacy", "nota": "En EE. UU. también se dice 'drugstore'." },
+        { "concepto_id": "voc.servicios.hairdresser", "en": "hairdresser", "es": "peluquero / peluquera", "audio": "tts:hairdresser" },
+        { "concepto_id": "voc.servicios.atm", "en": "ATM", "es": "cajero automático", "audio": "tts:A T M" },
+        { "concepto_id": "voc.servicios.receipt", "en": "receipt", "es": "recibo / ticket de compra", "audio": "tts:receipt", "nota": "La p no se pronuncia. Ojo: 'recipe' es una receta de cocina." },
+        { "concepto_id": "voc.servicios.wait_in_line", "en": "wait in line", "es": "hacer fila", "audio": "tts:wait in line", "nota": "En Reino Unido se dice 'queue'." },
+        { "concepto_id": "voc.servicios.open", "en": "open", "es": "abierto / abrir", "audio": "tts:open" },
+        { "concepto_id": "voc.servicios.closed", "en": "closed", "es": "cerrado", "audio": "tts:closed" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Cantidades",
+      "items": [
+        { "concepto_id": "voc.servicios.kilo", "en": "kilo", "es": "kilo", "audio": "tts:a kilo of apples" },
+        { "concepto_id": "voc.servicios.liter", "en": "liter", "es": "litro", "audio": "tts:a liter of milk", "nota": "En Reino Unido se escribe 'litre'." },
+        { "concepto_id": "voc.servicios.bottle", "en": "bottle", "es": "botella", "audio": "tts:a bottle of water" },
+        { "concepto_id": "voc.servicios.package", "en": "package", "es": "paquete", "audio": "tts:package" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.quantifiers_much_many",
+      "titulo": "Much, many, a lot of",
+      "explicacion": "'Many' va con cosas que se cuentan, en plural (many bottles). 'Much' va con cosas que no se cuentan (much milk, much money). Se usan sobre todo en preguntas y negativas: How many…? How much…? En afirmativas usamos 'a lot of' con los dos: a lot of people, a lot of water.",
+      "ejemplos": ["How many bottles do you need?", "There isn't much milk in the fridge.", "There are a lot of people at the bank."]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.must_mustnt",
+      "titulo": "Must y mustn't (reglas)",
+      "explicacion": "'Must' + verbo = deber (obligación fuerte o regla): You must wait in line. 'Mustn't' = está prohibido: You mustn't use your phone here. ¡Ojo! 'Mustn't' no es lo mismo que 'don't have to' (no es necesario).",
+      "ejemplos": ["You must pay at the front desk.", "You mustn't open other people's packages.", "Passengers must show their tickets."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "En la farmacia",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Laura", "en": "Good morning. I need some medicine for a sore throat.", "es": "Buenos días. Necesito una medicina para el dolor de garganta." },
+        { "hablante": "Farmacéutico", "en": "Here you are. You must take one every eight hours.", "es": "Aquí tiene. Debe tomar una cada ocho horas." },
+        { "hablante": "Laura", "en": "How many can I take in a day?", "es": "¿Cuántas puedo tomar al día?" },
+        { "hablante": "Farmacéutico", "en": "Three. You mustn't take more than three.", "es": "Tres. No debe tomar más de tres." },
+        { "hablante": "Laura", "en": "OK. I also need two bottles of water. How much is it?", "es": "Muy bien. También necesito dos botellas de agua. ¿Cuánto es?" },
+        { "hablante": "Farmacéutico", "en": "It's one hundred pesos. Here is your receipt.", "es": "Son cien pesos. Aquí está su recibo." }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.quantifiers_much_many",
+          "enunciado": "How ___ bottles do you need?",
+          "opciones": ["much", "many", "a lot"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Bottles' se pueden contar y están en plural: how many."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.quantifiers_much_many",
+          "enunciado": "There isn't ___ milk in the fridge.",
+          "respuesta_correcta": "much",
+          "acepta": ["much"],
+          "feedback_error": "'Milk' no se cuenta, así que en negativa usamos 'much'."
+        },
+        {
+          "id": "q3",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.quantifiers_much_many",
+          "enunciado": "¿Cuál es correcta?",
+          "opciones": ["I don't have many money.", "I don't have a lot money.", "I don't have much money."],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Money' no se cuenta: much money (o 'a lot of money')."
+        },
+        {
+          "id": "q4",
+          "tipo": "completar",
+          "concepto_id": "gram.must_mustnt",
+          "enunciado": "Es la regla del banco: You ___ wait in line.",
+          "respuesta_correcta": "must",
+          "acepta": ["must"],
+          "feedback_error": "Para una regla u obligación fuerte usamos 'must' + verbo."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.must_mustnt",
+          "enunciado": "Está prohibido usar el celular: You ___ use your phone here.",
+          "opciones": ["mustn't", "don't have to", "must"],
+          "respuesta_correcta": 0,
+          "feedback_error": "Prohibido = 'mustn't'. 'Don't have to' significa que no es necesario."
+        },
+        {
+          "id": "q6",
+          "tipo": "completar",
+          "concepto_id": "gram.must_mustnt",
+          "enunciado": "No es tuyo, no lo abras: You ___ open that package.",
+          "respuesta_correcta": "mustn't",
+          "acepta": ["mustn't", "must not"],
+          "feedback_error": "Para decir que algo está prohibido usamos 'mustn't' (must not)."
+        },
+        {
+          "id": "q7",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.servicios.receipt",
+          "enunciado": "Después de pagar te dan un papel con lo que compraste. Es el…",
+          "opciones": ["recipe", "receipt", "refund"],
+          "respuesta_correcta": 1,
+          "feedback_error": "'Receipt' = recibo. 'Recipe' es una receta de cocina."
+        },
+        {
+          "id": "q8",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa las tablas de servicios y cantidades.",
+          "pares": [
+            { "concepto_id": "voc.servicios.post_office", "izq": "post office", "der": "oficina de correos" },
+            { "concepto_id": "voc.servicios.pharmacy", "izq": "pharmacy", "der": "farmacia" },
+            { "concepto_id": "voc.servicios.bottle", "izq": "bottle", "der": "botella" },
+            { "concepto_id": "voc.servicios.wait_in_line", "izq": "wait in line", "der": "hacer fila" }
+          ]
+        }
+      ]
+    }
+  ]
+}

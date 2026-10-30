@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Splash de Android 12+: el ícono de la mascota sobre el azul claro del PDF. -->
+    <style name="Theme.XPSPEAK" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/xp_fondo</item>
+        <item name="android:windowSplashScreenBackground">@color/xp_azul_claro</item>
+    </style>
+</resources>

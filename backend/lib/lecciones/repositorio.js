@@ -1,0 +1,282 @@
+const { ErrorApi } = require('../errores');
+const { ESTADOS, estaDesbloqueada, esTemaNuevo, aplicarIntento } = require('./estado');
+const { siguienteLeccion, conceptosEnsenados, listarLecciones } = require('./contenido');
+const { acumularSenal } = require('./srs');
+const { consumirIntento } = require('./limite');
+const { leerResumenEnTx, aplicarEnTx } = require('../progreso/repositorio');
+const { fechaDeActividad } = require('../progreso/racha');
+
+/**
+ * Persistencia por usuario en Firestore (docs/lecciones-diseno.md §5.2).
+ * Aquí solo se lee y escribe; las reglas viven en estado.js, srs.js y
+ * limite.js. Las fechas son milisegundos epoch, igual que en RF-03.
+ */
+const COLECCIONES = {
+  PROGRESO: 'progreso_lecciones',
+  SRS: 'srs_conceptos',
+  EVENTOS: 'eventos_actividad',
+  INTENTOS: 'intentos_lecciones',
+  REPASOS: 'intentos_repaso',
+};
+
+function referencias(db, uid, leccion) {
+  const progreso = (leccionId) => db.collection(COLECCIONES.PROGRESO).doc(`${uid}_${leccionId}`);
+  return {
+    progreso: progreso(leccion.id),
+    prerequisito: leccion.prerequisito_id ? progreso(leccion.prerequisito_id) : null,
+    intento: (attemptId) => db.collection(COLECCIONES.INTENTOS).doc(`${uid}_${attemptId}`),
+    srs: (conceptoId) => db.collection(COLECCIONES.SRS).doc(`${uid}_${conceptoId}`),
+    evento: () => db.collection(COLECCIONES.EVENTOS).doc(),
+  };
+}
+
+/**
+ * Lee varios documentos en una sola ida a Firestore y los devuelve con el
+ * mismo nombre con que se pidieron: { progreso: {...} | null, srs: [...] }.
+ * Acepta una referencia, null (no leer) o una lista de referencias.
+ */
+async function leerEnTransaccion(tx, pedidos) {
+  const refs = Object.values(pedidos).flat().filter(Boolean);
+  const snapshots = refs.length ? await tx.getAll(...refs) : [];
+  const datos = new Map(refs.map((ref, i) => [ref, snapshots[i].exists ? snapshots[i].data() : null]));
+  const leer = (ref) => (ref ? datos.get(ref) : null);
+
+  return Object.fromEntries(
+    Object.entries(pedidos).map(([nombre, pedido]) => [nombre, Array.isArray(pedido) ? pedido.map(leer) : leer(pedido)])
+  );
+}
+
+function exigirDesbloqueada(leccion, progresoPrerequisito) {
+  if (!estaDesbloqueada(leccion, progresoPrerequisito)) {
+    throw new ErrorApi(403, 'LECCION_BLOQUEADA', 'Primero aprueba la lección anterior para desbloquear esta (mínimo 70%).');
+  }
+}
+
+async function listarPorUsuario(db, coleccion, uid) {
+  const snapshot = await db.collection(coleccion).where('uid', '==', uid).get();
+  return snapshot.docs.map((doc) => doc.data());
+}
+
+async function obtenerProgresosDeUsuario(db, uid) {
+  const progresos = await listarPorUsuario(db, COLECCIONES.PROGRESO, uid);
+  return new Map(progresos.map((progreso) => [progreso.leccion_id, progreso]));
+}
+
+function listarConceptosDeUsuario(db, uid) {
+  return listarPorUsuario(db, COLECCIONES.SRS, uid);
+}
+
+/** Lo que responde POST /attempt (§6.1) y se guarda para reenvíos idempotentes. */
+function construirRespuesta({ attemptId, leccion, resultado, progreso, xpGanado, primeraAprobacion }) {
+  return {
+    attempt_id: attemptId,
+    leccion_id: leccion.id,
+    puntaje: resultado.puntaje,
+    correctas: resultado.correctas,
+    total: resultado.total,
+    umbral_aprobacion: resultado.umbral,
+    aprobada: resultado.aprobada,
+    estado: progreso.estado,
+    mejor_puntaje: progreso.mejor_puntaje,
+    xp_ganado: xpGanado,
+    desbloqueada_siguiente: primeraAprobacion ? siguienteLeccion(leccion.id) : null,
+    feedback: resultado.feedback,
+    conceptos_debiles: resultado.conceptos_debiles,
+    // Para mostrarlos con nombre en la app (QA 29-oct: salía el id interno).
+    conceptos_debiles_detalle: detallarConceptos(leccion, resultado.conceptos_debiles),
+    desbloqueada_titulo: primeraAprobacion ? tituloDeLeccion(siguienteLeccion(leccion.id)) : null,
+    // CU-06 A3: con menos del 70% se sugiere repetir antes de avanzar.
+    sugerencia: resultado.aprobada ? null : 'repetir_leccion',
+    // Módulo de Progreso: insignias y nivel de XP ganados con este intento (solo al aprobar).
+    insignias_nuevas: [],
+    nivel_xp_nuevo: null,
+  };
+}
+
+/**
+ * Núcleo de POST /api/lessons/:id/attempt. Todo ocurre en una sola
+ * transacción: si dos envíos del mismo intento llegan a la vez, Firestore
+ * reintenta uno y ese ya encuentra el attempt_id procesado, así que el XP
+ * nunca se duplica (RN-09 + idempotencia §6.2).
+ */
+/** Nombre legible de cada concepto débil: el título de la regla o la palabra en inglés. */
+function detallarConceptos(leccion, conceptoIds) {
+  const ensenados = new Map(conceptosEnsenados(leccion).map((c) => [c.concepto_id, c]));
+  return conceptoIds.map((id) => {
+    const c = ensenados.get(id);
+    return { concepto_id: id, titulo: c?.titulo ?? null, en: c?.en ?? null, es: c?.es ?? null };
+  });
+}
+
+function tituloDeLeccion(id) {
+  if (!id) return null;
+  return listarLecciones().find((l) => l.id === id)?.modulo_tematico ?? null;
+}
+
+async function registrarIntento(db, { uid, leccion, attemptId, resultado, completadoEn = null, ahora = Date.now() }) {
+  // RN-08: la racha, el SRS y el evento usan el momento en que se contestó; los límites, el de llegada.
+  const fecha = fechaDeActividad(completadoEn, ahora);
+  const refs = referencias(db, uid, leccion);
+  const refIntento = refs.intento(attemptId);
+  const refsSrs = resultado.conceptos.map((c) => refs.srs(c.concepto_id));
+
+  return db.runTransaction(async (tx) => {
+    const leido = await leerEnTransaccion(tx, {
+      intento: refIntento,
+      progreso: refs.progreso,
+      prerequisito: refs.prerequisito,
+      srs: refsSrs,
+    });
+
+    // 1. Idempotencia: el mismo attempt_id devuelve la respuesta original sin escribir nada.
+    if (leido.intento) {
+      if (leido.intento.leccion_id !== leccion.id) {
+        throw new ErrorApi(409, 'ATTEMPT_ID_REUTILIZADO', 'Ese attempt_id ya se usó en otra lección');
+      }
+      return { ...JSON.parse(leido.intento.respuesta_json), repetido: true };
+    }
+
+    // 2. Reglas: lección desbloqueada (RN-06) y límite de intentos.
+    exigirDesbloqueada(leccion, leido.prerequisito);
+    const limite = consumirIntento(leido.progreso, ahora);
+    const { progreso, xpGanado, primeraAprobacion } = aplicarIntento(leido.progreso, leccion, resultado, fecha);
+    const respuesta = construirRespuesta({ attemptId, leccion, resultado, progreso, xpGanado, primeraAprobacion });
+    // Última lectura (antes de escribir): el resumen de progreso, solo si el intento cuenta como actividad.
+    const resumen = resultado.aprobada ? (await leerResumenEnTx(tx, db, uid, ahora)).resumen : null;
+
+    // 3. Escrituras.
+    tx.set(refs.progreso, { ...progreso, ...limite, uid });
+    resultado.conceptos.forEach((conteo, i) => {
+      tx.set(refsSrs[i], acumularSenal(leido.srs[i], { uid, ...conteo }, leccion, fecha));
+    });
+    if (resultado.aprobada) {
+      // "Actividad válida" para la racha (RN-08) y auditoría del XP otorgado.
+      tx.set(refs.evento(), {
+        uid,
+        tipo: 'leccion_completada',
+        leccion_id: leccion.id,
+        attempt_id: attemptId,
+        puntaje: resultado.puntaje,
+        xp: xpGanado,
+        fecha,
+      });
+      Object.assign(
+        respuesta,
+        aplicarEnTx(tx, db, resumen, { tipo: 'leccion', xp: xpGanado, leccionId: leccion.id, nivel: leccion.nivel_mcer }, fecha)
+      );
+    }
+    // Serializada: Firestore no admite arrays anidados (los pares de "emparejar").
+    tx.set(refIntento, {
+      uid,
+      leccion_id: leccion.id,
+      attempt_id: attemptId,
+      fecha: ahora,
+      respuesta_json: JSON.stringify(respuesta),
+    });
+
+    return { ...respuesta, repetido: false };
+  });
+}
+
+/**
+ * RN-12 / CU-06 A2: guarda en qué sección de la teoría va el usuario para
+ * retomarla. Una lección completada se queda completada.
+ *
+ * RN-07: empezar un tema nuevo (una lección sin progreso) no se permite mientras
+ * haya conceptos con alta tasa de error pendientes de repaso (`repasoPendiente`).
+ * Lo ya empezado se puede terminar.
+ */
+async function guardarAvance(db, { uid, leccion, seccionActual, repasoPendiente = false, ahora = Date.now() }) {
+  const refs = referencias(db, uid, leccion);
+
+  return db.runTransaction(async (tx) => {
+    const leido = await leerEnTransaccion(tx, { progreso: refs.progreso, prerequisito: refs.prerequisito });
+    exigirDesbloqueada(leccion, leido.prerequisito);
+    if (repasoPendiente && esTemaNuevo(leido.progreso)) {
+      throw new ErrorApi(409, 'REPASO_PENDIENTE', 'Antes de empezar un tema nuevo, repasa los conceptos que más se te dificultan.');
+    }
+
+    const previo = leido.progreso || {};
+    const estado = previo.aprobada ? ESTADOS.COMPLETADA : ESTADOS.EN_PROGRESO;
+    const avance = { seccion_actual: seccionActual, fecha: ahora };
+
+    tx.set(refs.progreso, {
+      intentos: 0,
+      aprobada: false,
+      xp_otorgado: false,
+      mejor_puntaje: 0,
+      ultimo_puntaje: null,
+      ...previo,
+      uid,
+      leccion_id: leccion.id,
+      version_leccion: leccion.version,
+      estado,
+      avance,
+      fecha_actualizacion: ahora,
+    });
+    return { leccion_id: leccion.id, estado, avance };
+  });
+}
+
+/**
+ * Núcleo de POST /api/srs/session: registra las respuestas de una sesión de
+ * repaso y reprograma cada concepto con SM-2. Idempotente por attempt_id,
+ * igual que las lecciones: un reenvío no vuelve a mover los intervalos.
+ * El repaso no da XP (no se puede farmear), pero cuenta como actividad (RN-08).
+ *
+ * @param leccionDeConcepto concepto_id → lección de donde salió su ejercicio
+ */
+async function registrarRepaso(db, { uid, attemptId, resultado, leccionDeConcepto, ahora = Date.now() }) {
+  const refIntento = db.collection(COLECCIONES.REPASOS).doc(`${uid}_${attemptId}`);
+  const refsSrs = resultado.conceptos.map((c) => db.collection(COLECCIONES.SRS).doc(`${uid}_${c.concepto_id}`));
+
+  return db.runTransaction(async (tx) => {
+    const leido = await leerEnTransaccion(tx, { intento: refIntento, srs: refsSrs });
+    if (leido.intento) {
+      return { ...JSON.parse(leido.intento.respuesta_json), repetido: true };
+    }
+    const { resumen } = await leerResumenEnTx(tx, db, uid, ahora);
+
+    const conceptos = resultado.conceptos.map((conteo, i) => {
+      const nuevo = acumularSenal(leido.srs[i], { uid, ...conteo }, leccionDeConcepto.get(conteo.concepto_id), ahora);
+      tx.set(refsSrs[i], nuevo);
+      return {
+        concepto_id: conteo.concepto_id,
+        acierto: conteo.fallos === 0,
+        intervalo: nuevo.intervalo,
+        proxima_revision: nuevo.proxima_revision,
+      };
+    });
+
+    const respuesta = {
+      attempt_id: attemptId,
+      puntaje: resultado.puntaje,
+      correctas: resultado.correctas,
+      total: resultado.total,
+      feedback: resultado.feedback,
+      conceptos,
+      ...aplicarEnTx(tx, db, resumen, { tipo: 'repaso', xp: 0 }, ahora),
+    };
+
+    tx.set(db.collection(COLECCIONES.EVENTOS).doc(), {
+      uid,
+      tipo: 'repaso_completado',
+      attempt_id: attemptId,
+      puntaje: resultado.puntaje,
+      xp: 0,
+      fecha: ahora,
+    });
+    tx.set(refIntento, { uid, attempt_id: attemptId, fecha: ahora, respuesta_json: JSON.stringify(respuesta) });
+
+    return { ...respuesta, repetido: false };
+  });
+}
+
+module.exports = {
+  COLECCIONES,
+  obtenerProgresosDeUsuario,
+  listarConceptosDeUsuario,
+  registrarIntento,
+  registrarRepaso,
+  guardarAvance,
+};

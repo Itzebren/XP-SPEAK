@@ -9,3 +9,17 @@ local.properties
 /captures
 .externalNativeBuild
 .cxx
+
+# Documento del Trabajo Terminal: referencia local, no va en el repo
+Trabajo Terminal*.pdf
+TT_*.docx
+
+# Archivos temporales de pruebas y parches locales
+*.patch
+/patches/
+/patches_extraidos/
+/patches_remotos/
+screenshot_test.png
+window_dump.xml
+.vercel
+.env*

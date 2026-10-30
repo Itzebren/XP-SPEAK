@@ -1,0 +1,143 @@
+{
+  "id": "a1-casa-hogar",
+  "version": 1,
+  "nivel_mcer": "A1",
+  "modulo_tematico": "La casa",
+  "orden": 6,
+  "prerequisito_id": "a1-ropa-colores",
+  "xp_recompensa": 60,
+  "can_do": [
+    "Puedo describir con frases sencillas el lugar donde vivo.",
+    "Puedo decir dónde están las cosas: in, on, under, next to."
+  ],
+  "autoria": {
+    "fuentes": [
+      "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Vivienda, hogar y entorno.",
+      "MCER, Cuadro 2 (autoevaluación), Expresión oral, A1 (p. 30): «Utilizo expresiones y frases sencillas para describir el lugar donde vivo y las personas a las que conozco.»",
+      "MCER, Expresión oral en general, A1 (p. 62): «Puede expresarse con frases sencillas y aisladas relativas a personas y lugares.»",
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+    ],
+    "notas": "Ejemplos, diálogo y ejercicios originales. 'there is / there are' se repasa en espiral desde la lección 3 (mismo concepto_id). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
+  },
+  "secciones": [
+    {
+      "tipo": "introduccion",
+      "titulo": "¡Bienvenido a mi casa!",
+      "cuerpo": "Aprenderás los cuartos y muebles de la casa y las palabras para decir dónde está algo: in, on, under, next to."
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Cuartos de la casa",
+      "items": [
+        { "concepto_id": "voc.casa.house", "en": "house", "es": "casa", "audio": "tts:house" },
+        { "concepto_id": "voc.casa.apartment", "en": "apartment", "es": "departamento", "audio": "tts:apartment", "nota": "Ojo: 'department' no es vivienda. En Reino Unido se dice 'flat'." },
+        { "concepto_id": "voc.casa.bedroom", "en": "bedroom", "es": "recámara / dormitorio", "audio": "tts:bedroom" },
+        { "concepto_id": "voc.casa.bathroom", "en": "bathroom", "es": "baño", "audio": "tts:bathroom" },
+        { "concepto_id": "voc.casa.kitchen", "en": "kitchen", "es": "cocina", "audio": "tts:kitchen" },
+        { "concepto_id": "voc.casa.living_room", "en": "living room", "es": "sala", "audio": "tts:living room" }
+      ]
+    },
+    {
+      "tipo": "vocabulario",
+      "titulo": "Cosas de la casa",
+      "items": [
+        { "concepto_id": "voc.casa.bed", "en": "bed", "es": "cama", "audio": "tts:bed" },
+        { "concepto_id": "voc.casa.table", "en": "table", "es": "mesa", "audio": "tts:table" },
+        { "concepto_id": "voc.casa.chair", "en": "chair", "es": "silla", "audio": "tts:chair" },
+        { "concepto_id": "voc.casa.door", "en": "door", "es": "puerta", "audio": "tts:door" },
+        { "concepto_id": "voc.casa.window", "en": "window", "es": "ventana", "audio": "tts:window" }
+      ]
+    },
+    {
+      "tipo": "gramatica",
+      "concepto_id": "gram.prepositions_of_place",
+      "titulo": "¿Dónde está? (in, on, under, next to…)",
+      "explicacion": "Estas palabras dicen dónde está algo: in (dentro de, en), on (sobre, encima de), under (debajo de), next to (al lado de), behind (detrás de), in front of (enfrente de). Se usan con 'to be' o con 'there is / there are': The phone is on the table. There is a chair next to the bed.",
+      "ejemplos": ["My shoes are under the bed.", "The kitchen is next to the living room.", "There is a window in my bedroom.", "The car is in front of the house."]
+    },
+    {
+      "tipo": "dialogo",
+      "titulo": "¿Dónde está mi celular?",
+      "audio": "tts:dialogo",
+      "lineas": [
+        { "hablante": "Diego", "en": "Mom, where is my phone?", "es": "Mamá, ¿dónde está mi celular?" },
+        { "hablante": "Mamá", "en": "Is it in your bedroom? Look under the bed.", "es": "¿Está en tu recámara? Busca debajo de la cama." },
+        { "hablante": "Diego", "en": "No, it isn't. It isn't on my table.", "es": "No, no está. No está en mi mesa." },
+        { "hablante": "Mamá", "en": "There is a phone in the kitchen, next to the window.", "es": "Hay un celular en la cocina, al lado de la ventana." },
+        { "hablante": "Diego", "en": "Yes! It's my phone. Thank you, Mom!", "es": "¡Sí! Es mi celular. ¡Gracias, mamá!" }
+      ]
+    },
+    {
+      "tipo": "evaluacion",
+      "umbral_aprobacion": 0.7,
+      "items": [
+        {
+          "id": "q1",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.prepositions_of_place",
+          "enunciado": "El gato está debajo de la mesa: The cat is ___ the table.",
+          "opciones": ["on", "in", "under"],
+          "respuesta_correcta": 2,
+          "feedback_error": "'Under' = debajo de. 'On' = sobre, 'in' = dentro de."
+        },
+        {
+          "id": "q2",
+          "tipo": "completar",
+          "concepto_id": "gram.prepositions_of_place",
+          "enunciado": "Los libros están sobre la mesa: My books are ___ the table.",
+          "respuesta_correcta": "on",
+          "acepta": ["on"],
+          "feedback_error": "Para algo que está encima de una superficie usamos 'on'."
+        },
+        {
+          "id": "q3",
+          "tipo": "opcion_multiple",
+          "concepto_id": "gram.prepositions_of_place",
+          "enunciado": "¿Qué significa 'next to the door'?",
+          "opciones": ["al lado de la puerta", "detrás de la puerta", "enfrente de la puerta"],
+          "respuesta_correcta": 0,
+          "feedback_error": "'Next to' = al lado de. 'Behind' = detrás de; 'in front of' = enfrente de."
+        },
+        {
+          "id": "q4",
+          "tipo": "completar",
+          "concepto_id": "gram.there_is_are",
+          "enunciado": "There ___ two bedrooms in my house.",
+          "respuesta_correcta": "are",
+          "acepta": ["are"],
+          "feedback_error": "'Two bedrooms' es plural, así que usamos 'there are'."
+        },
+        {
+          "id": "q5",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.casa.kitchen",
+          "enunciado": "¿En qué cuarto cocinas?",
+          "opciones": ["bathroom", "bedroom", "living room", "kitchen"],
+          "respuesta_correcta": 3,
+          "feedback_error": "'Kitchen' = cocina. 'Bathroom' es el baño y 'living room' la sala."
+        },
+        {
+          "id": "q6",
+          "tipo": "opcion_multiple",
+          "concepto_id": "voc.casa.apartment",
+          "enunciado": "Vives en un departamento. ¿Cómo lo dices?",
+          "opciones": ["I live in a department.", "I live in an apartment.", "I live in a floor."],
+          "respuesta_correcta": 1,
+          "feedback_error": "Vivienda = 'apartment'. 'Department' es un área de una empresa o tienda."
+        },
+        {
+          "id": "q7",
+          "tipo": "emparejar",
+          "enunciado": "Une cada palabra con su traducción.",
+          "feedback_error": "Repasa las tablas de la casa.",
+          "pares": [
+            { "concepto_id": "voc.casa.bedroom", "izq": "bedroom", "der": "recámara / dormitorio" },
+            { "concepto_id": "voc.casa.bathroom", "izq": "bathroom", "der": "baño" },
+            { "concepto_id": "voc.casa.window", "izq": "window", "der": "ventana" },
+            { "concepto_id": "voc.casa.chair", "izq": "chair", "der": "silla" }
+          ]
+        }
+      ]
+    }
+  ]
+}
