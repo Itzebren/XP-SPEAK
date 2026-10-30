@@ -20,7 +20,9 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
-private const val BASE_URL_RECUPERACION = "https://xp-speak-auth-backend.vercel.app/"
+// Un solo backend (backend/ en Vercel). En debug se cambia con -PleccionesBaseUrl para probar en local;
+// antes recuperación, voz y chat iban fijos a producción y no se podían probar sin desplegar (QA 30-oct, H9).
+private val BASE_URL_RECUPERACION get() = BuildConfig.LECCIONES_BASE_URL
 
 @Module
 @InstallIn(SingletonComponent::class)

@@ -13,7 +13,7 @@ con `adb` (toques, texto y volcados de la jerarquía de la pantalla). Las captur
 | Backend | `npm run dev:emulador` (servidor local en :3000 con emuladores de Firestore y Auth de Firebase) |
 | Red | `adb reverse tcp:3000` y `tcp:9099`; para el modo sin conexión se quitó el reverse y se apagaron wifi y datos |
 | Cuenta | `qa.tester@xpspeak.test` creada durante la prueba en el emulador de Auth (correo verificado con el enlace que expone el emulador) |
-| Pruebas automáticas | Android 131/131 (`testDebugUnitTest`), backend 166/166 (`npm test`), lint 0 errores, después de las correcciones |
+| Pruebas automáticas | Android 131/131 (H9 es solo de configuración) (`testDebugUnitTest`), backend 166/166 (`npm test`), lint 0 errores, después de las correcciones |
 | Producción | `https://xp-speak-auth-backend.vercel.app` con una cuenta real del proyecto `xp-speak` (sección 4) |
 
 Para poder registrar y verificar cuentas sin tocar el proyecto real de Firebase se agregó la
@@ -71,6 +71,7 @@ Limitaciones del entorno local (no son defectos de la app):
 | H6 | Info | `gradle.properties` trae `leccionesBaseUrl` apuntando a producción, así que el `debug` por defecto ya no usa `localhost:3000` como dice el comentario de `build.gradle.kts` | Documentado; para probar en local hay que pasar `-PleccionesBaseUrl=http://localhost:3000/` |
 | H7 | Info | Producción (Vercel) rechaza con 403 los JWT `alg: none` del emulador de Auth. Es el firewall de Vercel, no la API | Sin acción; las pruebas contra producción deben usar una cuenta real |
 | H8 | **Alta** | Producción: `POST /api/send-reset-code` (recuperar contraseña) respondía **500 "Ocurrió un error"** al pedir un código para `diseno.prueba@xpspeak.com`. Causa más probable: el remitente de pruebas `onboarding@resend.dev` solo puede entregar al correo del dueño de la cuenta de Resend (o falta `RESEND_API_KEY` en Vercel) | **Corregido en la app y el backend**: el backend responde 503 con `CORREO_NO_CONFIGURADO` / `CORREO_NO_DISPONIBLE` (pruebas en `recuperacion.test.js`) y la app, al recibirlo, manda el **enlace de restablecimiento del propio Firebase** (`RecuperacionRepository.enviarEnlaceFirebase`, paso `ENLACE` en la pantalla), que no depende de Resend; se verificó que Firebase lo envía para el proyecto real (`accounts:sendOobCode` → 200). Opcional para volver al código de 6 dígitos: verificar un dominio en Resend |
+| H9 | Baja | En debug, los servicios de recuperación, voz (`speech-token`) y chat iban fijos a la URL de producción aunque lecciones, juegos, progreso y cuenta usen la configurable; por eso no se podían probar en local ni con el emulador de Auth | **Corregido**: todos los servicios usan `BuildConfig.LECCIONES_BASE_URL` (en release sigue siendo la misma URL de Vercel) |
 
 No se encontraron cierres inesperados (crashes) en ninguna pantalla durante la sesión. Los cinco
 hallazgos funcionales de la app (H1–H5) quedaron corregidos en el mismo día; H6 y H7 son notas de
@@ -112,11 +113,22 @@ Sin cierres inesperados en el logcat. Además, `lintDebug` termina con 0 errores
 `NewApi`/`InlinedApi`. Nota para quien automatice: en este emulador los gestos de desplazamiento
 de menos de ~300 ms no se registran; no es de la app.
 
-## 5. Lo que sigue requiriendo algo externo
+## 5. Voz con Azure en pantalla: lo intentado y lo que falta
 
-- Una pasada en teléfono físico con micrófono real (Eco Vocal, chat en vivo y práctica con
-  Azure): el emulador no capta audio. Lo demás de la voz quedó verificado por API con el recurso
-  de producción y la pantalla de retroalimentación se probó con el respaldo del teléfono.
+Se intentó cerrar la prueba de Eco Vocal con Azure real sin teléfono: el emulador Pixel_10a se
+arrancó con `-allow-host-audio` y un arnés local (`proxy-voz.js`, fuera del repo) entregó a la app
+tokens reales de Azure desde producción. El SDK de Azure sí corrió dentro de la app (se registró la
+latencia de la Tabla 93: 456 ms tras dejar de hablar, dentro de RN-05 y R01), pero el micrófono
+virtual recibió silencio porque macOS no concede el micrófono a un emulador lanzado desde terminal
+sin aceptar el diálogo de permisos, y la app respondió correctamente con "Pronunciación incorrecta,
+índice de confianza 0 %" (Ilustración 40, captura 85). Es decir, la cadena completa app → token →
+Azure → pantalla funciona; lo único que no se pudo verificar es un puntaje real con voz humana.
+
+Queda por hacer, y requiere a una persona:
+
+- Una pasada en teléfono físico con micrófono (o conceder el micrófono al emulador en Ajustes del
+  sistema → Privacidad → Micrófono) para ver un puntaje real en Eco Vocal, el chat en vivo y la
+  práctica. La evaluación con Azure ya está verificada por API con el recurso de producción.
 - Opcional: verificar un dominio en Resend para volver al código de 6 dígitos por correo propio
   (hoy la app usa el enlace de Firebase como respaldo y funciona).
 
