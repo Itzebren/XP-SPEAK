@@ -30,9 +30,14 @@ android {
             // con targetSdk 37 Android bloquea a las apps las IPs de red local como 10.0.2.2.
             val leccionesBaseUrl = (project.findProperty("leccionesBaseUrl") as String?) ?: "http://localhost:3000/"
             buildConfigField("String", "LECCIONES_BASE_URL", "\"$leccionesBaseUrl\"")
+            // Pruebas sin cuentas reales: -PfirebaseAuthEmulador=true usa el emulador de Auth
+            // (cd backend && npm run dev:emulador; adb reverse tcp:9099 tcp:9099).
+            val authEmulador = project.findProperty("firebaseAuthEmulador") == "true"
+            buildConfigField("boolean", "FIREBASE_AUTH_EMULADOR", authEmulador.toString())
         }
         release {
             buildConfigField("String", "LECCIONES_BASE_URL", "\"https://xp-speak-auth-backend.vercel.app/\"")
+            buildConfigField("boolean", "FIREBASE_AUTH_EMULADOR", "false")
             optimization {
                 enable = false
             }

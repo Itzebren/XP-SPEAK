@@ -137,7 +137,8 @@ class RafagaViewModel @Inject constructor(
             }
             // Solo vuelve si Azure canceló (sin red, token rechazado…): se apaga el micrófono.
             resultado.exceptionOrNull()?.let {
-                _microfono.value = MicrofonoRafaga(error = "${it.message ?: "No pude usar el micrófono"}. Sigue con los botones.")
+                // QA 29-oct: el mensaje de Azure ya termina en punto; sin trimEnd salía "voz.. Sigue".
+                _microfono.value = MicrofonoRafaga(error = "${(it.message ?: "No pude usar el micrófono").trimEnd('.')}. Sigue con los botones.")
                 escucha = null
             }
         }

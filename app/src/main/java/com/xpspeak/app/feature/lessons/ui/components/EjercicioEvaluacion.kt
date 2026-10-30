@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xpspeak.app.feature.lessons.data.FeedbackDto
@@ -67,11 +69,15 @@ private fun OpcionMultiple(
     onResponder: (RespuestaUsuario) -> Unit
 ) {
     item.opciones.orEmpty().forEachIndexed { indice, opcion ->
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            RadioButton(
-                selected = respuesta?.indice == indice,
-                onClick = { onResponder(RespuestaUsuario.Opcion(indice)) }
-            )
+        val elegida = respuesta?.indice == indice
+        // Toda la fila responde, no solo el círculo (QA 29-oct: tocar el texto no marcaba la opción).
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .selectable(selected = elegida, role = Role.RadioButton, onClick = { onResponder(RespuestaUsuario.Opcion(indice)) })
+        ) {
+            RadioButton(selected = elegida, onClick = null)
             Text(opcion)
         }
     }
