@@ -13,7 +13,7 @@ con `adb` (toques, texto y volcados de la jerarquía de la pantalla). Las captur
 | Backend | `npm run dev:emulador` (servidor local en :3000 con emuladores de Firestore y Auth de Firebase) |
 | Red | `adb reverse tcp:3000` y `tcp:9099`; para el modo sin conexión se quitó el reverse y se apagaron wifi y datos |
 | Cuenta | `qa.tester@xpspeak.test` creada durante la prueba en el emulador de Auth (correo verificado con el enlace que expone el emulador) |
-| Pruebas automáticas | Android 129/129 (`testDebugUnitTest`), backend 166/166 (`npm test`), lint 0 errores, después de las correcciones |
+| Pruebas automáticas | Android 131/131 (`testDebugUnitTest`), backend 166/166 (`npm test`), lint 0 errores, después de las correcciones |
 | Producción | `https://xp-speak-auth-backend.vercel.app` con una cuenta real del proyecto `xp-speak` (sección 4) |
 
 Para poder registrar y verificar cuentas sin tocar el proyecto real de Firebase se agregó la
@@ -70,13 +70,13 @@ Limitaciones del entorno local (no son defectos de la app):
 | H5 | Baja | Inconsistencias de datos locales vs servidor: Inicio decía "Empieza tu racha hoy" mientras Progreso mostraba "1 día"; la pantalla de eliminar cuenta mostraba "A1" después de cambiar a A2 | **Corregido**: Inicio combina la racha local con la del resumen del servidor guardado por Progreso y usa la mayor; la pantalla de eliminar cuenta lee el nivel real del perfil |
 | H6 | Info | `gradle.properties` trae `leccionesBaseUrl` apuntando a producción, así que el `debug` por defecto ya no usa `localhost:3000` como dice el comentario de `build.gradle.kts` | Documentado; para probar en local hay que pasar `-PleccionesBaseUrl=http://localhost:3000/` |
 | H7 | Info | Producción (Vercel) rechaza con 403 los JWT `alg: none` del emulador de Auth. Es el firewall de Vercel, no la API | Sin acción; las pruebas contra producción deben usar una cuenta real |
-| H8 | **Alta** | Producción: `POST /api/send-reset-code` (recuperar contraseña) respondía **500 "Ocurrió un error"** al pedir un código para `diseno.prueba@xpspeak.com`. Causa más probable: el remitente de pruebas `onboarding@resend.dev` solo puede entregar al correo del dueño de la cuenta de Resend (o falta `RESEND_API_KEY` en Vercel) | **Parcialmente corregido**: el backend ya responde 503 con `CORREO_NO_CONFIGURADO` / `CORREO_NO_DISPONIBLE` y un mensaje claro para la app (pruebas en `recuperacion.test.js`). **Acción de despliegue pendiente**: verificar un dominio en Resend y cambiar el `from`, o confirmar la llave en Vercel; después repetir la prueba |
+| H8 | **Alta** | Producción: `POST /api/send-reset-code` (recuperar contraseña) respondía **500 "Ocurrió un error"** al pedir un código para `diseno.prueba@xpspeak.com`. Causa más probable: el remitente de pruebas `onboarding@resend.dev` solo puede entregar al correo del dueño de la cuenta de Resend (o falta `RESEND_API_KEY` en Vercel) | **Corregido en la app y el backend**: el backend responde 503 con `CORREO_NO_CONFIGURADO` / `CORREO_NO_DISPONIBLE` (pruebas en `recuperacion.test.js`) y la app, al recibirlo, manda el **enlace de restablecimiento del propio Firebase** (`RecuperacionRepository.enviarEnlaceFirebase`, paso `ENLACE` en la pantalla), que no depende de Resend; se verificó que Firebase lo envía para el proyecto real (`accounts:sendOobCode` → 200). Opcional para volver al código de 6 dígitos: verificar un dominio en Resend |
 
 No se encontraron cierres inesperados (crashes) en ninguna pantalla durante la sesión. Los cinco
 hallazgos funcionales de la app (H1–H5) quedaron corregidos en el mismo día; H6 y H7 son notas de
-entorno. H8 es de producción: el código ya avisa con claridad, pero el envío real del correo depende
-de la configuración de Resend en Vercel. H1 se verificó de nuevo en el emulador; H2–H5 quedaron
-cubiertos por pruebas unitarias y del backend.
+entorno. H8 era de producción y quedó cubierto con el respaldo de Firebase, así la recuperación de
+contraseña funciona aunque Resend no entregue. H1 se verificó de nuevo en el emulador; H2–H5 y H8
+quedaron cubiertos por pruebas unitarias y del backend.
 
 ## 4. Verificación contra producción (Vercel + Firebase real)
 
@@ -90,7 +90,7 @@ borrada durante la prueba:
 | Evaluación de pronunciación real (REST de Azure con ese token, audio sintetizado "Good morning! My name is Laura.") | ✅ Precisión 98, fluidez 97, completitud 100, confianza 99, seis palabras con fonemas IPA y candidatos. La respuesta se guardó como `app/src/test/resources/azure-pronunciation-real.json` y la lee el analizador de la app en una prueba unitaria |
 | Progreso (`GET /api/progress`) | ✅ 200 con nivel, XP, racha, habilidades e insignias |
 | Eliminar cuenta (`POST /api/account/delete`) | ✅ 200 `{eliminada: true, documentos: 1}`; la cuenta desechable dejó de existir en Firebase Auth (las credenciales de administrador sí están en Vercel) |
-| Recuperar contraseña (`POST /api/send-reset-code`) | ❌ 500 genérico → hallazgo **H8**. La validación de correo inválido (400) y de código incompleto (400) sí funcionan |
+| Recuperar contraseña (`POST /api/send-reset-code`) | ❌ 500 genérico → hallazgo **H8**, resuelto con el enlace de Firebase (`accounts:sendOobCode` responde 200 para el proyecto real). La validación de correo inválido (400) y de código incompleto (400) sí funcionan |
 | Firewall de Vercel | Rechaza tokens del emulador (403), acepta los reales |
 
 Compatibilidad con Android 8.0 (`minSdk 26`): `lintDebug` termina con 0 errores y ninguna
@@ -101,8 +101,10 @@ proteger. Solo se ejecutó en Android 17 porque no hay imagen de sistema de API 
 
 - Una pasada en teléfono físico con micrófono real (Eco Vocal, chat en vivo y práctica con
   Azure): el emulador no capta audio. Todo lo demás de la voz ya quedó verificado por API.
-- Que el correo de recuperación llegue de verdad (H8): depende de Resend/Vercel.
-- Instalar una imagen de Android 8.0 para ejecutar la app ahí (el análisis estático ya pasó).
+- Ejecutar la app en una imagen de Android 8.0 (API 26): no está instalada y la instalación de las
+  herramientas del SDK quedó bloqueada por permisos en esta sesión; se instala desde Android Studio
+  (SDK Manager → `system-images;android-26;google_apis;arm64-v8a`). El análisis estático ya pasó.
+- Si se quiere volver al código de 6 dígitos por correo propio: verificar un dominio en Resend.
 
 ## 6. Cómo repetir
 

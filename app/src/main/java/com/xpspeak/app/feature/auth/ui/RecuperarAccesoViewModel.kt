@@ -3,6 +3,7 @@ package com.xpspeak.app.feature.auth.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xpspeak.app.feature.auth.data.RecuperacionRepository
+import com.xpspeak.app.feature.auth.data.ServicioCorreoNoDisponible
 import com.xpspeak.app.feature.auth.domain.PasswordValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-enum class PasoRecuperacion { CORREO, CODIGO }
+/** ENLACE: el servidor no pudo mandar el código y se envió el enlace de restablecimiento de Firebase. */
+enum class PasoRecuperacion { CORREO, CODIGO, ENLACE }
 
 data class RecuperarUiState(
     val paso: PasoRecuperacion = PasoRecuperacion.CORREO,
@@ -63,7 +65,14 @@ class RecuperarAccesoViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(cargando = false, paso = PasoRecuperacion.CODIGO)
                 }
                 .onFailure { excepcion ->
-                    _uiState.value = _uiState.value.copy(cargando = false, error = excepcion.message)
+                    if (excepcion is ServicioCorreoNoDisponible) {
+                        // QA 29-oct (H8): sin servicio de correo propio, Firebase manda su enlace de restablecimiento.
+                        repository.enviarEnlaceFirebase(correo)
+                            .onSuccess { _uiState.value = _uiState.value.copy(cargando = false, paso = PasoRecuperacion.ENLACE) }
+                            .onFailure { _uiState.value = _uiState.value.copy(cargando = false, error = excepcion.message) }
+                    } else {
+                        _uiState.value = _uiState.value.copy(cargando = false, error = excepcion.message)
+                    }
                 }
         }
     }

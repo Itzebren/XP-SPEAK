@@ -29,7 +29,7 @@ import com.xpspeak.app.core.ui.componentes.CampoTexto
 import com.xpspeak.app.core.ui.componentes.Logotipo
 import com.xpspeak.app.feature.auth.domain.PasswordValidator
 
-/** Recuperar contraseña (Ilustración 30), en dos pasos: correo y código. */
+/** Recuperar contraseña (Ilustración 30), en dos pasos: correo y código; con enlace de Firebase si el correo propio falla. */
 @Composable
 fun RecuperarAccesoScreen(
     onCompletado: () -> Unit,
@@ -100,6 +100,17 @@ fun RecuperarAccesoScreen(
                 )
                 Error(uiState.error?.takeIf { uiState.nuevaPassword.isEmpty() || it != PasswordValidator.mensajeError(uiState.nuevaPassword) })
                 BotonPrincipal("Restablecer contraseña", onClick = viewModel::confirmarNuevaPassword, cargando = uiState.cargando)
+            }
+
+            // QA 29-oct (H8): el servidor no pudo mandar el código; Firebase envió su propio enlace.
+            PasoRecuperacion.ENLACE -> {
+                Text(
+                    "No pudimos mandarte el código, así que te enviamos un enlace para restablecer tu contraseña. " +
+                        "Si el correo está registrado, te llegará en unos minutos: ábrelo, elige tu nueva contraseña y vuelve a iniciar sesión.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
+                BotonPrincipal("Volver a iniciar sesión", onClick = onCompletado)
             }
         }
     }
