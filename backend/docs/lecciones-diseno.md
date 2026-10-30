@@ -30,8 +30,8 @@ Técnico del proyecto (RF/RN/CU) y en fuentes autorizadas del MCER (ver §9).
 | Registro por concepto y conceptos débiles (base SRS) | ✅ | `srs_conceptos`, `GET /api/srs/review` |
 | Pruebas: unitarias, API y emuladores | ✅ | `test/`, `scripts/probar-lecciones.sh` |
 | UI Android (catálogo, teoría, evaluación, resultado) | ✅ | `XP-SPEAK/app/.../feature/lessons/` |
-| **Lecciones dentro del APK** (RNF-08, RN-11, CU-06 paso 2) | ✅ | `npm run exportar:lecciones` → `app/src/main/assets/lecciones/lecciones.json`; Room solo guarda las que cambien después |
-| **Caché offline en Room** (§3, RN-11) | ✅ | `LeccionesDao`; sin conexión ni caché el catálogo se arma con el APK (`CatalogoLocal`) |
+| **Lecciones dentro del APK** (RNF-08, RN-11, CU-06 paso 2) | ✅ | `npm run exportar:lecciones` → `app/src/main/assets/lecciones/contenido.json`; Room solo guarda las que cambien después |
+| **Caché offline en Room** (§3, RN-11) | ✅ | `LeccionesDao`; sin conexión ni caché el catálogo se arma con el APK (`LeccionesLocales.catalogoInicial`) |
 | **Calificación local + outbox** (§6.2) | ✅ | `CalificadorLocal`, `SincronizarIntentosWorker`; aprobar sin conexión ya desbloquea la siguiente |
 | **Retomar una lección a medias** (RN-12, CU-06 A2) | ✅ | `lecciones_en_curso` (Room v6): respuestas y posición; diálogo "¿Retomar la lección?" |
 | **Algoritmo SM-2** (intervalos) | ✅ | `lib/lecciones/sm2.js`, `/api/srs/session` |

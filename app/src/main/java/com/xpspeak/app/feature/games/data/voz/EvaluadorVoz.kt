@@ -1,8 +1,9 @@
 package com.xpspeak.app.feature.games.data.voz
 
-import com.xpspeak.app.feature.games.data.MinijuegosRepository
+import android.util.Log
 import com.xpspeak.app.feature.games.data.TokenVozDto
 import com.xpspeak.app.feature.games.domain.EvaluacionVoz
+import com.xpspeak.app.feature.voice.data.SpeechRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -12,16 +13,17 @@ import javax.inject.Singleton
 /**
  * Elige quién evalúa cada intento de Eco Vocal: Azure si hay red y el
  * backend tiene el recurso configurado; si no, el reconocedor del teléfono.
- * El token se reutiliza mientras no esté por vencer.
+ * El token sale del mismo SpeechRepository que usa el chat: en debug el
+ * backend de minijuegos es el local (localhost:3000), que no tiene Azure,
+ * y Eco Vocal terminaba siempre en el reconocedor del teléfono.
  */
 @Singleton
 class EvaluadorVoz @Inject constructor(
-    private val repository: MinijuegosRepository,
+    private val speechRepository: SpeechRepository,
     private val azure: EvaluadorAzure,
     private val dispositivo: EvaluadorDispositivo
 ) {
     private val pidiendoToken = Mutex()
-    private var token: TokenVozDto? = null
     /** Sin red o sin Azure en el backend: no se vuelve a preguntar en cada intento. */
     private var sinAzureHasta = 0L
 
@@ -33,25 +35,30 @@ class EvaluadorVoz @Inject constructor(
             throw error
         } catch (error: Exception) {
             // Token rechazado, red caída a media frase o falla del SDK: se usa el respaldo.
-            token = null
+            Log.w("EvaluadorVoz", "Azure falló, se usa el reconocedor del teléfono: ${error.message}")
             dispositivo.evaluar(referencia)
         }
     }
 
+    // SpeechRepository ya reutiliza el token mientras no esté por vencer.
     private suspend fun tokenVigente(): TokenVozDto? = pidiendoToken.withLock {
         val ahora = System.currentTimeMillis()
-        token?.takeIf { it.expiraEn - MARGEN_MS > ahora }?.let { return@withLock it }
         if (ahora < sinAzureHasta) return@withLock null
-        runCatching { repository.tokenVoz() }.getOrNull()
-            .also { token = it }
-            .also { if (it == null) sinAzureHasta = ahora + REINTENTO_MS }
+        speechRepository.obtenerCredenciales()
+            .onFailure {
+                Log.w("EvaluadorVoz", "Sin token de Azure, se usa el reconocedor del teléfono: ${it.message}")
+                sinAzureHasta = ahora + REINTENTO_MS
+            }
+            .getOrNull()
+            ?.let { TokenVozDto(it.token, it.region, expiraEn = ahora + VIGENCIA_MINIMA_MS) }
     }
 
     /** Fuera de una ronda (al empezar la partida): ¿se usará Azure? Para avisar al usuario. */
     suspend fun azureDisponible(): Boolean = tokenVigente() != null
 
     private companion object {
-        const val MARGEN_MS = 60_000L
         const val REINTENTO_MS = 2 * 60_000L
+        // SpeechRepository entrega tokens de a lo más 8 min de uso; quedan ≥ 2 min.
+        const val VIGENCIA_MINIMA_MS = 2 * 60_000L
     }
 }

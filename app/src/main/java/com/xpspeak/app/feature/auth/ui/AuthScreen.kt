@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -32,6 +34,7 @@ import com.xpspeak.app.core.ui.componentes.BotonSecundario
 import com.xpspeak.app.core.ui.componentes.CampoTexto
 import com.xpspeak.app.core.ui.componentes.Logotipo
 import com.xpspeak.app.core.ui.theme.XPMarino
+import com.xpspeak.app.feature.auth.domain.PasswordValidator
 
 /** Iniciar sesión y Crear cuenta (Ilustraciones 28 y 29). */
 @Composable
@@ -56,11 +59,17 @@ fun AuthScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
-            .verticalScroll(rememberScrollState())
+            .imePadding().verticalScroll(rememberScrollState())
             .padding(horizontal = 28.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
+        // Sesión guardada: solo el logo mientras se decide a dónde ir.
+        if (uiState.retomandoSesion) {
+            Logotipo(tamano = 190.dp)
+            CircularProgressIndicator(color = XPMarino)
+            return@Column
+        }
         if (uiState.pendienteVerificacion) {
             AvisoVerificacion(uiState, viewModel)
             return@Column
@@ -94,6 +103,7 @@ fun AuthScreen(
             icono = Icons.Filled.Lock,
             esContrasena = true
         )
+        if (!esLogin) RequisitosContrasena(uiState.password)
         if (!esLogin) {
             CampoTexto(
                 valor = uiState.confirmarPassword,
@@ -110,7 +120,8 @@ fun AuthScreen(
             }
         }
 
-        uiState.error?.let { mensaje ->
+        // El aviso de requisitos ya está bajo el campo: no se repite aquí.
+        uiState.error?.takeIf { esLogin || uiState.password.isEmpty() || it != PasswordValidator.mensajeError(uiState.password) }?.let { mensaje ->
             Text(mensaje, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
         }
 

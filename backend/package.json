@@ -8,10 +8,11 @@
   },
   "scripts": {
     "test": "node --test test/*.test.js",
+    "generar:sonidos": "node scripts/generar-sonidos.js",
     "lint:content": "node scripts/lint-content.js",
     "exportar:minijuegos": "node scripts/exportar-banco-minijuegos.js",
-    "exportar:lecciones": "node scripts/exportar-lecciones.js",
     "exportar:insignias": "node scripts/exportar-insignias.js",
+    "exportar:lecciones": "node scripts/exportar-lecciones.js",
     "migrar:resumen": "node scripts/migrar-resumen.js",
     "test:emulador": "firebase emulators:exec --only firestore,auth --project demo-xpspeak \"node --test test/integracion/*.test.js\"",
     "dev:emulador": "firebase emulators:exec --only firestore,auth --project demo-xpspeak \"node scripts/servidor-local.js\"",

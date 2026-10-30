@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -26,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.xpspeak.app.core.ui.componentes.BotonPrincipal
 import com.xpspeak.app.core.ui.componentes.CampoTexto
 import com.xpspeak.app.core.ui.componentes.Logotipo
+import com.xpspeak.app.feature.auth.domain.PasswordValidator
 
 /** Recuperar contraseña (Ilustración 30), en dos pasos: correo y código. */
 @Composable
@@ -43,7 +45,7 @@ fun RecuperarAccesoScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
-            .verticalScroll(rememberScrollState())
+            .imePadding().verticalScroll(rememberScrollState())
             .padding(horizontal = 28.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -88,6 +90,7 @@ fun RecuperarAccesoScreen(
                     icono = Icons.Filled.Lock,
                     esContrasena = true
                 )
+                RequisitosContrasena(uiState.nuevaPassword)
                 CampoTexto(
                     valor = uiState.confirmarPassword,
                     onCambio = viewModel::onConfirmarPasswordChange,
@@ -95,7 +98,7 @@ fun RecuperarAccesoScreen(
                     icono = Icons.Filled.Lock,
                     esContrasena = true
                 )
-                Error(uiState.error)
+                Error(uiState.error?.takeIf { uiState.nuevaPassword.isEmpty() || it != PasswordValidator.mensajeError(uiState.nuevaPassword) })
                 BotonPrincipal("Restablecer contraseña", onClick = viewModel::confirmarNuevaPassword, cargando = uiState.cargando)
             }
         }

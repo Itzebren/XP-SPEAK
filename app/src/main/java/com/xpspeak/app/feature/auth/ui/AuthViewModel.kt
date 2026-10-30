@@ -2,6 +2,8 @@ package com.xpspeak.app.feature.auth.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -31,6 +33,8 @@ data class AuthUiState(
     val aviso: String? = null,
     /** RN-01: la cuenta existe pero su correo aún no se confirma con el enlace. */
     val pendienteVerificacion: Boolean = false,
+    /** Al abrir la app con una sesión guardada: se decide a dónde ir sin mostrar el formulario. */
+    val retomandoSesion: Boolean = false,
     val destino: DestinoPostAuth = DestinoPostAuth.NINGUNO
 )
 
@@ -42,6 +46,27 @@ class AuthViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
+
+    init {
+        retomarSesion()
+    }
+
+    /**
+     * Firebase guarda la sesión en el teléfono: si ya hay una, no se vuelve a pedir
+     * iniciar sesión. Funciona sin conexión (el perfil está en Room); si el correo
+     * aún no se verifica, se va directo al aviso de verificación (RN-01).
+     */
+    private fun retomarSesion() {
+        val usuario = authRepository.usuarioActual ?: return
+        _uiState.value = _uiState.value.copy(retomandoSesion = true, correo = usuario.email.orEmpty())
+        viewModelScope.launch {
+            if (usuario.isEmailVerified) {
+                continuar(usuario.uid)
+            } else {
+                _uiState.value = _uiState.value.copy(retomandoSesion = false, pendienteVerificacion = true)
+            }
+        }
+    }
 
     fun cambiarModo(modo: AuthMode) {
         _uiState.value = _uiState.value.copy(modo = modo, error = null)
@@ -79,7 +104,7 @@ class AuthViewModel @Inject constructor(
                 return
             }
             if (!PasswordValidator.esValida(estado.password)) {
-                _uiState.value = estado.copy(error = PasswordValidator.mensajeError())
+                _uiState.value = estado.copy(error = PasswordValidator.mensajeError(estado.password))
                 return
             }
             if (estado.password != estado.confirmarPassword) {
@@ -102,7 +127,12 @@ class AuthViewModel @Inject constructor(
                     if (usuario.isEmailVerified) {
                         continuar(usuario.uid)
                     } else {
-                        _uiState.value = _uiState.value.copy(cargando = false, pendienteVerificacion = true, password = "", confirmarPassword = "")
+                        // Al registrarse, si el correo no salió se dice por qué (antes se callaba).
+                        val falloEnvio = authRepository.falloEnvioVerificacion.takeIf { estado.modo == AuthMode.REGISTRO }
+                        _uiState.value = _uiState.value.copy(
+                            cargando = false, pendienteVerificacion = true, password = "", confirmarPassword = "",
+                            error = falloEnvio?.let(::mensajeEnvio)
+                        )
                     }
                 }
                 .onFailure { excepcion ->
@@ -135,7 +165,7 @@ class AuthViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(cargando = true, error = null, aviso = null)
             authRepository.reenviarVerificacion()
                 .onSuccess { _uiState.value = _uiState.value.copy(cargando = false, aviso = "Te enviamos un nuevo enlace.") }
-                .onFailure { _uiState.value = _uiState.value.copy(cargando = false, error = "No se pudo reenviar. Espera un momento e intenta de nuevo.") }
+                .onFailure { _uiState.value = _uiState.value.copy(cargando = false, error = mensajeEnvio(it)) }
         }
     }
 
@@ -148,7 +178,7 @@ class AuthViewModel @Inject constructor(
     private suspend fun continuar(uid: String) {
         val tienePerfil = perfilRepository.existePerfil(uid)
         val destino = if (tienePerfil) DestinoPostAuth.HOME else DestinoPostAuth.SELECCIONAR_NIVEL
-        _uiState.value = _uiState.value.copy(cargando = false, pendienteVerificacion = false, destino = destino)
+        _uiState.value = _uiState.value.copy(cargando = false, retomandoSesion = false, pendienteVerificacion = false, destino = destino)
     }
 
     private fun mapearError(excepcion: Throwable): String = when (excepcion) {
@@ -157,5 +187,13 @@ class AuthViewModel @Inject constructor(
         is FirebaseAuthInvalidCredentialsException -> "Correo o contraseña incorrectos."
         is FirebaseAuthInvalidUserException -> "No existe una cuenta con ese correo."
         else -> "Ocurrió un error. Intenta de nuevo."
+    }
+
+    /** Por qué no salió el correo de verificación (RN-01). */
+    private fun mensajeEnvio(excepcion: Throwable): String = when (excepcion) {
+        is FirebaseTooManyRequestsException ->
+            "Firebase pausó los envíos por demasiados intentos seguidos. Espera unos minutos y toca «Reenviar correo»."
+        is FirebaseNetworkException -> "No se pudo enviar el correo: revisa tu conexión y toca «Reenviar correo»."
+        else -> "No se pudo enviar el correo de verificación. Toca «Reenviar correo» en un momento."
     }
 }

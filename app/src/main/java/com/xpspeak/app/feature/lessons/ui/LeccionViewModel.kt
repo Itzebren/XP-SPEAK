@@ -3,11 +3,11 @@ package com.xpspeak.app.feature.lessons.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xpspeak.app.core.medicion.Meta
+import com.xpspeak.app.core.medicion.Tiempos
 import com.xpspeak.app.feature.lessons.data.EnvioIntento
-import com.xpspeak.app.feature.lessons.data.ErrorDelServidor
 import com.xpspeak.app.feature.lessons.data.IntentoResponse
 import com.xpspeak.app.feature.lessons.data.LeccionDto
-import com.xpspeak.app.feature.lessons.data.LeccionEnCurso
 import com.xpspeak.app.feature.lessons.data.LeccionesRepository
 import com.xpspeak.app.feature.lessons.domain.RespuestaUsuario
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,12 +30,6 @@ data class LeccionUiState(
     val resultado: IntentoResponse? = null,
     /** Calificado en el teléfono sin conexión; el XP se confirma al sincronizar. */
     val pendiente: Boolean = false,
-    /** CU-06 A2: hay una sesión anterior sin terminar; se pregunta si retomarla. */
-    val porRetomar: LeccionEnCurso? = null,
-    /** Desplazamiento al que la pantalla debe volver al retomar (se consume una vez). */
-    val posicionPorRestaurar: Int? = null,
-    /** RN-07: es un tema nuevo y antes hay que repasar los conceptos débiles. */
-    val requiereRepaso: Boolean = false,
     val error: String? = null
 )
 
@@ -50,25 +44,22 @@ class LeccionViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LeccionUiState())
     val uiState: StateFlow<LeccionUiState> = _uiState.asStateFlow()
 
-    /** Último desplazamiento de la pantalla, para guardarlo junto con las respuestas. */
-    private var posicion = 0
-
-    private val guardandoEnCurso = Mutex()
+    private val guardandoBorrador = Mutex()
 
     init {
         viewModelScope.launch {
             repository.leccion(leccionId)
                 .onSuccess { leccion ->
-                    val enCurso = repository.leccionEnCurso(leccionId)
-                        ?.takeIf { it.respuestas.isNotEmpty() || it.posicion > 0 }
-                    _uiState.value = _uiState.value.copy(cargando = false, leccion = leccion, porRetomar = enCurso)
-                    // RN-12: marca la lección como "en_progreso" al abrir la teoría. RN-07: si es un tema
-                    // nuevo y toca repasar, el servidor responde 409. Sin conexión no pasa nada.
-                    repository.guardarAvance(leccionId, 0).onFailure { error ->
-                        if ((error as? ErrorDelServidor)?.esRepasoPendiente == true) {
-                            _uiState.value = _uiState.value.copy(requiereRepaso = true, porRetomar = null)
-                        }
-                    }
+                    // RN-12/RNF-10: si la evaluación quedó a medias, se retoma con las mismas respuestas.
+                    val borrador = repository.borrador(leccionId)
+                    _uiState.value = _uiState.value.copy(
+                        cargando = false,
+                        leccion = leccion,
+                        respuestas = borrador?.second ?: emptyMap(),
+                        attemptId = borrador?.first ?: _uiState.value.attemptId
+                    )
+                    // RN-12: marca la lección como "en_progreso" al abrir la teoría.
+                    repository.guardarAvance(leccionId, 0)
                 }
                 .onFailure { excepcion ->
                     _uiState.value = _uiState.value.copy(cargando = false, error = excepcion.message)
@@ -76,55 +67,20 @@ class LeccionViewModel @Inject constructor(
         }
     }
 
-    /** CU-06 A2: vuelve a poner las respuestas y la posición de la sesión anterior. */
-    fun retomar() {
-        val enCurso = _uiState.value.porRetomar ?: return
-        posicion = enCurso.posicion
-        _uiState.value = _uiState.value.copy(
-            respuestas = enCurso.respuestas,
-            attemptId = enCurso.attemptId,
-            porRetomar = null,
-            posicionPorRestaurar = enCurso.posicion
-        )
-    }
-
-    fun empezarDeNuevo() {
-        _uiState.value = _uiState.value.copy(porRetomar = null)
-        viewModelScope.launch { repository.descartarEnCurso(leccionId) }
-    }
-
-    fun posicionRestaurada() {
-        _uiState.value = _uiState.value.copy(posicionPorRestaurar = null)
-    }
-
     fun responder(itemId: String, respuesta: RespuestaUsuario) {
         _uiState.value = _uiState.value.copy(respuestas = _uiState.value.respuestas + (itemId to respuesta))
-        guardarEnCurso()
-    }
-
-    /** La pantalla lo llama al pasar a segundo plano: si el sistema cierra la app, se retoma aquí. */
-    fun guardarPosicion(nueva: Int) {
-        posicion = nueva
-        guardarEnCurso()
-    }
-
-    /** RN-12: cada cambio queda en Room; un cierre inesperado no pierde lo contestado. */
-    private fun guardarEnCurso() {
         // Al escribir en "completar" llega un cambio por tecla: el candado evita que un guardado
         // viejo termine después de uno nuevo, y cada uno lee el estado más reciente.
         viewModelScope.launch {
-            guardandoEnCurso.withLock {
+            guardandoBorrador.withLock {
                 val estado = _uiState.value
-                // Mientras se pregunta si retomar no se pisa la sesión anterior; al enviar ya no hay nada a medias.
-                if (estado.leccion == null || estado.porRetomar != null || estado.resultado != null ||
-                    estado.enviando || estado.requiereRepaso
-                ) return@withLock
-                repository.guardarEnCurso(leccionId, LeccionEnCurso(estado.attemptId, estado.respuestas, posicion))
+                if (estado.resultado == null) repository.guardarBorrador(leccionId, estado.attemptId, estado.respuestas)
             }
         }
     }
 
     fun reintentar() {
+        viewModelScope.launch { guardandoBorrador.withLock { repository.descartarBorrador(leccionId) } }
         _uiState.value = _uiState.value.copy(
             respuestas = emptyMap(),
             attemptId = UUID.randomUUID().toString(),
@@ -138,15 +94,21 @@ class LeccionViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(enviando = true, error = null)
             val estado = _uiState.value
+            val enviado = Tiempos.ahora()
             repository.enviarIntento(leccionId, estado.attemptId, estado.respuestas)
                 .onSuccess { envio ->
-                    // Calificado (o en la cola de envío): ya no hay una lección a medias que retomar.
-                    guardandoEnCurso.withLock { repository.descartarEnCurso(leccionId) }
+                    // RN-05: la retroalimentación gramatical de la evaluación (sin red se califica en el teléfono).
+                    Tiempos.desde(
+                        "leccion.calificacion", enviado, Meta.RN05,
+                        if (envio is EnvioIntento.Pendiente) "sin conexión, calificada en el teléfono" else null
+                    )
                     _uiState.value = _uiState.value.copy(
                         enviando = false,
                         resultado = envio.resultado,
                         pendiente = envio is EnvioIntento.Pendiente
                     )
+                    // Ya calificado (o en la cola offline): no hay nada que retomar.
+                    guardandoBorrador.withLock { repository.descartarBorrador(leccionId) }
                 }
                 .onFailure { excepcion ->
                     _uiState.value = _uiState.value.copy(enviando = false, error = excepcion.message)

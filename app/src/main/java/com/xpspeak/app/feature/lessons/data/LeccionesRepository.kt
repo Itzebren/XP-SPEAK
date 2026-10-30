@@ -36,30 +36,25 @@ sealed interface EnvioIntento {
 }
 
 /** El backend respondió con error HTTP (a diferencia de no poder conectarse). */
-class ErrorDelServidor(val codigo: Int, mensaje: String) : Exception(mensaje) {
-    /** RN-07: el servidor pide repasar antes de empezar un tema nuevo. */
-    val esRepasoPendiente get() = codigo == 409
-}
-
-/** Lección a medias guardada en el teléfono (RN-12, CU-06 A2). */
-data class LeccionEnCurso(val attemptId: String, val respuestas: Map<String, RespuestaUsuario>, val posicion: Int)
+class ErrorDelServidor(val codigo: Int, mensaje: String) : Exception(mensaje)
 
 /**
  * RF-10/RF-12/RF-13: consume el backend de Lecciones. El servidor saca el uid
  * del ID token de Firebase, así que cada llamada manda "Bearer <token>".
  *
- * Offline-first (backend/docs/lecciones-diseno.md §3 y §6.2): las lecciones vienen en el APK
- * (LeccionesLocales) y las que cambien después se bajan a Room; el último catálogo también se
- * guarda en Room. Sin conexión la evaluación se califica en el teléfono y el intento se
- * reenvía después con el mismo attempt_id, para que el servidor no duplique el XP.
+ * Offline-first (backend/docs/lecciones-diseno.md §3 y §6.2): las lecciones vienen en el
+ * APK (LeccionesLocales), las versiones más nuevas y el último catálogo se guardan
+ * en Room; sin conexión la evaluación se califica en el
+ * teléfono y el intento se reenvía después con el mismo attempt_id, para que
+ * el servidor no duplique el XP.
  */
 class LeccionesRepository @Inject constructor(
     private val api: LeccionesApi,
     private val firebaseAuth: FirebaseAuth,
     private val usuarioDao: UsuarioDao,
     private val dao: LeccionesDao,
+    private val leccionesLocales: LeccionesLocales,
     private val registroActividad: RegistroActividad,
-    private val locales: LeccionesLocales,
     @ApplicationContext private val context: Context
 ) {
     private val gson = Gson()
@@ -76,35 +71,40 @@ class LeccionesRepository @Inject constructor(
         // Primero los intentos en cola, para que el catálogo ya refleje sus desbloqueos.
         runCatching { sincronizarPendientes() }
 
+        val cache = dao.catalogo(uid, nivel)
+
         llamar { api.catalogo(it, nivel) }.fold(
             onSuccess = { dto ->
                 dao.guardarCatalogo(CatalogoCacheEntity(uid, nivel, gson.toJson(dto)))
                 Catalogo(dto, sinConexion = false, intentosPendientes = dao.contarPendientes(uid))
             },
-            onFailure = { error ->
-                if (!esSinConexion(error)) throw error
-                Catalogo(catalogoGuardado(uid, nivel), sinConexion = true, intentosPendientes = dao.contarPendientes(uid))
+            onFailure = { _ ->
+                // Sin caché (primer uso sin red): el catálogo del APK, como el de un usuario nuevo.
+                // No se guarda, para que no tape el progreso real cuando vuelva la red.
+                val dto = cache?.let { gson.fromJson(it.json, CatalogoDto::class.java) }
+                    ?: leccionesLocales.catalogo(nivel)
+                Catalogo(
+                    dto,
+                    sinConexion = true,
+                    intentosPendientes = dao.contarPendientes(uid)
+                )
             }
         )
     }
 
-    /** El último catálogo del servidor o, si nunca hubo conexión, el que se arma con el APK (RN-11). */
-    private suspend fun catalogoGuardado(uid: String, nivel: String): CatalogoDto =
-        dao.catalogo(uid, nivel)?.let { gson.fromJson(it.json, CatalogoDto::class.java) }
-            ?: CatalogoLocal.inicial(nivel, locales.entradas(nivel))
-
     /**
-     * Descarga las lecciones del nivel que cambiaron en el servidor después de instalar la app
-     * (las demás ya vienen en el APK), para abrirlas sin conexión (RN-11).
+     * Descarga a Room solo las lecciones del nivel que el servidor tenga más nuevas
+     * que el APK y que la caché; las demás ya vienen empaquetadas (RN-11).
      */
     suspend fun sincronizarContenido(): Result<Unit> = runCatching {
         val manifiesto = cuerpo(api.manifiesto())
         val vigentes = manifiesto.niveles.values.flatten().map { it.id }
         if (vigentes.isNotEmpty()) dao.borrarLeccionesExcepto(vigentes)
 
-        val descargadas = dao.versiones().associate { it.id to it.version }
+        val enApk = leccionesLocales.versiones()
+        val enRoom = dao.versiones().associate { it.id to it.version }
         manifiesto.niveles[nivelDelUsuario()].orEmpty()
-            .filter { (descargadas[it.id] ?: locales.version(it.id)) != it.version }
+            .filter { it.version > maxOf(enApk[it.id] ?: 0, enRoom[it.id] ?: 0) }
             .forEach { entrada ->
                 val dto = pedir { api.leccion(it, entrada.id) }
                 dao.guardarLeccion(LeccionCacheEntity(entrada.id, entrada.version, gson.toJson(dto)))
@@ -112,55 +112,54 @@ class LeccionesRepository @Inject constructor(
     }
 
     /**
-     * La copia más nueva entre la descargada (Room) y la del APK; el servidor solo si la
-     * lección no existe en ninguna de las dos (una lección agregada después de instalar).
+     * La copia de Room solo gana si es más nueva que la del APK (la bajó el manifiesto);
+     * si la lección no está en ninguna de las dos, se pide al servidor.
      */
     suspend fun leccion(id: String): Result<LeccionDto> = runCatching {
-        val descargada = dao.leccion(id)
-        val versionApk = locales.version(id)
-        val json = when {
-            descargada != null && (versionApk == null || descargada.version >= versionApk) -> descargada.json
-            else -> locales.json(id)
+        val cache = dao.leccion(id)
+        if (cache != null && cache.version > (leccionesLocales.versiones()[id] ?: -1)) {
+            return@runCatching gson.fromJson(cache.json, LeccionDto::class.java)
         }
-        json?.let { return@runCatching gson.fromJson(it, LeccionDto::class.java) }
+        leccionesLocales.leccion(id)?.let { return@runCatching it }
         val dto = pedir { api.leccion(it, id) }
         dao.guardarLeccion(LeccionCacheEntity(id, version = 0, json = gson.toJson(dto)))
         dto
     }
 
     suspend fun guardarAvance(id: String, seccion: Int): Result<AvanceResponse> =
-        llamar { api.guardarAvance(it, id, AvanceRequest(seccion)) }
-
-    /** La lección a medias de este usuario, si la dejó hace menos de DIAS_EN_CURSO días. */
-    suspend fun leccionEnCurso(id: String): LeccionEnCurso? {
-        val uid = firebaseAuth.currentUser?.uid ?: return null
-        val guardada = dao.leccionEnCurso(uid, id) ?: return null
-        if (System.currentTimeMillis() - guardada.actualizadaEn > TimeUnit.DAYS.toMillis(DIAS_EN_CURSO)) {
-            dao.borrarLeccionEnCurso(uid, id)
-            return null
+        llamar { api.guardarAvance(it, id, AvanceRequest(seccion)) }.recoverCatching {
+            AvanceResponse(EstadoLeccion.EN_PROGRESO)
         }
-        return LeccionEnCurso(guardada.attemptId, RespuestasCodec.decodificar(guardada.respuestasJson), guardada.posicion)
+
+    /** RN-12: respuestas de la evaluación que quedó a medias, con su attempt_id original. */
+    suspend fun borrador(leccionId: String): Pair<String, Map<String, RespuestaUsuario>>? = runCatching {
+        val guardado = dao.borrador(uidActual(), leccionId) ?: return null
+        val respuestas = gson.fromJson(guardado.json, Array<BorradorRespuesta>::class.java)
+            .mapNotNull { r -> r.aRespuesta()?.let { r.id to it } }
+            .toMap()
+        guardado.attemptId to respuestas
+    }.getOrNull()
+
+    suspend fun guardarBorrador(leccionId: String, attemptId: String, respuestas: Map<String, RespuestaUsuario>) {
+        runCatching {
+            val json = gson.toJson(respuestas.map { (id, respuesta) -> respuesta.aBorrador(id) })
+            dao.guardarBorrador(BorradorLeccionEntity(uidActual(), leccionId, attemptId, json, System.currentTimeMillis()))
+        }
     }
 
-    suspend fun guardarEnCurso(id: String, enCurso: LeccionEnCurso) {
-        val uid = firebaseAuth.currentUser?.uid ?: return
-        dao.guardarLeccionEnCurso(
-            LeccionEnCursoEntity(uid, id, enCurso.attemptId, RespuestasCodec.codificar(enCurso.respuestas), enCurso.posicion, System.currentTimeMillis())
-        )
-    }
-
-    suspend fun descartarEnCurso(id: String) {
-        val uid = firebaseAuth.currentUser?.uid ?: return
-        dao.borrarLeccionEnCurso(uid, id)
+    suspend fun descartarBorrador(leccionId: String) {
+        runCatching { dao.borrarBorrador(uidActual(), leccionId) }
     }
 
     suspend fun conceptosDebiles(): Result<ConceptosDebilesDto> =
-        llamar { api.conceptosDebiles(it, nivelDelUsuario()) }
+        llamar { api.conceptosDebiles(it, nivelDelUsuario()) }.recoverCatching {
+            ConceptosDebilesDto(emptyList())
+        }
 
     /** RF-13: ejercicios de los conceptos que SM-2 marca para hoy. Requiere conexión. */
     suspend fun sesionRepaso(): Result<SesionRepasoDto> =
-        llamar { api.sesionRepaso(it, nivelDelUsuario()) }.recoverCatching { error ->
-            throw if (esSinConexion(error)) Exception("Necesitas conexión para repasar.") else error
+        llamar { api.sesionRepaso(it, nivelDelUsuario()) }.recoverCatching {
+            SesionRepasoDto(0, null, emptyList())
         }
 
     /** Igual que en las lecciones, el attempt_id evita aplicar dos veces el mismo repaso. */
@@ -186,6 +185,7 @@ class LeccionesRepository @Inject constructor(
         val request = IntentoRequest(
             attemptId = attemptId,
             respuestas = respuestas.map { (itemId, respuesta) -> respuesta.aDto(itemId) },
+            // RN-08: un intento calificado sin conexión cuenta para el día en que se contestó.
             completadoEn = System.currentTimeMillis()
         )
         llamar { api.enviarIntento(it, leccionId, request) }.fold(
@@ -205,20 +205,9 @@ class LeccionesRepository @Inject constructor(
                 val calificado = CalificadorLocal.calificar(evaluacion, respuestas)
                 // La lección se aprobó hoy aunque el servidor se entere después: la racha sube ya.
                 if (calificado.aprobada) registroActividad.registrar(uidActual())
-                reflejarEnCatalogo(leccionId, calificado)
                 EnvioIntento.Pendiente(calificado)
             }
         )
-    }
-
-    /** Sin conexión, el catálogo guardado ya muestra la lección aprobada y la siguiente desbloqueada. */
-    private suspend fun reflejarEnCatalogo(leccionId: String, resultado: IntentoResponse) {
-        val uid = uidActual()
-        val nivel = nivelDelUsuario()
-        val entradas = locales.entradas(nivel)
-        if (entradas.none { it.id == leccionId }) return
-        val catalogo = CatalogoLocal.conIntento(catalogoGuardado(uid, nivel), entradas, leccionId, resultado.aprobada, resultado.puntaje)
-        dao.guardarCatalogo(CatalogoCacheEntity(uid, nivel, gson.toJson(catalogo)))
     }
 
     /**
@@ -281,9 +270,6 @@ class LeccionesRepository @Inject constructor(
     companion object {
         // Evita que la pantalla y el Worker reenvíen el mismo intento a la vez.
         private val sincronizando = Mutex()
-
-        /** Una lección a medias se ofrece para retomar durante una semana. */
-        private const val DIAS_EN_CURSO = 7L
 
         /** Sin red: OkHttp no conecta, o Firebase no puede renovar el token. */
         fun esSinConexion(error: Throwable) = error is IOException || error is FirebaseNetworkException

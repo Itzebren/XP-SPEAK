@@ -1,5 +1,6 @@
 package com.xpspeak.app.feature.auth.data
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.userProfileChangeRequest
@@ -16,6 +17,11 @@ open class AuthRepository @Inject constructor(
     // Constructor secundario protegido para pruebas unitarias sin Dagger
     protected constructor() : this(null)
 
+    private companion object {
+        /** Logcat: fallos al enviar el correo de verificación (RN-01). */
+        const val TAG = "XPS-AUTH"
+    }
+
     open val usuarioActual: FirebaseUser?
         get() = firebaseAuth?.currentUser
 
@@ -27,16 +33,24 @@ open class AuthRepository @Inject constructor(
         if (!nombre.isNullOrBlank()) {
             usuario.updateProfile(userProfileChangeRequest { displayName = nombre.trim() }).await()
         }
-        // RN-01: si el envío falla, la cuenta ya existe; el usuario puede reenviarlo desde el aviso.
-        runCatching { usuario.sendEmailVerification().await() }
+        // RN-01: si el envío falla, la cuenta ya existe; se guarda el motivo para avisarlo
+        // y el usuario puede reenviarlo desde el aviso.
+        falloEnvioVerificacion = runCatching { usuario.sendEmailVerification().await() }
+            .onFailure { Log.w(TAG, "No se envió la verificación al registrarse", it) }
+            .exceptionOrNull()
         usuario
     }
+
+    /** Por qué no salió el correo de verificación al registrarse, o null si se envió. */
+    open var falloEnvioVerificacion: Throwable? = null
+        protected set
 
     /** RN-01: vuelve a mandar el enlace de verificación al correo de la sesión actual. */
     open suspend fun reenviarVerificacion(): Result<Unit> = runCatching {
         val usuario = requireNotNull(usuarioActual) { "Inicia sesión para verificar tu correo." }
         usuario.sendEmailVerification().await()
-    }
+        Unit
+    }.onFailure { Log.w(TAG, "No se reenvió la verificación", it) }
 
     /** Recarga el usuario desde Firebase: `isEmailVerified` no cambia solo al abrir el enlace. */
     open suspend fun correoVerificado(): Result<Boolean> = runCatching {

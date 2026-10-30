@@ -1,19 +1,17 @@
 package com.xpspeak.app.feature.games.ui.orden
 
-import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
-import com.xpspeak.app.core.ui.theme.FormaBoton
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,11 +24,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.xpspeak.app.core.ui.theme.FormaBoton
+import com.xpspeak.app.core.ui.theme.XPBlanco
+import com.xpspeak.app.core.ui.theme.XPMarino
+import com.xpspeak.app.core.ui.theme.XPTextoSecundario
 import com.xpspeak.app.core.ui.theme.XPVerdeExito
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
 import com.xpspeak.app.feature.games.domain.GeneradorRondas
 import com.xpspeak.app.feature.games.domain.Minijuego
+import com.xpspeak.app.feature.games.ui.comun.ChipDato
+import com.xpspeak.app.feature.games.ui.comun.EtiquetaJuego
+import com.xpspeak.app.feature.games.ui.comun.LocalTemaJuego
 import com.xpspeak.app.feature.games.ui.comun.PantallaPartida
+import com.xpspeak.app.feature.games.ui.comun.TONOS_FICHA
 import com.xpspeak.app.feature.games.ui.comun.TarjetaFeedback
+import com.xpspeak.app.feature.games.ui.comun.TarjetaJuego
 import com.xpspeak.app.feature.games.ui.comun.Veredicto
 import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
 
@@ -46,6 +54,7 @@ fun OrdenMaestroScreen(onVolver: () -> Unit, viewModel: OrdenMaestroViewModel = 
         onVolver = onVolver,
         progreso = { (it.numeroRonda - 1).toFloat() / GeneradorRondas.RONDAS_ORDEN }
     ) { estado ->
+        val tema = LocalTemaJuego.current
         val ronda = estado.ronda
         val revision = estado.revision
         val oracion = ronda.solucion.joinToString(" ").replaceFirstChar { it.uppercase() } + ronda.puntuacion
@@ -53,33 +62,39 @@ fun OrdenMaestroScreen(onVolver: () -> Unit, viewModel: OrdenMaestroViewModel = 
         // Al acertar se escucha la oración completa (§5.4 paso 3).
         LaunchedEffect(revision) { if (revision?.correcta == true) locutor.decir(oracion) }
 
-        Text("Oración ${estado.numeroRonda} de ${GeneradorRondas.RONDAS_ORDEN}", style = MaterialTheme.typography.labelLarge)
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Ordena la oración", style = MaterialTheme.typography.labelMedium)
-                Text(ronda.pista, style = MaterialTheme.typography.titleMedium)
-            }
+        ChipDato(Icons.Filled.Reorder, "Oración ${estado.numeroRonda} de ${GeneradorRondas.RONDAS_ORDEN}", XPBlanco, tema.texto)
+        TarjetaJuego {
+            EtiquetaJuego("Ordena la oración")
+            Text(ronda.pista, style = MaterialTheme.typography.titleMedium, color = XPMarino)
         }
 
         // Oración en construcción: tocar una ficha la regresa.
-        OutlinedCard(modifier = Modifier.fillMaxWidth().heightIn(min = 96.dp)) {
+        Surface(
+            color = XPBlanco,
+            shape = RoundedCornerShape(20.dp),
+            border = BorderStroke(2.dp, tema.acento.copy(alpha = 0.35f)),
+            modifier = Modifier.fillMaxWidth().heightIn(min = 104.dp)
+        ) {
             FlowRow(
                 modifier = Modifier.padding(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 itemVerticalAlignment = Alignment.CenterVertically
             ) {
+                if (estado.colocadas.isEmpty()) {
+                    Text("Toca las fichas en orden para armar la oración", style = MaterialTheme.typography.bodyMedium, color = XPTextoSecundario)
+                }
                 estado.colocadas.forEachIndexed { posicion, indice ->
-                    val color = when {
+                    val revisada = when {
                         revision == null -> null
                         revision.correcta -> XPVerdeExito
                         posicion in revision.posicionesMal -> MaterialTheme.colorScheme.error
                         else -> null
                     }
-                    Ficha(ronda.fichas[indice], color = color, onClick = { viewModel.quitar(posicion) })
+                    Ficha(ronda.fichas[indice], tono = tonoDe(indice), revisada = revisada, onClick = { viewModel.quitar(posicion) })
                 }
                 if (estado.colocadas.size == ronda.fichas.size) {
-                    Text(ronda.puntuacion, style = MaterialTheme.typography.titleLarge)
+                    Text(ronda.puntuacion, style = MaterialTheme.typography.titleLarge, color = XPMarino)
                 }
             }
         }
@@ -87,10 +102,10 @@ fun OrdenMaestroScreen(onVolver: () -> Unit, viewModel: OrdenMaestroViewModel = 
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             ronda.fichas.forEachIndexed { indice, ficha ->
-                if (indice !in estado.colocadas) Ficha(ficha, onClick = { viewModel.colocar(indice) })
+                if (indice !in estado.colocadas) Ficha(ficha, tono = tonoDe(indice), onClick = { viewModel.colocar(indice) })
             }
         }
 
@@ -105,28 +120,36 @@ fun OrdenMaestroScreen(onVolver: () -> Unit, viewModel: OrdenMaestroViewModel = 
                 )
                 else -> TarjetaFeedback(Veredicto.ERROR, "La oración correcta es:", oracion)
             }
-            Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = viewModel::continuar, modifier = Modifier.fillMaxWidth()) {
-                Text(if (revision.definitiva) "Continuar" else "Intentar de nuevo")
+            Button(
+                colors = coloresBotonPrincipal(),
+                shape = FormaBoton,
+                onClick = viewModel::continuar,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 54.dp)
+            ) {
+                Text(if (revision.definitiva) "Continuar" else "Intentar de nuevo", fontWeight = FontWeight.Bold)
             }
         }
     }
 }
 
+/** Cada ficha conserva su color al moverse, para seguirla con la vista. */
+private fun tonoDe(indice: Int) = TONOS_FICHA[indice % TONOS_FICHA.size]
+
 @Composable
-private fun Ficha(texto: String, color: Color? = null, onClick: () -> Unit) {
+private fun Ficha(texto: String, tono: Color, revisada: Color? = null, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
-        shape = MaterialTheme.shapes.medium,
-        tonalElevation = 2.dp,
-        shadowElevation = 1.dp,
-        border = BorderStroke(2.dp, color ?: MaterialTheme.colorScheme.outlineVariant),
-        color = color?.copy(alpha = 0.12f) ?: MaterialTheme.colorScheme.surface
+        shape = RoundedCornerShape(14.dp),
+        shadowElevation = 2.dp,
+        border = BorderStroke(if (revisada != null) 3.dp else 1.5.dp, revisada ?: XPMarino),
+        color = revisada?.copy(alpha = 0.15f) ?: tono
     ) {
         Text(
             texto,
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Bold,
+            color = XPMarino
         )
     }
 }

@@ -2,10 +2,11 @@ package com.xpspeak.app.feature.lessons.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xpspeak.app.feature.lessons.data.AscensoRepository
 import com.xpspeak.app.feature.lessons.data.ConceptoDebilDto
-import com.xpspeak.app.feature.lessons.data.EstadoLeccion
 import com.xpspeak.app.feature.lessons.data.LeccionResumenDto
 import com.xpspeak.app.feature.lessons.data.LeccionesRepository
+import com.xpspeak.app.feature.lessons.domain.RepasoPrimero
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,14 +25,17 @@ data class LessonsUiState(
     val intentosPendientes: Int = 0,
     /** Conceptos que SM-2 marca para repasar hoy (RF-13). */
     val repasoPendiente: Int = 0,
-    /** RN-07: hay temas nuevos en espera hasta hacer el repaso. */
-    val repasoBloquea: Boolean = false,
+    /** De esos, los de alta tasa de error: mientras haya, no se empieza un tema nuevo (RN-07). */
+    val repasoPrioritario: Int = 0,
+    /** Acaba de completar su nivel y pasó a este (A1 → A2), para felicitarlo. */
+    val ascendioA: String? = null,
     val error: String? = null
 )
 
 @HiltViewModel
 class LessonsViewModel @Inject constructor(
-    private val repository: LeccionesRepository
+    private val repository: LeccionesRepository,
+    private val ascenso: AscensoRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LessonsUiState())
@@ -47,7 +51,6 @@ class LessonsViewModel @Inject constructor(
                         cargando = false,
                         nivel = catalogo.dto.nivel,
                         lecciones = catalogo.dto.lecciones,
-                        repasoBloquea = catalogo.dto.lecciones.any { it.estado == EstadoLeccion.REPASO_PENDIENTE },
                         sinConexion = catalogo.sinConexion,
                         intentosPendientes = catalogo.intentosPendientes
                     )
@@ -56,16 +59,33 @@ class LessonsViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(cargando = false, error = excepcion.message)
                 }
                 .getOrNull()
-            if (catalogo == null || catalogo.sinConexion) return@launch
+            if (catalogo == null || catalogo.sinConexion) {
+                // Sin red el repaso no se puede hacer: no se deja el candado de RN-07 de la carga anterior.
+                _uiState.value = _uiState.value.copy(repasoPendiente = 0, repasoPrioritario = 0)
+                return@launch
+            }
+            // Completó todo A1: pasa a A2 y se carga su catálogo.
+            ascenso.ascenderSiCorresponde(catalogo)?.let { nuevo ->
+                _uiState.value = _uiState.value.copy(ascendioA = nuevo)
+                cargar()
+                return@launch
+            }
 
             repository.conceptosDebiles().onSuccess { dto ->
                 _uiState.value = _uiState.value.copy(conceptosDebiles = dto.conceptos)
             }
             repository.sesionRepaso().onSuccess { sesion ->
-                _uiState.value = _uiState.value.copy(repasoPendiente = sesion.totalVencidos)
+                _uiState.value = _uiState.value.copy(
+                    repasoPendiente = sesion.totalVencidos,
+                    repasoPrioritario = RepasoPrimero.prioritarios(sesion)
+                )
             }
             // En segundo plano: deja descargadas las lecciones del nivel para usarlas sin conexión.
             repository.sincronizarContenido()
         }
+    }
+
+    fun cerrarAscenso() {
+        _uiState.value = _uiState.value.copy(ascendioA = null)
     }
 }

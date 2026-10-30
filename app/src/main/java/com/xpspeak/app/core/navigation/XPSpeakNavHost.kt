@@ -25,13 +25,12 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -71,20 +70,11 @@ private val bottomTabs = listOf(
 )
 
 /**
- * Grafo de navegación raíz. Arranca en Inicio si ya hay una sesión guardada
- * (ArranqueViewModel); si no, en el acceso.
+ * Grafo de navegación raíz. Arranca en AUTH, que con una sesión guardada salta
+ * sola a Inicio o a elegir nivel (AuthViewModel.retomarSesion).
  */
 @Composable
-fun XPSpeakNavHost(
-    navController: NavHostController = rememberNavController(),
-    arranque: ArranqueViewModel = hiltViewModel()
-) {
-    val destinoInicial by arranque.destino.collectAsState()
-    // Mientras se lee el perfil local se muestra solo el fondo (unos milisegundos, sin parpadeo del login).
-    val inicio = destinoInicial ?: run {
-        Box(modifier = Modifier.fillMaxSize().background(XPFondo))
-        return
-    }
+fun XPSpeakNavHost(navController: NavHostController = rememberNavController()) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination
 
@@ -127,7 +117,7 @@ fun XPSpeakNavHost(
         Box(modifier = Modifier.fillMaxSize()) {
             NavHost(
                 navController = navController,
-                startDestination = inicio,
+                startDestination = Routes.AUTH,
                 modifier = Modifier
                     .padding(innerPadding)
                     .consumeWindowInsets(innerPadding)
@@ -202,13 +192,7 @@ fun XPSpeakNavHost(
                     RepasoScreen(onVolver = { navController.popBackStack() })
                 }
                 composable(Routes.LECCION) {
-                    LeccionScreen(
-                        onVolver = { navController.popBackStack() },
-                        // RN-07: el repaso reemplaza a la lección; al terminar se vuelve al catálogo.
-                        onAbrirRepaso = {
-                            navController.navigate(Routes.REPASO) { popUpTo(Routes.LECCION) { inclusive = true } }
-                        }
-                    )
+                    LeccionScreen(onVolver = { navController.popBackStack() })
                 }
                 composable(Routes.GAMES) {
                     GamesScreen(onAbrirJuego = { juego -> navController.navigate(Routes.minijuego(juego.id)) })
@@ -255,13 +239,9 @@ fun XPSpeakNavHost(
     }
 }
 
-/**
- * Cambia de pestaña conservando el estado de cada una (como la barra inferior). Inicio es
- * siempre la base de la pila de pestañas (el acceso y la nivelación se sacan al entrar),
- * así que las pestañas no se apilan.
- */
+/** Cambia de pestaña conservando el estado de cada una (como la barra inferior). */
 private fun NavHostController.irAPestana(ruta: String) = navigate(ruta) {
-    popUpTo(Routes.INICIO) { saveState = true }
+    popUpTo(graph.findStartDestination().id) { saveState = true }
     launchSingleTop = true
     restoreState = true
 }

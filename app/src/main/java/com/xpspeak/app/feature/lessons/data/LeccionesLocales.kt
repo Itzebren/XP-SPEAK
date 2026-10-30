@@ -2,50 +2,23 @@ package com.xpspeak.app.feature.lessons.data
 
 import android.content.Context
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Lecciones empaquetadas en el APK (RNF-08 / RN-11, CU-06 paso 2): `assets/lecciones/lecciones.json`,
- * generado con `npm run exportar:lecciones` desde backend/content/lessons. Con esto las 24 lecciones
- * se abren y se califican sin haberse conectado nunca; el manifiesto del servidor solo sirve
- * para bajar las que cambien después de instalar la app.
- */
-@Singleton
-class LeccionesLocales @Inject constructor(@ApplicationContext private val context: Context) {
-
-    private val paquete: PaqueteLecciones by lazy {
-        context.assets.open(RUTA).bufferedReader().use { Gson().fromJson(it, PaqueteLecciones::class.java) }
-    }
-
-    private val porId: Map<String, JsonObject> by lazy {
-        paquete.lecciones.associateBy { it.get("id").asString }
-    }
-
-    /** Lecciones del nivel en orden, con lo necesario para armar el catálogo sin servidor. */
-    fun entradas(nivel: String): List<EntradaPaqueteDto> = paquete.niveles[nivel].orEmpty()
-
-    fun version(id: String): Int? = paquete.niveles.values.flatten().firstOrNull { it.id == id }?.version
-
-    /** El JSON de la lección tal como lo manda GET /api/lessons/:id. */
-    fun json(id: String): String? = porId[id]?.toString()
-
-    private companion object {
-        const val RUTA = "lecciones/lecciones.json"
-    }
-}
-
-data class PaqueteLecciones(
+/** assets/lecciones/contenido.json, generado con `npm run exportar:lecciones`. */
+data class ContenidoEmpaquetado(
     @SerializedName("version_contenido") val versionContenido: String,
-    val niveles: Map<String, List<EntradaPaqueteDto>>,
-    val lecciones: List<JsonObject>
+    val niveles: Map<String, List<EntradaEmpaquetada>>,
+    val lecciones: List<LeccionDto>
 )
 
-/** Una entrada del manifiesto (backend/lib/lecciones/contenido.js → construirManifiesto). */
-data class EntradaPaqueteDto(
+data class EntradaEmpaquetada(
     val id: String,
     val version: Int,
     val orden: Int,
@@ -53,3 +26,50 @@ data class EntradaPaqueteDto(
     val titulo: String,
     @SerializedName("xp_recompensa") val xpRecompensa: Int
 )
+
+/**
+ * RNF-08 / RN-11: las lecciones vienen en el APK, así se abren sin conexión
+ * desde la instalación. El servidor sigue siendo el que manda: si tiene una
+ * versión más nueva de una lección, el repositorio la descarga a Room.
+ */
+@Singleton
+class LeccionesLocales @Inject constructor(@ApplicationContext private val context: Context) {
+    private val gson = Gson()
+    private val leyendo = Mutex()
+    private var contenido: ContenidoEmpaquetado? = null
+
+    suspend fun contenido(): ContenidoEmpaquetado = leyendo.withLock {
+        contenido ?: withContext(Dispatchers.IO) {
+            context.assets.open(RUTA).reader().use { gson.fromJson(it, ContenidoEmpaquetado::class.java) }
+        }.also { contenido = it }
+    }
+
+    suspend fun leccion(id: String): LeccionDto? = contenido().lecciones.firstOrNull { it.id == id }
+
+    /** Versión de cada lección empaquetada, para no descargar lo que ya trae el APK. */
+    suspend fun versiones(): Map<String, Int> =
+        contenido().niveles.values.flatten().associate { it.id to it.version }
+
+    /** Catálogo sin conexión ni caché: sin progreso conocido, igual que un usuario nuevo. */
+    suspend fun catalogo(nivel: String): CatalogoDto = catalogoInicial(contenido(), nivel)
+
+    companion object {
+        private const val RUTA = "lecciones/contenido.json"
+
+        /** Como el servidor sin progreso: disponible la lección sin prerrequisito, las demás bloqueadas (RN-06). */
+        fun catalogoInicial(contenido: ContenidoEmpaquetado, nivel: String): CatalogoDto = CatalogoDto(
+            nivel = nivel,
+            lecciones = contenido.niveles[nivel].orEmpty().map { entrada ->
+                LeccionResumenDto(
+                    id = entrada.id,
+                    orden = entrada.orden,
+                    titulo = entrada.titulo,
+                    estado = if (entrada.prerequisitoId == null) EstadoLeccion.DISPONIBLE else EstadoLeccion.BLOQUEADA,
+                    intentos = 0,
+                    xpRecompensa = entrada.xpRecompensa,
+                    mejorPuntaje = null
+                )
+            }
+        )
+    }
+}

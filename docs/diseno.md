@@ -113,7 +113,8 @@
 | `inicio_lecciones`, `inicio_minijuegos`, `inicio_ia`, `inicio_progreso` | Accesos del Inicio |
 | `juego_<id>` (4) | Catálogo de minijuegos |
 | `leccion_<id>` (24) | Catálogo de lecciones; si falta una, se usa `inicio_lecciones` |
-| `avatar_<id>` (8) | Personalización y ajustes (`UsuarioEntity.avatar`) |
+| `avatar_<id>` (8) | Personalización y ajustes (`UsuarioEntity.avatar`); salen de `node docs/diseno-arte/avatares.js` |
+| `avatar_robot` | El tutor en el chat |
 | `moneda_xp`, `icono_racha` | Tarjetas de XP y racha, Inicio |
 
 ## 4. Pendiente
@@ -123,7 +124,7 @@ Ninguna pantalla del PDF queda sin implementar. Lo que sigue es de despliegue o 
 1. **Despliegue:** `api/account/delete` necesita las credenciales de administrador de Firebase
    en Vercel (las mismas de `verify-reset-code`).
 2. **Cuenta de prueba:** borrar `diseno.prueba@xpspeak.com` desde la consola de Firebase.
-3. ~~**Arranque con sesión**~~ ✅ (rama `feature/requisitos-tt`): `ArranqueViewModel` entra directo a Inicio
-   con la sesión guardada de Firebase, también sin conexión.
+3. ~~**Arranque con sesión**~~ ✅ (rama `feature/sesion-guardada`): `AuthViewModel.retomarSesion` salta
+   de AUTH a Inicio con la sesión guardada de Firebase, también sin conexión.
 4. **Resto de minijuegos y repaso:** usan los colores y el encabezado nuevos, pero su contenido
    conserva la maquetación anterior; pueden adoptar `TarjetaXP`.

@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -59,6 +58,14 @@ import com.xpspeak.app.core.ui.theme.XPTextoSecundario
 import com.xpspeak.app.core.ui.theme.XPVerdeExito
 import com.xpspeak.app.feature.lessons.data.EstadoLeccion
 import com.xpspeak.app.feature.lessons.data.LeccionResumenDto
+import com.xpspeak.app.feature.lessons.domain.RepasoPrimero
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.xpspeak.app.core.ui.theme.FormaBoton
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
 
 /**
  * RF-10: catálogo de lecciones del nivel del usuario en cuadrícula de 2 columnas
@@ -72,8 +79,18 @@ fun LessonsScreen(
     viewModel: LessonsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var avisoRepaso by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { viewModel.cargar() }
+
+    if (avisoRepaso) {
+        DialogoRepasoPrimero(
+            conceptos = uiState.repasoPrioritario,
+            onRepasar = { avisoRepaso = false; onAbrirRepaso() },
+            onCerrar = { avisoRepaso = false }
+        )
+    }
+    uiState.ascendioA?.let { nivel -> DialogoAscenso(nivel, onCerrar = viewModel::cerrarAscenso) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         EncabezadoXP(
@@ -131,9 +148,9 @@ fun LessonsScreen(
                                 "${uiState.repasoPendiente} concepto(s) por repasar",
                                 style = MaterialTheme.typography.bodySmall
                             )
-                            if (uiState.repasoBloquea) {
+                            if (uiState.repasoPrioritario > 0) {
                                 Text(
-                                    "Haz tu repaso para desbloquear los temas nuevos.",
+                                    "Termínalo para empezar lecciones nuevas.",
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -144,11 +161,14 @@ fun LessonsScreen(
             }
 
             items(uiState.lecciones, key = { it.id }) { leccion ->
-                TarjetaLeccion(
-                    leccion,
-                    // RN-07: un tema nuevo en espera lleva al repaso, no a la lección.
-                    onClick = { if (leccion.estado == EstadoLeccion.REPASO_PENDIENTE) onAbrirRepaso() else onAbrirLeccion(leccion.id) }
-                )
+                TarjetaLeccion(leccion, onClick = {
+                    when {
+                        // RN-07 según el servidor: el tema nuevo espera al repaso.
+                        leccion.estado == EstadoLeccion.REPASO_PENDIENTE -> onAbrirRepaso()
+                        RepasoPrimero.retiene(leccion, uiState.repasoPrioritario) -> avisoRepaso = true
+                        else -> onAbrirLeccion(leccion.id)
+                    }
+                })
             }
 
             if (uiState.conceptosDebiles.isNotEmpty()) {
@@ -173,6 +193,40 @@ fun LessonsScreen(
     }
 }
 
+/** RN-07: se tocó una lección nueva con conceptos de alta tasa de error pendientes. */
+@Composable
+private fun DialogoRepasoPrimero(conceptos: Int, onRepasar: () -> Unit, onCerrar: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onCerrar,
+        title = { Text("Primero, un repaso") },
+        text = {
+            Text(
+                "Tienes $conceptos concepto(s) que te han costado y toca repasar hoy. " +
+                    "Repásalos antes de empezar un tema nuevo; las lecciones que ya empezaste siguen abiertas."
+            )
+        },
+        confirmButton = { Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onRepasar) { Text("Repasar ahora") } },
+        dismissButton = { TextButton(onClick = onCerrar) { Text("Ahora no") } }
+    )
+}
+
+/** Completó todas las lecciones de su nivel y pasó al siguiente (AscensoNivel). */
+@Composable
+private fun DialogoAscenso(nivel: String, onCerrar: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onCerrar,
+        icon = { DistintivoNivel(nivel, tamano = 48.dp) },
+        title = { Text("¡Subiste a $nivel!") },
+        text = {
+            Text(
+                "Completaste todas las lecciones de tu nivel. Desde ahora tus lecciones, el chat y los " +
+                    "minijuegos son de nivel $nivel. Si quieres repasar, puedes volver al nivel anterior en Cuenta."
+            )
+        },
+        confirmButton = { Button(colors = coloresBotonPrincipal(), shape = FormaBoton, onClick = onCerrar) { Text("¡Vamos!") } }
+    )
+}
+
 /** Elemento que ocupa las dos columnas de la cuadrícula (encabezados, avisos). */
 private fun LazyGridScope.filaCompleta(content: @Composable () -> Unit) {
     item(span = { GridItemSpan(maxLineSpan) }) { content() }
@@ -181,7 +235,6 @@ private fun LazyGridScope.filaCompleta(content: @Composable () -> Unit) {
 @Composable
 private fun TarjetaLeccion(leccion: LeccionResumenDto, onClick: () -> Unit) {
     val bloqueada = leccion.estado == EstadoLeccion.BLOQUEADA
-    val enEspera = bloqueada || leccion.estado == EstadoLeccion.REPASO_PENDIENTE
     Column(
         modifier = Modifier
             .clickable(enabled = !bloqueada, role = Role.Button, onClick = onClick)
@@ -194,8 +247,8 @@ private fun TarjetaLeccion(leccion: LeccionResumenDto, onClick: () -> Unit) {
             Image(
                 painter = painterResource(if (portada != 0) portada else R.drawable.inicio_lecciones),
                 contentDescription = null,
-                colorFilter = if (enEspera) ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) }) else null,
-                alpha = if (enEspera) 0.55f else 1f,
+                colorFilter = if (bloqueada) ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) }) else null,
+                alpha = if (bloqueada) 0.55f else 1f,
                 modifier = Modifier.fillMaxWidth().aspectRatio(1f).clip(FormaPortada)
             )
             ChipEstado(leccion.estado, modifier = Modifier.padding(bottom = 8.dp))
@@ -236,7 +289,6 @@ private fun ChipEstado(estado: EstadoLeccion?, modifier: Modifier = Modifier) {
             when (estado) {
                 EstadoLeccion.BLOQUEADA -> Icon(Icons.Filled.Lock, contentDescription = null, tint = tinta, modifier = Modifier.size(14.dp))
                 EstadoLeccion.COMPLETADA -> Icon(Icons.Filled.Check, contentDescription = null, tint = tinta, modifier = Modifier.size(14.dp))
-                EstadoLeccion.REPASO_PENDIENTE -> Icon(Icons.Filled.Refresh, contentDescription = null, tint = tinta, modifier = Modifier.size(14.dp))
                 else -> Unit
             }
             Text(texto, color = tinta, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)

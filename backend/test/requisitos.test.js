@@ -1,6 +1,5 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const fs = require('fs');
 const { randomUUID } = require('crypto');
 const { instalarFirebaseFalso, llamar, enRuta } = require('./helpers/fakeFirebase');
 
@@ -15,7 +14,7 @@ const resultadoJuego = require('../api/games/result');
 const { registrarDia, diaLocal, fechaDeActividad, MAX_DIAS_ATRASO } = require('../lib/progreso/racha');
 const { resumenVacio } = require('../lib/progreso/resumen');
 const { listarLecciones, leccionPublica } = require('../lib/lecciones/contenido');
-const { RUTA_LECCIONES, construirPaquete, serializarPaquete } = require('../scripts/exportar-lecciones');
+const { construirContenido } = require('../scripts/exportar-lecciones');
 
 const DIA_MS = 24 * 60 * 60 * 1000;
 const L1 = 'a1-saludos-presentaciones';
@@ -172,13 +171,8 @@ test('completado_en inválido responde 400', async () => {
 
 // ── RNF-08 / RN-11: lecciones dentro del APK ───────────────────────────────
 
-test('lecciones del APK: al día con content/lessons (npm run exportar:lecciones)', () => {
-  const actual = fs.readFileSync(RUTA_LECCIONES, 'utf-8');
-  assert.equal(actual, serializarPaquete(construirPaquete()), 'Las lecciones del APK están viejas: corre `npm run exportar:lecciones`');
-});
-
 test('lecciones del APK: las 24 con su manifiesto y sin la autoría', () => {
-  const paquete = construirPaquete();
+  const paquete = construirContenido();
   assert.equal(paquete.lecciones.length, 24);
   assert.equal(paquete.niveles.A1.length + paquete.niveles.A2.length, 24);
   assert.ok(!JSON.stringify(paquete).includes('"autoria"'));

@@ -9,7 +9,7 @@ import com.xpspeak.app.feature.games.domain.Minijuego
 import com.xpspeak.app.feature.games.domain.Mision
 import com.xpspeak.app.feature.games.domain.OpcionMision
 import com.xpspeak.app.feature.games.domain.PasoMision
-import com.xpspeak.app.feature.games.domain.Texto
+import com.xpspeak.app.feature.games.domain.RespuestaEscrita
 import com.xpspeak.app.feature.games.ui.comun.EstadoPartida
 import com.xpspeak.app.feature.games.ui.comun.PartidaViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -75,15 +75,22 @@ class MisionViewModel @Inject constructor(
         if (opcion.correcta) acertar(estado) else fallar(estado, indice, opcion.feedback)
     }
 
-    /** Compara lo escrito con la respuesta correcta, tolerando mayúsculas, puntuación y una palabra distinta. */
+    /**
+     * Compara lo escrito con la correcta y sus formas aceptadas, tolerando mayúsculas,
+     * puntuación, contracciones y una palabra distinta (RespuestaEscrita).
+     */
     fun escribir(texto: String) {
         val estado = estadoActual ?: return
         if (texto.isBlank()) return
-        val (indice, opcion) = estado.opciones.maxBy { (_, opcion) -> Texto.similitud(opcion.en, texto) }
+        val opciones = estado.pasoActual.opciones
+        val indice = RespuestaEscrita.opcionDe(opciones, texto)
         when {
-            opcion.correcta && Texto.similitud(opcion.en, texto) >= SIMILITUD_ESCRITA -> acertar(estado, texto.trim())
-            !opcion.correcta && Texto.similitud(opcion.en, texto) >= SIMILITUD_ESCRITA -> fallar(estado, indice, opcion.feedback)
-            else -> fallar(estado, null, "No es lo que se esperaba. Inténtalo otra vez o elige una opción.")
+            indice == null -> fallar(
+                estado, null,
+                "No es lo que se esperaba. Prueba con otras palabras, por ejemplo: \"${estado.correcta.en}\", o elige una opción."
+            )
+            opciones[indice].correcta -> acertar(estado, texto.trim())
+            else -> fallar(estado, indice, opciones[indice].feedback)
         }
     }
 
@@ -129,9 +136,5 @@ class MisionViewModel @Inject constructor(
                 escribiendo = dificultad.nivel >= Dificultad.MEDIO
             )
         )
-    }
-
-    private companion object {
-        const val SIMILITUD_ESCRITA = 0.8
     }
 }

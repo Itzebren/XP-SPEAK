@@ -318,7 +318,7 @@ los guiones de `content/minijuegos/misiones/`. Se empaqueta dentro del APK
 ```bash
 npm run lint:content         # valida lecciones y misiones
 npm run exportar:minijuegos  # regenera app/src/main/assets/minijuegos/banco.json
-npm run exportar:lecciones   # regenera app/src/main/assets/lecciones/lecciones.json
+npm run exportar:lecciones   # regenera app/src/main/assets/lecciones/contenido.json
 ```
 
 Después de cambiar una lección o una misión hay que volver a exportar; `npm test`

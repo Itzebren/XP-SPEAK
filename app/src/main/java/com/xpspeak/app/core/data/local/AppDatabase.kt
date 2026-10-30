@@ -9,10 +9,10 @@ import com.xpspeak.app.feature.auth.data.UsuarioEntity
 import com.xpspeak.app.feature.games.data.MinijuegosDao
 import com.xpspeak.app.feature.games.data.PartidaGuardadaEntity
 import com.xpspeak.app.feature.games.data.ResultadoMinijuegoEntity
+import com.xpspeak.app.feature.lessons.data.BorradorLeccionEntity
 import com.xpspeak.app.feature.lessons.data.CatalogoCacheEntity
 import com.xpspeak.app.feature.lessons.data.IntentoPendienteEntity
 import com.xpspeak.app.feature.lessons.data.LeccionCacheEntity
-import com.xpspeak.app.feature.lessons.data.LeccionEnCursoEntity
 import com.xpspeak.app.feature.lessons.data.LeccionesDao
 import com.xpspeak.app.feature.progress.data.ProgresoCacheEntity
 import com.xpspeak.app.feature.progress.data.ProgresoDao
@@ -32,7 +32,7 @@ import com.xpspeak.app.feature.progress.data.ProgresoDao
         PartidaGuardadaEntity::class,
         ResultadoMinijuegoEntity::class,
         ProgresoCacheEntity::class,
-        LeccionEnCursoEntity::class
+        BorradorLeccionEntity::class
     ],
     version = 6,
     exportSchema = false
@@ -98,13 +98,13 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        /** v6: lección a medias para retomarla (RN-12, CU-06 A2). */
+        /** v6: respuestas de la evaluación en curso, para recuperarlas tras un cierre (RN-12). */
         val MIGRACION_5_6 = object : Migration(5, 6) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(
-                    "CREATE TABLE IF NOT EXISTS `lecciones_en_curso` (`uid` TEXT NOT NULL, `leccionId` TEXT NOT NULL, " +
-                        "`attemptId` TEXT NOT NULL, `respuestasJson` TEXT NOT NULL, `posicion` INTEGER NOT NULL, " +
-                        "`actualizadaEn` INTEGER NOT NULL, PRIMARY KEY(`uid`, `leccionId`))"
+                    "CREATE TABLE IF NOT EXISTS `borradores_leccion` (`uid` TEXT NOT NULL, `leccionId` TEXT NOT NULL, " +
+                        "`attemptId` TEXT NOT NULL, `json` TEXT NOT NULL, `actualizadoEn` INTEGER NOT NULL, " +
+                        "PRIMARY KEY(`uid`, `leccionId`))"
                 )
             }
         }

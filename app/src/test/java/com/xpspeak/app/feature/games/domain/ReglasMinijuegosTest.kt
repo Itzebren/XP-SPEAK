@@ -85,29 +85,48 @@ class ReglasMinijuegosTest {
     }
 
     @Test
-    fun `sin conexion la pronunciacion se evalua por palabras con la mejor alternativa`() {
+    fun `sin conexion se evalua lo que el reconocedor cree que se dijo, no la alternativa mas parecida`() {
         val evaluacion = Pronunciacion.evaluarTranscripcion(
             "Nice to meet you",
-            listOf("nice to eat you" to 0.4f, "nice to meet you" to 0.9f)
+            listOf("nice to meet you" to 0.9f, "nice to eat you" to 0.4f)
         )
         assertEquals(100, evaluacion.puntaje)
         assertEquals(90, evaluacion.confianza)
         assertTrue(Pronunciacion.esAcierto(evaluacion))
         assertEquals(FuenteEvaluacion.DISPOSITIVO, evaluacion.fuente)
 
-        val parcial = Pronunciacion.evaluarTranscripcion("Nice to meet you", listOf("nice to eat you" to -1f))
-        assertEquals(75, parcial.puntaje)
-        assertEquals(100, parcial.confianza)
-        assertEquals("Mispronunciation", parcial.palabras[2].error)
-        assertTrue(Pronunciacion.esAcierto(parcial))
+        // Si se pronunció mal, que la 2.ª alternativa coincida con la frase no lo aprueba.
+        val mala = Pronunciacion.evaluarTranscripcion(
+            "Nice to meet you",
+            listOf("nice to eat you" to 0.6f, "nice to meet you" to 0.0f)
+        )
+        assertEquals(75, mala.puntaje)
+        assertEquals("Mispronunciation", mala.palabras[2].error)
+        assertFalse(Pronunciacion.esAcierto(mala))
     }
 
     @Test
-    fun `sin conexion la confianza es la del audio aunque la mejor alternativa venga en cero`() {
-        // Google reporta la confianza solo de la primera alternativa; las demás llegan en 0.0.
+    fun `una sola palabra mal dicha impide el acierto aunque el promedio pase de 70`() {
+        val parcial = Pronunciacion.evaluarTranscripcion("Nice to meet you", listOf("nice to eat you" to -1f))
+        assertEquals(75, parcial.puntaje)
+        assertFalse(Pronunciacion.esAcierto(parcial))
+
+        // Azure: buen promedio, pero una palabra por debajo de 60.
+        val azure = EvaluacionVoz(
+            puntaje = 78, confianza = 90,
+            palabras = listOf(PalabraEvaluada("good", 95), PalabraEvaluada("morning", 52)),
+            transcripcion = "good morning", fuente = FuenteEvaluacion.AZURE
+        )
+        assertFalse(Pronunciacion.esAcierto(azure))
+        assertTrue(Pronunciacion.esAcierto(azure.copy(palabras = listOf(PalabraEvaluada("good", 95), PalabraEvaluada("morning", 64)))))
+    }
+
+    @Test
+    fun `sin conexion la confianza es la del audio aunque la primera alternativa venga en cero`() {
+        // Algunos motores reportan la confianza en otra alternativa y dejan la primera en 0.0.
         val evaluacion = Pronunciacion.evaluarTranscripcion(
             "Nice to meet you",
-            listOf("nice to me too" to 0.85f, "nice to meet you" to 0.0f)
+            listOf("nice to meet you" to 0.0f, "nice to me too" to 0.85f)
         )
         assertEquals(100, evaluacion.puntaje)
         assertEquals(85, evaluacion.confianza)
@@ -116,10 +135,39 @@ class ReglasMinijuegosTest {
     }
 
     @Test
+    fun `sin conexion una confianza de cero en todas no vuelve ilegible lo que si se entendio`() {
+        val evaluacion = Pronunciacion.evaluarTranscripcion("Nice to meet you", listOf("nice to meet you" to 0.0f))
+        assertTrue(Pronunciacion.esLegible(evaluacion))
+        assertTrue(Pronunciacion.esAcierto(evaluacion))
+    }
+
+    @Test
+    fun `sin conexion los numeros en cifra cuentan como la palabra de la frase`() {
+        val evaluacion = Pronunciacion.evaluarTranscripcion(
+            "I usually have breakfast at seven o'clock.",
+            listOf("I usually have breakfast at 7 o'clock" to 0.9f)
+        )
+        assertEquals(100, evaluacion.puntaje)
+        assertTrue(evaluacion.palabras.all { it.error == null })
+    }
+
+    @Test
     fun `si no se oyo nada el audio no es legible y no cuenta como intento`() {
         val evaluacion = Pronunciacion.evaluarTranscripcion("Hello, how are you?", emptyList())
         assertFalse(Pronunciacion.esLegible(evaluacion))
         assertFalse(Pronunciacion.esAcierto(evaluacion))
         assertEquals(4, evaluacion.palabras.size)
+    }
+
+    @Test
+    fun `en Rafaga yes acepta el par, no lo manda al bote y lo demas se ignora`() {
+        assertEquals(true, RespuestaVoz.interpretar("Yes."))
+        assertEquals(true, RespuestaVoz.interpretar("yeah"))
+        assertEquals(false, RespuestaVoz.interpretar("No!"))
+        assertEquals(false, RespuestaVoz.interpretar("Wrong"))
+        // Cuenta la primera que dijo.
+        assertEquals(false, RespuestaVoz.interpretar("no, yes"))
+        assertEquals(null, RespuestaVoz.interpretar("Hmm"))
+        assertEquals(null, RespuestaVoz.interpretar(""))
     }
 }
