@@ -1,6 +1,6 @@
 const { ErrorApi } = require('../errores');
 const { ESTADOS, estaDesbloqueada, esTemaNuevo, aplicarIntento } = require('./estado');
-const { siguienteLeccion } = require('./contenido');
+const { siguienteLeccion, conceptosEnsenados, listarLecciones } = require('./contenido');
 const { acumularSenal } = require('./srs');
 const { consumirIntento } = require('./limite');
 const { leerResumenEnTx, aplicarEnTx } = require('../progreso/repositorio');
@@ -82,6 +82,9 @@ function construirRespuesta({ attemptId, leccion, resultado, progreso, xpGanado,
     desbloqueada_siguiente: primeraAprobacion ? siguienteLeccion(leccion.id) : null,
     feedback: resultado.feedback,
     conceptos_debiles: resultado.conceptos_debiles,
+    // Para mostrarlos con nombre en la app (QA 29-oct: salía el id interno).
+    conceptos_debiles_detalle: detallarConceptos(leccion, resultado.conceptos_debiles),
+    desbloqueada_titulo: primeraAprobacion ? tituloDeLeccion(siguienteLeccion(leccion.id)) : null,
     // CU-06 A3: con menos del 70% se sugiere repetir antes de avanzar.
     sugerencia: resultado.aprobada ? null : 'repetir_leccion',
     // Módulo de Progreso: insignias y nivel de XP ganados con este intento (solo al aprobar).
@@ -96,6 +99,20 @@ function construirRespuesta({ attemptId, leccion, resultado, progreso, xpGanado,
  * reintenta uno y ese ya encuentra el attempt_id procesado, así que el XP
  * nunca se duplica (RN-09 + idempotencia §6.2).
  */
+/** Nombre legible de cada concepto débil: el título de la regla o la palabra en inglés. */
+function detallarConceptos(leccion, conceptoIds) {
+  const ensenados = new Map(conceptosEnsenados(leccion).map((c) => [c.concepto_id, c]));
+  return conceptoIds.map((id) => {
+    const c = ensenados.get(id);
+    return { concepto_id: id, titulo: c?.titulo ?? null, en: c?.en ?? null, es: c?.es ?? null };
+  });
+}
+
+function tituloDeLeccion(id) {
+  if (!id) return null;
+  return listarLecciones().find((l) => l.id === id)?.modulo_tematico ?? null;
+}
+
 async function registrarIntento(db, { uid, leccion, attemptId, resultado, completadoEn = null, ahora = Date.now() }) {
   // RN-08: la racha, el SRS y el evento usan el momento en que se contestó; los límites, el de llegada.
   const fecha = fechaDeActividad(completadoEn, ahora);

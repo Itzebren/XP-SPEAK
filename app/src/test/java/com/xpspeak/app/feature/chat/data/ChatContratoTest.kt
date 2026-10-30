@@ -43,4 +43,11 @@ class ChatContratoTest {
         assertEquals("Nice!", respuesta.respuesta)
         assertEquals("He go", respuesta.correccion!!.errores.single().original)
     }
+
+    @Test
+    fun `un error del servidor se muestra con su mensaje, y sin cuerpo con uno segun el codigo`() {
+        assertEquals("El chat no está disponible por ahora", ChatRepository.mensajeDeError(503, """{"error":"El chat no está disponible por ahora","codigo":"CHAT_NO_CONFIGURADO"}"""))
+        assertEquals("El chat no está disponible por ahora. Intenta más tarde.", ChatRepository.mensajeDeError(503, "Service Unavailable"))
+        assertEquals("Ocurrió un error (500). Intenta de nuevo.", ChatRepository.mensajeDeError(500, null))
+    }
 }

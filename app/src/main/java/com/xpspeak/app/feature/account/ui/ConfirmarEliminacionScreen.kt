@@ -80,7 +80,7 @@ fun ConfirmarEliminacionScreen(
                 Perdida(R.drawable.moneda_xp, "Puntos de experiencia (XP)")
                 Perdida(R.drawable.insignia_primer_logro, "Insignias desbloqueadas")
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    DistintivoNivel("A1", tamano = 30.dp)
+                    DistintivoNivel(uiState.nivel, tamano = 30.dp)
                     Text("Progreso MCER (A1/A2)", fontWeight = FontWeight.Medium)
                 }
                 Perdida(R.drawable.icono_racha, "Racha de días consecutivos")

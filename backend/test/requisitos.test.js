@@ -169,6 +169,18 @@ test('completado_en inválido responde 400', async () => {
   assert.equal((await enviarIntento(L1, APROBADAS_L1, { completado_en: 'ayer' })).statusCode, 400);
 });
 
+// ── QA 29-oct: el resultado nombra los conceptos débiles y la lección desbloqueada ──
+
+test('el intento trae el nombre de los conceptos débiles y el título de la lección desbloqueada', async () => {
+  const malas = respuestasCorrectas(L1).map((r, i) => (i === 0 ? { ...r, valor: (r.valor + 1) % 3 } : r));
+  const res = await enviarIntento(L1, malas);
+  assert.equal(res.statusCode, 200);
+  assert.ok(res.body.conceptos_debiles.length > 0);
+  assert.deepEqual(res.body.conceptos_debiles_detalle.map((c) => c.concepto_id), res.body.conceptos_debiles);
+  assert.ok(res.body.conceptos_debiles_detalle.every((c) => c.titulo || c.en), 'cada concepto trae un nombre');
+  if (res.body.desbloqueada_siguiente) assert.equal(typeof res.body.desbloqueada_titulo, 'string');
+});
+
 // ── RNF-08 / RN-11: lecciones dentro del APK ───────────────────────────────
 
 test('lecciones del APK: las 24 con su manifiesto y sin la autoría', () => {

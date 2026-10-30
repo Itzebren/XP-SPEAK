@@ -113,4 +113,15 @@ class LeccionesContratoTest {
         val json = gson.toJson(IntentoRequest("id", emptyList(), completadoEn = 1_760_000_000_000))
         assertEquals(true, json.contains(""""completado_en":1760000000000"""))
     }
+
+    @Test
+    fun `el resultado trae el nombre de los conceptos debiles y, si falta, lo arma con el id`() {
+        val json = """{"puntaje":0.5,"correctas":3,"total":6,"aprobada":false,"estado":"reprobada","repetido":false,"sugerencia":"repetir_leccion",""" +
+            """"feedback":[],"xp_ganado":0,"desbloqueada_siguiente":null,"conceptos_debiles":["gram.verb_to_be_present","voc.saludos.hello"],""" +
+            """"conceptos_debiles_detalle":[{"concepto_id":"gram.verb_to_be_present","titulo":"Verbo to be (am / is / are)"},""" +
+            """{"concepto_id":"voc.saludos.hello","en":"Hello!","es":"¡Hola!"}]}"""
+        val resultado = gson.fromJson(json, IntentoResponse::class.java)
+        assertEquals(listOf("Verbo to be (am / is / are)", "Hello! (¡Hola!)"), resultado.conceptosDebilesDetalle!!.map { it.nombre })
+        assertEquals("verb to be present", nombreLegible("gram.verb_to_be_present"))
+    }
 }

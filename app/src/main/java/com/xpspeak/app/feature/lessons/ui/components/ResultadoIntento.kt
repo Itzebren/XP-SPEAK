@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.xpspeak.app.feature.lessons.data.IntentoResponse
+import com.xpspeak.app.feature.lessons.data.nombreLegible
 import com.xpspeak.app.feature.progress.ui.InsigniaNueva
 
 /** Resultado de la evaluación: puntaje, XP (RF-14), desbloqueo (RN-06) y conceptos a reforzar. */
@@ -51,9 +52,11 @@ fun ResultadoIntento(
                 Text("XP ganado: ${resultado.xpGanado}")
                 resultado.nivelXpNuevo?.let { Text("⭐ ¡Subiste a nivel $it!") }
             }
-            resultado.desbloqueadaSiguiente?.let { Text("🔓 Desbloqueaste: $it") }
+            resultado.desbloqueadaSiguiente?.let { Text("🔓 Desbloqueaste: ${resultado.desbloqueadaTitulo ?: nombreLegible(it)}") }
             if (resultado.conceptosDebiles.isNotEmpty()) {
-                Text("Conceptos a reforzar: ${resultado.conceptosDebiles.joinToString()}")
+                // Con nombre (del servidor) y no con el id interno (QA 29-oct).
+                val nombres = resultado.conceptosDebilesDetalle?.map { it.nombre } ?: resultado.conceptosDebiles.map(::nombreLegible)
+                Text("Conceptos a reforzar: ${nombres.joinToString()}")
             }
         }
     }

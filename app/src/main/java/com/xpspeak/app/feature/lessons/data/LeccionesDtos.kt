@@ -129,6 +129,9 @@ data class IntentoResponse(
     @SerializedName("xp_ganado") val xpGanado: Int,
     @SerializedName("desbloqueada_siguiente") val desbloqueadaSiguiente: String?,
     @SerializedName("conceptos_debiles") val conceptosDebiles: List<String>,
+    /** Nombres de los conceptos débiles y de la lección desbloqueada (faltan en un backend viejo o sin conexión). */
+    @SerializedName("conceptos_debiles_detalle") val conceptosDebilesDetalle: List<ConceptoNombreDto>? = null,
+    @SerializedName("desbloqueada_titulo") val desbloqueadaTitulo: String? = null,
     /** Progreso: insignias ganadas en vivo (para festejarlas) y nivel de XP alcanzado; faltan en un backend viejo. */
     @SerializedName("insignias_nuevas") val insigniasNuevas: List<InsigniaDto>? = null,
     @SerializedName("nivel_xp_nuevo") val nivelXpNuevo: Int? = null
@@ -147,6 +150,19 @@ data class AvanceResponse(val estado: EstadoLeccion?)
 
 // SRS — GET /api/srs/review
 data class ConceptosDebilesDto(val conceptos: List<ConceptoDebilDto>)
+
+/** Nombre legible de un concepto: el título de la regla gramatical o la palabra en inglés. */
+data class ConceptoNombreDto(
+    @SerializedName("concepto_id") val conceptoId: String,
+    val titulo: String? = null,
+    val en: String? = null,
+    val es: String? = null
+) {
+    val nombre: String get() = titulo ?: en?.let { if (es != null) "$it ($es)" else it } ?: nombreLegible(conceptoId)
+}
+
+/** "gram.verb_to_be_present" → "verb to be present": por si el servidor no mandó el nombre. */
+fun nombreLegible(conceptoId: String): String = conceptoId.substringAfterLast('.').replace('_', ' ')
 
 data class ConceptoDebilDto(
     @SerializedName("concepto_id") val conceptoId: String,

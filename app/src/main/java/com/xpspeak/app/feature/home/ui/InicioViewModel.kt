@@ -7,6 +7,8 @@ import com.xpspeak.app.core.sesion.SesionActual
 import com.xpspeak.app.core.ui.componentes.Avatar
 import com.xpspeak.app.feature.auth.data.UsuarioDao
 import com.xpspeak.app.feature.notifications.data.PreferenciasNotificaciones
+import com.xpspeak.app.feature.progress.data.FuenteProgreso
+import kotlinx.coroutines.flow.combine
 import com.xpspeak.app.feature.notifications.data.ProgramadorRecordatorios
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,11 +26,16 @@ data class InicioUiState(
     val avatar: Avatar = Avatar.COHETE
 )
 
-/** Pantalla de Inicio (Ilustración 32): la racha sale del perfil local, así funciona sin red. */
+/**
+ * Pantalla de Inicio (Ilustración 32): la racha sale del perfil local, así funciona sin
+ * red, y se completa con el resumen del servidor guardado por Progreso (QA 29-oct: una
+ * lección aprobada desde otro dispositivo no se veía en Inicio pero sí en Progreso).
+ */
 @HiltViewModel
 class InicioViewModel @Inject constructor(
     sesion: SesionActual,
     usuarioDao: UsuarioDao,
+    progreso: FuenteProgreso,
     preferencias: PreferenciasNotificaciones,
     programador: ProgramadorRecordatorios
 ) : ViewModel() {
@@ -39,14 +46,17 @@ class InicioViewModel @Inject constructor(
     }
 
     val uiState: StateFlow<InicioUiState> =
-        (sesion.uid?.let(usuarioDao::observarUsuario) ?: emptyFlow())
-            .map { usuario ->
-                val hoy = LocalDate.now()
-                InicioUiState(
-                    racha = Racha.vigente(usuario?.racha ?: 0, usuario?.ultimoDiaActivo, hoy),
-                    semana = Racha.semana(usuario?.racha ?: 0, usuario?.ultimoDiaActivo, hoy),
-                    avatar = Avatar.porId(usuario?.avatar)
-                )
-            }
+        combine(sesion.uid?.let(usuarioDao::observarUsuario) ?: emptyFlow(), progreso.observar()) { usuario, guardado ->
+            val hoy = LocalDate.now()
+            val local = Racha.vigente(usuario?.racha ?: 0, usuario?.ultimoDiaActivo, hoy)
+            val servidor = guardado?.datos?.racha?.let { Racha.vigente(it.actual, it.ultimoDia, hoy) } ?: 0
+            // La mayor de las dos: la local va adelante si hay actividad sin sincronizar, la del servidor si se jugó en otro teléfono.
+            val (racha, ultimoDia) = if (servidor > local) servidor to guardado?.datos?.racha?.ultimoDia else local to usuario?.ultimoDiaActivo
+            InicioUiState(
+                racha = racha,
+                semana = Racha.semana(racha, ultimoDia, hoy),
+                avatar = Avatar.porId(usuario?.avatar)
+            )
+        }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), InicioUiState())
 }

@@ -2,6 +2,7 @@ package com.xpspeak.app.feature.chat.data
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import com.google.gson.JsonParser
 import com.xpspeak.app.feature.auth.data.UsuarioDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +26,24 @@ class ChatRepository @Inject constructor(
     private val usuarioDao: UsuarioDao
 ) {
     private val gson = Gson()
+
+    companion object {
+        /**
+         * El mensaje que manda el servidor ({ error, codigo }) o, si no se puede leer, uno
+         * según el código HTTP (QA 29-oct: un 503 salía como "Ocurrió un error").
+         */
+        fun mensajeDeError(codigo: Int, cuerpo: String?): String {
+            val delServidor = cuerpo?.let {
+                runCatching { JsonParser.parseString(it).asJsonObject.get("error")?.takeIf { e -> e.isJsonPrimitive }?.asString }.getOrNull()
+            }?.takeIf { it.isNotBlank() }
+            return delServidor ?: when (codigo) {
+                503 -> "El chat no está disponible por ahora. Intenta más tarde."
+                429 -> "Has conversado mucho por hoy. Intenta más tarde."
+                401 -> "Tu sesión venció. Vuelve a iniciar sesión."
+                else -> "Ocurrió un error ($codigo). Intenta de nuevo."
+            }
+        }
+    }
 
     /** RN-02: la IA responde con la complejidad del nivel elegido al registrarse (guardado en Room). */
     suspend fun nivelDelUsuario(): String {
@@ -51,11 +70,7 @@ class ChatRepository @Inject constructor(
         val respuesta = api.enviarMensaje("Bearer $token", ChatRequest(mensaje, nivel, historial))
 
         if (!respuesta.isSuccessful) {
-            val errorBody = respuesta.errorBody()?.string()
-            val mensajeError = errorBody?.let {
-                runCatching { gson.fromJson(it, ChatResponse::class.java).error }.getOrNull()
-            }
-            throw Exception(mensajeError ?: "Ocurrió un error. Intenta de nuevo.")
+            throw Exception(mensajeDeError(respuesta.code(), respuesta.errorBody()?.string()))
         }
 
         val cuerpo = respuesta.body() ?: throw IllegalStateException("Respuesta vacía del servidor")
