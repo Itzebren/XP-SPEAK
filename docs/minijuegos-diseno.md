@@ -29,7 +29,8 @@ a cambio (ver §9).
 | Eco Vocal (Azure + respaldo del teléfono) | ✅ | `feature/games/ui/ecovocal/`, `feature/games/data/voz/` |
 | `POST /api/games/result` + worker + SRS + racha | ✅ | §6 · `backend/api/games/result.js`, `SincronizarPartidasWorker.kt` |
 | `GET|POST /api/speech-token` | ✅ | `backend/api/speech-token.js` (compartido con la voz del chat) |
-| Imágenes del catálogo y sonidos (fase 8) | ❌ | Pendiente de assets |
+| Sonidos de acierto y error (fase 8, CU-07 paso 6) | ✅ | `feature/games/ui/comun/Sonidos.kt`, `res/raw/sonido_*.wav` (`npm run generar:sonidos`) |
+| Imágenes del catálogo (fase 8) | ❌ | Pendiente de assets |
 | Recurso de Azure Speech en producción | ❌ | Configurar `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION` en Vercel (ver `backend/README.md`) |
 
 ### 0.1 Contexto para retomar el desarrollo
@@ -55,17 +56,17 @@ con los conceptos fallados. Pruebas: backend 91/91 (`npm test`) y unitarias de A
    en un **teléfono físico**: nunca se ha visto un puntaje real de pronunciación.
    En el emulador se puede intentar activando *Extended controls → Microphone →
    "Virtual microphone uses host audio input"*.
-2. **Imágenes del catálogo y sonidos de acierto/error (fase 8).** Depende de los
-   assets; hoy el feedback es visual + háptico y las tarjetas no tienen ilustración.
+2. **Imágenes del catálogo (fase 8).** Depende de los assets; las tarjetas no tienen
+   ilustración. Los sonidos de acierto y error ya están (`Sonidos.kt`, 28-oct).
 
 **Opcional / mejoras:**
 - Revisar con el equipo los guiones de las 6 misiones (`backend/content/minijuegos/misiones/`):
   los redactó el asistente de código.
 - Reducir el APK (~58 MB, sobre todo por el SDK de Azure) con *ABI splits*.
-- La racha local (`UsuarioEntity.ultimoDiaActivo`) solo la actualizan los minijuegos;
-  Lecciones también debería actualizarla (fuera de este módulo).
-- Fuera del módulo: la pantalla Cuenta muestra "Racha: 1 días" y la app siempre
-  arranca en el login.
+- ~~La racha local solo la actualizan los minijuegos~~ ✅ `RegistroActividad` la unifica
+  con lecciones, repaso y chat (ver `docs/progreso-diseno.md`).
+- ~~La app siempre arranca en el login~~ ✅ `AuthViewModel.retomarSesion` entra con la
+  sesión guardada (rama `feature/sesion-guardada`).
 
 **Cómo levantar el entorno de prueba:**
 ```sh

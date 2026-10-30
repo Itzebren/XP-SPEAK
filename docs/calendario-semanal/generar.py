@@ -2,7 +2,7 @@
 a partir del Cronograma final.
 
 Salidas (en esta misma carpeta):
-  - Calendario semanal.xlsx
+  - Calendario semanal - TT 2026-B162 .xlsx
   - calendario-semanal.md
 
 Uso:  python3 generar.py      (requiere openpyxl)
@@ -125,7 +125,7 @@ SEMANAS = [
            ["Endpoint de token de Azure AI Speech en el servidor (la llave no vive en la app)",
             "Evaluación de pronunciación con Azure y respaldo con el reconocedor del teléfono"],
            "Voz a texto en el chat",
-           "Adelantado: token de Azure y evaluación de pronunciación hechos el 06-oct para Eco Vocal. Pendiente: micrófono en el chat."),
+           "Adelantado: token de Azure y evaluación de pronunciación hechos el 06-oct para Eco Vocal. Voz en el chat (RF-07, RF-08): 18-oct; locución bilingüe 22-oct y chat en vivo con pronunciación por mensaje 28-oct."),
     semana(3, ["Módulo de reconocimiento de voz", TT2],
            ["Texto a voz de las respuestas del chatbot (RF-08)",
             "Respaldo en modo texto si el servicio de voz no responde a tiempo (riesgo R01)"],
@@ -133,7 +133,7 @@ SEMANAS = [
            ["Pantalla de error de pronunciación (Ilustración 40, RF-09)",
             "Medir la latencia de voz (RNF-03) y configurar Azure en producción"],
            "Incremento: conversación por voz",
-           "Pendiente: llaves AZURE_SPEECH_KEY / AZURE_SPEECH_REGION en Vercel."),
+           "Pantalla de error de pronunciación (RF-09) 18-oct; respuestas en streaming (RNF-02) 19-oct; medición de tiempos (R01, RNF-03) 28-oct. Pendiente: llaves AZURE_SPEECH_KEY / AZURE_SPEECH_REGION en Vercel."),
     semana(3, ["Desarrollo de módulos de gramática y vocabulario", TT2],
            ["Plan curricular A1 y A2 alineado al MCER (temas por nivel)",
             "Revisar los temas contra los descriptores del MCER"],
@@ -364,7 +364,7 @@ def generar_md(ruta, hoy):
         "Cronograma; aquí se detalla qué hace cada integrante cada semana. Semanas: S1 = días 1–7, "
         "S2 = 8–14, S3 = 15–21, S4 = 22 a fin de mes.",
         "",
-        "La versión para entregar es `Calendario semanal.xlsx` (misma información, con estado "
+        "La versión para entregar es `Calendario semanal - TT 2026-B162 .xlsx` (misma información, con estado "
         "automático según la fecha). Ambos archivos se generan con `generar.py`.",
         "",
         f"Estado al **{hoy:%d-%m-%Y}**: ✅ concluida · ▶️ en curso · (vacío) pendiente.",
@@ -379,7 +379,7 @@ def generar_md(ruta, hoy):
         "|---|---|---|",
         "| Interfaz y estructura básica | Ago S4 – Sep S2 | Arquitectura 14-sep, Auth 20-sep, recuperación 25-sep (≈2 semanas tarde) |",
         "| Integración de chatbot con IA | Sep S3 – Oct S1 | Chat en texto 29-sep (a tiempo) |",
-        "| Módulo de reconocimiento de voz | Oct S2 – Oct S3 | Azure + evaluación de pronunciación ya hechos (06-oct); **falta voz en el chat** |",
+        "| Módulo de reconocimiento de voz | Oct S2 – Oct S3 | Azure + evaluación de pronunciación 06-oct; voz en el chat 18-oct y chat en vivo con pronunciación 28-oct (a tiempo) |",
         "| Módulos de gramática y vocabulario | Oct S4 – Nov S1 | Hecho 26-sep – 01-oct; 24 lecciones (adelantado) |",
         "| Ejercicios de gramática y vocabulario | Nov S2 – Nov S3 | Evaluaciones y SRS 29-sep (adelantado) |",
         "| Desarrollo de mini-juegos | Nov S4 – Dic S1 | Los 4 juegos 06-oct (adelantado) |",
@@ -405,6 +405,7 @@ def generar_md(ruta, hoy):
 
 
 if __name__ == "__main__":
-    generar_xlsx(AQUI / "Calendario semanal.xlsx")
+    # El .xlsx del repo se ajustó a mano para la entrega: regenerarlo lo sobrescribe.
+    generar_xlsx(AQUI / "Calendario semanal - TT 2026-B162 .xlsx")
     generar_md(AQUI / "calendario-semanal.md", dt.date.today())
-    print("Listo:", AQUI / "Calendario semanal.xlsx", AQUI / "calendario-semanal.md")
+    print("Listo:", AQUI / "Calendario semanal - TT 2026-B162 .xlsx", AQUI / "calendario-semanal.md")

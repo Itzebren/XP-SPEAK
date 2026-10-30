@@ -7,9 +7,9 @@
 
 Desglose por semana del **Cronograma final** de agosto a diciembre (periodo 2026-2). Las actividades y sus semanas son las del Cronograma; aquí se detalla qué hace cada integrante cada semana. Semanas: S1 = días 1–7, S2 = 8–14, S3 = 15–21, S4 = 22 a fin de mes.
 
-La versión para entregar es `Calendario semanal.xlsx` (misma información, con estado automático según la fecha). Ambos archivos se generan con `generar.py`.
+La versión para entregar es `Calendario semanal - TT 2026-B162 .xlsx` (misma información, con estado automático según la fecha). Ambos archivos se generan con `generar.py`.
 
-Estado al **14-10-2026**: ✅ concluida · ▶️ en curso · (vacío) pendiente.
+Estado al **29-10-2026**: ✅ concluida · ▶️ en curso · (vacío) pendiente.
 
 ## Plan contra lo desarrollado
 
@@ -19,7 +19,7 @@ La planeación se mantiene apegada al Cronograma. Lo que ya está desarrollado a
 |---|---|---|
 | Interfaz y estructura básica | Ago S4 – Sep S2 | Arquitectura 14-sep, Auth 20-sep, recuperación 25-sep (≈2 semanas tarde) |
 | Integración de chatbot con IA | Sep S3 – Oct S1 | Chat en texto 29-sep (a tiempo) |
-| Módulo de reconocimiento de voz | Oct S2 – Oct S3 | Azure + evaluación de pronunciación ya hechos (06-oct); **falta voz en el chat** |
+| Módulo de reconocimiento de voz | Oct S2 – Oct S3 | Azure + evaluación de pronunciación 06-oct; voz en el chat 18-oct y chat en vivo con pronunciación 28-oct (a tiempo) |
 | Módulos de gramática y vocabulario | Oct S4 – Nov S1 | Hecho 26-sep – 01-oct; 24 lecciones (adelantado) |
 | Ejercicios de gramática y vocabulario | Nov S2 – Nov S3 | Evaluaciones y SRS 29-sep (adelantado) |
 | Desarrollo de mini-juegos | Nov S4 – Dic S1 | Los 4 juegos 06-oct (adelantado) |
@@ -169,7 +169,7 @@ Diferencia entre los dos renglones del Cronograma final: Brenda tiene la marca d
 
 **Entregable:** Chat con IA cerrado · Backlog refinado
 
-### Semana 10 · Octubre S2 (08/10 – 14/10) ▶️ **en curso**
+### Semana 10 · Octubre S2 (08/10 – 14/10) ✅
 
 **Brenda** — Módulo de reconocimiento de voz · Reporte técnico TT-II
 
@@ -183,9 +183,9 @@ Diferencia entre los dos renglones del Cronograma final: Brenda tiene la marca d
 
 **Entregable:** Voz a texto en el chat
 
-**Avance real:** Adelantado: token de Azure y evaluación de pronunciación hechos el 06-oct para Eco Vocal. Pendiente: micrófono en el chat.
+**Avance real:** Adelantado: token de Azure y evaluación de pronunciación hechos el 06-oct para Eco Vocal. Voz en el chat (RF-07, RF-08): 18-oct; locución bilingüe 22-oct y chat en vivo con pronunciación por mensaje 28-oct.
 
-### Semana 11 · Octubre S3 (15/10 – 21/10)
+### Semana 11 · Octubre S3 (15/10 – 21/10) ✅
 
 **Brenda** — Módulo de reconocimiento de voz · Reporte técnico TT-II
 
@@ -199,9 +199,9 @@ Diferencia entre los dos renglones del Cronograma final: Brenda tiene la marca d
 
 **Entregable:** Incremento: conversación por voz
 
-**Avance real:** Pendiente: llaves AZURE_SPEECH_KEY / AZURE_SPEECH_REGION en Vercel.
+**Avance real:** Pantalla de error de pronunciación (RF-09) 18-oct; respuestas en streaming (RNF-02) 19-oct; medición de tiempos (R01, RNF-03) 28-oct. Pendiente: llaves AZURE_SPEECH_KEY / AZURE_SPEECH_REGION en Vercel.
 
-### Semana 12 · Octubre S4 (22/10 – 31/10)
+### Semana 12 · Octubre S4 (22/10 – 31/10) ▶️ **en curso**
 
 **Brenda** — Desarrollo de módulos de gramática y vocabulario · Reporte técnico TT-II
 
