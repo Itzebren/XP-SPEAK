@@ -89,7 +89,12 @@ object AnalisisFonemas {
         }
     }
 
-    private fun evaluacion(json: JsonObject): JsonObject = json.getAsJsonObject("PronunciationAssessment") ?: JsonObject()
+    /**
+     * Las calificaciones vienen anidadas en "PronunciationAssessment" (JSON del SDK) o planas en
+     * el mismo objeto (REST de Azure, verificado el 29-oct con el recurso de producción).
+     */
+    private fun evaluacion(json: JsonObject): JsonObject =
+        json.getAsJsonObject("PronunciationAssessment") ?: json.takeIf { it.has("AccuracyScore") || it.has("ErrorType") } ?: JsonObject()
     private fun JsonObject.texto(clave: String): String? = get(clave)?.takeIf { it.isJsonPrimitive }?.asString
     private fun JsonObject.numero(clave: String): Int = numeroONulo(clave) ?: 0
     private fun JsonObject.numeroONulo(clave: String): Int? = get(clave)?.takeIf { it.isJsonPrimitive }?.asDouble?.roundToInt()

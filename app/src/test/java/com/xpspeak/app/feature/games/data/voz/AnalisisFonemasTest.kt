@@ -114,4 +114,21 @@ class AnalisisFonemasTest {
         assertEquals(AnalisisFonemas.TOPE_PALABRA_CON_ERROR, evaluacion.puntaje)
         assertNull(AnalisisFonemas.evaluar("""{"NBest":[{"Words":[]}]}""", ""))
     }
+
+    /** Respuesta real de Azure Speech (recurso de producción, REST, 29-oct-2026) a "Good morning! My name is Laura." */
+    @Test
+    fun `una respuesta real de Azure se lee completa con seis palabras, fonemas, fluidez y confianza`() {
+        val json = javaClass.classLoader!!.getResource("azure-pronunciation-real.json")!!.readText()
+        val evaluacion = AnalisisFonemas.evaluar(json, "Good morning. My name is Laura.")!!
+
+        assertEquals(listOf("good", "morning", "my", "name", "is", "laura"), evaluacion.palabras.map { it.palabra })
+        assertEquals(98, evaluacion.puntaje)
+        assertEquals(99, evaluacion.confianza)
+        assertEquals(97, evaluacion.fluidez)
+        assertEquals(100, evaluacion.completitud)
+        assertEquals(98, evaluacion.puntajeGeneral)
+        assertTrue(evaluacion.palabras.all { it.sonidos.isEmpty() && it.error == null })
+        assertEquals(listOf("g" to 100, "ʊ" to 100, "d" to 83), evaluacion.palabras[0].fonemas.map { it.fonema to it.puntaje })
+        assertTrue(Pronunciacion.esAcierto(evaluacion))
+    }
 }

@@ -31,7 +31,7 @@ a cambio (ver §9).
 | `GET|POST /api/speech-token` | ✅ | `backend/api/speech-token.js` (compartido con la voz del chat) |
 | Sonidos de acierto y error (fase 8, CU-07 paso 6) | ✅ | `feature/games/ui/comun/Sonidos.kt`, `res/raw/sonido_*.wav` (`npm run generar:sonidos`) |
 | Imágenes del catálogo (fase 8) | ❌ | Pendiente de assets |
-| Recurso de Azure Speech en producción | ❌ | Configurar `AZURE_SPEECH_KEY` / `AZURE_SPEECH_REGION` en Vercel (ver `backend/README.md`) |
+| Recurso de Azure Speech en producción | ✅ | Verificado el 29-oct: `/api/speech-token` en Vercel entrega tokens del recurso F0 en `eastus2`; evaluación REST real en `docs/qa/reporte-qa-2026-10-29.md` |
 
 ### 0.1 Contexto para retomar el desarrollo
 
@@ -51,8 +51,8 @@ con los conceptos fallados. Pruebas: backend 91/91 (`npm test`) y unitarias de A
 (`ReglasMinijuegosTest`, `GeneradorRondasTest`, `EstadoPersistenteTest`).
 
 **Pendiente (bloquea el cierre del módulo):**
-1. **Azure Speech en producción.** Crear el recurso (capa F0 basta para pruebas) y
-   poner `AZURE_SPEECH_KEY` y `AZURE_SPEECH_REGION` en Vercel. Luego probar Eco Vocal
+1. ~~**Azure Speech en producción.**~~ ✅ El recurso (F0, `eastus2`) ya está en Vercel y se
+   verificó con una evaluación real el 29-oct. Falta probar Eco Vocal
    en un **teléfono físico**: nunca se ha visto un puntaje real de pronunciación.
    En el emulador se puede intentar activando *Extended controls → Microphone →
    "Virtual microphone uses host audio input"*.

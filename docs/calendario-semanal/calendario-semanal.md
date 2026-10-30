@@ -199,7 +199,7 @@ Diferencia entre los dos renglones del Cronograma final: Brenda tiene la marca d
 
 **Entregable:** Incremento: conversación por voz
 
-**Avance real:** Pantalla de error de pronunciación (RF-09) 18-oct; respuestas en streaming (RNF-02) 19-oct; medición de tiempos (R01, RNF-03) 28-oct. Pendiente: llaves AZURE_SPEECH_KEY / AZURE_SPEECH_REGION en Vercel.
+**Avance real:** Pantalla de error de pronunciación (RF-09) 18-oct; respuestas en streaming (RNF-02) 19-oct; medición de tiempos (R01, RNF-03) 28-oct. Azure Speech verificado en producción el 29-oct (token y evaluación REST).
 
 ### Semana 12 · Octubre S4 (22/10 – 31/10) ▶️ **en curso**
 

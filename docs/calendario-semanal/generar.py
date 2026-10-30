@@ -133,7 +133,7 @@ SEMANAS = [
            ["Pantalla de error de pronunciación (Ilustración 40, RF-09)",
             "Medir la latencia de voz (RNF-03) y configurar Azure en producción"],
            "Incremento: conversación por voz",
-           "Pantalla de error de pronunciación (RF-09) 18-oct; respuestas en streaming (RNF-02) 19-oct; medición de tiempos (R01, RNF-03) 28-oct. Pendiente: llaves AZURE_SPEECH_KEY / AZURE_SPEECH_REGION en Vercel."),
+           "Pantalla de error de pronunciación (RF-09) 18-oct; respuestas en streaming (RNF-02) 19-oct; medición de tiempos (R01, RNF-03) 28-oct. Azure Speech verificado en producción el 29-oct (token y evaluación REST)."),
     semana(3, ["Desarrollo de módulos de gramática y vocabulario", TT2],
            ["Plan curricular A1 y A2 alineado al MCER (temas por nivel)",
             "Revisar los temas contra los descriptores del MCER"],

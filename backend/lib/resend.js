@@ -1,3 +1,5 @@
+const { ErrorApi } = require('./errores');
+
 /**
  * Envía el código de verificación por correo usando la API de Resend.
  * "onboarding@resend.dev" es el remitente de pruebas que Resend da gratis
@@ -6,7 +8,8 @@
 async function enviarCorreoCodigo(destinatario, codigo) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    throw new Error('Falta la variable de entorno RESEND_API_KEY');
+    // Como SPEECH_NO_CONFIGURADO: la app explica que el servicio no está disponible, no un error genérico.
+    throw new ErrorApi(503, 'CORREO_NO_CONFIGURADO', 'El envío de correos no está disponible por ahora. Intenta más tarde.');
   }
 
   const respuesta = await fetch('https://api.resend.com/emails', {
@@ -32,7 +35,10 @@ async function enviarCorreoCodigo(destinatario, codigo) {
 
   if (!respuesta.ok) {
     const errorTexto = await respuesta.text();
-    throw new Error(`Resend respondió con error: ${respuesta.status} ${errorTexto}`);
+    console.error(`Resend respondió ${respuesta.status}: ${errorTexto}`);
+    // 403 con el remitente de pruebas onboarding@resend.dev: Resend solo entrega al correo del dueño
+    // de la cuenta hasta verificar un dominio propio (QA 29-oct: producción respondía 500 genérico).
+    throw new ErrorApi(503, 'CORREO_NO_DISPONIBLE', 'No pudimos enviarte el correo por ahora. Intenta más tarde.');
   }
 }
 

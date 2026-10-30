@@ -1,5 +1,6 @@
 const { getFirebaseAdmin } = require('../lib/firebaseAdmin');
 const { generarCodigo } = require('../lib/codeGenerator');
+const { ErrorApi } = require('../lib/errores');
 const { enviarCorreoCodigo } = require('../lib/resend');
 
 const MENSAJE_GENERICO = { mensaje: 'Si el correo existe, se envió un código de verificación.' };
@@ -48,6 +49,9 @@ module.exports = async (req, res) => {
     return res.status(200).json(MENSAJE_GENERICO);
   } catch (error) {
     console.error('Error en send-reset-code:', error);
+    if (error instanceof ErrorApi) {
+      return res.status(error.status).json({ error: error.message, codigo: error.codigo });
+    }
     return res.status(500).json({ error: 'Ocurrió un error. Intenta más tarde.' });
   }
 };

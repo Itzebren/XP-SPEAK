@@ -13,17 +13,19 @@ con `adb` (toques, texto y volcados de la jerarquía de la pantalla). Las captur
 | Backend | `npm run dev:emulador` (servidor local en :3000 con emuladores de Firestore y Auth de Firebase) |
 | Red | `adb reverse tcp:3000` y `tcp:9099`; para el modo sin conexión se quitó el reverse y se apagaron wifi y datos |
 | Cuenta | `qa.tester@xpspeak.test` creada durante la prueba en el emulador de Auth (correo verificado con el enlace que expone el emulador) |
-| Pruebas automáticas | Android 128/128 (`testDebugUnitTest`), backend 164/164 (`npm test`), después de las correcciones |
+| Pruebas automáticas | Android 129/129 (`testDebugUnitTest`), backend 166/166 (`npm test`), lint 0 errores, después de las correcciones |
+| Producción | `https://xp-speak-auth-backend.vercel.app` con una cuenta real del proyecto `xp-speak` (sección 4) |
 
 Para poder registrar y verificar cuentas sin tocar el proyecto real de Firebase se agregó la
 bandera de compilación `-PfirebaseAuthEmulador=true` (solo debug; en release queda apagada).
 Sin ella la app usa el Firebase real, como hasta ahora.
 
-Limitaciones del entorno (no son defectos de la app):
+Limitaciones del entorno local (no son defectos de la app):
 
 - El backend local no tiene `AZURE_OPENAI_*` ni `AZURE_SPEECH_*`: el chat responde 503 y la
   voz cae al reconocedor del teléfono. El micrófono del emulador no capta audio, así que
   toda evaluación de voz termina en "no te entendimos" (CU-05 A1/A3), que es el camino esperado.
+  Lo que depende de Azure se verificó contra producción (sección 4).
 - El backend de producción en Vercel responde **403 Forbidden** a los tokens del emulador de
   Auth (son JWT con `alg: none` y el firewall de Vercel los rechaza). Con un token real
   responde normal (401 sin token, 200 con token). No afecta a usuarios reales.
@@ -68,20 +70,41 @@ Limitaciones del entorno (no son defectos de la app):
 | H5 | Baja | Inconsistencias de datos locales vs servidor: Inicio decía "Empieza tu racha hoy" mientras Progreso mostraba "1 día"; la pantalla de eliminar cuenta mostraba "A1" después de cambiar a A2 | **Corregido**: Inicio combina la racha local con la del resumen del servidor guardado por Progreso y usa la mayor; la pantalla de eliminar cuenta lee el nivel real del perfil |
 | H6 | Info | `gradle.properties` trae `leccionesBaseUrl` apuntando a producción, así que el `debug` por defecto ya no usa `localhost:3000` como dice el comentario de `build.gradle.kts` | Documentado; para probar en local hay que pasar `-PleccionesBaseUrl=http://localhost:3000/` |
 | H7 | Info | Producción (Vercel) rechaza con 403 los JWT `alg: none` del emulador de Auth. Es el firewall de Vercel, no la API | Sin acción; las pruebas contra producción deben usar una cuenta real |
+| H8 | **Alta** | Producción: `POST /api/send-reset-code` (recuperar contraseña) respondía **500 "Ocurrió un error"** al pedir un código para `diseno.prueba@xpspeak.com`. Causa más probable: el remitente de pruebas `onboarding@resend.dev` solo puede entregar al correo del dueño de la cuenta de Resend (o falta `RESEND_API_KEY` en Vercel) | **Parcialmente corregido**: el backend ya responde 503 con `CORREO_NO_CONFIGURADO` / `CORREO_NO_DISPONIBLE` y un mensaje claro para la app (pruebas en `recuperacion.test.js`). **Acción de despliegue pendiente**: verificar un dominio en Resend y cambiar el `from`, o confirmar la llave en Vercel; después repetir la prueba |
 
 No se encontraron cierres inesperados (crashes) en ninguna pantalla durante la sesión. Los cinco
-hallazgos funcionales (H1–H5) quedaron corregidos en el mismo día; H6 y H7 son notas de entorno.
-H1 se verificó de nuevo en el emulador; H2–H5 quedaron cubiertos por pruebas unitarias y del backend.
+hallazgos funcionales de la app (H1–H5) quedaron corregidos en el mismo día; H6 y H7 son notas de
+entorno. H8 es de producción: el código ya avisa con claridad, pero el envío real del correo depende
+de la configuración de Resend en Vercel. H1 se verificó de nuevo en el emulador; H2–H5 quedaron
+cubiertos por pruebas unitarias y del backend.
 
-## 4. Lo que queda fuera de este entorno (requiere llaves, correo o teléfono real)
+## 4. Verificación contra producción (Vercel + Firebase real)
 
-- Evaluación real de pronunciación con Azure Speech (sin llaves y sin micrófono en el emulador).
-- Respuestas del chat con IA y correcciones gramaticales (sin llaves de Azure OpenAI).
-- Envío real del correo de recuperación (Resend) y eliminación definitiva de la cuenta.
-- Notificación programada a la hora elegida (ya se verificó el 11 de octubre forzando el job).
-- Teléfono físico y Android 8.0 (`minSdk 26`): solo se probó en Android 17.
+Con una cuenta real del proyecto (`diseno.prueba@xpspeak.com`) y una cuenta desechable creada y
+borrada durante la prueba:
 
-## 5. Cómo repetir
+| Qué | Resultado |
+|---|---|
+| Chat con IA (`POST /api/chat`, Azure OpenAI) | ✅ 200. A "I go to the park yesterday and I see my friends" respondió en inglés A1 y devolvió la corrección (RF-09): *I went… I saw…* con explicación en español |
+| Token de voz (`GET /api/speech-token`) | ✅ 200. Token del recurso Azure Speech F0 en `eastus2` (las llaves sí están en Vercel; los docs decían lo contrario y se actualizaron) |
+| Evaluación de pronunciación real (REST de Azure con ese token, audio sintetizado "Good morning! My name is Laura.") | ✅ Precisión 98, fluidez 97, completitud 100, confianza 99, seis palabras con fonemas IPA y candidatos. La respuesta se guardó como `app/src/test/resources/azure-pronunciation-real.json` y la lee el analizador de la app en una prueba unitaria |
+| Progreso (`GET /api/progress`) | ✅ 200 con nivel, XP, racha, habilidades e insignias |
+| Eliminar cuenta (`POST /api/account/delete`) | ✅ 200 `{eliminada: true, documentos: 1}`; la cuenta desechable dejó de existir en Firebase Auth (las credenciales de administrador sí están en Vercel) |
+| Recuperar contraseña (`POST /api/send-reset-code`) | ❌ 500 genérico → hallazgo **H8**. La validación de correo inválido (400) y de código incompleto (400) sí funcionan |
+| Firewall de Vercel | Rechaza tokens del emulador (403), acepta los reales |
+
+Compatibilidad con Android 8.0 (`minSdk 26`): `lintDebug` termina con 0 errores y ninguna
+advertencia `NewApi`/`InlinedApi`, es decir, no hay llamadas a APIs posteriores al mínimo sin
+proteger. Solo se ejecutó en Android 17 porque no hay imagen de sistema de API 26 instalada.
+
+## 5. Lo que sigue requiriendo algo externo
+
+- Una pasada en teléfono físico con micrófono real (Eco Vocal, chat en vivo y práctica con
+  Azure): el emulador no capta audio. Todo lo demás de la voz ya quedó verificado por API.
+- Que el correo de recuperación llegue de verdad (H8): depende de Resend/Vercel.
+- Instalar una imagen de Android 8.0 para ejecutar la app ahí (el análisis estático ya pasó).
+
+## 6. Cómo repetir
 
 ```sh
 # backend con emuladores de Firebase

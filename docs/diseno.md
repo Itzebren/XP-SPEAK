@@ -122,7 +122,7 @@
 
 Ninguna pantalla del PDF queda sin implementar. Lo que sigue es de despliegue o de pulido:
 
-1. **Despliegue:** `api/account/delete` necesita las credenciales de administrador de Firebase
+1. ~~**Despliegue:**~~ ✅ Verificado el 29-oct: `api/account/delete` en Vercel ya tiene las credenciales de administrador de Firebase
    en Vercel (las mismas de `verify-reset-code`).
 2. **Cuenta de prueba:** borrar `diseno.prueba@xpspeak.com` desde la consola de Firebase.
 3. ~~**Arranque con sesión**~~ ✅ (rama `feature/sesion-guardada`): `AuthViewModel.retomarSesion` salta
