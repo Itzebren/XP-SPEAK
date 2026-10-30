@@ -61,12 +61,16 @@ import com.xpspeak.app.feature.games.ui.comun.TarjetaFeedback
 import com.xpspeak.app.feature.games.ui.comun.TarjetaJuego
 import com.xpspeak.app.feature.games.ui.comun.Veredicto
 import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
+import com.xpspeak.app.feature.voice.ui.BotonPronunciar
+import com.xpspeak.app.feature.voice.ui.HojaPracticaPronunciacion
+import com.xpspeak.app.feature.voice.ui.PracticaVozViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun MisionScreen(onVolver: () -> Unit, viewModel: MisionViewModel = hiltViewModel()) {
+fun MisionScreen(onVolver: () -> Unit, viewModel: MisionViewModel = hiltViewModel(), practica: PracticaVozViewModel = hiltViewModel()) {
     val fase by viewModel.fase.collectAsState()
     val locutor = rememberLocutor()
+    HojaPracticaPronunciacion(practica, locutor)
 
     PantallaPartida(
         juego = Minijuego.MISION_SITUACIONAL,
@@ -122,7 +126,12 @@ fun MisionScreen(onVolver: () -> Unit, viewModel: MisionViewModel = hiltViewMode
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(estado.historial) { linea ->
-                Burbuja(linea, mision.personaje, onEscuchar = { locutor.decir(linea.en) })
+                // RF-09: lo que tú dijiste se puede repetir en voz alta y ver cómo sonó.
+                Burbuja(
+                    linea, mision.personaje,
+                    onEscuchar = { locutor.decir(linea.en) },
+                    onPronunciar = if (linea.deNpc) null else ({ practica.abrir(linea.en) })
+                )
             }
         }
 
@@ -153,7 +162,7 @@ fun MisionScreen(onVolver: () -> Unit, viewModel: MisionViewModel = hiltViewMode
 
 /** El personaje en burbuja blanca con borde de color; tus respuestas, en el color del juego. */
 @Composable
-private fun Burbuja(linea: LineaChat, personaje: String, onEscuchar: () -> Unit) {
+private fun Burbuja(linea: LineaChat, personaje: String, onEscuchar: () -> Unit, onPronunciar: (() -> Unit)? = null) {
     val tema = LocalTemaJuego.current
     val deNpc = linea.deNpc
     Row(
@@ -182,6 +191,7 @@ private fun Burbuja(linea: LineaChat, personaje: String, onEscuchar: () -> Unit)
                 IconButton(onClick = onEscuchar) {
                     Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Escuchar", tint = texto)
                 }
+                onPronunciar?.let { BotonPronunciar(onClick = it, tinte = texto) }
             }
         }
     }

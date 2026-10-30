@@ -1,39 +1,40 @@
 package com.xpspeak.app.feature.voice.domain
 
+import com.xpspeak.app.feature.games.domain.EvaluacionVoz
+import com.xpspeak.app.feature.games.domain.FonemaEvaluado
+import com.xpspeak.app.feature.games.domain.FuenteEvaluacion
+import com.xpspeak.app.feature.games.domain.PalabraEvaluada
 import com.xpspeak.app.feature.games.domain.Pronunciacion
-import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion.FonemaEvaluado
-import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion.PalabraEvaluada
-import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion.ResultadoPronunciacion
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** RF-09: reglas de la retroalimentación de la práctica de pronunciación. */
+/** RF-09: reglas de la retroalimentación de pronunciación (frase, palabra y sonido). */
 class RetroalimentacionTest {
 
-    private fun resultado(vararg palabras: PalabraEvaluada, confianza: Int = 90, texto: String = "hello world") =
-        ResultadoPronunciacion(texto, 80.0, 80.0, 80.0, 80.0, palabras.toList(), confianza)
+    private fun evaluacion(vararg palabras: PalabraEvaluada, confianza: Int = 90, texto: String = "hello world") =
+        EvaluacionVoz(80, confianza, palabras.toList(), texto, FuenteEvaluacion.AZURE, fluidez = 80, completitud = 80, puntajeGeneral = 80)
 
     @Test
     fun `una palabra omitida cuenta como mal aunque Azure le de puntaje`() {
-        val omitida = PalabraEvaluada("world", 100.0, "Omission")
+        val omitida = PalabraEvaluada("world", 100, "Omission")
         assertEquals(Pronunciacion.Nivel.MALO, Retroalimentacion.nivelDe(omitida))
     }
 
     @Test
     fun `los umbrales coinciden con Eco Vocal`() {
-        assertEquals(Pronunciacion.Nivel.BUENO, Retroalimentacion.nivelDe(PalabraEvaluada("a", 70.0, "None")))
-        assertEquals(Pronunciacion.Nivel.REGULAR, Retroalimentacion.nivelDe(PalabraEvaluada("a", 60.0, "None")))
-        assertEquals(Pronunciacion.Nivel.MALO, Retroalimentacion.nivelDe(PalabraEvaluada("a", 59.0, "Mispronunciation")))
+        assertEquals(Pronunciacion.Nivel.BUENO, Retroalimentacion.nivelDe(PalabraEvaluada("a", 70)))
+        assertEquals(Pronunciacion.Nivel.REGULAR, Retroalimentacion.nivelDe(PalabraEvaluada("a", 60)))
+        assertEquals(Pronunciacion.Nivel.MALO, Retroalimentacion.nivelDe(PalabraEvaluada("a", 59, "Mispronunciation")))
     }
 
     @Test
     fun `solo se sugieren las palabras que no salieron bien, en orden`() {
-        val r = resultado(
-            PalabraEvaluada("the", 95.0, "None"),
-            PalabraEvaluada("quick", 40.0, "Mispronunciation"),
-            PalabraEvaluada("fox", 65.0, "None")
+        val r = evaluacion(
+            PalabraEvaluada("the", 95),
+            PalabraEvaluada("quick", 40, "Mispronunciation"),
+            PalabraEvaluada("fox", 65)
         )
         assertEquals(listOf("quick", "fox"), Retroalimentacion.palabrasAPracticar(r).map { it.palabra })
         assertEquals("Practica estas palabras: «quick», «fox».", Retroalimentacion.resumen(r))
@@ -41,24 +42,43 @@ class RetroalimentacionTest {
 
     @Test
     fun `sin errores se felicita`() {
-        val r = resultado(PalabraEvaluada("hello", 90.0, "None"))
+        val r = evaluacion(PalabraEvaluada("hello", 90))
         assertEquals("¡Excelente! Pronunciaste bien todas las palabras.", Retroalimentacion.resumen(r))
     }
 
     @Test
     fun `los fonemas debiles van del peor al mejor y se omiten los buenos`() {
         val palabra = PalabraEvaluada(
-            "think", 50.0, "Mispronunciation",
-            listOf(FonemaEvaluado("θ", 30.0), FonemaEvaluado("ɪ", 90.0), FonemaEvaluado("ŋ", 55.0), FonemaEvaluado("k", 80.0))
+            "think", 50, "Mispronunciation",
+            fonemas = listOf(FonemaEvaluado("θ", 30), FonemaEvaluado("ɪ", 90), FonemaEvaluado("ŋ", 55), FonemaEvaluado("k", 80))
         )
         assertEquals(listOf("θ", "ŋ"), Retroalimentacion.fonemasAPracticar(palabra).map { it.fonema })
     }
 
     @Test
+    fun `la descripcion nombra el sonido sustituido cuando se conoce`() {
+        val party = PalabraEvaluada("party", 55, "Mispronunciation", sonidos = listOf("/ɹ/ sonó como /d/"))
+        assertEquals("Fíjate en el sonido: /ɹ/ sonó como /d/.", Retroalimentacion.descripcion(party))
+        assertEquals("¡Bien pronunciada!", Retroalimentacion.descripcion(PalabraEvaluada("hi", 90)))
+    }
+
+    @Test
     fun `con confianza menor al 30 por ciento se pide repetir`() {
-        assertFalse(Retroalimentacion.esLegible(resultado(confianza = 29)))
-        assertTrue(Retroalimentacion.esLegible(resultado(confianza = 30)))
-        assertFalse(Retroalimentacion.esLegible(resultado(confianza = 90, texto = "")))
+        assertFalse(Retroalimentacion.esLegible(evaluacion(confianza = 29)))
+        assertTrue(Retroalimentacion.esLegible(evaluacion(confianza = 30)))
+        assertFalse(Retroalimentacion.esLegible(evaluacion(confianza = 90, texto = "")))
+    }
+
+    @Test
+    fun `sin Azure el telefono solo transcribe y el resumen lo dice`() {
+        val transcrita = Pronunciacion.soloTranscripcion(listOf("i like coffee" to 0.8f))
+        assertTrue(transcrita.soloTranscrita)
+        assertEquals("i like coffee", transcrita.transcripcion)
+        assertEquals(80, transcrita.confianza)
+        assertTrue(Retroalimentacion.esLegible(transcrita))
+        assertTrue(Retroalimentacion.resumen(transcrita).contains("sin el servicio de voz"))
+        // Si no oyó nada, no es legible y el chat pide repetir.
+        assertFalse(Retroalimentacion.esLegible(Pronunciacion.soloTranscripcion(emptyList())))
     }
 
     @Test

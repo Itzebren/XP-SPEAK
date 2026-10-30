@@ -1,46 +1,49 @@
 package com.xpspeak.app.feature.voice.domain
 
+import com.xpspeak.app.feature.games.domain.EvaluacionVoz
+import com.xpspeak.app.feature.games.domain.FonemaEvaluado
+import com.xpspeak.app.feature.games.domain.PalabraEvaluada
 import com.xpspeak.app.feature.games.domain.Pronunciacion
-import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion.FonemaEvaluado
-import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion.PalabraEvaluada
-import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion.ResultadoPronunciacion
-import kotlin.math.roundToInt
 
 /**
- * RF-09: retroalimentación inmediata y efímera de la práctica de pronunciación.
- * Usa los mismos umbrales que Eco Vocal (Pronunciacion) para que el verde,
- * amarillo y rojo signifiquen lo mismo en toda la aplicación. Nada de esto se
- * guarda (RN-04).
+ * RF-09: retroalimentación inmediata y efímera de la pronunciación, en tres niveles:
+ * frase (puntaje, fluidez, completitud), palabra (verde/amarillo/rojo) y sonido (IPA).
+ * Usa los mismos umbrales que Eco Vocal (Pronunciacion) para que los colores
+ * signifiquen lo mismo en toda la aplicación. Nada de esto se guarda (RN-04).
  */
 object Retroalimentacion {
 
     /** CU-05 A3: con confianza menor al 30 % se pide repetir en lugar de calificar. */
-    fun esLegible(resultado: ResultadoPronunciacion) =
-        resultado.confianza >= Pronunciacion.CONFIANZA_MINIMA && resultado.textoReconocido.isNotBlank()
+    fun esLegible(evaluacion: EvaluacionVoz) =
+        evaluacion.confianza >= Pronunciacion.CONFIANZA_MINIMA && evaluacion.transcripcion.isNotBlank()
 
     fun nivelDe(palabra: PalabraEvaluada): Pronunciacion.Nivel =
-        if (palabra.errorType == "Omission") Pronunciacion.Nivel.MALO
-        else Pronunciacion.nivelDe(palabra.puntuacionPrecision.roundToInt())
+        if (palabra.error == "Omission") Pronunciacion.Nivel.MALO else Pronunciacion.nivelDe(palabra.puntaje)
 
     /** Palabras que no salieron bien, en el orden de la frase. */
-    fun palabrasAPracticar(resultado: ResultadoPronunciacion): List<PalabraEvaluada> =
-        resultado.palabras.filter { nivelDe(it) != Pronunciacion.Nivel.BUENO }
+    fun palabrasAPracticar(evaluacion: EvaluacionVoz): List<PalabraEvaluada> =
+        evaluacion.palabras.filter { nivelDe(it) != Pronunciacion.Nivel.BUENO }
 
     /** Sonidos de la palabra que bajaron su puntaje, del peor al mejor. */
     fun fonemasAPracticar(palabra: PalabraEvaluada): List<FonemaEvaluado> =
         palabra.fonemas
-            .filter { Pronunciacion.nivelDe(it.puntuacionPrecision.roundToInt()) != Pronunciacion.Nivel.BUENO }
-            .sortedBy { it.puntuacionPrecision }
+            .filter { Pronunciacion.nivelDe(it.puntaje) != Pronunciacion.Nivel.BUENO }
+            .sortedBy { it.puntaje }
 
     fun descripcion(palabra: PalabraEvaluada): String = when {
-        palabra.errorType == "Omission" -> "No la escuchamos: parece que te la saltaste."
+        palabra.error == "Omission" -> "No la escuchamos: parece que te la saltaste."
+        // AnalisisFonemas detectó el sonido concreto: "/ɹ/ sonó como /d/".
+        palabra.sonidos.isNotEmpty() -> "Fíjate en el sonido: " + palabra.sonidos.joinToString("; ") + "."
         nivelDe(palabra) == Pronunciacion.Nivel.BUENO -> "¡Bien pronunciada!"
         nivelDe(palabra) == Pronunciacion.Nivel.REGULAR -> "Casi: se entiende, pero puede sonar más clara."
         else -> "Hay que practicarla: escúchala y repítela despacio."
     }
 
-    fun resumen(resultado: ResultadoPronunciacion): String {
-        val pendientes = palabrasAPracticar(resultado)
+    fun resumen(evaluacion: EvaluacionVoz): String {
+        if (evaluacion.soloTranscrita) {
+            return "Te entendimos, pero sin el servicio de voz no podemos calificar la pronunciación."
+        }
+        val pendientes = palabrasAPracticar(evaluacion)
         return when {
             pendientes.isEmpty() -> "¡Excelente! Pronunciaste bien todas las palabras."
             pendientes.size == 1 -> "Muy bien. Practica la palabra «${pendientes[0].palabra}»."

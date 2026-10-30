@@ -2,6 +2,9 @@ package com.xpspeak.app.feature.games.data.voz
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.xpspeak.app.feature.games.domain.EvaluacionVoz
+import com.xpspeak.app.feature.games.domain.FonemaEvaluado
+import com.xpspeak.app.feature.games.domain.FuenteEvaluacion
 import com.xpspeak.app.feature.games.domain.PalabraEvaluada
 import kotlin.math.roundToInt
 
@@ -22,26 +25,52 @@ object AnalisisFonemas {
     /** Puntaje máximo de una palabra con un sonido mal dicho: por debajo del regular (60), en rojo. */
     const val TOPE_PALABRA_CON_ERROR = 55
 
-    /** Palabras de la frase (sin las de más que dijo el usuario), o null si el JSON no trae fonemas. */
-    fun palabras(json: String): List<PalabraEvaluada>? = runCatching {
-        val mejor = JsonParser.parseString(json).asJsonObject.getAsJsonArray("NBest")[0].asJsonObject
-        val palabras = mejor.getAsJsonArray("Words").map { it.asJsonObject }
-            .filter { evaluacion(it).texto("ErrorType") != "Insertion" }
-            .map(::palabra)
-        palabras.takeIf { it.isNotEmpty() }
+    /**
+     * La evaluación completa de la frase: palabras calificadas por sonido más las métricas de
+     * frase de Azure (fluidez, completitud, PronScore) y la confianza del reconocimiento.
+     * Null si el JSON no trae palabras (se usa entonces la calificación del SDK).
+     */
+    fun evaluar(json: String, transcripcion: String): EvaluacionVoz? = runCatching {
+        val mejor = mejorAlternativa(json)
+        val palabras = palabrasDe(mejor) ?: return null
+        val frase = evaluacion(mejor)
+        EvaluacionVoz(
+            puntaje = puntaje(palabras),
+            confianza = mejor.get("Confidence")?.takeIf { it.isJsonPrimitive }?.asDouble?.let { (it * 100).roundToInt() } ?: 100,
+            palabras = palabras,
+            transcripcion = transcripcion,
+            fuente = FuenteEvaluacion.AZURE,
+            fluidez = frase.numeroONulo("FluencyScore"),
+            completitud = frase.numeroONulo("CompletenessScore"),
+            puntajeGeneral = frase.numeroONulo("PronScore")
+        )
     }.getOrNull()
+
+    /** Palabras de la frase (sin las de más que dijo el usuario), o null si el JSON no trae palabras. */
+    fun palabras(json: String): List<PalabraEvaluada>? = runCatching { palabrasDe(mejorAlternativa(json)) }.getOrNull()
 
     /** Precisión general: el promedio de las palabras ya calificadas por sonido. */
     fun puntaje(palabras: List<PalabraEvaluada>): Int = palabras.map { it.puntaje }.average().roundToInt()
+
+    private fun mejorAlternativa(json: String): JsonObject =
+        JsonParser.parseString(json).asJsonObject.getAsJsonArray("NBest")[0].asJsonObject
+
+    private fun palabrasDe(mejor: JsonObject): List<PalabraEvaluada>? =
+        mejor.getAsJsonArray("Words").map { it.asJsonObject }
+            .filter { evaluacion(it).texto("ErrorType") != "Insertion" }
+            .map(::palabra)
+            .takeIf { it.isNotEmpty() }
 
     private fun palabra(json: JsonObject): PalabraEvaluada {
         val evaluacion = evaluacion(json)
         val precision = evaluacion.numero("AccuracyScore")
         val error = evaluacion.texto("ErrorType")?.takeIf { it != "None" }
-        val sonidosMal = json.getAsJsonArray("Phonemes")?.mapNotNull { sonidoMal(it.asJsonObject) }.orEmpty()
+        val fonemas = json.getAsJsonArray("Phonemes")?.map { it.asJsonObject }.orEmpty()
+        val sonidosMal = fonemas.mapNotNull(::sonidoMal)
+        val detalle = fonemas.mapNotNull { f -> f.texto("Phoneme")?.let { FonemaEvaluado(it, evaluacion(f).numero("AccuracyScore")) } }
         val texto = json.texto("Word").orEmpty()
-        if (error == "Omission" || sonidosMal.isEmpty()) return PalabraEvaluada(texto, precision, error)
-        return PalabraEvaluada(texto, minOf(precision, TOPE_PALABRA_CON_ERROR), "Mispronunciation", sonidosMal)
+        if (error == "Omission" || sonidosMal.isEmpty()) return PalabraEvaluada(texto, precision, error, fonemas = detalle)
+        return PalabraEvaluada(texto, minOf(precision, TOPE_PALABRA_CON_ERROR), "Mispronunciation", sonidosMal, detalle)
     }
 
     /** "/ɹ/ sonó como /d/", "/ɑ/ poco claro", o null si el sonido estuvo bien. */
@@ -62,5 +91,6 @@ object AnalisisFonemas {
 
     private fun evaluacion(json: JsonObject): JsonObject = json.getAsJsonObject("PronunciationAssessment") ?: JsonObject()
     private fun JsonObject.texto(clave: String): String? = get(clave)?.takeIf { it.isJsonPrimitive }?.asString
-    private fun JsonObject.numero(clave: String): Int = get(clave)?.takeIf { it.isJsonPrimitive }?.asDouble?.roundToInt() ?: 0
+    private fun JsonObject.numero(clave: String): Int = numeroONulo(clave) ?: 0
+    private fun JsonObject.numeroONulo(clave: String): Int? = get(clave)?.takeIf { it.isJsonPrimitive }?.asDouble?.roundToInt()
 }

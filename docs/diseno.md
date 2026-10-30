@@ -28,7 +28,7 @@
 | Ícono de la app y splash | ✅ | `ic_launcher_*` (mascota sobre azul claro, monocromo para íconos temáticos), `values-v31/themes.xml` |
 | Catálogos de minijuegos y lecciones con portadas (Il. 37–38) | ✅ | `feature/games/ui/GamesScreen.kt`, `feature/lessons/ui/LessonsScreen.kt` |
 | Pantalla de lección (Il. 39) | ✅ | `LeccionScreen`, `components/SeccionTeoria.kt` (tarjetas con audio por TTS) |
-| Retroalimentación de pronunciación (Il. 40) | ✅ | `games/ui/ecovocal/EcoVocalScreen.kt` |
+| Retroalimentación de pronunciación (Il. 40) | ✅ | Un solo modelo (`EvaluacionVoz`: frase, palabra y sonido IPA) y un panel compartido (`voice/ui/PanelPronunciacion.kt`) en Eco Vocal, Práctica, chat en vivo, lecciones (tarjetas, ejemplos y diálogos), Misión y Orden Maestro (`HojaPracticaPronunciacion`); sin Azure, respaldo del teléfono en todas |
 | Confirmar eliminación (Il. 36, RN-14) | ✅ | `feature/account/ui/ConfirmarEliminacionScreen.kt`, `feature/account/data/CuentaRepository.kt`, `backend/api/account/delete.js` |
 | Notificaciones (Il. 41) | ✅ | `feature/notifications/` (preferencias, `RecordatorioWorker` diario, pantalla) |
 | Botones con el naranja del PDF y enlaces legibles | ✅ | `primary` = marino, `coloresBotonPrincipal()` en `Theme.kt` |

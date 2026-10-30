@@ -20,7 +20,9 @@ class AnalisisFonemasTest {
         """{"Word":"$texto","PronunciationAssessment":{"AccuracyScore":$precision,"ErrorType":"$error"},
            "Phonemes":[${fonemas.joinToString(",")}]}"""
 
-    private fun json(vararg palabras: String) = """{"NBest":[{"Confidence":0.9,"Words":[${palabras.joinToString(",")}]}]}"""
+    private fun json(vararg palabras: String) =
+        """{"NBest":[{"Confidence":0.9,"PronunciationAssessment":{"AccuracyScore":88,"FluencyScore":91,"CompletenessScore":100,"PronScore":90},
+           "Words":[${palabras.joinToString(",")}]}]}"""
 
     private fun evaluacion(json: String): EvaluacionVoz {
         val palabras = AnalisisFonemas.palabras(json)!!
@@ -92,5 +94,24 @@ class AnalisisFonemasTest {
     fun `sin fonemas en el json se usa la calificacion del sdk`() {
         assertNull(AnalisisFonemas.palabras("""{"NBest":[{"Words":[]}]}"""))
         assertNull(AnalisisFonemas.palabras("no es json"))
+    }
+
+    @Test
+    fun `la evaluacion completa trae confianza, fluidez, completitud y los fonemas de cada palabra`() {
+        val evaluacion = AnalisisFonemas.evaluar(json(palabra("three", 80, "None",
+            fonema("θ", 40),
+            fonema("ɹ", 90),
+            fonema("i", 95)
+        )), transcripcion = "three")!!
+        assertEquals(90, evaluacion.confianza)
+        assertEquals(91, evaluacion.fluidez)
+        assertEquals(100, evaluacion.completitud)
+        assertEquals(90, evaluacion.puntajeGeneral)
+        assertEquals("three", evaluacion.transcripcion)
+        assertEquals(FuenteEvaluacion.AZURE, evaluacion.fuente)
+        assertEquals(listOf("θ" to 40, "ɹ" to 90, "i" to 95), evaluacion.palabras.single().fonemas.map { it.fonema to it.puntaje })
+        // La palabra queda en rojo por el sonido poco claro, y el puntaje de la frase lo refleja.
+        assertEquals(AnalisisFonemas.TOPE_PALABRA_CON_ERROR, evaluacion.puntaje)
+        assertNull(AnalisisFonemas.evaluar("""{"NBest":[{"Words":[]}]}""", ""))
     }
 }

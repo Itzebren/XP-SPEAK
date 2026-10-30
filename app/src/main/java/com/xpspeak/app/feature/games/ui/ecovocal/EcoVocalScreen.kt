@@ -16,7 +16,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,7 +34,6 @@ import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.SlowMotionVideo
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -51,11 +49,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -68,7 +64,6 @@ import com.xpspeak.app.core.ui.theme.XPTextoSecundario
 import com.xpspeak.app.core.ui.theme.XPVerdeExito
 import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
 import com.xpspeak.app.feature.games.domain.EvaluacionVoz
-import com.xpspeak.app.feature.games.domain.FuenteEvaluacion
 import com.xpspeak.app.feature.games.domain.GeneradorRondas
 import com.xpspeak.app.feature.games.domain.Minijuego
 import com.xpspeak.app.feature.games.domain.Pronunciacion
@@ -80,6 +75,13 @@ import com.xpspeak.app.feature.games.ui.comun.TarjetaFeedback
 import com.xpspeak.app.feature.games.ui.comun.TarjetaJuego
 import com.xpspeak.app.feature.games.ui.comun.Veredicto
 import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
+import com.xpspeak.app.feature.voice.ui.AnilloPuntaje
+import com.xpspeak.app.feature.voice.ui.DetallePalabra
+import com.xpspeak.app.feature.voice.ui.NotaFuente
+import com.xpspeak.app.feature.voice.ui.PalabrasColoreadas
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 @Composable
 fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltViewModel()) {
@@ -152,7 +154,7 @@ fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltView
             }
 
             if (evaluacion != null && revision != null) {
-                PuntajePronunciacion(evaluacion)
+                PuntajePronunciacion(evaluacion, locutor)
                 when {
                     revision.acierto -> TarjetaFeedback(Veredicto.ACIERTO, "¡Muy bien pronunciado!")
                     !revision.definitiva -> TarjetaFeedback(
@@ -276,67 +278,44 @@ private fun AudioNoLegible(evaluacion: EvaluacionVoz) {
     }
 }
 
-/** Puntaje en anillo y palabras coloreadas (verde/amarillo/rojo) según la evaluación. */
+/**
+ * Puntaje en anillo, palabras coloreadas (verde/amarillo/rojo) y, al tocar una, sus sonidos:
+ * la misma retroalimentación de Práctica, lecciones y chat (RF-09).
+ */
 @Composable
-private fun PuntajePronunciacion(evaluacion: EvaluacionVoz) {
-    val color = colorPorPuntaje(evaluacion.puntaje)
+private fun PuntajePronunciacion(evaluacion: EvaluacionVoz, locutorDetalle: com.xpspeak.app.feature.games.ui.comun.Locutor?) {
+    var seleccionada by remember(evaluacion) { mutableStateOf<Int?>(null) }
     TarjetaJuego {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.size(84.dp)) {
-                CircularProgressIndicator(
-                    progress = { evaluacion.puntaje / 100f },
-                    color = color,
-                    trackColor = color.copy(alpha = 0.18f),
-                    strokeWidth = 9.dp,
-                    strokeCap = StrokeCap.Round,
-                    modifier = Modifier.fillMaxSize()
-                )
-                Text("${evaluacion.puntaje}", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = color)
-            }
+            AnilloPuntaje(evaluacion.puntaje)
             Column {
                 Text("Precisión", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = XPMarino)
                 Text("de 100 puntos", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
+                evaluacion.fluidez?.let { Text("Fluidez $it", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario) }
+                evaluacion.completitud?.let { Text("Completitud $it", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario) }
             }
         }
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            evaluacion.palabras.forEach { palabra ->
-                Text(
-                    palabra.palabra,
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .background(colorPorPuntaje(palabra.puntaje), RoundedCornerShape(10.dp))
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                )
-            }
+        PalabrasColoreadas(evaluacion, seleccionada, onSeleccionar = { seleccionada = if (seleccionada == it) null else it })
+        seleccionada?.let { evaluacion.palabras.getOrNull(it) }?.let { palabra ->
+            DetallePalabra(palabra, onEscuchar = { locutorDetalle?.decir(palabra.palabra, lento = true) })
         }
         // Qué sonido falló en cada palabra en rojo (AnalisisFonemas): "party: /ɹ/ sonó como /d/".
-        evaluacion.palabras.filter { it.sonidos.isNotEmpty() }.take(3).forEach { palabra ->
-            Text(
-                "${palabra.palabra}: ${palabra.sonidos.joinToString(" · ")}",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.error
-            )
+        if (seleccionada == null) {
+            evaluacion.palabras.filter { it.sonidos.isNotEmpty() }.take(3).forEach { palabra ->
+                Text(
+                    "${palabra.palabra}: ${palabra.sonidos.joinToString(" · ")}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+            if (evaluacion.palabras.isNotEmpty()) {
+                Text("Toca una palabra para ver sus sonidos.", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
+            }
         }
         if (evaluacion.transcripcion.isNotBlank()) {
             Text("Oímos: “${evaluacion.transcripcion}”", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
         }
-        if (evaluacion.fuente == FuenteEvaluacion.DISPOSITIVO) {
-            Text(
-                "Evaluación básica del teléfono (sin conexión con el servicio de voz): revisa qué palabras se entendieron, no los sonidos.",
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Start,
-                color = XPTextoSecundario
-            )
-        }
+        NotaFuente(evaluacion)
     }
-}
-
-@Composable
-private fun colorPorPuntaje(puntaje: Int): Color = when (Pronunciacion.nivelDe(puntaje)) {
-    Pronunciacion.Nivel.BUENO -> XPVerdeExito
-    Pronunciacion.Nivel.REGULAR -> Color(0xFFB7791F)
-    Pronunciacion.Nivel.MALO -> MaterialTheme.colorScheme.error
 }

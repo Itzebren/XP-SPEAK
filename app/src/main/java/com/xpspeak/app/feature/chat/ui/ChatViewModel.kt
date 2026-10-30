@@ -11,8 +11,8 @@ import com.xpspeak.app.feature.chat.data.EventoRespuesta
 import com.xpspeak.app.feature.chat.data.MensajeChat
 import com.xpspeak.app.feature.progress.data.InsigniaDto
 import com.xpspeak.app.feature.progress.data.ProgresoRepository
-import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion
-import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion.ResultadoPronunciacion
+import com.xpspeak.app.feature.games.data.voz.EvaluadorVoz
+import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import com.xpspeak.app.feature.voice.domain.Retroalimentacion
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
@@ -26,14 +26,15 @@ import javax.inject.Inject
 
 /**
  * [completo] es false mientras la respuesta de la IA sigue llegando (RNF-02).
- * [pronunciacion] solo en mensajes dichos con voz: cómo los pronunció el usuario (RF-09).
+ * [pronunciacion] solo en mensajes dichos con voz: cómo los pronunció el usuario, por frase,
+ * palabra y sonido (RF-09); sin Azure solo queda la transcripción.
  * [correccion] solo en mensajes del usuario con errores de gramática (RF-09); no va al historial.
  */
 data class MensajeUi(
     val texto: String,
     val esUsuario: Boolean,
     val completo: Boolean = true,
-    val pronunciacion: ResultadoPronunciacion? = null,
+    val pronunciacion: EvaluacionVoz? = null,
     val correccion: CorreccionDto? = null
 )
 
@@ -57,7 +58,7 @@ class ChatViewModel @Inject constructor(
     private val repository: ChatRepository,
     private val progresoRepository: ProgresoRepository,
     private val registroActividad: RegistroActividad,
-    private val evaluador: EvaluadorPronunciacion
+    private val evaluador: EvaluadorVoz
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ChatUiState())
@@ -81,7 +82,7 @@ class ChatViewModel @Inject constructor(
         enviarTexto(texto, pronunciacion = null)
     }
 
-    private fun enviarTexto(texto: String, pronunciacion: ResultadoPronunciacion?) {
+    private fun enviarTexto(texto: String, pronunciacion: EvaluacionVoz?) {
         val historialParaApi = _uiState.value.mensajes.map {
             MensajeChat(role = if (it.esUsuario) "user" else "assistant", content = it.texto)
         }
@@ -180,14 +181,17 @@ class ChatViewModel @Inject constructor(
         _uiState.value = estado.copy(escuchando = true, parcial = "")
 
         escucha = viewModelScope.launch {
-            val resultado = evaluador.escucharFrase { parcial ->
-                _uiState.value = _uiState.value.copy(parcial = parcial, error = null)
+            // Con Azure se califica la pronunciación; sin Azure el teléfono solo transcribe.
+            val resultado = runCatching {
+                evaluador.escucharFrase { parcial ->
+                    _uiState.value = _uiState.value.copy(parcial = parcial, error = null)
+                }
             }
             _uiState.value = _uiState.value.copy(escuchando = false, parcial = "")
             resultado
                 .onSuccess { frase ->
                     if (Retroalimentacion.esLegible(frase)) {
-                        enviarTexto(frase.textoReconocido.trim(), frase)
+                        enviarTexto(frase.transcripcion.trim(), frase)
                     } else {
                         // CU-05 A3: audio poco claro, se pide repetir en vez de mandar algo que no dijo.
                         _uiState.value = _uiState.value.copy(error = "No te escuché bien. Repítelo, por favor.")

@@ -26,7 +26,7 @@ a cambio (ver §9).
 | Orden Maestro | ✅ | `feature/games/ui/orden/` |
 | Ráfaga de Palabras | ✅ | `feature/games/ui/rafaga/` |
 | Misión Situacional | ✅ | `feature/games/ui/mision/` |
-| Eco Vocal (Azure + respaldo del teléfono) | ✅ | `feature/games/ui/ecovocal/`, `feature/games/data/voz/` |
+| Eco Vocal (Azure + respaldo del teléfono) | ✅ | `feature/games/ui/ecovocal/`, `feature/games/data/voz/` (`EvaluadorVoz` es la fachada de voz de toda la app: también chat, Práctica y lecciones) |
 | `POST /api/games/result` + worker + SRS + racha | ✅ | §6 · `backend/api/games/result.js`, `SincronizarPartidasWorker.kt` |
 | `GET|POST /api/speech-token` | ✅ | `backend/api/speech-token.js` (compartido con la voz del chat) |
 | Sonidos de acierto y error (fase 8, CU-07 paso 6) | ✅ | `feature/games/ui/comun/Sonidos.kt`, `res/raw/sonido_*.wav` (`npm run generar:sonidos`) |

@@ -58,22 +58,15 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import com.xpspeak.app.feature.games.domain.Pronunciacion
 import com.xpspeak.app.feature.games.ui.comun.Locutor
-import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion.ResultadoPronunciacion
-import com.xpspeak.app.feature.voice.domain.Retroalimentacion
+import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import com.xpspeak.app.feature.voice.ui.DetallePalabra
+import com.xpspeak.app.feature.voice.ui.PalabrasColoreadas
 import com.xpspeak.app.feature.voice.ui.colorPorNivel
-import kotlin.math.roundToInt
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.runtime.DisposableEffect
@@ -299,45 +292,45 @@ private fun CorreccionMensaje(correccion: CorreccionDto, locutor: Locutor) {
     }
 }
 
-/** RF-09 en el chat: cómo pronunció el usuario lo que dijo; toca una palabra para ver sus sonidos. */
-@OptIn(ExperimentalLayoutApi::class)
+/**
+ * RF-09 en el chat: cómo pronunció el usuario lo que dijo, con la misma retroalimentación
+ * que Eco Vocal y las lecciones: puntaje de la frase, palabras coloreadas y, al tocar una,
+ * sus sonidos. Sin Azure solo se avisa que el teléfono transcribió.
+ */
 @Composable
-private fun PronunciacionMensaje(resultado: ResultadoPronunciacion, locutor: Locutor) {
-    var seleccionada by remember(resultado) { mutableStateOf<Int?>(null) }
+private fun PronunciacionMensaje(evaluacion: EvaluacionVoz, locutor: Locutor) {
+    var seleccionada by remember(evaluacion) { mutableStateOf<Int?>(null) }
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        val general = resultado.puntuacionGeneral.roundToInt()
+        if (evaluacion.soloTranscrita) {
+            Text(
+                "Transcrito por el teléfono · sin evaluación de pronunciación",
+                style = MaterialTheme.typography.labelMedium,
+                color = XPTextoSecundario
+            )
+            return@Column
+        }
         Text(
-            "Pronunciación $general/100 · Fluidez ${resultado.puntuacionFluidez.roundToInt()}",
+            buildString {
+                append("Pronunciación ${evaluacion.puntaje}/100")
+                evaluacion.fluidez?.let { append(" · Fluidez $it") }
+            },
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
-            color = colorPorNivel(Pronunciacion.nivelDe(general))
+            color = colorPorNivel(Pronunciacion.nivelDe(evaluacion.puntaje))
         )
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.widthIn(max = 300.dp)
-        ) {
-            resultado.palabras.forEachIndexed { i, palabra ->
-                Text(
-                    palabra.palabra,
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier
-                        .background(colorPorNivel(Retroalimentacion.nivelDe(palabra)), RoundedCornerShape(6.dp))
-                        .then(
-                            if (seleccionada == i) Modifier.border(BorderStroke(2.dp, XPMarino), RoundedCornerShape(6.dp))
-                            else Modifier
-                        )
-                        .clickable { seleccionada = if (seleccionada == i) null else i }
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
-                )
-            }
-        }
-        seleccionada?.let { resultado.palabras.getOrNull(it) }?.let { palabra ->
+        PalabrasColoreadas(
+            evaluacion,
+            seleccionada,
+            onSeleccionar = { seleccionada = if (seleccionada == it) null else it },
+            modifier = Modifier.widthIn(max = 300.dp),
+            alineacion = Alignment.End,
+            compacto = true
+        )
+        seleccionada?.let { evaluacion.palabras.getOrNull(it) }?.let { palabra ->
             Column(modifier = Modifier.widthIn(max = 300.dp)) {
                 DetallePalabra(palabra, onEscuchar = { locutor.decir(palabra.palabra, lento = true) })
             }

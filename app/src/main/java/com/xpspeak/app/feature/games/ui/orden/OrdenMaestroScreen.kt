@@ -41,11 +41,15 @@ import com.xpspeak.app.feature.games.ui.comun.TarjetaFeedback
 import com.xpspeak.app.feature.games.ui.comun.TarjetaJuego
 import com.xpspeak.app.feature.games.ui.comun.Veredicto
 import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
+import com.xpspeak.app.feature.voice.ui.HojaPracticaPronunciacion
+import com.xpspeak.app.feature.voice.ui.PracticaVozViewModel
+import androidx.compose.material3.OutlinedButton
 
 @Composable
-fun OrdenMaestroScreen(onVolver: () -> Unit, viewModel: OrdenMaestroViewModel = hiltViewModel()) {
+fun OrdenMaestroScreen(onVolver: () -> Unit, viewModel: OrdenMaestroViewModel = hiltViewModel(), practica: PracticaVozViewModel = hiltViewModel()) {
     val fase by viewModel.fase.collectAsState()
     val locutor = rememberLocutor()
+    HojaPracticaPronunciacion(practica, locutor)
 
     PantallaPartida(
         juego = Minijuego.ORDEN_MAESTRO,
@@ -119,6 +123,15 @@ fun OrdenMaestroScreen(onVolver: () -> Unit, viewModel: OrdenMaestroViewModel = 
                     "Tienes un intento más."
                 )
                 else -> TarjetaFeedback(Veredicto.ERROR, "La oración correcta es:", oracion)
+            }
+            // RF-09: con la oración ya armada, repetirla en voz alta y ver cómo sonó.
+            if (revision.correcta || revision.definitiva) {
+                OutlinedButton(
+                    onClick = { locutor.callar(); practica.abrir(oracion) },
+                    shape = FormaBoton,
+                    border = BorderStroke(2.dp, tema.acento),
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("🎙 Pronunciar la oración", color = tema.texto, fontWeight = FontWeight.Bold) }
             }
             Button(
                 colors = coloresBotonPrincipal(),

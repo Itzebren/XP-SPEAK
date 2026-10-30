@@ -33,6 +33,8 @@ import com.xpspeak.app.feature.lessons.data.TipoSeccion
 import com.xpspeak.app.feature.lessons.ui.components.EjercicioEvaluacion
 import com.xpspeak.app.feature.lessons.ui.components.ResultadoIntento
 import com.xpspeak.app.feature.lessons.ui.components.SeccionTeoria
+import com.xpspeak.app.feature.voice.ui.HojaPracticaPronunciacion
+import com.xpspeak.app.feature.voice.ui.PracticaVozViewModel
 
 /**
  * CU-06: teoría de la lección + evaluación corta (Ilustración 39). La evaluación
@@ -43,12 +45,16 @@ import com.xpspeak.app.feature.lessons.ui.components.SeccionTeoria
 @Composable
 fun LeccionScreen(
     onVolver: () -> Unit,
-    viewModel: LeccionViewModel = hiltViewModel()
+    viewModel: LeccionViewModel = hiltViewModel(),
+    practica: PracticaVozViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val leccion = uiState.leccion
     val resultado = uiState.resultado
     val locutor = rememberLocutor()
+    // RF-09: cualquier palabra, ejemplo o línea de diálogo se puede repetir y recibir la
+    // retroalimentación de pronunciación (frase, palabra y sonido) en una hoja.
+    HojaPracticaPronunciacion(practica, locutor)
     var evaluando by rememberSaveable { mutableStateOf(false) }
     val irAEvaluacion = remember { BringIntoViewRequester() }
 
@@ -76,7 +82,8 @@ fun LeccionScreen(
                     nivel = leccion.nivelMcer,
                     portada = portada,
                     canDo = leccion.canDo,
-                    onEscuchar = locutor::decir
+                    onEscuchar = locutor::decir,
+                    onPronunciar = practica::abrir
                 )
             }
 

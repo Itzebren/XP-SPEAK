@@ -47,13 +47,15 @@ import com.xpspeak.app.core.ui.theme.XPMarino
 import com.xpspeak.app.core.ui.theme.XPTextoSecundario
 import com.xpspeak.app.feature.lessons.data.SeccionDto
 import com.xpspeak.app.feature.lessons.data.TipoSeccion
+import com.xpspeak.app.feature.voice.ui.BotonPronunciar
 
 /** Tarjetas de vocabulario que se ven a la vez; las demás, con las flechas. */
 private const val TARJETAS_POR_PAGINA = 3
 
 /**
  * Una sección de teoría (introducción, vocabulario, gramática o diálogo) — CU-06 paso 3,
- * con el diseño de la Ilustración 39. [onEscuchar] lee en voz alta un texto en inglés.
+ * con el diseño de la Ilustración 39. [onEscuchar] lee en voz alta un texto en inglés;
+ * [onPronunciar] abre la práctica de pronunciación de esa frase (RF-09), si se da.
  */
 @Composable
 fun SeccionTeoria(
@@ -61,13 +63,14 @@ fun SeccionTeoria(
     nivel: String,
     @DrawableRes portada: Int,
     canDo: List<String>,
-    onEscuchar: (String) -> Unit
+    onEscuchar: (String) -> Unit,
+    onPronunciar: ((String) -> Unit)? = null
 ) {
     when (seccion.tipo) {
         TipoSeccion.INTRODUCCION -> Introduccion(seccion, nivel, portada, canDo)
-        TipoSeccion.VOCABULARIO -> Vocabulario(seccion, onEscuchar)
-        TipoSeccion.DIALOGO -> Dialogo(seccion, onEscuchar)
-        else -> Explicacion(seccion)
+        TipoSeccion.VOCABULARIO -> Vocabulario(seccion, onEscuchar, onPronunciar)
+        TipoSeccion.DIALOGO -> Dialogo(seccion, onEscuchar, onPronunciar)
+        else -> Explicacion(seccion, onPronunciar)
     }
 }
 
@@ -91,9 +94,9 @@ private fun Introduccion(seccion: SeccionDto, nivel: String, @DrawableRes portad
     }
 }
 
-/** Tarjetas de tres en tres con flechas; al tocar una se escucha la palabra en inglés. */
+/** Tarjetas de tres en tres con flechas; al tocar una se escucha la palabra en inglés y el micrófono la practica. */
 @Composable
-private fun Vocabulario(seccion: SeccionDto, onEscuchar: (String) -> Unit) {
+private fun Vocabulario(seccion: SeccionDto, onEscuchar: (String) -> Unit, onPronunciar: ((String) -> Unit)?) {
     val paginas = seccion.items.orEmpty().filter { it.en != null }.chunked(TARJETAS_POR_PAGINA)
     var pagina by rememberSaveable(seccion.titulo) { mutableIntStateOf(0) }
     val actual = paginas.getOrNull(pagina).orEmpty()
@@ -131,6 +134,7 @@ private fun Vocabulario(seccion: SeccionDto, onEscuchar: (String) -> Unit) {
                     ) {
                         Text(en, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
                         item.es?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario, textAlign = TextAlign.Center) }
+                        onPronunciar?.let { BotonPronunciar(onClick = { it(en) }) }
                     }
                 }
             }
@@ -144,7 +148,7 @@ private fun Vocabulario(seccion: SeccionDto, onEscuchar: (String) -> Unit) {
 }
 
 @Composable
-private fun Dialogo(seccion: SeccionDto, onEscuchar: (String) -> Unit) {
+private fun Dialogo(seccion: SeccionDto, onEscuchar: (String) -> Unit, onPronunciar: ((String) -> Unit)?) {
     val lineas = seccion.lineas.orEmpty()
     TarjetaXP {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -168,12 +172,14 @@ private fun Dialogo(seccion: SeccionDto, onEscuchar: (String) -> Unit) {
         Surface(color = XPBlanco, shape = MaterialTheme.shapes.small, modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 lineas.forEach { linea ->
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                         Text("${linea.hablante}:", fontWeight = FontWeight.Bold, color = XPMarino)
-                        Column {
+                        Column(modifier = Modifier.weight(1f)) {
                             Text(linea.en, style = MaterialTheme.typography.bodyMedium)
                             Text(linea.es, style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
                         }
+                        // RF-09: repetir la línea del diálogo y ver cómo sonó.
+                        onPronunciar?.let { BotonPronunciar(onClick = { it(linea.en) }) }
                     }
                 }
             }
@@ -182,14 +188,17 @@ private fun Dialogo(seccion: SeccionDto, onEscuchar: (String) -> Unit) {
 }
 
 @Composable
-private fun Explicacion(seccion: SeccionDto) {
+private fun Explicacion(seccion: SeccionDto, onPronunciar: ((String) -> Unit)?) {
     TarjetaXP {
         TituloTarjeta(seccion.titulo ?: "Gramática")
         seccion.cuerpo?.let { Text(it) }
         seccion.explicacion?.let { Text(it) }
-        seccion.ejemplos?.forEach {
+        seccion.ejemplos?.forEach { ejemplo ->
             Surface(color = XPBlanco, shape = MaterialTheme.shapes.small, modifier = Modifier.fillMaxWidth()) {
-                Text(it, fontWeight = FontWeight.Medium, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 12.dp, end = 4.dp)) {
+                    Text(ejemplo, fontWeight = FontWeight.Medium, modifier = Modifier.weight(1f).padding(vertical = 8.dp))
+                    onPronunciar?.let { BotonPronunciar(onClick = { it(ejemplo) }) }
+                }
             }
         }
     }

@@ -31,16 +31,27 @@ class EvaluadorDispositivo @Inject constructor(@ApplicationContext private val c
 
     // SpeechRecognizer solo funciona en el hilo principal.
     suspend fun evaluar(referencia: String): EvaluacionVoz = withContext(Dispatchers.Main) {
-        if (!disponible()) throw SinReconocedor()
-        val alternativas = try {
-            escuchar(offline = true)
-        } catch (error: SinIdiomaOffline) {
-            escuchar(offline = false)
-        }
-        Pronunciacion.evaluarTranscripcion(referencia, alternativas)
+        Pronunciacion.evaluarTranscripcion(referencia, alternativas())
     }
 
-    private suspend fun escuchar(offline: Boolean): List<Pair<String, Float>> {
+    /**
+     * Chat en vivo sin Azure: solo transcribe lo que se dijo, avisando con [onParcial] mientras
+     * habla, para poder conversar. No califica la pronunciación.
+     */
+    suspend fun transcribir(onParcial: (String) -> Unit = {}): EvaluacionVoz = withContext(Dispatchers.Main) {
+        Pronunciacion.soloTranscripcion(alternativas(onParcial))
+    }
+
+    private suspend fun alternativas(onParcial: (String) -> Unit = {}): List<Pair<String, Float>> {
+        if (!disponible()) throw SinReconocedor()
+        return try {
+            escuchar(offline = true, onParcial)
+        } catch (error: SinIdiomaOffline) {
+            escuchar(offline = false, onParcial)
+        }
+    }
+
+    private suspend fun escuchar(offline: Boolean, onParcial: (String) -> Unit): List<Pair<String, Float>> {
         val reconocedor = SpeechRecognizer.createSpeechRecognizer(context)
         try {
             return suspendCancellableCoroutine { continuacion ->
@@ -74,7 +85,7 @@ class EvaluadorDispositivo @Inject constructor(@ApplicationContext private val c
 
                     override fun onPartialResults(partialResults: Bundle?) {
                         partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                            ?.firstOrNull()?.takeIf { it.isNotBlank() }?.let { parcial = it }
+                            ?.firstOrNull()?.takeIf { it.isNotBlank() }?.let { parcial = it; onParcial(it) }
                     }
 
                     override fun onReadyForSpeech(params: Bundle?) {}
