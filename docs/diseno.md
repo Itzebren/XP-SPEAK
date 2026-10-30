@@ -2,7 +2,8 @@
 
 > Rama `feature/diseno` (desde `develop` `52dc32c`). Es el documento de contexto del diseño
 > visual, igual que `docs/minijuegos-diseno.md` y `docs/progreso-diseno.md`: se actualiza
-> conforme avance el desarrollo. Última sesión: **2026-10-11**.
+> conforme avance el desarrollo. Última sesión: **2026-10-29** (integración de `origin/develop`,
+> repaso con los componentes comunes; Android 123/123, backend 163/163).
 >
 > Lienzo de diseño (sistema visual y las 14 pantallas recreadas, navegable como prototipo):
 > https://claude.ai/artifact/Vt3piWUYkdga2xeRLQioBD (privado: compártelo desde su menú Share).

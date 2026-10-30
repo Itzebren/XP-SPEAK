@@ -65,9 +65,8 @@ de 136 XP sembrado sin resumen):
    reexporta.
 
 **Pendiente:**
-- Los archivos del arte final. Basta con agregar `res/drawable/insignia_<id con _>.png`
-  (por ejemplo `insignia_primer_logro.png`) y `mascota.png`; la app los usa sin cambiar código
-  y pone en gris las bloqueadas. Se verificó en el emulador con un drawable temporal.
+- ~~Los archivos del arte final~~ ✅ Las 9 insignias y la mascota están como VectorDrawable
+  (`res/drawable/insignia_*.xml`, `mascota.xml`); la app los toma con `recursoDrawable`.
 - Desplegar. El cliente de chat no tiene un id de conversación propio:
 `ChatViewModel` genera un UUID por pantalla de chat.
 
