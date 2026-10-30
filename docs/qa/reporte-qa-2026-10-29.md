@@ -9,7 +9,7 @@ con `adb` (toques, texto y volcados de la jerarquía de la pantalla). Las captur
 | Pieza | Valor |
 |---|---|
 | App | `develop` en `6bac815` + correcciones de este reporte, `app-debug.apk` (59 MB) |
-| Dispositivo | Emulador Pixel_10a, Android 17, 1080×2424 |
+| Dispositivos | Emulador Pixel_10a, Android 17, 1080×2424 (recorrido completo) · Emulador QA_API26, **Android 8.0 (API 26, el mínimo soportado)**, 1080×1920 (recorrido de humo, 30-oct) |
 | Backend | `npm run dev:emulador` (servidor local en :3000 con emuladores de Firestore y Auth de Firebase) |
 | Red | `adb reverse tcp:3000` y `tcp:9099`; para el modo sin conexión se quitó el reverse y se apagaron wifi y datos |
 | Cuenta | `qa.tester@xpspeak.test` creada durante la prueba en el emulador de Auth (correo verificado con el enlace que expone el emulador) |
@@ -93,18 +93,32 @@ borrada durante la prueba:
 | Recuperar contraseña (`POST /api/send-reset-code`) | ❌ 500 genérico → hallazgo **H8**, resuelto con el enlace de Firebase (`accounts:sendOobCode` responde 200 para el proyecto real). La validación de correo inválido (400) y de código incompleto (400) sí funcionan |
 | Firewall de Vercel | Rechaza tokens del emulador (403), acepta los reales |
 
-Compatibilidad con Android 8.0 (`minSdk 26`): `lintDebug` termina con 0 errores y ninguna
-advertencia `NewApi`/`InlinedApi`, es decir, no hay llamadas a APIs posteriores al mínimo sin
-proteger. Solo se ejecutó en Android 17 porque no hay imagen de sistema de API 26 instalada.
+### Android 8.0 (API 26), el mínimo soportado
+
+Recorrido de humo en un emulador con la imagen `google_apis;arm64-v8a` de API 26, con el mismo
+APK y el backend local (capturas en `capturas-2026-10-30-android8/`, prefijo `a8-`):
+
+| Pantalla | Resultado | Captura |
+|---|---|---|
+| Acceso e inicio de sesión (cuenta verificada) | ✅ | a8-01, a8-02 |
+| Personalización: nivel, avatar, botón al final (la pantalla se desplaza) | ✅ | a8-03, a8-03b |
+| Inicio, barra inferior | ✅ | a8-04 |
+| Catálogo y lección (teoría, tarjetas, micrófono de práctica, hoja de pronunciación) | ✅ | a8-05 a a8-07 |
+| Evaluación: tocar el texto de la opción la marca (H1 también en API 26) | ✅ | a8-08 |
+| Minijuegos: catálogo y Orden Maestro | ✅ | a8-09, a8-10 |
+| Progreso (estado inicial sin XP), Chat, Ajustes de perfil, Notificaciones | ✅ | a8-11 a a8-14 |
+
+Sin cierres inesperados en el logcat. Además, `lintDebug` termina con 0 errores y sin advertencias
+`NewApi`/`InlinedApi`. Nota para quien automatice: en este emulador los gestos de desplazamiento
+de menos de ~300 ms no se registran; no es de la app.
 
 ## 5. Lo que sigue requiriendo algo externo
 
 - Una pasada en teléfono físico con micrófono real (Eco Vocal, chat en vivo y práctica con
-  Azure): el emulador no capta audio. Todo lo demás de la voz ya quedó verificado por API.
-- Ejecutar la app en una imagen de Android 8.0 (API 26): no está instalada y la instalación de las
-  herramientas del SDK quedó bloqueada por permisos en esta sesión; se instala desde Android Studio
-  (SDK Manager → `system-images;android-26;google_apis;arm64-v8a`). El análisis estático ya pasó.
-- Si se quiere volver al código de 6 dígitos por correo propio: verificar un dominio en Resend.
+  Azure): el emulador no capta audio. Lo demás de la voz quedó verificado por API con el recurso
+  de producción y la pantalla de retroalimentación se probó con el respaldo del teléfono.
+- Opcional: verificar un dominio en Resend para volver al código de 6 dígitos por correo propio
+  (hoy la app usa el enlace de Firebase como respaldo y funciona).
 
 ## 6. Cómo repetir
 
@@ -117,4 +131,7 @@ adb install -r -g app/build/outputs/apk/debug/app-debug.apk
 adb reverse tcp:3000 tcp:3000 && adb reverse tcp:9099 tcp:9099
 # enlace de verificación de la cuenta recién creada
 curl -s http://localhost:9099/emulator/v1/projects/demo-xpspeak/oobCodes
+# Android 8.0: imagen system-images;android-26;google_apis;arm64-v8a (SDK Manager) y un AVD
+# definido a mano en ~/.android/avd/QA_API26.avd (avdmanager 12 no lee el package.xml v4 de la imagen)
+emulator -avd QA_API26 -no-boot-anim -no-audio -gpu swiftshader_indirect
 ```
