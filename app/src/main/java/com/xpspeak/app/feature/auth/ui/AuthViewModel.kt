@@ -55,11 +55,21 @@ class AuthViewModel @Inject constructor(
      * Firebase guarda la sesión en el teléfono: si ya hay una, no se vuelve a pedir
      * iniciar sesión. Funciona sin conexión (el perfil está en Room); si el correo
      * aún no se verifica, se va directo al aviso de verificación (RN-01).
+     *
+     * Antes de continuar se comprueba que Firebase todavía acepte la sesión: si el refresh
+     * token ya no sirve, entrar a Inicio dejaría al usuario con todo el backend fallando en
+     * silencio (voz, chat, progreso). En ese caso se cierra la sesión y se pide entrar de nuevo.
      */
     private fun retomarSesion() {
         val usuario = authRepository.usuarioActual ?: return
         _uiState.value = _uiState.value.copy(retomandoSesion = true, correo = usuario.email.orEmpty())
         viewModelScope.launch {
+            val caducada = authRepository.comprobarSesion().exceptionOrNull()?.let(AuthRepository::esSesionCaducada) == true
+            if (caducada) {
+                authRepository.cerrarSesion()
+                _uiState.value = AuthUiState(correo = usuario.email.orEmpty(), aviso = MENSAJE_SESION_CADUCADA)
+                return@launch
+            }
             if (usuario.isEmailVerified) {
                 continuar(usuario.uid)
             } else {
@@ -179,6 +189,10 @@ class AuthViewModel @Inject constructor(
         val tienePerfil = perfilRepository.existePerfil(uid)
         val destino = if (tienePerfil) DestinoPostAuth.HOME else DestinoPostAuth.SELECCIONAR_NIVEL
         _uiState.value = _uiState.value.copy(cargando = false, retomandoSesion = false, pendienteVerificacion = false, destino = destino)
+    }
+
+    private companion object {
+        const val MENSAJE_SESION_CADUCADA = "Tu sesión caducó. Inicia sesión de nuevo."
     }
 
     private fun mapearError(excepcion: Throwable): String = when (excepcion) {

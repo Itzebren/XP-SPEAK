@@ -43,6 +43,7 @@ import com.xpspeak.app.core.ui.theme.XPFondo
 import com.xpspeak.app.core.ui.theme.XPMarino
 import com.xpspeak.app.core.ui.theme.XPTexto
 import com.xpspeak.app.core.ui.theme.XPTextoSecundario
+import com.xpspeak.app.feature.games.data.voz.EstadoEscucha
 import com.xpspeak.app.feature.games.data.voz.EvaluadorVoz
 import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import com.xpspeak.app.feature.games.ui.comun.Locutor
@@ -75,7 +76,13 @@ class PracticaVozViewModel @Inject constructor(private val evaluador: EvaluadorV
     private val _uiState = MutableStateFlow(PracticaVozUiState())
     val uiState: StateFlow<PracticaVozUiState> = _uiState.asStateFlow()
 
+    /** Volumen, lo que se va oyendo y en qué paso va el micrófono (PanelEscucha). */
+    val estadoEscucha: StateFlow<EstadoEscucha> = evaluador.escucha
+
     private var escucha: Job? = null
+
+    /** Botón «Listo»: califica lo dicho sin esperar la pausa de silencio. */
+    fun terminarDeHablar() = evaluador.terminar()
 
     fun abrir(frase: String) {
         escucha?.cancel()
@@ -129,6 +136,7 @@ fun BotonPronunciar(onClick: () -> Unit, modifier: Modifier = Modifier, tinte: a
 @Composable
 fun HojaPracticaPronunciacion(viewModel: PracticaVozViewModel, locutor: Locutor) {
     val uiState by viewModel.uiState.collectAsState()
+    val escucha by viewModel.estadoEscucha.collectAsState()
     val frase = uiState.frase ?: return
     val context = LocalContext.current
     val pedirPermiso = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { concedido ->
@@ -168,16 +176,18 @@ fun HojaPracticaPronunciacion(viewModel: PracticaVozViewModel, locutor: Locutor)
                             Text("  Más lento")
                         }
                     }
+                    AvisoVoz(locutor)
                 }
             }
-            BotonPrincipal(
-                texto = if (uiState.evaluacion == null) "🎙 Hablar" else "🎙 Intentar de nuevo",
-                onClick = hablar,
-                cargando = uiState.evaluando
-            )
-            if (uiState.evaluando) {
-                Text("Escuchando… lee la frase completa y haz una pausa al terminar.", style = MaterialTheme.typography.bodyMedium, color = XPTextoSecundario)
+            // Mientras escucha, el panel trae su propio botón «Listo»; el de hablar se oculta.
+            if (escucha !is EstadoEscucha.Escuchando) {
+                BotonPrincipal(
+                    texto = if (uiState.evaluacion == null) "🎙 Hablar" else "🎙 Intentar de nuevo",
+                    onClick = hablar,
+                    cargando = uiState.evaluando
+                )
             }
+            PanelEscucha(escucha, onTerminar = viewModel::terminarDeHablar)
             uiState.error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
             uiState.evaluacion?.let { PanelPronunciacion(it, locutor) }
             Surface(color = XPAzulClaro, shape = MaterialTheme.shapes.small, modifier = Modifier.fillMaxWidth()) {

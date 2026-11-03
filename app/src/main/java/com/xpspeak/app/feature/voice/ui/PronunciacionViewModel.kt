@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xpspeak.app.core.sesion.SesionActual
 import com.xpspeak.app.feature.auth.data.UsuarioDao
+import com.xpspeak.app.feature.games.data.voz.EstadoEscucha
 import com.xpspeak.app.feature.games.data.voz.EvaluadorVoz
 import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import com.xpspeak.app.feature.voice.domain.Retroalimentacion
@@ -34,6 +35,12 @@ class PronunciacionViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(PronunciacionUiState())
     val uiState: StateFlow<PronunciacionUiState> = _uiState.asStateFlow()
+
+    /** Volumen, lo que se va oyendo y en qué paso va el micrófono (PanelEscucha). */
+    val escucha: StateFlow<EstadoEscucha> = evaluador.escucha
+
+    /** Botón «Listo»: califica lo dicho sin esperar la pausa de silencio. */
+    fun terminarDeHablar() = evaluador.terminar()
 
     init {
         // RN-02: las frases siguen el nivel elegido al registrarse.

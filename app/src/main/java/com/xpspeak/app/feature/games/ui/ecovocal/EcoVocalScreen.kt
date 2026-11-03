@@ -28,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.RecordVoiceOver
 import androidx.compose.material.icons.filled.Replay
@@ -63,6 +64,7 @@ import com.xpspeak.app.core.ui.theme.XPNaranjaTexto
 import com.xpspeak.app.core.ui.theme.XPTextoSecundario
 import com.xpspeak.app.core.ui.theme.XPVerdeExito
 import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
+import com.xpspeak.app.feature.games.data.voz.EstadoEscucha
 import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import com.xpspeak.app.feature.games.domain.GeneradorRondas
 import com.xpspeak.app.feature.games.domain.Minijuego
@@ -76,9 +78,11 @@ import com.xpspeak.app.feature.games.ui.comun.TarjetaJuego
 import com.xpspeak.app.feature.games.ui.comun.Veredicto
 import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
 import com.xpspeak.app.feature.voice.ui.AnilloPuntaje
+import com.xpspeak.app.feature.voice.ui.AvisoVoz
 import com.xpspeak.app.feature.voice.ui.DetallePalabra
 import com.xpspeak.app.feature.voice.ui.NotaFuente
 import com.xpspeak.app.feature.voice.ui.PalabrasColoreadas
+import com.xpspeak.app.feature.voice.ui.PanelEscucha
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -86,7 +90,7 @@ import androidx.compose.runtime.setValue
 @Composable
 fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltViewModel()) {
     val fase by viewModel.fase.collectAsState()
-    val escuchando by viewModel.escuchando.collectAsState()
+    val escucha by viewModel.estadoEscucha.collectAsState()
     val aviso by viewModel.aviso.collectAsState()
     val locutor = rememberLocutor()
     val context = LocalContext.current
@@ -151,6 +155,8 @@ fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltView
                         Text("  Más lento", color = tema.texto, fontWeight = FontWeight.Bold)
                     }
                 }
+                // Si el teléfono no tiene voz en inglés, se dice aquí en vez de que «Escuchar» quede mudo.
+                AvisoVoz(locutor)
             }
 
             if (evaluacion != null && revision != null) {
@@ -180,7 +186,7 @@ fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltView
                 Text(if (revision.definitiva) "Continuar" else "Intentar de nuevo", fontWeight = FontWeight.Bold)
             }
         } else {
-            BotonMicrofono(escuchando, onClick = hablar)
+            BotonMicrofono(escucha, onHablar = hablar, onTerminar = viewModel::terminarDeHablar)
             // Si el micrófono no capta nada (o falla), el usuario no debe quedar atorado en la frase.
             if (aviso != null || evaluacion != null) {
                 OutlinedButton(
@@ -194,10 +200,16 @@ fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltView
     }
 }
 
-/** Micrófono grande del color del juego; mientras escucha, un halo late a su alrededor. */
+/**
+ * Micrófono grande del color del juego. Mientras escucha, arriba van las barras de volumen y
+ * lo que se va entendiendo (PanelEscucha), y el botón se vuelve «Listo» para calificar sin
+ * esperar la pausa: antes no había señal de que ya oía y el usuario repetía la frase tres veces.
+ */
 @Composable
-private fun BotonMicrofono(escuchando: Boolean, onClick: () -> Unit) {
+private fun BotonMicrofono(estado: EstadoEscucha, onHablar: () -> Unit, onTerminar: () -> Unit) {
     val tema = LocalTemaJuego.current
+    val escuchando = estado as? EstadoEscucha.Escuchando
+    val ocupado = estado == EstadoEscucha.Preparando || estado == EstadoEscucha.Calificando
     val latido = rememberInfiniteTransition(label = "microfono")
     val escala by latido.animateFloat(
         initialValue = 1f,
@@ -210,30 +222,46 @@ private fun BotonMicrofono(escuchando: Boolean, onClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
+        PanelEscucha(estado, onTerminar = onTerminar, color = tema.texto, conBoton = false)
         Box(contentAlignment = Alignment.Center, modifier = Modifier.size(120.dp)) {
+            // El halo late mientras espera y crece con la voz mientras escucha.
+            val haloEscala = when {
+                escuchando != null -> 1.05f + escuchando.nivel * 0.35f
+                ocupado -> escala
+                else -> 1.1f
+            }
             Box(
                 modifier = Modifier
                     .size(96.dp)
-                    .scale(if (escuchando) escala else 1.1f)
-                    .background(tema.acento.copy(alpha = if (escuchando) 0.3f else 0.18f), CircleShape)
+                    .scale(haloEscala)
+                    .background(tema.acento.copy(alpha = if (estado == EstadoEscucha.Inactivo) 0.18f else 0.3f), CircleShape)
             )
             FilledIconButton(
-                onClick = onClick,
-                enabled = !escuchando,
+                onClick = if (escuchando != null) onTerminar else onHablar,
+                enabled = !ocupado,
                 modifier = Modifier.size(88.dp),
                 shape = CircleShape,
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = tema.acento,
+                    containerColor = if (escuchando != null) XPVerdeExito else tema.acento,
                     contentColor = tema.sobreAcento,
                     disabledContainerColor = tema.acento,
                     disabledContentColor = tema.sobreAcento
                 )
             ) {
-                Icon(Icons.Filled.Mic, contentDescription = "Hablar", modifier = Modifier.size(44.dp))
+                if (escuchando != null) {
+                    Icon(Icons.Filled.Check, contentDescription = "Listo, calificar", modifier = Modifier.size(44.dp))
+                } else {
+                    Icon(Icons.Filled.Mic, contentDescription = "Hablar", modifier = Modifier.size(44.dp))
+                }
             }
         }
         Text(
-            if (escuchando) "Escuchando… di la frase" else "Toca y repite la frase",
+            when (estado) {
+                EstadoEscucha.Inactivo -> "Toca y repite la frase"
+                EstadoEscucha.Preparando -> "Un momento…"
+                is EstadoEscucha.Escuchando -> "Toca ✓ cuando termines"
+                EstadoEscucha.Calificando -> "Calificando…"
+            },
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             color = tema.texto

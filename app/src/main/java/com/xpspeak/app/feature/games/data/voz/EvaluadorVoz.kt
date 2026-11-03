@@ -6,6 +6,9 @@ import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import com.xpspeak.app.feature.voice.data.EvaluadorPronunciacion
 import com.xpspeak.app.feature.voice.data.SpeechRepository
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
@@ -29,23 +32,44 @@ class EvaluadorVoz @Inject constructor(
     /** Sin red o sin Azure en el backend: no se vuelve a preguntar en cada intento. */
     private var sinAzureHasta = 0L
 
+    private val _escucha = MutableStateFlow<EstadoEscucha>(EstadoEscucha.Inactivo)
+    /** Qué hace el micrófono ahora (una sola fuente para todas las pantallas con voz). */
+    val escucha: StateFlow<EstadoEscucha> = _escucha.asStateFlow()
+    @Volatile private var sesionActual: SesionEscucha? = null
+
     /**
      * Califica cómo se dijo [referencia]. Con Azure: fonema por fonema, fluidez y
-     * completitud; con el teléfono: qué palabras se entendieron.
+     * completitud; con el teléfono: qué palabras se entendieron. Mientras tanto publica en
+     * [escucha] el volumen y lo que va oyendo; [terminar] cierra el micrófono antes de la pausa.
      * @param medida nombre de la medición de latencia para la Tabla 93.
      */
     suspend fun evaluar(referencia: String, medida: String = "voz.eco_vocal"): EvaluacionVoz {
-        val vigente = tokenVigente() ?: return dispositivo.evaluar(referencia)
-        return try {
-            azure.evaluar(referencia, vigente, medida)
-        } catch (error: CancellationException) {
-            throw error
-        } catch (error: Exception) {
-            // Token rechazado, red caída a media frase o falla del SDK: se usa el respaldo.
-            Log.w(TAG, "Azure falló, se usa el reconocedor del teléfono: ${error.message}")
-            dispositivo.evaluar(referencia)
+        val sesion = nuevaSesion()
+        sesion.preparando()
+        try {
+            val vigente = tokenVigente() ?: return dispositivo.evaluar(referencia, sesion)
+            return try {
+                azure.evaluar(referencia, vigente, medida, sesion)
+            } catch (error: CancellationException) {
+                throw error
+            } catch (error: Exception) {
+                // Token rechazado, red caída a media frase o falla del SDK: se usa el respaldo,
+                // con una sesión nueva porque el micrófono se vuelve a abrir desde cero.
+                Log.w(TAG, "Azure falló, se usa el reconocedor del teléfono: ${error.message}")
+                dispositivo.evaluar(referencia, nuevaSesion())
+            }
+        } finally {
+            sesionActual = null
+            _escucha.value = EstadoEscucha.Inactivo
         }
     }
+
+    /** Botón «Listo»: deja de escuchar y califica lo que ya se dijo. */
+    fun terminar() {
+        sesionActual?.terminar()
+    }
+
+    private fun nuevaSesion() = SesionEscucha { _escucha.value = it }.also { sesionActual = it }
 
     /**
      * Chat en vivo: una frase libre, avisando con [onParcial] lo que se va oyendo. Con Azure

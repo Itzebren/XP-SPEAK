@@ -35,7 +35,7 @@ import com.xpspeak.app.core.ui.componentes.EncabezadoXP
 import com.xpspeak.app.core.ui.componentes.TarjetaXP
 import com.xpspeak.app.core.ui.theme.XPBlanco
 import com.xpspeak.app.core.ui.theme.XPTexto
-import com.xpspeak.app.core.ui.theme.XPTextoSecundario
+import com.xpspeak.app.feature.games.data.voz.EstadoEscucha
 import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
 
 /** RF-09: lee una frase de tu nivel y recibe la retroalimentación de frase, palabra y sonido. */
@@ -45,6 +45,7 @@ fun PronunciacionScreen(
     onBack: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val escucha by viewModel.escucha.collectAsState()
     val context = LocalContext.current
     val locutor = rememberLocutor()
 
@@ -99,16 +100,18 @@ fun PronunciacionScreen(
                         Text("Otra frase")
                     }
                 }
+                AvisoVoz(locutor)
             }
 
-            BotonPrincipal(
-                texto = if (uiState.resultado == null) "🎙 Hablar" else "🎙 Intentar de nuevo",
-                onClick = onHablarClick,
-                cargando = uiState.evaluando
-            )
-            if (uiState.evaluando) {
-                Text("Escuchando... lee la frase completa.", style = MaterialTheme.typography.bodyMedium, color = XPTextoSecundario)
+            // Mientras escucha, el panel trae su propio botón «Listo»; el de hablar se oculta.
+            if (escucha !is EstadoEscucha.Escuchando) {
+                BotonPrincipal(
+                    texto = if (uiState.resultado == null) "🎙 Hablar" else "🎙 Intentar de nuevo",
+                    onClick = onHablarClick,
+                    cargando = uiState.evaluando
+                )
             }
+            PanelEscucha(escucha, onTerminar = viewModel::terminarDeHablar)
 
             uiState.error?.let { error ->
                 Text(text = error, color = MaterialTheme.colorScheme.error)

@@ -120,6 +120,8 @@ fun AuthScreen(
             }
         }
 
+        // Sesión guardada que Firebase ya no acepta: se explica por qué se pide entrar otra vez.
+        uiState.aviso?.let { Text(it, color = XPMarino, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center) }
         // El aviso de requisitos ya está bajo el campo: no se repite aquí.
         uiState.error?.takeIf { esLogin || uiState.password.isEmpty() || it != PasswordValidator.mensajeError(uiState.password) }?.let { mensaje ->
             Text(mensaje, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)

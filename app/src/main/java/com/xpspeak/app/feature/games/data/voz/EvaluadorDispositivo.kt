@@ -3,6 +3,8 @@ package com.xpspeak.app.feature.games.data.voz
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -30,8 +32,8 @@ class EvaluadorDispositivo @Inject constructor(@ApplicationContext private val c
     private class SinIdiomaOffline : Exception()
 
     // SpeechRecognizer solo funciona en el hilo principal.
-    suspend fun evaluar(referencia: String): EvaluacionVoz = withContext(Dispatchers.Main) {
-        Pronunciacion.evaluarTranscripcion(referencia, alternativas())
+    suspend fun evaluar(referencia: String, sesion: SesionEscucha? = null): EvaluacionVoz = withContext(Dispatchers.Main) {
+        Pronunciacion.evaluarTranscripcion(referencia, alternativas(sesion = sesion))
     }
 
     /**
@@ -42,16 +44,17 @@ class EvaluadorDispositivo @Inject constructor(@ApplicationContext private val c
         Pronunciacion.soloTranscripcion(alternativas(onParcial))
     }
 
-    private suspend fun alternativas(onParcial: (String) -> Unit = {}): List<Pair<String, Float>> {
+    private suspend fun alternativas(onParcial: (String) -> Unit = {}, sesion: SesionEscucha? = null): List<Pair<String, Float>> {
         if (!disponible()) throw SinReconocedor()
         return try {
-            escuchar(offline = true, onParcial)
+            escuchar(offline = true, onParcial, sesion)
         } catch (error: SinIdiomaOffline) {
-            escuchar(offline = false, onParcial)
+            escuchar(offline = false, onParcial, sesion)
         }
     }
 
-    private suspend fun escuchar(offline: Boolean, onParcial: (String) -> Unit): List<Pair<String, Float>> {
+    /** [sesion]: a quién avisar el volumen y lo que se va oyendo; el botón «Listo» corta la escucha. */
+    private suspend fun escuchar(offline: Boolean, onParcial: (String) -> Unit, sesion: SesionEscucha?): List<Pair<String, Float>> {
         val reconocedor = SpeechRecognizer.createSpeechRecognizer(context)
         try {
             return suspendCancellableCoroutine { continuacion ->
@@ -85,14 +88,14 @@ class EvaluadorDispositivo @Inject constructor(@ApplicationContext private val c
 
                     override fun onPartialResults(partialResults: Bundle?) {
                         partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                            ?.firstOrNull()?.takeIf { it.isNotBlank() }?.let { parcial = it; onParcial(it) }
+                            ?.firstOrNull()?.takeIf { it.isNotBlank() }?.let { parcial = it; onParcial(it); sesion?.oyendo(it) }
                     }
 
-                    override fun onReadyForSpeech(params: Bundle?) {}
-                    override fun onBeginningOfSpeech() {}
-                    override fun onRmsChanged(rmsdB: Float) {}
+                    override fun onReadyForSpeech(params: Bundle?) { sesion?.escuchando() }
+                    override fun onBeginningOfSpeech() { sesion?.vozDetectada() }
+                    override fun onRmsChanged(rmsdB: Float) { sesion?.nivel(NivelAudio.deRmsAndroid(rmsdB)) }
                     override fun onBufferReceived(buffer: ByteArray?) {}
-                    override fun onEndOfSpeech() {}
+                    override fun onEndOfSpeech() { sesion?.calificando() }
                     override fun onEvent(eventType: Int, params: Bundle?) {}
                 })
                 reconocedor.startListening(
@@ -107,6 +110,11 @@ class EvaluadorDispositivo @Inject constructor(@ApplicationContext private val c
                         putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 1500L)
                     }
                 )
+                // «Listo»: stopListening entrega lo que ya oyó (o NO_MATCH si no oyó nada).
+                // Puede llegar desde otro hilo y SpeechRecognizer solo acepta el principal.
+                sesion?.alTerminar = {
+                    Handler(Looper.getMainLooper()).post { if (continuacion.isActive) runCatching { reconocedor.stopListening() } }
+                }
             }
         } finally {
             reconocedor.destroy()

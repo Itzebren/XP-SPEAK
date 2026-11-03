@@ -2,6 +2,7 @@ package com.xpspeak.app.feature.games.ui.ecovocal
 
 import androidx.lifecycle.viewModelScope
 import com.xpspeak.app.feature.games.data.MinijuegosRepository
+import com.xpspeak.app.feature.games.data.voz.EstadoEscucha
 import com.xpspeak.app.feature.games.data.voz.EvaluadorVoz
 import com.xpspeak.app.feature.games.domain.ContenidoJuegos
 import com.xpspeak.app.feature.games.domain.Dificultad
@@ -53,6 +54,12 @@ class EcoVocalViewModel @Inject constructor(
 
     private val _escuchando = MutableStateFlow(false)
     val escuchando: StateFlow<Boolean> = _escuchando.asStateFlow()
+
+    /** Volumen, lo que se va oyendo y en qué paso va el micrófono (PanelEscucha). */
+    val estadoEscucha: StateFlow<EstadoEscucha> = evaluador.escucha
+
+    /** Botón «Listo»: califica lo dicho sin esperar la pausa de silencio. */
+    fun terminarDeHablar() = evaluador.terminar()
 
     private val _aviso = MutableStateFlow<String?>(null)
     /** Problema con el micrófono o el reconocedor (no es un error de pronunciación). */

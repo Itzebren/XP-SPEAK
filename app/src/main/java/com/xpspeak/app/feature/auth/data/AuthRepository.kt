@@ -1,7 +1,9 @@
 package com.xpspeak.app.feature.auth.data
 
 import android.util.Log
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.userProfileChangeRequest
 import kotlinx.coroutines.tasks.await
@@ -17,9 +19,26 @@ open class AuthRepository @Inject constructor(
     // Constructor secundario protegido para pruebas unitarias sin Dagger
     protected constructor() : this(null)
 
-    private companion object {
+    companion object {
         /** Logcat: fallos al enviar el correo de verificación (RN-01). */
-        const val TAG = "XPS-AUTH"
+        private const val TAG = "XPS-AUTH"
+
+        /**
+         * Códigos con los que Firebase rechaza un refresh token: la sesión guardada en el
+         * teléfono ya no sirve (cuenta borrada o deshabilitada, contraseña cambiada, o la
+         * sesión venía de otro proyecto, como el emulador de Auth). El SDK los entrega como
+         * `FirebaseAuthInvalidUserException` o como un error "interno" cuyo mensaje trae el código.
+         */
+        private val CODIGOS_SESION_CADUCADA =
+            listOf("INVALID_REFRESH_TOKEN", "TOKEN_EXPIRED", "USER_NOT_FOUND", "USER_DISABLED", "INVALID_ID_TOKEN")
+
+        /** ¿[error] significa que hay que volver a iniciar sesión? Sin red no se sabe: es false. */
+        fun esSesionCaducada(error: Throwable): Boolean {
+            if (error is FirebaseNetworkException) return false
+            if (error is FirebaseAuthInvalidUserException) return true
+            val mensaje = error.message.orEmpty()
+            return CODIGOS_SESION_CADUCADA.any { mensaje.contains(it) }
+        }
     }
 
     open val usuarioActual: FirebaseUser?
@@ -78,6 +97,17 @@ open class AuthRepository @Inject constructor(
         val auth = requireNotNull(firebaseAuth) { "FirebaseAuth no está inicializado" }
         val resultado = auth.signInWithEmailAndPassword(correo, password).await()
         resultado.user ?: throw IllegalStateException("No se pudo iniciar sesión")
+    }
+
+    /**
+     * Al abrir la app con sesión guardada: pide a Firebase el ID token para saber si la sesión
+     * sigue viva. Si falla, [esSesionCaducada] dice si fue por la sesión (hay que entrar de
+     * nuevo) o por la red (se sigue sin conexión, como antes).
+     */
+    open suspend fun comprobarSesion(): Result<Unit> = runCatching {
+        val usuario = requireNotNull(usuarioActual) { "No hay sesión guardada." }
+        usuario.getIdToken(false).await()
+        Unit
     }
 
     open fun cerrarSesion() {

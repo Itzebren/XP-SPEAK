@@ -7,6 +7,9 @@ plugins {
 }
 
 android {
+    // Las excepciones de Firebase llaman a TextUtils al construirse: sin esto las pruebas
+    // unitarias que las usan (AuthRepositoryTest) revientan con "Method ... not mocked".
+    testOptions { unitTests.isReturnDefaultValues = true }
     namespace = "com.xpspeak.app"
     compileSdk {
         version = release(37)
