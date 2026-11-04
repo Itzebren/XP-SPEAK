@@ -98,7 +98,7 @@ fun InicioScreen(
                     modifier = Modifier.padding(start = 8.dp, end = 8.dp)
                 )
             }
-            TarjetaRacha(uiState.racha, uiState.semana, modifier = Modifier.padding(top = 10.dp, end = 8.dp))
+            TarjetaRacha(uiState.racha, uiState.semana, uiState.xp, modifier = Modifier.padding(top = 10.dp, end = 8.dp))
         }
 
         Column(
@@ -118,16 +118,19 @@ fun InicioScreen(
 }
 
 @Composable
-private fun TarjetaRacha(racha: Int, semana: List<Boolean>, modifier: Modifier = Modifier) {
+private fun TarjetaRacha(racha: Int, semana: List<Boolean>, xp: Int, modifier: Modifier = Modifier) {
     Surface(color = XPBlanco, shape = RoundedCornerShape(18.dp), modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Image(painterResource(R.drawable.icono_racha), contentDescription = null, modifier = Modifier.size(24.dp))
                 Text(
                     if (racha > 0) "Racha de ${Racha.texto(racha)}" else "Empieza tu racha hoy",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
                 )
+                Image(painterResource(R.drawable.moneda_xp), contentDescription = null, modifier = Modifier.size(24.dp))
+                Text("$xp XP", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 DIAS.forEachIndexed { i, (letra, nombre) ->

@@ -2,7 +2,7 @@ const { crearEndpoint } = require('../../lib/endpoint');
 const { ErrorApi, responderError } = require('../../lib/errores');
 const { calificarIntento } = require('../../lib/lecciones/calificador');
 const { listarConceptosDeUsuario, registrarRepaso } = require('../../lib/lecciones/repositorio');
-const { ejercicioParaConcepto, resolverEjercicio } = require('../../lib/lecciones/repaso');
+const { ejercicioParaConcepto, esRepasable, resolverEjercicio } = require('../../lib/lecciones/repaso');
 const { conTextoDelContenido, seleccionarConceptosDebiles, seleccionarParaRepaso } = require('../../lib/lecciones/srs');
 const { validarNivel, validarLimite, validarRepaso } = require('../../lib/lecciones/validacion');
 
@@ -21,7 +21,7 @@ const { validarNivel, validarLimite, validarRepaso } = require('../../lib/leccio
 async function obtenerSesion({ req, res, uid, db }) {
   const nivel = req.query.level ? validarNivel(req.query.level) : null;
   const conceptos = await listarConceptosDeUsuario(db, uid);
-  const seleccion = seleccionarParaRepaso(conceptos, { nivel, ahora: Date.now() });
+  const seleccion = seleccionarParaRepaso(conceptos, { nivel, ahora: Date.now(), repasable: esRepasable });
 
   const items = seleccion.vencidos
     .map((concepto) => ({ concepto, ejercicio: ejercicioParaConcepto(concepto) }))

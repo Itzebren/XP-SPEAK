@@ -52,7 +52,7 @@ fun PronunciacionScreen(
     val permisoLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { concedido ->
-        if (concedido) viewModel.iniciarEvaluacion()
+        if (concedido) viewModel.iniciarEvaluacion() else viewModel.permisoDenegado()
     }
 
     val onHablarClick = {

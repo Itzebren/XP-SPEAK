@@ -102,6 +102,26 @@ test('RN-07: los conceptos débiles de otro nivel no bloquean', async () => {
   assert.ok(a2.body.lecciones.every((l) => l.estado !== 'repaso_pendiente'));
 });
 
+test('RN-07: un concepto débil sin ejercicio de repaso (solo de minijuegos) no bloquea el tema nuevo', async () => {
+  assert.equal((await enviarIntento(L1, APROBADAS_L1)).body.aprobada, true);
+  // "Good afternoon!" solo aparece en tarjetas y minijuegos: ninguna evaluación lo pregunta,
+  // así que la sesión de repaso no puede ofrecerlo (QA 3-nov: el tema nuevo quedaba cerrado).
+  await db.runTransaction(async (tx) => {
+    tx.set(db.collection('srs_conceptos').doc('uid-ana_voc.saludos.good_afternoon'), {
+      uid: 'uid-ana', concepto_id: 'voc.saludos.good_afternoon', nivel_mcer: 'A1',
+      aciertos: 0, fallos: 2, tasa_error: 1, proxima_revision: Date.now() - 1,
+    });
+  });
+
+  const cat = await verCatalogo();
+  assert.equal(estadoDe(cat, L2), 'disponible');
+  assert.equal(cat.body.repaso_requerido, 0);
+  assert.equal((await abrir(L2)).statusCode, 200);
+  const sesionHoy = (await llamar(sesion, { token: 'token-ana' })).body;
+  assert.equal(sesionHoy.total_vencidos, 0, 'lo que la sesión no puede preguntar tampoco cuenta como pendiente');
+  assert.equal(sesionHoy.items.length, 0);
+});
+
 // ── RN-08: la actividad cuenta el día en que se hizo ───────────────────────
 
 test('racha: un día atrasado que llena el hueco une las dos rachas', () => {

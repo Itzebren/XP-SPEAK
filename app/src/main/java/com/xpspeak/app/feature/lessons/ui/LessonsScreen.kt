@@ -85,7 +85,7 @@ fun LessonsScreen(
 
     if (avisoRepaso) {
         DialogoRepasoPrimero(
-            conceptos = uiState.repasoPrioritario,
+            conceptos = uiState.repasoPrioritario.takeIf { it > 0 } ?: uiState.repasoPendiente,
             onRepasar = { avisoRepaso = false; onAbrirRepaso() },
             onCerrar = { avisoRepaso = false }
         )
@@ -163,8 +163,9 @@ fun LessonsScreen(
             items(uiState.lecciones, key = { it.id }) { leccion ->
                 TarjetaLeccion(leccion, onClick = {
                     when {
-                        // RN-07 según el servidor: el tema nuevo espera al repaso.
-                        leccion.estado == EstadoLeccion.REPASO_PENDIENTE -> onAbrirRepaso()
+                        // RN-07 según el servidor: el tema nuevo espera al repaso. Se avisa primero
+                        // («Primero, un repaso») en lugar de saltar al repaso sin explicar por qué.
+                        leccion.estado == EstadoLeccion.REPASO_PENDIENTE -> avisoRepaso = true
                         RepasoPrimero.retiene(leccion, uiState.repasoPrioritario) -> avisoRepaso = true
                         else -> onAbrirLeccion(leccion.id)
                     }
@@ -201,7 +202,8 @@ private fun DialogoRepasoPrimero(conceptos: Int, onRepasar: () -> Unit, onCerrar
         title = { Text("Primero, un repaso") },
         text = {
             Text(
-                "Tienes $conceptos concepto(s) que te han costado y toca repasar hoy. " +
+                (if (conceptos > 0) "Tienes $conceptos concepto(s) que te han costado y toca repasar hoy. "
+                else "Tienes conceptos que te han costado y toca repasar hoy. ") +
                     "Repásalos antes de empezar un tema nuevo; las lecciones que ya empezaste siguen abiertas."
             )
         },

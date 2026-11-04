@@ -67,4 +67,7 @@ function resolverEjercicio(id) {
   return obtenerIndice().porId.get(id) || null;
 }
 
-module.exports = { ejercicioParaConcepto, resolverEjercicio, construirIndice };
+/** Si la sesión de repaso tiene algún ejercicio para el concepto (RN-07 solo bloquea por estos). */
+const esRepasable = (concepto) => obtenerIndice().porConcepto.has(concepto.concepto_id);
+
+module.exports = { ejercicioParaConcepto, esRepasable, resolverEjercicio, construirIndice };

@@ -1,6 +1,7 @@
 const { crearEndpoint } = require('../../../lib/endpoint');
 const { guardarAvance, listarConceptosDeUsuario } = require('../../../lib/lecciones/repositorio');
 const { conceptosQueBloquean } = require('../../../lib/lecciones/srs');
+const { esRepasable } = require('../../../lib/lecciones/repaso');
 const { exigirLeccion, validarAvance } = require('../../../lib/lecciones/validacion');
 
 /**
@@ -16,7 +17,7 @@ module.exports = crearEndpoint({ metodo: 'POST', nombre: 'lessons/[id]/progress'
   const { seccionActual } = validarAvance(req.body, leccion);
 
   const conceptos = await listarConceptosDeUsuario(db, uid);
-  const repasoPendiente = conceptosQueBloquean(conceptos, { nivel: leccion.nivel_mcer, ahora: Date.now() }).length > 0;
+  const repasoPendiente = conceptosQueBloquean(conceptos, { nivel: leccion.nivel_mcer, ahora: Date.now(), repasable: esRepasable }).length > 0;
 
   const resultado = await guardarAvance(db, { uid, leccion, seccionActual, repasoPendiente });
   return res.status(200).json(resultado);

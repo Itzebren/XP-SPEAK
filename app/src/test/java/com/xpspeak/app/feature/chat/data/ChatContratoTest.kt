@@ -50,4 +50,12 @@ class ChatContratoTest {
         assertEquals("El chat no está disponible por ahora. Intenta más tarde.", ChatRepository.mensajeDeError(503, "Service Unavailable"))
         assertEquals("Ocurrió un error (500). Intenta de nuevo.", ChatRepository.mensajeDeError(500, null))
     }
+
+    @Test
+    fun `sin conexion se explica en espanol y no con el mensaje tecnico de red`() {
+        val red = java.net.ConnectException("Failed to connect to localhost/127.0.0.1:3000")
+        assertEquals(ChatRepository.SIN_CONEXION, ChatRepository.mensajeDeFalla(red))
+        assertEquals(ChatRepository.SIN_CONEXION, ChatRepository.mensajeDeFalla(RuntimeException("envuelto", java.net.UnknownHostException("xp-speak"))))
+        assertEquals("El chat no está disponible por ahora", ChatRepository.mensajeDeFalla(Exception("El chat no está disponible por ahora")))
+    }
 }

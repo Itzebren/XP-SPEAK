@@ -176,11 +176,19 @@ fun ChatScreen(
         }
 
         uiState.error?.let { mensajeError ->
-            Text(
-                mensajeError,
-                modifier = Modifier.padding(horizontal = 16.dp),
-                color = MaterialTheme.colorScheme.error
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    mensajeError,
+                    modifier = Modifier.weight(1f),
+                    color = MaterialTheme.colorScheme.error
+                )
+                if (uiState.reintentable) {
+                    TextButton(onClick = viewModel::reintentar, enabled = !uiState.cargando) { Text("Reintentar") }
+                }
+            }
         }
 
         if (uiState.enVivo) {

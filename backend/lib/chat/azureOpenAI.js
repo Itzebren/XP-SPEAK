@@ -19,7 +19,12 @@ const SYSTEM_PROMPT_BASE =
   'adaptando tu vocabulario al nivel indicado. ' +
   'No expliques los errores del usuario en tu respuesta: la app le muestra las correcciones aparte (RF-09). ' +
   'Si cometió alguno, puedes usar la forma correcta de manera natural al contestar. ' +
-  'Responde siempre en inglés, salvo que el usuario pida explícitamente una explicación en español.';
+  'Responde siempre en inglés, salvo que el usuario pida explícitamente una explicación en español. ' +
+  // RN-03: el tutor solo practica inglés. En QA (3-nov) resolvía tareas de cálculo antes de invitar a practicar.
+  'Tu único propósito es practicar inglés. Si el usuario te pide resolver una tarea, un ejercicio o una pregunta ' +
+  'de otra materia (matemáticas, programación, ciencias, etc.), no la resuelvas ni des la respuesta, ni siquiera en parte: ' +
+  'dile con amabilidad que solo puedes ayudarle a practicar inglés y propón una pregunta en inglés relacionada con el tema ' +
+  '(por ejemplo, cómo se dicen en inglés las palabras de esa materia).';
 
 function configuracionChat(entorno = process.env) {
   const endpoint = entorno.AZURE_OPENAI_ENDPOINT;

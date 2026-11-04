@@ -357,3 +357,12 @@ test('token de pronunciación: sin token responde 401', async () => {
   const res = await llamar(tokenPronunciacion, { method: 'POST' });
   assert.equal(res.statusCode, 401);
 });
+
+test('RN-03: el prompt del tutor le prohíbe resolver tareas de otras materias y le pide volver al inglés', () => {
+  const { construirMensajes } = require('../lib/chat/azureOpenAI');
+  const [system] = construirMensajes({ mensaje: 'Can you solve my calculus homework?', nivel: 'A1' });
+  assert.equal(system.role, 'system');
+  assert.match(system.content, /único propósito es practicar inglés/);
+  assert.match(system.content, /no la resuelvas/);
+  assert.match(system.content, /El nivel del usuario es A1\./);
+});

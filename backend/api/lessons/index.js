@@ -3,6 +3,7 @@ const { obtenerManifiesto, listarLeccionesDeNivel } = require('../../lib/leccion
 const { calcularEstado } = require('../../lib/lecciones/estado');
 const { obtenerProgresosDeUsuario, listarConceptosDeUsuario } = require('../../lib/lecciones/repositorio');
 const { conceptosQueBloquean } = require('../../lib/lecciones/srs');
+const { esRepasable } = require('../../lib/lecciones/repaso');
 const { validarNivel } = require('../../lib/lecciones/validacion');
 
 /**
@@ -14,7 +15,7 @@ const { validarNivel } = require('../../lib/lecciones/validacion');
 module.exports = crearEndpoint({ metodo: 'GET', nombre: 'lessons' }, async ({ req, res, uid, db }) => {
   const nivel = validarNivel(req.query.level);
   const [progresos, conceptos] = await Promise.all([obtenerProgresosDeUsuario(db, uid), listarConceptosDeUsuario(db, uid)]);
-  const bloqueo = conceptosQueBloquean(conceptos, { nivel, ahora: Date.now() });
+  const bloqueo = conceptosQueBloquean(conceptos, { nivel, ahora: Date.now(), repasable: esRepasable });
 
   const lecciones = listarLeccionesDeNivel(nivel).map((leccion) => {
     const progreso = progresos.get(leccion.id);

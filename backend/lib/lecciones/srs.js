@@ -41,8 +41,8 @@ function acumularSenal(previo, { uid, concepto_id, aciertos, fallos }, leccion, 
  * (RN-07); a igualdad, el que lleva más tiempo vencido. Un concepto guardado
  * antes de SM-2 (sin proxima_revision) cuenta como vencido.
  */
-function seleccionarParaRepaso(conceptos, { nivel = null, ahora, limite = LIMITE_SESION }) {
-  const delNivel = conceptos.filter((c) => !nivel || c.nivel_mcer === nivel);
+function seleccionarParaRepaso(conceptos, { nivel = null, ahora, limite = LIMITE_SESION, repasable = () => true }) {
+  const delNivel = conceptos.filter((c) => (!nivel || c.nivel_mcer === nivel) && repasable(c));
   const vencidos = delNivel
     .filter((c) => (c.proxima_revision ?? 0) <= ahora)
     .sort(
@@ -63,11 +63,15 @@ function seleccionarParaRepaso(conceptos, { nivel = null, ahora, limite = LIMITE
  * RN-07: conceptos débiles (ya fallados, tasa de error alta) cuyo repaso ya venció. Mientras
  * haya alguno, el usuario repasa antes de empezar un tema nuevo. Repasarlo lo reprograma con
  * SM-2 a una fecha futura, así que el bloqueo se levanta al terminar la sesión de repaso.
+ * `repasable` deja fuera los conceptos que la sesión no puede preguntar (vocabulario que solo
+ * aparece en minijuegos, sin ítem de evaluación): si bloquearan, el repaso diría «Nada pendiente»
+ * y el tema nuevo quedaría cerrado para siempre (QA del 3-nov). La API pasa esRepasable.
  */
-function conceptosQueBloquean(conceptos, { nivel = null, ahora }) {
+function conceptosQueBloquean(conceptos, { nivel = null, ahora, repasable = () => true }) {
   return conceptos.filter(
     (c) =>
       (!nivel || c.nivel_mcer === nivel) &&
+      repasable(c) &&
       c.fallos > 0 &&
       c.tasa_error >= UMBRAL_TASA_ERROR &&
       (c.proxima_revision ?? 0) <= ahora

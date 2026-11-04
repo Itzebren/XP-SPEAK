@@ -49,6 +49,8 @@ data class ChatUiState(
     /** Lo que Azure va oyendo mientras el usuario habla. */
     val parcial: String = "",
     val error: String? = null,
+    /** El último mensaje no se pudo enviar (p. ej., sin conexión): se ofrece «Reintentar». */
+    val reintentable: Boolean = false,
     /** "Habla con IA" y otras insignias ganadas al conversar (Progreso), para festejarlas. */
     val insigniasNuevas: List<InsigniaDto> = emptyList()
 )
@@ -68,6 +70,8 @@ class ChatViewModel @Inject constructor(
     private val sesionId = UUID.randomUUID().toString()
     private var conversacionRegistrada = false
     private var escucha: Job? = null
+    /** Texto y pronunciación del mensaje que falló, para reenviarlo con «Reintentar». */
+    private var fallido: Pair<String, EvaluacionVoz?>? = null
 
     fun onEntradaChange(valor: String) {
         _uiState.value = _uiState.value.copy(entrada = valor)
@@ -93,8 +97,10 @@ class ChatViewModel @Inject constructor(
             mensajes = _uiState.value.mensajes + MensajeUi(texto, esUsuario = true, pronunciacion = pronunciacion),
             entrada = "",
             cargando = true,
-            error = null
+            error = null,
+            reintentable = false
         )
+        fallido = null
 
         viewModelScope.launch {
             var respuesta = ""
@@ -136,9 +142,23 @@ class ChatViewModel @Inject constructor(
                 // Una respuesta cortada no se queda en el historial: confundiría a la IA en el siguiente turno.
                 val mensajes = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
                 // Sin respuesta que leer, el modo en vivo se quedaría esperando: se pausa.
-                _uiState.value = _uiState.value.copy(mensajes = mensajes, cargando = false, enVivo = false, error = excepcion.message)
+                fallido = texto to pronunciacion
+                _uiState.value = _uiState.value.copy(
+                    mensajes = mensajes, cargando = false, enVivo = false,
+                    error = ChatRepository.mensajeDeFalla(excepcion), reintentable = true
+                )
             }
         }
+    }
+
+    /** Reenvía el mensaje que falló: se quita su burbuja para no duplicarla y se manda otra vez. */
+    fun reintentar() {
+        val (texto, pronunciacion) = fallido ?: return
+        if (_uiState.value.cargando) return
+        val mensajes = _uiState.value.mensajes
+        val sinFallido = if (mensajes.lastOrNull()?.let { it.esUsuario && it.texto == texto } == true) mensajes.dropLast(1) else mensajes
+        _uiState.value = _uiState.value.copy(mensajes = sinFallido)
+        enviarTexto(texto, pronunciacion)
     }
 
     /** RN-08: la primera respuesta de la IA cuenta como actividad del día (racha) y para "Habla con IA". */

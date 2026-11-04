@@ -74,6 +74,11 @@ class PronunciacionViewModel @Inject constructor(
         }
     }
 
+    /** El usuario negó el micrófono: se le dice por qué no pasa nada al tocar «Hablar» (PV6 E2). */
+    fun permisoDenegado() {
+        _uiState.value = _uiState.value.copy(evaluando = false, error = "Necesitas permitir el micrófono para practicar con voz.")
+    }
+
     fun siguienteFrase() {
         if (_uiState.value.evaluando) return
         // RF-09: la retroalimentación es efímera; al cambiar de frase se descarta.

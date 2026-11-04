@@ -23,7 +23,9 @@ data class InicioUiState(
     val racha: Int = 0,
     /** Lunes a domingo de esta semana: true si el día cuenta para la racha. */
     val semana: List<Boolean> = List(7) { false },
-    val avatar: Avatar = Avatar.COHETE
+    val avatar: Avatar = Avatar.COHETE,
+    /** XP total (CU-02: el Inicio muestra avatar, XP y racha). */
+    val xp: Int = 0
 )
 
 /**
@@ -55,7 +57,9 @@ class InicioViewModel @Inject constructor(
             InicioUiState(
                 racha = racha,
                 semana = Racha.semana(racha, ultimoDia, hoy),
-                avatar = Avatar.porId(usuario?.avatar)
+                avatar = Avatar.porId(usuario?.avatar),
+                // Igual que la racha: la mayor entre el perfil local y el resumen del servidor.
+                xp = maxOf(usuario?.xp ?: 0, guardado?.datos?.xp?.total ?: 0)
             )
         }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), InicioUiState())

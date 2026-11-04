@@ -43,6 +43,18 @@ class ChatRepository @Inject constructor(
                 else -> "Ocurrió un error ($codigo). Intenta de nuevo."
             }
         }
+
+        const val SIN_CONEXION = "No hay conexión a internet. Revisa tu conexión y toca «Reintentar»."
+
+        /**
+         * Texto para el usuario a partir de una falla al enviar. Los errores de red (sin internet,
+         * servidor inalcanzable, tiempo agotado) llegan como IOException con un mensaje técnico en
+         * inglés («Failed to connect to …», QA 3-nov), que no se debe mostrar tal cual.
+         */
+        fun mensajeDeFalla(error: Throwable): String {
+            val deRed = generateSequence(error) { it.cause }.any { it is java.io.IOException }
+            return if (deRed) SIN_CONEXION else error.message?.takeIf { it.isNotBlank() } ?: "Ocurrió un error. Intenta de nuevo."
+        }
     }
 
     /** RN-02: la IA responde con la complejidad del nivel elegido al registrarse (guardado en Room). */
