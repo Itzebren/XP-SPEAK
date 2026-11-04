@@ -1,0 +1,703 @@
+{
+ "fichas": [
+  {
+   "codigo": "PV1-R",
+   "tabla_pasos": 96,
+   "duracion": "06:59",
+   "fecha": "03/11/2026",
+   "resultado": "EXITOSA. Los 7 pasos y los 5 casos de error dieron el resultado esperado; el enlace de verificación se abrió desde la bandeja de correo simulada del entorno de pruebas. La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "1": [
+     true,
+     ""
+    ],
+    "2": [
+     true,
+     "Formulario con correo, nombre de usuario, contraseña y confirmación."
+    ],
+    "4": [
+     true,
+     "Mensaje mostrado al escribir «ingles»."
+    ],
+    "E2": [
+     true,
+     "«Ingresa un correo válido.» al tocar «Comenzar»."
+    ],
+    "E3": [
+     true,
+     "«Las contraseñas no coinciden.»"
+    ],
+    "5": [
+     true,
+     ""
+    ],
+    "3": [
+     true,
+     "Nombre y correo aceptados sin error."
+    ],
+    "E5": [
+     true,
+     "Sin conexión aparece «Ocurrió un error. Intenta de nuevo.» y no se crea la cuenta."
+    ],
+    "6": [
+     true,
+     ""
+    ],
+    "E4": [
+     true,
+     "Tu correo aún no está verificado. Abre el enlace que te enviamos."
+    ],
+    "7": [
+     true,
+     ""
+    ],
+    "E1": [
+     true,
+     "Ya existe una cuenta con ese correo."
+    ]
+   }
+  },
+  {
+   "codigo": "PV2-IS",
+   "tabla_pasos": 98,
+   "duracion": "02:15",
+   "fecha": "03/11/2026; pasos corregidos, 04/11/2026",
+   "resultado": "EXITOSA tras la corrección. En la ejecución del 03/11/2026 el paso 2 no coincidía porque el Inicio no mostraba la XP; se corrigió y el 04/11/2026 el Inicio muestra el avatar, la XP y la racha. El resto de los pasos y los casos de error dieron el resultado esperado. La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "4": [
+     true,
+     "Se regresa a la pantalla de acceso."
+    ],
+    "1": [
+     true,
+     ""
+    ],
+    "E1": [
+     true,
+     "Correo o contraseña incorrectos."
+    ],
+    "E3": [
+     true,
+     "Ocurrió un error. Intenta de nuevo."
+    ],
+    "2": [
+     true,
+     "El 03/11/2026 el Inicio no mostraba la XP. Corregido y comprobado el 04/11/2026: la tarjeta de racha muestra la moneda y la XP total («50 XP» tras aprobar la lección 1)."
+    ],
+    "3": [
+     true,
+     "Se entra al Inicio sin pedir la contraseña."
+    ],
+    "E2": [
+     true,
+     "Se muestra «Verifica tu correo» en lugar del Inicio."
+    ]
+   }
+  },
+  {
+   "codigo": "PV3-RA",
+   "tabla_pasos": 100,
+   "duracion": "06:18",
+   "fecha": "03/11/2026",
+   "resultado": "EXITOSA. El código de 6 caracteres permitió restablecer la contraseña e iniciar sesión con la nueva; se rechazaron el código incorrecto, el código vencido y el código tras 5 intentos fallidos. Diferencias: los mensajes son «Código incorrecto» y «El código expiró, solicita uno nuevo» en lugar de «Código inválido o expirado». El vencimiento se simuló adelantando 16 minutos la fecha del código en la base de prueba y el código se leyó en la bandeja simulada, porque el servidor local no envía correos. La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "1": [
+     true,
+     ""
+    ],
+    "E4": [
+     true,
+     "Se muestra la misma pantalla «Revisa tu correo…» que para un correo registrado."
+    ],
+    "E3": [
+     true,
+     "Tu contraseña debe contener al menos: un número."
+    ],
+    "E1": [
+     true,
+     "Se rechaza con el mensaje «Código incorrecto» (el texto difiere de «Código inválido o expirado»)."
+    ],
+    "E5": [
+     true,
+     "Tras 5 intentos fallidos, el código correcto se rechaza con «Demasiados intentos fallidos, solicita un código nuevo»."
+    ],
+    "E2": [
+     true,
+     "Con el vencimiento adelantado 16 minutos en la base de prueba, se rechaza con «El código expiró, solicita uno nuevo»."
+    ],
+    "2": [
+     true,
+     "Se muestra «Revisa tu correo…» y el correo de la bandeja de pruebas trae un código de 6 caracteres (A4BDHV)."
+    ],
+    "3": [
+     true,
+     ""
+    ],
+    "4": [
+     true,
+     ""
+    ]
+   }
+  },
+  {
+   "codigo": "PV4-NP",
+   "tabla_pasos": 102,
+   "duracion": "02:22",
+   "fecha": "03/11/2026",
+   "resultado": "EXITOSA. El nivel y el avatar se eligen en el primer ingreso, el botón permanece deshabilitado sin nivel y, al cambiar a A2 en «Ajustes de perfil», el catálogo, el chat y los minijuegos pasan a ese nivel. La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "1": [
+     true,
+     ""
+    ],
+    "E1": [
+     true,
+     "El botón muestra «Elige tu nivel» y no avanza."
+    ],
+    "E2": [
+     true,
+     "Al volver a abrir se pide de nuevo el nivel."
+    ],
+    "2": [
+     true,
+     "Inicio con el avatar del zorro; catálogo de A1."
+    ],
+    "3": [
+     true,
+     "El avatar cambia a la estrella en Ajustes de perfil y en el Inicio."
+    ],
+    "4": [
+     true,
+     "Catálogo «1. Mi fin de semana» (A2), minijuegos «Nivel A2» y frase de práctica en pasado."
+    ]
+   }
+  },
+  {
+   "codigo": "PV5-CH",
+   "tabla_pasos": 104,
+   "duracion": "07:45",
+   "fecha": "03/11/2026; pasos corregidos, 04/11/2026",
+   "resultado": "EXITOSA tras las correcciones. En la ejecución del 03/11/2026 fallaron E1 (el tutor resolvía tareas ajenas al inglés, RN-03) y E2 (el error sin conexión era un mensaje técnico sin opción de reintentar); ambos se corrigieron y el 04/11/2026 se comprobaron en la aplicación y, para E1, también contra el servidor de producción. La voz del usuario se suministró como audio sintetizado, porque el emulador no tiene acceso al micrófono. La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "1": [
+     true,
+     "La respuesta llega por partes (XPS-TIEMPOS: primer fragmento 1222 ms y respuesta completa 1458 ms) y usa vocabulario sencillo."
+    ],
+    "2": [
+     true,
+     "Aparece «go → went» con «go» tachado en rojo, «went» en verde y la explicación."
+    ],
+    "3": [
+     true,
+     "Se reproduce la respuesta con el motor de voz del sistema (AudioTrack de voz activo)."
+    ],
+    "4": [
+     true,
+     "La frase dicha se envía tras la pausa, se califica (pronunciación 95/100), la IA responde en voz alta y el micrófono vuelve a abrirse. Tras un silencio prolongado la aplicación pausa sola la conversación."
+    ],
+    "5": [
+     true,
+     "Al tocar el botón de detener desaparece «Te escucho…» y el campo vuelve a «Escribe o habla en inglés…» con el botón «Conversar en vivo»."
+    ],
+    "E1": [
+     true,
+     "El 03/11/2026 el tutor resolvió la tarea de cálculo. Corregido y comprobado el 04/11/2026 en la aplicación y en producción: el tutor responde que no puede resolver tareas de otras materias y propone practicar el vocabulario en inglés."
+    ],
+    "E2": [
+     true,
+     "El 03/11/2026 se mostraba un mensaje técnico en inglés sin opción de reintentar. Corregido y comprobado el 04/11/2026: aparece «No hay conexión a internet. Revisa tu conexión y toca «Reintentar».» y el botón «Reintentar» reenvía el mensaje al reconectar."
+    ],
+    "E3": [
+     true,
+     "Al negar el permiso aparece «Necesitas permitir el micrófono para practicar con voz.»"
+    ]
+   }
+  },
+  {
+   "codigo": "PV6-PR",
+   "tabla_pasos": 106,
+   "duracion": "10:51",
+   "fecha": "03/11/2026; pasos corregidos, 04/11/2026",
+   "resultado": "EXITOSA tras la corrección. En la ejecución del 03/11/2026 falló E2: en «Práctica de pronunciación» no aparecía aviso al negar el micrófono; se corrigió y se comprobó el 04/11/2026. En el paso 4 no apareció la palabra «party» y se usó otra frase con acento del español. La voz del usuario se suministró como audio sintetizado. La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "1": [
+     true,
+     ""
+    ],
+    "E2": [
+     true,
+     "El 03/11/2026 no aparecía ningún aviso en «Práctica de pronunciación». Corregido y comprobado el 04/11/2026: aparece «Necesitas permitir el micrófono para practicar con voz.», también tras negar el permiso dos veces."
+    ],
+    "2": [
+     true,
+     "Puntaje 96, todas las palabras en verde y «Oímos: “Hello my name is Anna and I am a student.”»"
+    ],
+    "3": [
+     true,
+     "Puntaje 67; «hello», «and», «I» y «am» en rojo y listadas en «Practica estas palabras:» (la pantalla usa ese texto en lugar de «Sonidos a mejorar:»); al tocar una palabra se indica el sonido que falló."
+    ],
+    "4": [
+     true,
+     "En 12 partidas no apareció «party» (Eco Vocal toma palabras al azar de las lecciones vistas); con «I am nineteen» dicho con acento del español, las palabras quedaron en rojo con el sonido que falló (p. ej., «/m/ sonó como /n/») y puntaje 55."
+    ],
+    "E1": [
+     true,
+     "Aparece «¡Pronunciación incorrecta!» con índice de confianza del 0 % y el contador sigue en «Intento 2 de 2»."
+    ],
+    "5": [
+     true,
+     "XPS-TIEMPOS: voz.pronunciacion 2429 y 2294 ms; voz.eco_vocal 1233 y 804 ms; todos dentro de 2.5 s."
+    ]
+   }
+  },
+  {
+   "codigo": "PV7-LE",
+   "tabla_pasos": 108,
+   "duracion": "22:12",
+   "fecha": "03/11/2026; pasos corregidos, 04/11/2026",
+   "resultado": "EXITOSA tras las correcciones. En la ejecución del 03/11/2026 falló el paso 7 (no aparecía el aviso «Primero, un repaso») y se detectó que los conceptos fallados en los minijuegos sin ejercicio de repaso dejaban cerrada la lección nueva aunque el repaso indicara «Nada pendiente por ahora»; ambos se corrigieron y se comprobaron el 04/11/2026. Para los pasos 7 y 8 se adelantó la fecha de repaso de los conceptos y se marcaron como completadas las lecciones 3 a 11 en la base de prueba; la lección 12 se aprobó en la aplicación. La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "1": [
+     true,
+     "Se muestran introducción, tarjetas, gramática (pronombres y verbo to be) y diálogo de ejemplo."
+    ],
+    "2": [
+     true,
+     "La flecha pasa de «Hello!, Hi!, Good morning!» a «Good afternoon!, Good evening!, Goodbye!» y al tocar una tarjeta se reproduce la palabra."
+    ],
+    "3": [
+     true,
+     "¡Aprobada! 🎉; Puntaje: 100% (6/6); XP ganado: 50; 🔓 Desbloqueaste: Información personal"
+    ],
+    "4": [
+     true,
+     "Se aprueba de nuevo con 100 % y «XP ganado: 0»."
+    ],
+    "5": [
+     true,
+     "«Aún no — repasa y vuelve a intentarlo», 0 % y 0 XP; en el catálogo la lección queda en «Repetir» y la 3 sigue «Bloqueada»."
+    ],
+    "E1": [
+     true,
+     "Tras cerrar la aplicación y volver, al reabrir la evaluación siguen marcadas «Where are you from?» y la respuesta escrita «years»."
+    ],
+    "E2": [
+     true,
+     "Al tocar «Where ___ you from?» la pantalla se desplaza y el campo queda justo encima del teclado, visible."
+    ],
+    "6": [
+     true,
+     "Sin conexión se califica en el dispositivo (100 %) con «Sin conexión: tu evaluación se enviará al reconectarte y ahí se sumará tu XP.»; al reconectar se envió el intento y la lección 3 quedó «Disponible»."
+    ],
+    "7": [
+     true,
+     "El 03/11/2026 la lección abría directamente el repaso, sin el aviso. Corregido y comprobado el 04/11/2026: aparece «Primero, un repaso» con «Repasar ahora» y «Ahora no»; tras el repaso, la lección nueva queda «Disponible»."
+    ],
+    "8": [
+     true,
+     "Con las lecciones 3 a 11 marcadas como completadas en la base de prueba, al aprobar la 12 («De compras») aparece «¡Subiste a A2!» y el catálogo pasa a A2."
+    ]
+   }
+  },
+  {
+   "codigo": "PV8-MJ",
+   "tabla_pasos": 110,
+   "duracion": "16:48",
+   "fecha": "03/11/2026",
+   "resultado": "EXITOSA. Los cuatro juegos, la retroalimentación, la XP, la racha, la partida guardada y el aviso sin conexión funcionaron como se esperaba. Diferencia: la misión de la cafetería no estaba disponible para la cuenta de prueba, por lo que la respuesta escrita se probó en «Primer día de clases». La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "1": [
+     true,
+     "Se muestran los cuatro juegos con su color; como había partidas a medias, el botón dice «Continuar» en lugar de «Jugar»."
+    ],
+    "2": [
+     true,
+     "Las fichas se marcan en verde con «¡Correcto!» y se reproduce la oración con la voz del sistema (reproducción de voz activa)."
+    ],
+    "7": [
+     true,
+     "Tras cerrar la aplicación a mitad de la partida aparece «¿Retomar la partida?» con «Retomar» y «Empezar de nuevo»."
+    ],
+    "6": [
+     true,
+     "Resultado de Orden Maestro: 100 % de precisión, 8 de 8, +10 XP con la moneda y racha de 1 día."
+    ],
+    "3": [
+     true,
+     "En pantalla el reloj bajó menos tras un acierto que tras un error (lecturas de la pantalla cada ~5 s: aciertos de 50 a 46 s, errores de 34 a 28 s); el código suma 1000 ms por acierto y resta 3000 ms por error."
+    ],
+    "E1": [
+     true,
+     "Al terminar una partida de Ráfaga sin conexión aparece «Sin conexión: tu XP se confirma al reconectarte.»"
+    ],
+    "5": [
+     true,
+     "Con «Más lento» la frase «Good morning!» se reproduce por partes: la reproducción de voz se detiene entre palabras (pausa de 350 ms) y se reanuda."
+    ],
+    "E2": [
+     true,
+     "Al escribir «You is my friend.» aparece «Inténtalo de nuevo» con la explicación «Con you se usa are: You are my friend.»"
+    ],
+    "4": [
+     true,
+     "La misión de la cafetería requiere una lección que la cuenta de prueba aún no desbloquea; se probó la escritura en «Primer día de clases»: tras tres aciertos se pide escribir, la respuesta «Bye! See you later!» se acepta y el teclado deja visible el campo y la conversación."
+    ]
+   }
+  },
+  {
+   "codigo": "PV9-PG",
+   "tabla_pasos": 112,
+   "duracion": "04:44",
+   "fecha": "03/11/2026",
+   "resultado": "EXITOSA. Progreso muestra la XP, el nivel, la racha, las habilidades y las insignias; la XP aumentó de 200 a 280 al aprobar una lección, se mostró el último progreso guardado sin conexión y un usuario nuevo ve «¡Tu aventura empieza hoy!». La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "E1": [
+     true,
+     ""
+    ],
+    "1": [
+     true,
+     "Se muestran 200 XP, nivel 2, nivel MCER A2, racha de 1 día, habilidades e «Insignias obtenidas: 3 de 9»."
+    ],
+    "2": [
+     true,
+     "Al aprobar «Mi fin de semana» la XP pasa de 200 a 280. Las insignias ganadas en la sesión se festejaron con «¡Nueva insignia!» (p. ej., «Estrella del Minijuego»)."
+    ],
+    "3": [
+     true,
+     "Sin conexión se muestra el último progreso guardado con «Sin conexión · datos de hace un momento» y 280 XP."
+    ]
+   }
+  },
+  {
+   "codigo": "PV10-NT",
+   "tabla_pasos": 114,
+   "duracion": "09:34",
+   "fecha": "03/11/2026",
+   "resultado": "EXITOSA. El recordatorio llegó a la hora elegida, dejó de llegar al desactivar las notificaciones y no se mostró con el permiso negado. Para no esperar al horario programado, se ajustó el reloj del emulador a las 17:57 del día siguiente con el aviso a las 18:00. La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "1": [
+     true,
+     "Se abre «Notificaciones» con estado, recordatorios, frecuencia, hora y permisos del sistema."
+    ],
+    "E1": [
+     true,
+     "Con el permiso negado, el trabajo de recordatorio se ejecuta (WorkManager: SUCCESS) y no se muestra ningún aviso; la pantalla indica «XP-SPEAK no puede mostrar notificaciones» con «Permitir»."
+    ],
+    "2": [
+     true,
+     "Al conceder el permiso el estado queda en «Notificaciones activadas» y «El dispositivo tiene permisos otorgados»."
+    ],
+    "3": [
+     true,
+     "Con el reloj del emulador en 17:57 y la hora en 18:00, el recordatorio «¡No pierdas tu racha de 1 día! Practica unos minutos hoy.» llegó solo a las 17:59:33 del emulador, unos segundos antes de la hora elegida."
+    ],
+    "4": [
+     true,
+     "Con «Estado» desactivado se cancela el trabajo programado; con el reloj del emulador en 17:58–18:01 del día siguiente no llegó ningún recordatorio nuevo."
+    ]
+   }
+  },
+  {
+   "codigo": "PV11-EC",
+   "tabla_pasos": 116,
+   "duracion": "03:12",
+   "fecha": "03/11/2026",
+   "resultado": "EXITOSA. El nombre se actualizó, «Cancelar y volver» no borró nada, sin conexión no se permitió eliminar la cuenta y, con conexión, se borraron la cuenta de Firebase Authentication y todos sus documentos en Firestore. La prueba se ejecutó en el emulador Pixel 10a (Android 17) con el servidor local, los emuladores de Firebase y los servicios de Azure de producción.",
+   "pasos": {
+    "1": [
+     true,
+     ""
+    ],
+    "2": [
+     true,
+     "El encabezado de «Ajustes de perfil» cambia a «Luis Pruebas»."
+    ],
+    "3": [
+     true,
+     "«¡Advertencia!» con XP, insignias, progreso MCER y racha que se perderán."
+    ],
+    "4": [
+     true,
+     "Se regresa a «Ajustes de perfil» con la cuenta intacta (nombre «Luis Pruebas» y aviso «Guardamos tu nombre.»)."
+    ],
+    "E1": [
+     true,
+     "Sin conexión aparece «Necesitas conexión a internet para eliminar tu cuenta.» y la cuenta y sus datos siguen en Firebase."
+    ],
+    "5": [
+     true,
+     "Se regresa a la pantalla de acceso; en Firebase ya no existen la cuenta ni sus documentos de progreso, repaso, intentos y actividad."
+    ],
+    "6": [
+     true,
+     "No existe una cuenta con ese correo."
+    ]
+   }
+  }
+ ],
+ "tablas": {
+  "Tabla 117. Resultados de las pruebas de validación": {
+   "PV1": {
+    "1": "OK"
+   },
+   "PV2": {
+    "1": "OK"
+   },
+   "PV3": {
+    "1": "OK"
+   },
+   "PV4": {
+    "1": "OK"
+   },
+   "PV5": {
+    "1": "OK"
+   },
+   "PV6": {
+    "1": "OK"
+   },
+   "PV7": {
+    "1": "OK"
+   },
+   "PV8": {
+    "1": "OK"
+   },
+   "PV9": {
+    "1": "OK"
+   },
+   "PV10": {
+    "1": "OK"
+   },
+   "PV11": {
+    "1": "OK"
+   }
+  },
+  "Tabla 119. Resultados de las pruebas de integración": {
+   "PI-01": {
+    "1": "CORRECTO",
+    "2": "Registro, verificación e inicio de sesión con el emulador de Authentication (PV1 y PV2)"
+   },
+   "PI-02": {
+    "1": "CORRECTO",
+    "2": "Producción: 401 sin token y con token inválido; la aplicación envía el token en cada petición"
+   },
+   "PI-03": {
+    "1": "CORRECTO",
+    "2": "Respuestas de Azure OpenAI acordes al nivel (PV5); tras la corrección del 04/11/2026, el tutor no resuelve tareas de otras materias (RN-03)"
+   },
+   "PI-04": {
+    "1": "CORRECTO",
+    "2": "Token temporal y evaluación con Azure AI Speech (PV6)"
+   },
+   "PI-05": {
+    "1": "INCORRECTO",
+    "2": "Producción responde 503 «CORREO_NO_DISPONIBLE» al enviar el código con Resend; la verificación y el vencimiento del código funcionan (PV3)"
+   },
+   "PI-06": {
+    "1": "CORRECTO",
+    "2": "npm run test:emulador: 3 de 3 (Ilustración 76)"
+   },
+   "PI-07": {
+    "1": "CORRECTO",
+    "2": "Intento calificado, desbloqueo y envío del intento hecho sin conexión (PV7)"
+   },
+   "PI-08": {
+    "1": "CORRECTO",
+    "2": "Partidas confirmadas por el servidor con XP y racha; sin conexión, XP pendiente de confirmar (PV8)"
+   },
+   "PI-09": {
+    "1": "CORRECTO",
+    "2": "Corrección mostrada bajo el mensaje en el mismo flujo de la respuesta (PV5)"
+   },
+   "PI-10": {
+    "1": "CORRECTO",
+    "2": "Tras eliminar la cuenta no quedan la cuenta ni documentos del usuario en Firestore (PV11)"
+   }
+  },
+  "Tabla 120. Metas de rendimiento y seguridad": {
+   "Evaluación acústica en 800 ms o menos": {
+    "3": "No se cumple: promedio de 836 ms en Eco Vocal y 1187 ms en el chat en vivo (Tabla 121)"
+   },
+   "Retroalimentación en 2.5 s o menos": {
+    "3": "Se cumple en promedio en las cuatro mediciones; el máximo de chat.correccion fue de 4288 ms (Tabla 121)"
+   },
+   "Comunicación con TLS 1.2 o superior": {
+    "3": "Se cumple: TLS 1.3 con certificado de *.vercel.app; las peticiones por HTTP se redirigen a HTTPS (308)"
+   },
+   "Sin audio almacenado": {
+    "3": "Se cumple: el audio se envía en flujo a Azure; no se encontraron archivos de audio en el dispositivo tras las pruebas"
+   }
+  },
+  "Tabla 121. Mediciones de tiempo": {
+   "voz.eco_vocal, procesamiento de Azure": {
+    "2": "836",
+    "3": "1394",
+    "4": "No"
+   },
+   "voz.chat_en_vivo, procesamiento de Azure": {
+    "2": "1187",
+    "3": "2813",
+    "4": "No"
+   },
+   "voz.pronunciacion, total": {
+    "2": "2124",
+    "3": "2368",
+    "4": "Sí"
+   },
+   "voz.eco_vocal, total": {
+    "2": "1716",
+    "3": "2394",
+    "4": "Sí"
+   },
+   "chat.correccion": {
+    "2": "1913",
+    "3": "4288",
+    "4": "En promedio"
+   },
+   "leccion.calificacion": {
+    "2": "463",
+    "3": "1306",
+    "4": "Sí"
+   },
+   "chat.primer_pedazo": {
+    "2": "1295",
+    "3": "2437",
+    "4": "No aplica"
+   }
+  },
+  "Tabla 128. Resumen de las pruebas realizadas": {
+   "PV1-R": {
+    "2": "Correcto",
+    "3": "Tabla 96; Ilustración 52"
+   },
+   "PV2-IS": {
+    "2": "Correcto",
+    "3": "Tabla 98; Ilustración 53"
+   },
+   "PV3-RA": {
+    "2": "Correcto",
+    "3": "Tabla 100; Ilustración 54"
+   },
+   "PV4-NP": {
+    "2": "Correcto",
+    "3": "Tabla 102; Ilustración 55"
+   },
+   "PV5-CH": {
+    "2": "Correcto",
+    "3": "Tabla 104; Ilustración 56"
+   },
+   "PV6-PR": {
+    "2": "Correcto",
+    "3": "Tabla 106; Ilustración 57"
+   },
+   "PV7-LE": {
+    "2": "Correcto",
+    "3": "Tabla 108; Ilustraciones 58 y 59"
+   },
+   "PV8-MJ": {
+    "2": "Correcto",
+    "3": "Tabla 110; Ilustración 60"
+   },
+   "PV9-PG": {
+    "2": "Correcto",
+    "3": "Tabla 112; Ilustración 61"
+   },
+   "PV10-NT": {
+    "2": "Correcto",
+    "3": "Tabla 114; Ilustración 62"
+   },
+   "PV11-EC": {
+    "2": "Correcto",
+    "3": "Tabla 116; Ilustración 63"
+   },
+   "PI-01": {
+    "2": "Correcto",
+    "3": "Tabla 119"
+   },
+   "PI-02": {
+    "2": "Correcto",
+    "3": "Tabla 119"
+   },
+   "PI-03": {
+    "2": "Correcto",
+    "3": "Tabla 119"
+   },
+   "PI-04": {
+    "2": "Correcto",
+    "3": "Tabla 119"
+   },
+   "PI-05": {
+    "2": "Incorrecto",
+    "3": "Tabla 119"
+   },
+   "PI-06": {
+    "2": "Correcto",
+    "3": "Tabla 119"
+   },
+   "PI-07": {
+    "2": "Correcto",
+    "3": "Tabla 119"
+   },
+   "PI-08": {
+    "2": "Correcto",
+    "3": "Tabla 119"
+   },
+   "PI-09": {
+    "2": "Correcto",
+    "3": "Tabla 119"
+   },
+   "PI-10": {
+    "2": "Correcto",
+    "3": "Tabla 119"
+   },
+   "PA-F1": {
+    "2": "Pendiente",
+    "3": "Recorrido en el emulador: Ilustraciones 78 a 81"
+   },
+   "PA-F2": {
+    "2": "Pendiente",
+    "3": "Recorrido en el emulador: Ilustraciones 78 a 81"
+   },
+   "PA-F3": {
+    "2": "Pendiente",
+    "3": "Recorrido en el emulador: Ilustraciones 78 a 81"
+   },
+   "PA-F4": {
+    "2": "Pendiente",
+    "3": "Recorrido en el emulador: Ilustraciones 78 a 81"
+   }
+  }
+ },
+ "parrafos": [
+  [
+   "En la versión de la rama develop del 28 de octubre",
+   "En la versión de la rama develop del 28 de octubre de 2026 se ejecutaron 121 pruebas unitarias de la aplicación y 154 del servidor; todas resultaron exitosas, sin fallos ni errores. La tabla siguiente las resume por componente. En la ejecución del 3 de noviembre de 2026, que incluye las pruebas añadidas por los defectos corregidos durante la validación, el total fue de 144 pruebas de la aplicación y 166 del servidor, todas exitosas; las capturas de esa ejecución se incluyen en el anexo Evidencias de pruebas."
+  ],
+  [
+   "El proceso de pruebas de XP-SPEAK se completó",
+   "El proceso de pruebas de XP-SPEAK obtuvo una tasa de éxito del 95 % (20 de 21) en las pruebas de validación e integración y del 100 % en las 310 pruebas unitarias. En la primera ejecución de las pruebas de validación (3 de noviembre de 2026) se cumplieron 79 de 84 pasos; los cinco pasos fallidos se corrigieron y se comprobaron el 4 de noviembre. Las pruebas de aceptación con usuarios están pendientes. Los resultados muestran que:"
+  ],
+  [
+   "Funcionalidad completa:",
+   "Funcionalidad: las 11 pruebas de validación resultaron exitosas. En la primera ejecución fallaron cuatro (PV2, PV5, PV6 y PV7), que se volvieron a comprobar después de las correcciones descritas en la última viñeta."
+  ],
+  [
+   "Integración correcta:",
+   "Integración: 9 de los 10 casos resultaron correctos. En producción, el envío del código de recuperación con Resend responde «CORREO_NO_DISPONIBLE»; en ese caso, la aplicación envía el enlace de restablecimiento de Firebase."
+  ],
+  [
+   "Tiempos de respuesta:",
+   "Tiempos de respuesta: la evaluación acústica promedió 836 ms en Eco Vocal y 1187 ms en el chat en vivo, por encima de la meta de 800 ms (R01); la retroalimentación promedió 2124 ms en la práctica de pronunciación, 1716 ms en Eco Vocal, 1913 ms en la corrección gramatical y 463 ms en la calificación de lecciones, dentro de la meta de 2.5 s (RN-05)."
+  ],
+  [
+   "Defectos encontrados y corregidos:",
+   "Defectos encontrados y corregidos: durante las pruebas en un dispositivo real se encontraron y corrigieron seis defectos: el puntaje de Eco Vocal aprobaba pronunciaciones con acento del español («party» obtenía 95), por lo que se adoptó una calificación por fonema; Misión Situacional rechazaba respuestas escritas correctas que no coincidían con la frase exacta; el teclado cubría los campos de texto en versiones recientes de Android; el botón «Más lento» no cambiaba la velocidad en algunos dispositivos; el servidor rechazaba contraseñas nuevas con ñ o acentos, y el aviso de verificación no indicaba el motivo cuando Firebase bloqueaba los envíos. En la ejecución de las fichas de validación se encontraron y corrigieron otros seis: el tutor resolvía tareas de otras materias (RN-03); el chat sin conexión mostraba un mensaje técnico y no permitía reintentar; la práctica de pronunciación no avisaba al negar el micrófono; no aparecía el aviso «Primero, un repaso»; los conceptos de los minijuegos sin ejercicio de repaso bloqueaban las lecciones nuevas, y el Inicio no mostraba la XP. Cada corrección quedó acompañada de una prueba unitaria o de una comprobación en el emulador."
+  ]
+ ],
+ "textos_tabla": [
+  [
+   "Pruebas unitarias (275: 121 de la aplicación y 154 del servidor)",
+   "Pruebas unitarias (310: 144 de la aplicación y 166 del servidor)"
+  ]
+ ]
+}

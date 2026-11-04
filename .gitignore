@@ -13,6 +13,9 @@ local.properties
 # Documento del Trabajo Terminal: referencia local, no va en el repo
 Trabajo Terminal*.pdf
 TT_*.docx
+TT_*.pdf
+~$*
+__pycache__/
 
 # Archivos temporales de pruebas y parches locales
 *.patch
