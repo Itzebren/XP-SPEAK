@@ -1,0 +1,379 @@
+{
+ "_t": {
+  "PV1": {
+   "ini": 1793763297.973679
+  }
+ },
+ "PV1": {
+  "1": [
+   true,
+   ""
+  ],
+  "2": [
+   true,
+   ""
+  ],
+  "4": [
+   true,
+   "Mensaje mostrado al escribir «ingles»."
+  ],
+  "E2": [
+   true,
+   "«Ingresa un correo válido.» al tocar «Comenzar»."
+  ],
+  "E3": [
+   true,
+   ""
+  ],
+  "5": [
+   true,
+   ""
+  ],
+  "3": [
+   true,
+   "Nombre y correo aceptados sin error."
+  ],
+  "E5": [
+   true,
+   "Sin conexión aparece «Ocurrió un error. Intenta de nuevo.» y no se crea la cuenta."
+  ],
+  "6": [
+   true,
+   ""
+  ],
+  "E4": [
+   true,
+   "Tu correo aún no está verificado. Abre el enlace que te enviamos."
+  ],
+  "7": [
+   true,
+   ""
+  ],
+  "E1": [
+   true,
+   "Ya existe una cuenta con ese correo."
+  ]
+ },
+ "_dur": {
+  "PV1": 419.23359203338623,
+  "PV4": 142.54916977882385,
+  "PV9": 284.5507552623749,
+  "PV2": 135.45681881904602,
+  "PV3": 378.86180663108826,
+  "PV5": 465.0114941596985,
+  "PV6": 651.2862570285797,
+  "PV8": 1008.3536159992218,
+  "PV7": 1332.5178761482239,
+  "PV10": 574.7826948165894,
+  "PV11": 192.6154019832611
+ },
+ "_ini": {},
+ "PV4": {
+  "1": [
+   true,
+   ""
+  ],
+  "E1": [
+   true,
+   "El botón muestra «Elige tu nivel» y no avanza."
+  ],
+  "E2": [
+   true,
+   "Al volver a abrir se pide de nuevo el nivel."
+  ],
+  "2": [
+   true,
+   "Inicio con el avatar del zorro; catálogo de A1."
+  ],
+  "3": [
+   true,
+   "El avatar cambia a la estrella en Ajustes de perfil y en el Inicio."
+  ],
+  "4": [
+   true,
+   "Catálogo «1. Mi fin de semana» (A2), minijuegos «Nivel A2» y frase de práctica en pasado."
+  ]
+ },
+ "PV9": {
+  "E1": [
+   true,
+   ""
+  ],
+  "1": [
+   true,
+   "Se muestran 200 XP, nivel 2, nivel MCER A2, racha de 1 día, habilidades e «Insignias obtenidas: 3 de 9»."
+  ],
+  "2": [
+   true,
+   "Al aprobar «Mi fin de semana» la XP pasa de 200 a 280. Las insignias ganadas en la sesión se festejaron con «¡Nueva insignia!» (p. ej., «Estrella del Minijuego»)."
+  ],
+  "3": [
+   true,
+   "Sin conexión se muestra el último progreso guardado con «Sin conexión · datos de hace un momento» y 280 XP."
+  ]
+ },
+ "PV2": {
+  "4": [
+   true,
+   "Se regresa a la pantalla de acceso."
+  ],
+  "1": [
+   true,
+   ""
+  ],
+  "E1": [
+   true,
+   "Correo o contraseña incorrectos."
+  ],
+  "E3": [
+   true,
+   "Ocurrió un error. Intenta de nuevo."
+  ],
+  "2": [
+   false,
+   "Se abre el Inicio con el avatar y la racha; la XP no aparece en el Inicio, sino en Progreso."
+  ],
+  "3": [
+   true,
+   "Se entra al Inicio sin pedir la contraseña."
+  ],
+  "E2": [
+   true,
+   "Se muestra «Verifica tu correo» en lugar del Inicio."
+  ]
+ },
+ "PV3": {
+  "1": [
+   true,
+   ""
+  ],
+  "E4": [
+   true,
+   "Se muestra la misma pantalla «Revisa tu correo…» que para un correo registrado."
+  ],
+  "E3": [
+   true,
+   "Tu contraseña debe contener al menos: un número."
+  ],
+  "E1": [
+   true,
+   "Se rechaza con el mensaje «Código incorrecto» (el texto difiere de «Código inválido o expirado»)."
+  ],
+  "E5": [
+   true,
+   "Tras 5 intentos fallidos, el código correcto se rechaza con «Demasiados intentos fallidos, solicita un código nuevo»."
+  ],
+  "E2": [
+   true,
+   "Con el vencimiento adelantado 16 minutos en la base de prueba, se rechaza con «El código expiró, solicita uno nuevo»."
+  ],
+  "2": [
+   true,
+   "Se muestra «Revisa tu correo…» y el correo de la bandeja de pruebas trae un código de 6 caracteres (A4BDHV)."
+  ],
+  "3": [
+   true,
+   ""
+  ],
+  "4": [
+   true,
+   ""
+  ]
+ },
+ "PV5": {
+  "1": [
+   true,
+   "La respuesta llega por partes (XPS-TIEMPOS: primer fragmento 1222 ms y respuesta completa 1458 ms) y usa vocabulario sencillo."
+  ],
+  "2": [
+   true,
+   "Aparece «go → went» con «go» tachado en rojo, «went» en verde y la explicación."
+  ],
+  "3": [
+   true,
+   "Se reproduce la respuesta con el motor de voz del sistema (AudioTrack de voz activo)."
+  ],
+  "4": [
+   true,
+   "La frase dicha se envía tras la pausa, se califica (Pronunciación 95/100), la IA responde en voz alta y el micrófono vuelve a abrirse. Tras un silencio prolongado la aplicación pausa sola la conversación."
+  ],
+  "5": [
+   true,
+   "Al tocar el botón de detener desaparece «Te escucho…» y el campo vuelve a «Escribe o habla en inglés…» con el botón «Conversar en vivo»."
+  ],
+  "E1": [
+   false,
+   "El tutor resuelve la tarea («The integral of 2x is x squared plus a constant») y después invita a practicar inglés; no redirige sin resolverla."
+  ],
+  "E2": [
+   false,
+   "Se muestra un error, pero con el texto técnico «Failed to connect to localhost/127.0.0.1:3000», y no hay opción para reintentar el mensaje: hay que escribirlo de nuevo."
+  ],
+  "E3": [
+   true,
+   "Al negar el permiso aparece «Necesitas permitir el micrófono para practicar con voz.»"
+  ]
+ },
+ "PV6": {
+  "1": [
+   true,
+   ""
+  ],
+  "E2": [
+   false,
+   "En «Práctica de pronunciación», al negar el permiso no aparece ningún aviso: el resultado del permiso no llama a permisoDenegado() (PronunciacionScreen.kt). En el chat sí aparece."
+  ],
+  "2": [
+   true,
+   "Puntaje 96, todas las palabras en verde y «Oímos: “Hello my name is Anna and I am a student.”»"
+  ],
+  "3": [
+   true,
+   "Puntaje 67; «hello», «and», «I» y «am» en rojo y listadas en «Practica estas palabras:» (la pantalla usa ese texto en lugar de «Sonidos a mejorar:»); al tocar una palabra se indica el sonido que falló."
+  ],
+  "4": [
+   true,
+   "En 12 partidas no apareció «party» (Eco Vocal toma palabras al azar de las lecciones vistas); con «I am nineteen» dicho con acento del español, las palabras quedaron en rojo con el sonido que falló (p. ej., «/m/ sonó como /n/») y puntaje 55."
+  ],
+  "E1": [
+   true,
+   "Aparece «¡Pronunciación incorrecta!» con índice de confianza del 0 % y el contador sigue en «Intento 2 de 2»."
+  ],
+  "5": [
+   true,
+   "XPS-TIEMPOS: voz.pronunciacion 2429 y 2294 ms; voz.eco_vocal 1233 y 804 ms; todos dentro de 2.5 s."
+  ]
+ },
+ "PV8": {
+  "1": [
+   true,
+   "Se muestran los cuatro juegos con su color; como había partidas a medias, el botón dice «Continuar» en lugar de «Jugar»."
+  ],
+  "2": [
+   true,
+   "Las fichas se marcan en verde con «¡Correcto!» y se reproduce la oración con la voz del sistema (reproducción de voz activa)."
+  ],
+  "7": [
+   true,
+   "Tras cerrar la aplicación a mitad de la partida aparece «¿Retomar la partida?» con «Retomar» y «Empezar de nuevo»."
+  ],
+  "6": [
+   true,
+   "Resultado de Orden Maestro: 100 % de precisión, 8 de 8, +10 XP con la moneda y racha de 1 día."
+  ],
+  "3": [
+   true,
+   "En pantalla el reloj bajó menos tras un acierto que tras un error (lecturas de la pantalla cada ~5 s: aciertos de 50 a 46 s, errores de 34 a 28 s); el código suma 1000 ms por acierto y resta 3000 ms por error."
+  ],
+  "E1": [
+   true,
+   "Al terminar una partida de Ráfaga sin conexión aparece «Sin conexión: tu XP se confirma al reconectarte.»"
+  ],
+  "5": [
+   true,
+   "Con «Más lento» la frase «Good morning!» se reproduce por partes: la reproducción de voz se detiene entre palabras (pausa de 350 ms) y se reanuda."
+  ],
+  "E2": [
+   true,
+   "Al escribir «You is my friend.» aparece «Inténtalo de nuevo» con la explicación «Con you se usa are: You are my friend.»"
+  ],
+  "4": [
+   true,
+   "La misión de la cafetería requiere una lección que la cuenta de prueba aún no desbloquea; se probó la escritura en «Primer día de clases»: tras tres aciertos se pide escribir, la respuesta «Bye! See you later!» se acepta y el teclado deja visible el campo y la conversación."
+  ]
+ },
+ "PV7": {
+  "1": [
+   true,
+   "Se muestran introducción, tarjetas, gramática (pronombres y verbo to be) y diálogo de ejemplo."
+  ],
+  "2": [
+   true,
+   "La flecha pasa de «Hello!, Hi!, Good morning!» a «Good afternoon!, Good evening!, Goodbye!» y al tocar una tarjeta se reproduce la palabra."
+  ],
+  "3": [
+   true,
+   "¡Aprobada! 🎉; Puntaje: 100% (6/6); XP ganado: 50; 🔓 Desbloqueaste: Información personal"
+  ],
+  "4": [
+   true,
+   "Se aprueba de nuevo con 100 % y «XP ganado: 0»."
+  ],
+  "5": [
+   true,
+   "«Aún no — repasa y vuelve a intentarlo», 0 % y 0 XP; en el catálogo la lección queda en «Repetir» y la 3 sigue «Bloqueada»."
+  ],
+  "E1": [
+   true,
+   "Tras cerrar la aplicación y volver, al reabrir la evaluación siguen marcadas «Where are you from?» y la respuesta escrita «years»."
+  ],
+  "E2": [
+   true,
+   "Al tocar «Where ___ you from?» la pantalla se desplaza y el campo queda justo encima del teclado, visible."
+  ],
+  "6": [
+   true,
+   "Sin conexión se califica en el dispositivo (100 %) con «Sin conexión: tu evaluación se enviará al reconectarte y ahí se sumará tu XP.»; al reconectar se envió el intento y la lección 3 quedó «Disponible»."
+  ],
+  "7": [
+   false,
+   "La lección 3 aparece con «Repasa primero» y al tocarla se abre directamente «Repaso de hoy»; no se muestra el aviso «Primero, un repaso» con «Repasar ahora» y «Ahora no». El tema nuevo sí queda retenido hasta repasar."
+  ],
+  "8": [
+   true,
+   "Con las lecciones 3 a 11 marcadas como completadas en la base de prueba, al aprobar la 12 («De compras») aparece «¡Subiste a A2!» y el catálogo pasa a A2."
+  ]
+ },
+ "PV10": {
+  "1": [
+   true,
+   "Se abre «Notificaciones» con estado, recordatorios, frecuencia, hora y permisos del sistema."
+  ],
+  "E1": [
+   true,
+   "Con el permiso negado, el trabajo de recordatorio se ejecuta (WorkManager: SUCCESS) y no se muestra ningún aviso; la pantalla indica «XP-SPEAK no puede mostrar notificaciones» con «Permitir»."
+  ],
+  "2": [
+   true,
+   "Al conceder el permiso el estado queda en «Notificaciones activadas» y «El dispositivo tiene permisos otorgados»."
+  ],
+  "3": [
+   true,
+   "Con el reloj del emulador en 17:57 y la hora en 18:00, el recordatorio «¡No pierdas tu racha de 1 día! Practica unos minutos hoy.» llegó solo a las 17:59:33 del emulador, unos segundos antes de la hora elegida."
+  ],
+  "4": [
+   true,
+   "Con «Estado» desactivado se cancela el trabajo programado; con el reloj del emulador en 17:58–18:01 del día siguiente no llegó ningún recordatorio nuevo."
+  ]
+ },
+ "PV11": {
+  "1": [
+   true,
+   ""
+  ],
+  "2": [
+   true,
+   "El encabezado de «Ajustes de perfil» cambia a «Luis Pruebas»."
+  ],
+  "3": [
+   true,
+   "«¡Advertencia!» con XP, insignias, progreso MCER y racha que se perderán."
+  ],
+  "4": [
+   true,
+   "Se regresa a «Ajustes de perfil» con la cuenta intacta (nombre «Luis Pruebas» y aviso «Guardamos tu nombre.»)."
+  ],
+  "E1": [
+   true,
+   "Sin conexión aparece «Necesitas conexión a internet para eliminar tu cuenta.» y la cuenta y sus datos siguen en Firebase."
+  ],
+  "5": [
+   true,
+   "Se regresa a la pantalla de acceso; en Firebase ya no existen la cuenta ni sus documentos de progreso, repaso, intentos y actividad."
+  ],
+  "6": [
+   true,
+   "No existe una cuenta con ese correo."
+  ]
+ }
+}
