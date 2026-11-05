@@ -16,6 +16,7 @@ const { normalizarTexto } = require('../lib/lecciones/calificador');
 
 const RUTA_SCHEMA = path.join(__dirname, '..', 'content', 'schema', 'leccion.schema.json');
 const RUTA_SCHEMA_MISION = path.join(__dirname, '..', 'content', 'schema', 'mision.schema.json');
+const RUTA_VERIFICACION_CAMBRIDGE = path.join(__dirname, '..', 'content', 'verificacion-cambridge.json');
 
 const hayRepetidos = (valores) => new Set(valores).size !== valores.length;
 const evaluacionDe = (leccion) => leccion.secciones.find((s) => s.tipo === 'evaluacion');
@@ -243,6 +244,36 @@ function lintearMisiones(archivos, schema, lecciones) {
   return errores;
 }
 
+// ── Verificación del vocabulario contra Cambridge (docs/verificacion-cambridge.md) ──
+
+/**
+ * Cambridge no es la fuente del contenido (lo es el MCER), pero cada palabra
+ * de vocabulario debe estar verificada contra sus listas: o aparece en ellas o
+ * tiene una justificación escrita. Así una palabra nueva no entra sin revisar.
+ */
+function verificarCambridge(archivos, verificacion) {
+  const errores = [];
+  const items = verificacion.items || {};
+  for (const { archivo, leccion } of archivos) {
+    for (const seccion of leccion.secciones.filter((s) => s.tipo === 'vocabulario')) {
+      for (const item of seccion.items) {
+        const v = items[item.concepto_id];
+        if (!v) {
+          errores.push(`${archivo}: '${item.concepto_id}' no está en verificacion-cambridge.json`);
+        } else if (v.en !== item.en) {
+          errores.push(`${archivo}: '${item.concepto_id}' cambió ('${v.en}' → '${item.en}'); vuelve a verificarlo`);
+        }
+      }
+    }
+  }
+  for (const [concepto, v] of Object.entries(items)) {
+    if (v.estado === 'en_lista' && !v.lista) errores.push(`verificacion-cambridge.json: '${concepto}' no dice en qué lista está`);
+    if (v.estado === 'justificada' && !v.justificacion) errores.push(`verificacion-cambridge.json: '${concepto}' no tiene justificación`);
+    if (!['en_lista', 'justificada'].includes(v.estado)) errores.push(`verificacion-cambridge.json: '${concepto}' estado inválido`);
+  }
+  return errores;
+}
+
 // ── Ejecución ───────────────────────────────────────────────────────────────
 
 /**
@@ -278,6 +309,7 @@ if (require.main === module) {
   const errores = [
     ...lintearContenido(archivos, leerSchema(RUTA_SCHEMA)),
     ...lintearMisiones(misiones, leerSchema(RUTA_SCHEMA_MISION), archivos.map(({ leccion }) => leccion)),
+    ...verificarCambridge(archivos, leerSchema(RUTA_VERIFICACION_CAMBRIDGE)),
   ];
   if (errores.length > 0) {
     console.error(`✗ ${errores.length} error(es) de contenido:\n`);
@@ -287,4 +319,11 @@ if (require.main === module) {
   console.log(`✓ ${archivos.length} lección(es) y ${misiones.length} misión(es) válidas.`);
 }
 
-module.exports = { lintearContenido, lintearMisiones, RUTA_SCHEMA, RUTA_SCHEMA_MISION };
+module.exports = {
+  lintearContenido,
+  lintearMisiones,
+  verificarCambridge,
+  RUTA_SCHEMA,
+  RUTA_SCHEMA_MISION,
+  RUTA_VERIFICACION_CAMBRIDGE,
+};

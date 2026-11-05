@@ -1,6 +1,6 @@
 {
   "id": "mision-a2-doctor",
-  "version": 1,
+  "version": 2,
   "nivel": "A2",
   "leccion_id": "a2-salud-ejercicio",
   "titulo": "En el consultorio",
@@ -29,12 +29,12 @@
       ]
     },
     {
-      "npc": "Have you got a sore throat too?",
-      "npc_es": "¿También te duele la garganta?",
+      "npc": "Have you got a cough too?",
+      "npc_es": "¿También tienes tos?",
       "opciones": [
-        { "en": "Yes, I have. It hurts a lot.", "correcta": true, "aceptadas": ["Yes, I have got a sore throat. It hurts a lot.", "Yes, it hurts a lot.", "Yes, I've got a sore throat.", "Yes, I have. It hurts."], "concepto_id": "voc.salud.hurt" },
-        { "en": "Yes, I have. It hurt a lot.", "correcta": false, "feedback": "Hablas de ahora, y con 'it' el presente lleva -s: It hurts." },
-        { "en": "No, I'm a dentist.", "correcta": false, "feedback": "No responde a la pregunta sobre tu garganta." }
+        { "en": "Yes, I have. My head hurts a lot.", "correcta": true, "aceptadas": ["Yes, I have got a cough. My head hurts a lot.", "Yes, my head hurts a lot.", "Yes, I've got a cough. My head hurts.", "Yes, I have. My head hurts."], "concepto_id": "voc.salud.hurt" },
+        { "en": "Yes, I have. My head hurt a lot.", "correcta": false, "feedback": "Hablas de ahora, y con 'my head' (it) el presente lleva -s: My head hurts." },
+        { "en": "No, I'm a dentist.", "correcta": false, "feedback": "No responde a la pregunta sobre la tos." }
       ]
     },
     {

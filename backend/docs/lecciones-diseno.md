@@ -567,6 +567,10 @@ el resumen que rige el diseño.
 5. Etiquetar cada ítem con `concepto_id` (para el SRS).
 6. Citar en `autoria.fuentes` el tema y los descriptores, textuales y con
    página. El linter revisa que estén.
+7. Verificar el vocabulario contra las listas de Cambridge alineadas al MCER
+   y registrarlo en `content/verificacion-cambridge.json`
+   ([`verificacion-cambridge.md`](verificacion-cambridge.md)). El linter
+   revisa que cada palabra esté registrada.
 
 ### 8.4 Propiedad intelectual del contenido
 
@@ -588,6 +592,7 @@ Enlaces revisados el 2026-09-29.
   lenguas: aprendizaje, enseñanza, evaluación*. Madrid: Ministerio de
   Educación, Cultura y Deporte / Anaya, 2002. Traducción del Instituto
   Cervantes: https://cvc.cervantes.es/ensenanza/biblioteca_ele/marco/cvc_mer.pdf
+  (caído desde nov. 2026; copia archivada: http://web.archive.org/web/20261005063356/https://cvc.cervantes.es/Ensenanza/biblioteca_ele/marco/cvc_mer.pdf)
 - Consejo de Europa (2020), *Common European Framework of Reference for
   Languages: Companion Volume*. Actualiza los descriptores; está **pendiente**
   cotejar con él las citas de la revisión (`revision-mcer.md` §6).
@@ -630,7 +635,7 @@ Las decisiones que quedaron abiertas en la v1 ya se resolvieron:
 | 4 | Temas del corte vertical | Saludos, información personal, números y hora (§7). |
 | 5 | Rutas | Subcarpetas en `api/` (`/api/lessons/...`, `/api/srs/...`). |
 | 6 | Idioma L1 | Español; campos `es` planos. Si algún día hay otra L1, `es` pasa a mapa por idioma. |
-| 7 | Fuente del contenido | **Solo el MCER** (2026-09-29): temas de §4.2 y can-do con descriptores del nivel; sin listas de vocabulario externas. |
+| 7 | Fuente del contenido | **Solo el MCER** (2026-09-29): temas de §4.2 y can-do con descriptores del nivel. Desde el 2026-11-05 el vocabulario se **verifica**, sin usarse como fuente, contra listas de Cambridge alineadas al MCER (`verificacion-cambridge.md`). |
 | 8 | Alcance de la RN-03 | **Por nivel** (2026-09-29): una lección A1 no practica nada que el MCER ubique en A2. |
 
 Siguen abiertas:

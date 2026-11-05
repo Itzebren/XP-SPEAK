@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
 const path = require('path');
-const { lintearContenido, RUTA_SCHEMA } = require('../scripts/lint-content');
+const { lintearContenido, verificarCambridge, RUTA_SCHEMA, RUTA_VERIFICACION_CAMBRIDGE } = require('../scripts/lint-content');
 const { leerLeccionesDeDisco } = require('../lib/lecciones/contenido');
 
 const schema = JSON.parse(fs.readFileSync(RUTA_SCHEMA, 'utf-8'));
@@ -112,4 +112,24 @@ test('la plantilla de docs/guia-autoria-lecciones.md pasa el linter', () => {
   const archivos = contenidoReal().filter((a) => a.leccion.id !== plantilla.id);
   archivos.push({ archivo: `${plantilla.id}.json`, leccion: plantilla });
   assert.deepEqual(lintearContenido(archivos, schema), []);
+});
+
+test('Cambridge: todo el vocabulario real está verificado', () => {
+  const verificacion = JSON.parse(fs.readFileSync(RUTA_VERIFICACION_CAMBRIDGE, 'utf-8'));
+  assert.deepEqual(verificarCambridge(contenidoReal(), verificacion), []);
+});
+
+test('Cambridge: detecta vocabulario sin verificar, texto cambiado y justificación faltante', () => {
+  const verificacion = JSON.parse(fs.readFileSync(RUTA_VERIFICACION_CAMBRIDGE, 'utf-8'));
+  const archivos = structuredClone(contenidoReal());
+  const vocabulario = archivos[0].leccion.secciones.find((s) => s.tipo === 'vocabulario');
+  vocabulario.items[0].en = 'otra palabra';
+  vocabulario.items.push({ ...vocabulario.items[1], concepto_id: 'voc.prueba.nueva' });
+  const justificada = Object.values(verificacion.items).find((v) => v.estado === 'justificada');
+  delete justificada.justificacion;
+
+  const errores = verificarCambridge(archivos, verificacion).join('\n');
+  assert.match(errores, /cambió/);
+  assert.match(errores, /voc\.prueba\.nueva' no está en verificacion-cambridge\.json/);
+  assert.match(errores, /no tiene justificación/);
 });

@@ -1,6 +1,6 @@
 {
   "id": "a2-salud-ejercicio",
-  "version": 1,
+  "version": 2,
   "nivel_mcer": "A2",
   "modulo_tematico": "Salud y ejercicio",
   "orden": 5,
@@ -16,7 +16,8 @@
       "MCER, Conversación, A2 (p. 77): «Expresa cómo se siente en términos sencillos y sabe cómo dar las gracias.»",
       "MCER, Conversación, A2 (p. 77): «Realiza invitaciones y sugerencias, y responde a las que le hacen; se disculpa y responde a las disculpas que le presentan.»",
       "MCER, Competencia lingüística general, A2 (p. 107): «Produce expresiones breves y habituales con el fin de satisfacer necesidades sencillas y concretas: datos personales, acciones habituales, carencias y necesidades, demandas de información.»",
-      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»",
+      "Verificación del vocabulario (no es la fuente del contenido): 11 de 11 palabras están en listas de Cambridge alineadas al MCER (A2 Key Vocabulary List, 2025; Pre A1 Starters, A1 Movers and A2 Flyers Wordlists, 2025). Detalle en content/verificacion-cambridge.json."
     ],
     "notas": "Ejemplos, diálogo y ejercicios originales. 'a cold' (resfriado) es un concepto distinto de voc.clima.cold (frío), por eso tiene su propio concepto_id (guía §5.2). En el MCER, dar consejos aparece hasta B2 (Intercambiar información, p. 80); en A2 'should' se presenta como sugerencia. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
   },
@@ -33,7 +34,7 @@
         { "concepto_id": "voc.salud.sick", "en": "sick", "es": "enfermo / enferma", "audio": "tts:I feel sick.", "nota": "En Reino Unido también se dice 'ill'." },
         { "concepto_id": "voc.salud.headache", "en": "headache", "es": "dolor de cabeza", "audio": "tts:I've got a headache." },
         { "concepto_id": "voc.salud.stomachache", "en": "stomachache", "es": "dolor de estómago", "audio": "tts:stomachache" },
-        { "concepto_id": "voc.salud.sore_throat", "en": "sore throat", "es": "dolor de garganta", "audio": "tts:a sore throat" },
+        { "concepto_id": "voc.salud.cough", "en": "a cough", "es": "tos", "audio": "tts:I've got a cough." },
         { "concepto_id": "voc.salud.a_cold", "en": "a cold", "es": "un resfriado / una gripa", "audio": "tts:I've got a cold.", "nota": "I've got a cold = Tengo gripa. I'm cold = Tengo frío." },
         { "concepto_id": "voc.salud.hurt", "en": "hurt", "es": "doler", "audio": "tts:My back hurts.", "nota": "Lo que duele es el sujeto: My back hurts = Me duele la espalda." }
       ]
@@ -68,7 +69,7 @@
       "titulo": "Me siento mal",
       "audio": "tts:dialogo",
       "lineas": [
-        { "hablante": "Mateo", "en": "I feel sick. I've got a headache and a sore throat.", "es": "Me siento mal. Me duele la cabeza y la garganta." },
+        { "hablante": "Mateo", "en": "I feel sick. I've got a headache and a cough.", "es": "Me siento mal. Me duele la cabeza y tengo tos." },
         { "hablante": "Sofía", "en": "Oh no! Maybe you've got a cold. You should rest.", "es": "¡Ay, no! A lo mejor tienes gripa. Deberías descansar." },
         { "hablante": "Mateo", "en": "I can't. I have to go to work today.", "es": "No puedo. Tengo que ir a trabajar hoy." },
         { "hablante": "Sofía", "en": "You shouldn't go to work sick. You should see a doctor.", "es": "No deberías ir a trabajar enfermo. Deberías ir al médico." },
@@ -149,7 +150,7 @@
           "feedback_error": "Repasa las tablas de salud.",
           "pares": [
             { "concepto_id": "voc.salud.headache", "izq": "headache", "der": "dolor de cabeza" },
-            { "concepto_id": "voc.salud.sore_throat", "izq": "sore throat", "der": "dolor de garganta" },
+            { "concepto_id": "voc.salud.cough", "izq": "a cough", "der": "tos" },
             { "concepto_id": "voc.salud.dentist", "izq": "dentist", "der": "dentista" },
             { "concepto_id": "voc.salud.healthy", "izq": "healthy", "der": "saludable / sano" }
           ]

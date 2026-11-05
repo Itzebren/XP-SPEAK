@@ -1,6 +1,6 @@
 {
  "version": 1,
- "version_contenido": "4692500d5333",
+ "version_contenido": "473ae2322821",
  "lecciones": [
   {
    "id": "a1-saludos-presentaciones",
@@ -2014,9 +2014,9 @@
      "es": "cliente"
     },
     {
-     "concepto_id": "voc.trabajo.part_time",
-     "en": "part-time",
-     "es": "de medio tiempo"
+     "concepto_id": "voc.trabajo.factory",
+     "en": "factory",
+     "es": "fábrica"
     }
    ],
    "oraciones": [
@@ -2054,13 +2054,13 @@
    "dialogo": [
     {
      "hablante": "Laura",
-     "en": "What do you do, Luis?",
-     "es": "¿A qué te dedicas, Luis?"
+     "en": "I work in a factory. What do you do, Luis?",
+     "es": "Yo trabajo en una fábrica. ¿A qué te dedicas, Luis?"
     },
     {
      "hablante": "Luis",
-     "en": "I'm a student, but I have a part-time job. I work at a restaurant.",
-     "es": "Soy estudiante, pero tengo un trabajo de medio tiempo. Trabajo en un restaurante."
+     "en": "I'm a student, but I also have a job. I work at a restaurant.",
+     "es": "Soy estudiante, pero también tengo trabajo. Trabajo en un restaurante."
     },
     {
      "hablante": "Laura",
@@ -2106,9 +2106,9 @@
      "es": "dolor de estómago"
     },
     {
-     "concepto_id": "voc.salud.sore_throat",
-     "en": "sore throat",
-     "es": "dolor de garganta"
+     "concepto_id": "voc.salud.cough",
+     "en": "a cough",
+     "es": "tos"
     },
     {
      "concepto_id": "voc.salud.a_cold",
@@ -2186,8 +2186,8 @@
    "dialogo": [
     {
      "hablante": "Mateo",
-     "en": "I feel sick. I've got a headache and a sore throat.",
-     "es": "Me siento mal. Me duele la cabeza y la garganta."
+     "en": "I feel sick. I've got a headache and a cough.",
+     "es": "Me siento mal. Me duele la cabeza y tengo tos."
     },
     {
      "hablante": "Sofía",
@@ -2741,9 +2741,9 @@
      "es": "tormenta"
     },
     {
-     "concepto_id": "voc.excursion.weather_forecast",
-     "en": "weather forecast",
-     "es": "pronóstico del tiempo"
+     "concepto_id": "voc.excursion.weather_tomorrow",
+     "en": "What will the weather be like?",
+     "es": "¿Cómo va a estar el clima?"
     },
     {
      "concepto_id": "voc.excursion.temperature",
@@ -2801,13 +2801,13 @@
    "dialogo": [
     {
      "hablante": "Ana",
-     "en": "What's the weather forecast for Saturday?",
-     "es": "¿Cuál es el pronóstico del tiempo para el sábado?"
+     "en": "What will the weather be like on Saturday?",
+     "es": "¿Cómo va a estar el clima el sábado?"
     },
     {
      "hablante": "Mateo",
-     "en": "It says it will be sunny, twenty-five degrees.",
-     "es": "Dice que va a estar soleado, a veinticinco grados."
+     "en": "The radio says it will be sunny, twenty-five degrees.",
+     "es": "En el radio dicen que va a estar soleado, a veinticinco grados."
     },
     {
      "hablante": "Ana",
@@ -2928,8 +2928,8 @@
    "dialogo": [
     {
      "hablante": "Laura",
-     "en": "Good morning. I need some medicine for a sore throat.",
-     "es": "Buenos días. Necesito una medicina para el dolor de garganta."
+     "en": "Good morning. I need some medicine for a cough.",
+     "es": "Buenos días. Necesito una medicina para la tos."
     },
     {
      "hablante": "Farmacéutico",
@@ -3615,7 +3615,7 @@
   },
   {
    "id": "mision-a2-doctor",
-   "version": 1,
+   "version": 2,
    "nivel": "A2",
    "leccion_id": "a2-salud-ejercicio",
    "titulo": "En el consultorio",
@@ -3665,29 +3665,29 @@
      ]
     },
     {
-     "npc": "Have you got a sore throat too?",
-     "npc_es": "¿También te duele la garganta?",
+     "npc": "Have you got a cough too?",
+     "npc_es": "¿También tienes tos?",
      "opciones": [
       {
-       "en": "Yes, I have. It hurts a lot.",
+       "en": "Yes, I have. My head hurts a lot.",
        "correcta": true,
        "aceptadas": [
-        "Yes, I have got a sore throat. It hurts a lot.",
-        "Yes, it hurts a lot.",
-        "Yes, I've got a sore throat.",
-        "Yes, I have. It hurts."
+        "Yes, I have got a cough. My head hurts a lot.",
+        "Yes, my head hurts a lot.",
+        "Yes, I've got a cough. My head hurts.",
+        "Yes, I have. My head hurts."
        ],
        "concepto_id": "voc.salud.hurt"
       },
       {
-       "en": "Yes, I have. It hurt a lot.",
+       "en": "Yes, I have. My head hurt a lot.",
        "correcta": false,
-       "feedback": "Hablas de ahora, y con 'it' el presente lleva -s: It hurts."
+       "feedback": "Hablas de ahora, y con 'my head' (it) el presente lleva -s: My head hurts."
       },
       {
        "en": "No, I'm a dentist.",
        "correcta": false,
-       "feedback": "No responde a la pregunta sobre tu garganta."
+       "feedback": "No responde a la pregunta sobre la tos."
       }
      ]
     },

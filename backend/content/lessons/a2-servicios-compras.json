@@ -1,6 +1,6 @@
 {
   "id": "a2-servicios-compras",
-  "version": 1,
+  "version": 2,
   "nivel_mcer": "A2",
   "modulo_tematico": "Servicios y compras",
   "orden": 11,
@@ -15,7 +15,8 @@
       "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Servicios públicos; Compras.",
       "MCER, Interactuar para obtener bienes y servicios, A2 (p. 80): «Pregunta sobre cosas y realiza transacciones sencillas en tiendas, oficinas de correo o bancos. Ofrece y recibe información relativa a cantidades, números, precios, etc.»",
       "MCER, Leer instrucciones, A2 (p. 73): «Comprende normas, por ejemplo de seguridad, que estén expresadas con un nivel de lengua sencillo.»",
-      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»",
+      "Verificación del vocabulario (no es la fuente del contenido): 9 de 12 palabras están en listas de Cambridge alineadas al MCER (A2 Key Vocabulary List, 2025; Pre A1 Starters, A1 Movers and A2 Flyers Wordlists, 2025); las demás tienen justificación escrita. Detalle en content/verificacion-cambridge.json."
     ],
     "notas": "Ejemplos, diálogo y ejercicios originales. Se repasan 'have to' (A2-5) en la explicación de must y la salud (A2-5) en el diálogo. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
   },
@@ -68,7 +69,7 @@
       "titulo": "En la farmacia",
       "audio": "tts:dialogo",
       "lineas": [
-        { "hablante": "Laura", "en": "Good morning. I need some medicine for a sore throat.", "es": "Buenos días. Necesito una medicina para el dolor de garganta." },
+        { "hablante": "Laura", "en": "Good morning. I need some medicine for a cough.", "es": "Buenos días. Necesito una medicina para la tos." },
         { "hablante": "Farmacéutico", "en": "Here you are. You must take one every eight hours.", "es": "Aquí tiene. Debe tomar una cada ocho horas." },
         { "hablante": "Laura", "en": "How many can I take in a day?", "es": "¿Cuántas puedo tomar al día?" },
         { "hablante": "Farmacéutico", "en": "Three. You mustn't take more than three.", "es": "Tres. No debe tomar más de tres." },

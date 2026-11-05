@@ -16,7 +16,8 @@
       "MCER, Intercambiar información, A1 (p. 80): «Comprende preguntas e instrucciones que se le formulan despacio y con cuidado, y comprende indicaciones breves y sencillas sobre cómo ir a un lugar.»",
       "MCER, Leer instrucciones, A1 (p. 73): «Comprende indicaciones escritas si son breves y sencillas (por ejemplo, cómo ir de un lugar a otro).»",
       "MCER, Interacción oral en general, A1 (p. 76): «Sabe plantear y contestar preguntas sencillas, realizar afirmaciones sencillas y responder a las afirmaciones que se le hacen en áreas de necesidad inmediata o sobre temas muy cotidianos.»",
-      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»",
+      "Verificación del vocabulario (no es la fuente del contenido): 12 de 12 palabras están en listas de Cambridge alineadas al MCER (A2 Key Vocabulary List, 2025; Pre A1 Starters, A1 Movers and A2 Flyers Wordlists, 2025). Detalle en content/verificacion-cambridge.json."
     ],
     "notas": "Ejemplos, diálogo y ejercicios originales. Se repasan 'there is' (lección 3) y las preposiciones de lugar (lección 6, mismo concepto_id). Dar indicaciones es A2 (Intercambiar información, p. 80); en A1 los ejercicios piden entender las indicaciones, no producirlas. El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
   },

@@ -14,7 +14,15 @@ referencia para las lenguas: aprendizaje, enseñanza, evaluación*. Traducción
 oficial al español: Instituto Cervantes, 2002 (Madrid: MECD / Anaya), texto
 publicado en el Centro Virtual Cervantes:
 <https://cvc.cervantes.es/ensenanza/biblioteca_ele/marco/cvc_mer.pdf>.
-Las páginas citadas son las **impresas** en esa edición.
+Desde noviembre de 2026 todo cvc.cervantes.es responde 404. Copia archivada:
+<http://web.archive.org/web/20261005063356/https://cvc.cervantes.es/Ensenanza/biblioteca_ele/marco/cvc_mer.pdf>.
+Las páginas citadas son las **impresas** en esa edición. Las citas se
+cotejaron con el texto el 2026-11-05 y coinciden.
+
+> **Verificación con Cambridge (2026-11-05).** El vocabulario se comprobó
+> además contra las listas de Cambridge alineadas al MCER. Cambridge **no
+> es fuente**: solo confirma el nivel de las palabras. Ver
+> [`verificacion-cambridge.md`](verificacion-cambridge.md).
 
 **Criterio (RN-03 del Documento Técnico):** *"El chatbot y las lecciones
 tienen prohibido generar contenido que exceda los descriptores de desempeño
@@ -74,16 +82,16 @@ y se cita en cada lección, es:
 
 | # | Afirmación | Dónde estaba | Veredicto frente al MCER | Acción |
 |---|---|---|---|---|
-| 1 | El contenido se cura de "listas CEFR oficiales" (Cambridge A2 Key, Oxford 3000/5000, English Vocabulary Profile). | Diseño §1 (decisión 3), §2.3 (RN-03), §8.2, §9; Guía §2.1, §8 | ❌ Esas listas son de terceros (editoriales y exámenes), no del MCER. | Retiradas como fuente. El tema sale de §4.2 y el nivel se justifica con descriptores. |
+| 1 | El contenido se cura de "listas CEFR oficiales" (Cambridge A2 Key, Oxford 3000/5000, English Vocabulary Profile). | Diseño §1 (decisión 3), §2.3 (RN-03), §8.2, §9; Guía §2.1, §8 | ❌ Esas listas son de terceros (editoriales y exámenes), no del MCER. | Retiradas como fuente. El tema sale de §4.2 y el nivel se justifica con descriptores. **Actualización 2026-11-05:** las listas de Cambridge vuelven, pero solo como **verificación** del vocabulario (`verificacion-cambridge.md`). Oxford no se usa. |
 | 2 | "601 palabras en A1 y 925 en A2" (Capel, 2010). | Diseño §8.1; Guía §2.1 | ❌ No es del MCER; el MCER no cuantifica vocabulario. | Retirado. El tamaño de 10–12 palabras por lección queda como decisión de diseño del equipo. |
 | 3 | Temario de los *Topic Lists* de Cambridge. | Diseño §8.2; Guía §2 (columna "Topic list") | ⚠️ Casi todos coinciden con §4.2, pero la fuente citada no era el MCER. Dos temas no están en §4.2: *Communication and Technology* y *The Natural World*. | Temas reasignados a §4.2. A2-8 y A2-10 se reencuadraron (§5). |
 | 4 | "Gramática núcleo por nivel" (A1: *to be*, *can*…; A2: *past simple*, *present perfect*…). | Diseño §8.3; Guía §2 | ⚠️ El MCER no asigna estructuras a niveles (p. 111). | Se mantiene como **decisión del equipo** y se declara así. Cada estructura se enseña solo para funciones que tienen descriptor en el nivel. |
-| 5 | "Verificar el nivel de cada palabra" en EVP/Oxford. | Guía §8.2, §6.2, §7.2 | ❌ Con el MCER como única fuente no hay contra qué verificar palabras. | Sustituido por verificar la **función** contra un descriptor (Guía §8.2). |
-| 6 | En `autoria.fuentes`: "nivel A1/A2 verificado por palabra" y "Oxford 3000 — palabras marcadas A1". | 21 lecciones nuevas | ❌ Falso: esa verificación no se hizo. | Reemplazado en las 24 lecciones por citas textuales del MCER con página. |
+| 5 | "Verificar el nivel de cada palabra" en EVP/Oxford. | Guía §8.2, §6.2, §7.2 | ❌ Con el MCER como única fuente no hay contra qué verificar palabras. | Sustituido por verificar la **función** contra un descriptor (Guía §8.2). **Actualización 2026-11-05:** la verificación por palabra se hizo contra Cambridge (A2 Key 2025; Starters/Movers/Flyers 2025): 98.5 % en lista y el resto justificado. |
+| 6 | En `autoria.fuentes`: "nivel A1/A2 verificado por palabra" y "Oxford 3000 — palabras marcadas A1". | 21 lecciones nuevas | ❌ Falso: esa verificación no se hizo. | Reemplazado en las 24 lecciones por citas textuales del MCER con página. El 2026-11-05 se agregó un renglón con el resultado **real** de la verificación contra Cambridge. |
 | 7 | Los *can-do* "Puedo…". | Todas las lecciones | ✅ El formato en primera persona coincide con el Cuadro 2 del MCER (p. 30). Varios contenidos estaban por encima del nivel (§4). | Corregidos los que excedían. |
 | 8 | Temas prohibidos "según la política de Cambridge". | Guía §6.3 | ⚠️ No es del MCER. | Se conserva como **criterio del equipo**, sin atribuirlo a Cambridge. |
 | 9 | Umbral de aprobación del 70%. | Diseño §2.3, §9 | — No es un tema del MCER; ya estaba documentado como decisión del Documento Técnico. | Sin cambio. |
-| 10 | En la tesis, la referencia [19] del MCER es "P. C. ARG, 2026". | Documento Técnico §2.2.1 | ⚠️ No es la fuente primaria. | **Recomendación:** citar Consejo de Europa (2001) y la traducción del Instituto Cervantes (2002), como en §1 de este documento. |
+| 10 | En la tesis, la referencia [19] del MCER es "P. C. ARG, 2026". | Documento Técnico §2.2.1 | ⚠️ No es la fuente primaria. | **Recomendación:** citar Consejo de Europa (2001) y la traducción del Instituto Cervantes (2002), como en §1 de este documento. En la versión final [19] es el Volumen complementario (2020); se agrega la edición 2002, que es la de las páginas citadas. |
 
 ## 4. Revisión lección por lección
 
@@ -179,7 +187,12 @@ el límite, la alternativa es mover *How much…?* a A2-11.
    que podría respaldar un tema de tecnología. Esta revisión usó el texto de
    2001/2002 porque el sitio del Consejo de Europa bloqueó la descarga
    automática. Conviene cotejar las citas de §4 con el volumen de 2020 antes
-   de la entrega de la tesis.
+   de la entrega de la tesis. **Cotejo parcial (2026-11-05)** con la
+   traducción española del VC (2021). Los descriptores citados siguen
+   existiendo con redacción actualizada:
+   - «Sabe expresar lo que le gusta…» pasa a «Manifiesta lo que le gusta…» (p. 87);
+   - «Riqueza de vocabulario» pasa a «Alcance léxico» (pp. 145–146).
+   El VC no reproduce los temas de §4.2; para ellos la fuente es la edición 2001/2002.
 2. **Referencia [19] de la tesis:** reemplazarla por la fuente primaria
    (§3, fila 10).
 3. **Gramática por lección:** es decisión del equipo (§2). Debe presentarse

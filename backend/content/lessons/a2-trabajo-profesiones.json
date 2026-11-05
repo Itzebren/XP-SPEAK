@@ -1,6 +1,6 @@
 {
   "id": "a2-trabajo-profesiones",
-  "version": 1,
+  "version": 2,
   "nivel_mcer": "A2",
   "modulo_tematico": "Trabajo y profesiones",
   "orden": 4,
@@ -16,7 +16,8 @@
       "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe a su familia, sus condiciones de vida, sus estudios y su trabajo actual, o el último que tuvo.»",
       "MCER, Intercambiar información, A2 (p. 80): «Plantea y sabe cómo responder a preguntas relativas a lo que se hace en el trabajo y en el tiempo libre.»",
       "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe planes y citas, costumbres, actividades habituales o pertenecientes al pasado y experiencias personales.»",
-      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»",
+      "Verificación del vocabulario (no es la fuente del contenido): 12 de 12 palabras están en listas de Cambridge alineadas al MCER (A2 Key Vocabulary List, 2025; Pre A1 Starters, A1 Movers and A2 Flyers Wordlists, 2025). Detalle en content/verificacion-cambridge.json."
     ],
     "notas": "Ejemplos, diálogo y ejercicios originales. Como el usuario A2 no pasó por A1, el presente simple y el continuo se repasan dentro de gram.present_simple_vs_continuous (guía §2.4). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
   },
@@ -47,7 +48,7 @@
         { "concepto_id": "voc.trabajo.boss", "en": "boss", "es": "jefe / jefa", "audio": "tts:boss" },
         { "concepto_id": "voc.trabajo.meeting", "en": "meeting", "es": "reunión / junta", "audio": "tts:meeting" },
         { "concepto_id": "voc.trabajo.customer", "en": "customer", "es": "cliente", "audio": "tts:customer" },
-        { "concepto_id": "voc.trabajo.part_time", "en": "part-time", "es": "de medio tiempo", "audio": "tts:a part-time job", "nota": "Lo contrario es 'full-time' (de tiempo completo)." }
+        { "concepto_id": "voc.trabajo.factory", "en": "factory", "es": "fábrica", "audio": "tts:factory" }
       ]
     },
     {
@@ -66,11 +67,11 @@
     },
     {
       "tipo": "dialogo",
-      "titulo": "Trabajo de medio tiempo",
+      "titulo": "¿A qué te dedicas?",
       "audio": "tts:dialogo",
       "lineas": [
-        { "hablante": "Laura", "en": "What do you do, Luis?", "es": "¿A qué te dedicas, Luis?" },
-        { "hablante": "Luis", "en": "I'm a student, but I have a part-time job. I work at a restaurant.", "es": "Soy estudiante, pero tengo un trabajo de medio tiempo. Trabajo en un restaurante." },
+        { "hablante": "Laura", "en": "I work in a factory. What do you do, Luis?", "es": "Yo trabajo en una fábrica. ¿A qué te dedicas, Luis?" },
+        { "hablante": "Luis", "en": "I'm a student, but I also have a job. I work at a restaurant.", "es": "Soy estudiante, pero también tengo trabajo. Trabajo en un restaurante." },
         { "hablante": "Laura", "en": "Are you a waiter?", "es": "¿Eres mesero?" },
         { "hablante": "Luis", "en": "Yes. I usually work on weekends, but this week I'm working every night.", "es": "Sí. Normalmente trabajo los fines de semana, pero esta semana estoy trabajando todas las noches." },
         { "hablante": "Laura", "en": "Wow! Is your boss nice?", "es": "¡Guau! ¿Tu jefa es agradable?" },
@@ -138,11 +139,11 @@
         {
           "id": "q7",
           "tipo": "opcion_multiple",
-          "concepto_id": "voc.trabajo.part_time",
-          "enunciado": "'A part-time job' es…",
-          "opciones": ["un trabajo de tiempo completo", "un trabajo en una fiesta", "un trabajo de medio tiempo"],
+          "concepto_id": "voc.trabajo.factory",
+          "enunciado": "'A factory' es…",
+          "opciones": ["una farmacia", "una fiesta", "una fábrica"],
           "respuesta_correcta": 2,
-          "feedback_error": "'Part-time' = de medio tiempo. 'Full-time' = de tiempo completo."
+          "feedback_error": "'Factory' = fábrica: un lugar donde se hacen productos."
         },
         {
           "id": "q8",

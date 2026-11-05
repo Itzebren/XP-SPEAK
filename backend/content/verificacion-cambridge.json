@@ -1,0 +1,3579 @@
+{
+ "descripcion": "Verificación del vocabulario de las lecciones contra listas de Cambridge alineadas al MCER. No es la fuente del contenido: el tema y los can-do salen del MCER (docs/revision-mcer.md). Detalle y método en docs/verificacion-cambridge.md.",
+ "fecha": "2026-11-05",
+ "listas": [
+  "Cambridge University Press & Assessment, A2 Key and A2 Key for Schools Vocabulary List (agosto de 2025). https://www.cambridgeenglish.org/images/506886-a2-key-2020-vocabulary-list.pdf",
+  "Cambridge University Press & Assessment, Pre A1 Starters, A1 Movers and A2 Flyers Wordlists (2025). https://www.cambridgeenglish.org/images/506166-starters-movers-flyers-word-list-2025.pdf"
+ ],
+ "resumen": {
+  "entradas_de_vocabulario": 278,
+  "conceptos": 271,
+  "en_lista": 267,
+  "justificadas": 4,
+  "a1_en_listas_pre_a1_o_a1": 113,
+  "a1_total": 135
+ },
+ "items": {
+  "voc.casa.house": {
+   "en": "house",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.casa.apartment": {
+   "en": "apartment",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.casa.bedroom": {
+   "en": "bedroom",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.casa.bathroom": {
+   "en": "bathroom",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.casa.kitchen": {
+   "en": "kitchen",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.casa.living_room": {
+   "en": "living room",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.casa.bed": {
+   "en": "bed",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.casa.table": {
+   "en": "table",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.casa.chair": {
+   "en": "chair",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.casa.door": {
+   "en": "door",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.casa.window": {
+   "en": "window",
+   "lecciones": [
+    "a1-casa-hogar"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ciudad.street": {
+   "en": "street",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ciudad.park": {
+   "en": "park",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ciudad.bank": {
+   "en": "bank",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "A1 Movers (para niños) no trae estos lugares ni indicaciones. El MCER pone en A1 que «comprende indicaciones breves y sencillas sobre cómo ir a un lugar» (Intercambiar información, A1, p. 80); la lección solo las pide y las entiende."
+  },
+  "voc.ciudad.supermarket": {
+   "en": "supermarket",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.ciudad.hospital": {
+   "en": "hospital",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.ciudad.restaurant": {
+   "en": "restaurant",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "A1 Movers (para niños) no trae estos lugares ni indicaciones. El MCER pone en A1 que «comprende indicaciones breves y sencillas sobre cómo ir a un lugar» (Intercambiar información, A1, p. 80); la lección solo las pide y las entiende."
+  },
+  "voc.ciudad.bus_stop": {
+   "en": "bus stop",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.ciudad.excuse_me": {
+   "en": "Excuse me",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.ciudad.near": {
+   "en": "near",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.ciudad.turn_left": {
+   "en": "turn left",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "A1 Movers (para niños) no trae estos lugares ni indicaciones. El MCER pone en A1 que «comprende indicaciones breves y sencillas sobre cómo ir a un lugar» (Intercambiar información, A1, p. 80); la lección solo las pide y las entiende."
+  },
+  "voc.ciudad.turn_right": {
+   "en": "turn right",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "A1 Movers (para niños) no trae estos lugares ni indicaciones. El MCER pone en A1 que «comprende indicaciones breves y sencillas sobre cómo ir a un lugar» (Intercambiar información, A1, p. 80); la lección solo las pide y las entiende."
+  },
+  "voc.ciudad.go_straight": {
+   "en": "go straight",
+   "lecciones": [
+    "a1-ciudad-lugares"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.clima.weather": {
+   "en": "weather",
+   "lecciones": [
+    "a1-clima-ahora",
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A1",
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.clima.whats_the_weather_like": {
+   "en": "What's the weather like?",
+   "lecciones": [
+    "a1-clima-ahora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.clima.sunny": {
+   "en": "sunny",
+   "lecciones": [
+    "a1-clima-ahora",
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A1",
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.clima.cloudy": {
+   "en": "cloudy",
+   "lecciones": [
+    "a1-clima-ahora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.clima.windy": {
+   "en": "windy",
+   "lecciones": [
+    "a1-clima-ahora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.clima.hot": {
+   "en": "hot",
+   "lecciones": [
+    "a1-clima-ahora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.clima.cold": {
+   "en": "cold",
+   "lecciones": [
+    "a1-clima-ahora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.clima.rain": {
+   "en": "rain",
+   "lecciones": [
+    "a1-clima-ahora",
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A1",
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.clima.snow": {
+   "en": "snow",
+   "lecciones": [
+    "a1-clima-ahora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.clima.umbrella": {
+   "en": "umbrella",
+   "lecciones": [
+    "a1-clima-ahora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "Vocabulario del tema Condiciones atmosféricas (MCER §4.2): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas» (Riqueza de vocabulario, A1, p. 109)."
+  },
+  "voc.clima.now": {
+   "en": "now / right now",
+   "lecciones": [
+    "a1-clima-ahora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.comida.want": {
+   "en": "want",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.comida.hungry": {
+   "en": "hungry",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.comida.water": {
+   "en": "water",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.comida.coffee": {
+   "en": "coffee",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.comida.milk": {
+   "en": "milk",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.comida.juice": {
+   "en": "juice",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.comida.bread": {
+   "en": "bread",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.comida.egg": {
+   "en": "egg",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.comida.rice": {
+   "en": "rice",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.comida.chicken": {
+   "en": "chicken",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.comida.fruit": {
+   "en": "fruit",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.comida.vegetables": {
+   "en": "vegetables",
+   "lecciones": [
+    "a1-comida-bebida"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.compras.store": {
+   "en": "store",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.compras.money": {
+   "en": "money",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "Las listas de Cambridge para A1 (A1 Movers) son para niños de 6 a 12 años y no traen dinero ni precios. El MCER sí los pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (Interactuar para obtener bienes y servicios, A1, p. 80). Lección en el límite A1/A2 (revision-mcer.md §5.3)."
+  },
+  "voc.compras.price": {
+   "en": "price",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "Las listas de Cambridge para A1 (A1 Movers) son para niños de 6 a 12 años y no traen dinero ni precios. El MCER sí los pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (Interactuar para obtener bienes y servicios, A1, p. 80). Lección en el límite A1/A2 (revision-mcer.md §5.3)."
+  },
+  "voc.compras.buy": {
+   "en": "buy",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.compras.pay": {
+   "en": "pay",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "Las listas de Cambridge para A1 (A1 Movers) son para niños de 6 a 12 años y no traen dinero ni precios. El MCER sí los pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (Interactuar para obtener bienes y servicios, A1, p. 80). Lección en el límite A1/A2 (revision-mcer.md §5.3)."
+  },
+  "voc.compras.cheap": {
+   "en": "cheap",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "Las listas de Cambridge para A1 (A1 Movers) son para niños de 6 a 12 años y no traen dinero ni precios. El MCER sí los pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (Interactuar para obtener bienes y servicios, A1, p. 80). Lección en el límite A1/A2 (revision-mcer.md §5.3)."
+  },
+  "voc.compras.expensive": {
+   "en": "expensive",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "Las listas de Cambridge para A1 (A1 Movers) son para niños de 6 a 12 años y no traen dinero ni precios. El MCER sí los pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (Interactuar para obtener bienes y servicios, A1, p. 80). Lección en el límite A1/A2 (revision-mcer.md §5.3)."
+  },
+  "voc.compras.cash": {
+   "en": "cash",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "Las listas de Cambridge para A1 (A1 Movers) son para niños de 6 a 12 años y no traen dinero ni precios. El MCER sí los pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (Interactuar para obtener bienes y servicios, A1, p. 80). Lección en el límite A1/A2 (revision-mcer.md §5.3)."
+  },
+  "voc.compras.card": {
+   "en": "card",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "Las listas de Cambridge para A1 (A1 Movers) son para niños de 6 a 12 años y no traen dinero ni precios. El MCER sí los pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (Interactuar para obtener bienes y servicios, A1, p. 80). Lección en el límite A1/A2 (revision-mcer.md §5.3)."
+  },
+  "voc.compras.here_you_are": {
+   "en": "Here you are.",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.compras.thirty_to_fifty": {
+   "en": "thirty, forty, fifty",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.compras.sixty_to_one_hundred": {
+   "en": "sixty, seventy, eighty, ninety, one hundred",
+   "lecciones": [
+    "a1-compras"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.familia.family": {
+   "en": "family",
+   "lecciones": [
+    "a1-familia-amigos"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.familia.mother": {
+   "en": "mother",
+   "lecciones": [
+    "a1-familia-amigos"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.familia.father": {
+   "en": "father",
+   "lecciones": [
+    "a1-familia-amigos"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.familia.parents": {
+   "en": "parents",
+   "lecciones": [
+    "a1-familia-amigos"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.familia.brother": {
+   "en": "brother",
+   "lecciones": [
+    "a1-familia-amigos"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.familia.sister": {
+   "en": "sister",
+   "lecciones": [
+    "a1-familia-amigos"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.familia.son": {
+   "en": "son",
+   "lecciones": [
+    "a1-familia-amigos"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.familia.daughter": {
+   "en": "daughter",
+   "lecciones": [
+    "a1-familia-amigos"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.familia.grandmother": {
+   "en": "grandmother",
+   "lecciones": [
+    "a1-familia-amigos"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.familia.friend": {
+   "en": "friend",
+   "lecciones": [
+    "a1-familia-amigos"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.personal.name": {
+   "en": "name",
+   "lecciones": [
+    "a1-informacion-personal"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.personal.country": {
+   "en": "country",
+   "lecciones": [
+    "a1-informacion-personal"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.personal.city": {
+   "en": "city",
+   "lecciones": [
+    "a1-informacion-personal"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.personal.age": {
+   "en": "age",
+   "lecciones": [
+    "a1-informacion-personal"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.personal.years_old": {
+   "en": "… years old",
+   "lecciones": [
+    "a1-informacion-personal"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.personal.be_from": {
+   "en": "to be from…",
+   "lecciones": [
+    "a1-informacion-personal"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.personal.live_in": {
+   "en": "to live in…",
+   "lecciones": [
+    "a1-informacion-personal"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.personal.student": {
+   "en": "student",
+   "lecciones": [
+    "a1-informacion-personal"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "Vocabulario de identificación personal (MCER §4.2): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas» (Riqueza de vocabulario, A1, p. 109)."
+  },
+  "voc.personal.teacher": {
+   "en": "teacher",
+   "lecciones": [
+    "a1-informacion-personal"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.personal.phone_number": {
+   "en": "phone number",
+   "lecciones": [
+    "a1-informacion-personal",
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A1",
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.numeros.zero": {
+   "en": "zero",
+   "lecciones": [
+    "a1-numeros-hora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "A1 Movers (para niños) no trae la hora con minutos. El MCER la pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (p. 80). A1 Movers sí trae «o'clock»."
+  },
+  "voc.numeros.one_to_five": {
+   "en": "one, two, three, four, five",
+   "lecciones": [
+    "a1-numeros-hora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.numeros.six_to_ten": {
+   "en": "six, seven, eight, nine, ten",
+   "lecciones": [
+    "a1-numeros-hora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.numeros.eleven_to_fifteen": {
+   "en": "eleven, twelve, thirteen, fourteen, fifteen",
+   "lecciones": [
+    "a1-numeros-hora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.numeros.sixteen_to_twenty": {
+   "en": "sixteen, seventeen, eighteen, nineteen, twenty",
+   "lecciones": [
+    "a1-numeros-hora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.numeros.what_time_is_it": {
+   "en": "What time is it?",
+   "lecciones": [
+    "a1-numeros-hora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "palabra por palabra",
+   "nota": "A1 Movers (para niños) no trae la hora con minutos. El MCER la pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (p. 80). A1 Movers sí trae «o'clock»."
+  },
+  "voc.numeros.o_clock": {
+   "en": "… o'clock",
+   "lecciones": [
+    "a1-numeros-hora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.numeros.half_past": {
+   "en": "half past …",
+   "lecciones": [
+    "a1-numeros-hora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "palabra por palabra",
+   "nota": "A1 Movers (para niños) no trae la hora con minutos. El MCER la pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (p. 80). A1 Movers sí trae «o'clock»."
+  },
+  "voc.numeros.hour": {
+   "en": "hour",
+   "lecciones": [
+    "a1-numeros-hora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "A1 Movers (para niños) no trae la hora con minutos. El MCER la pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (p. 80). A1 Movers sí trae «o'clock»."
+  },
+  "voc.numeros.minute": {
+   "en": "minute",
+   "lecciones": [
+    "a1-numeros-hora"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "A1 Movers (para niños) no trae la hora con minutos. El MCER la pone en A1: «Se desenvuelve bien con números, cantidades, precios y horarios» (p. 80). A1 Movers sí trae «o'clock»."
+  },
+  "voc.ropa.shirt": {
+   "en": "shirt",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ropa.t_shirt": {
+   "en": "T-shirt",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ropa.pants": {
+   "en": "pants",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "justificada",
+   "faltan": [
+    "pants"
+   ],
+   "justificacion": "Forma de inglés de EE. UU. de «trousers», que sí está en Pre A1 Starters y en A2 Key. La app usa inglés de EE. UU. (la nota de la lección menciona «trousers»)."
+  },
+  "voc.ropa.dress": {
+   "en": "dress",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ropa.shoes": {
+   "en": "shoes",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ropa.jacket": {
+   "en": "jacket",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ropa.color": {
+   "en": "color",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ropa.red": {
+   "en": "red",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ropa.blue": {
+   "en": "blue",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ropa.black": {
+   "en": "black",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ropa.white": {
+   "en": "white",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ropa.green": {
+   "en": "green",
+   "lecciones": [
+    "a1-ropa-colores"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.rutina.get_up": {
+   "en": "get up",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.rutina.take_a_shower": {
+   "en": "take a shower",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.rutina.have_breakfast": {
+   "en": "have breakfast",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.rutina.go_to_school": {
+   "en": "go to school",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.rutina.have_lunch": {
+   "en": "have lunch",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.rutina.do_homework": {
+   "en": "do homework",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.rutina.go_home": {
+   "en": "go home",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.rutina.have_dinner": {
+   "en": "have dinner",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.rutina.go_to_bed": {
+   "en": "go to bed",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.rutina.every_day": {
+   "en": "every day",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.rutina.in_the_morning": {
+   "en": "in the morning / afternoon / evening",
+   "lecciones": [
+    "a1-rutina-diaria"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.rutina.weekend": {
+   "en": "weekend",
+   "lecciones": [
+    "a1-rutina-diaria",
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A1",
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.saludos.hello": {
+   "en": "Hello!",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.saludos.hi": {
+   "en": "Hi!",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.saludos.good_morning": {
+   "en": "Good morning!",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.saludos.good_afternoon": {
+   "en": "Good afternoon!",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.saludos.good_evening": {
+   "en": "Good evening!",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.saludos.goodbye": {
+   "en": "Goodbye!",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.saludos.see_you_later": {
+   "en": "See you later!",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión",
+   "nota": "Expresión hecha. El MCER la pone en A1: «Se presenta y utiliza saludos y expresiones de despedida básicos» (Conversación, A1, p. 77). Starters trae «see you» y «nice»."
+  },
+  "voc.saludos.how_are_you": {
+   "en": "How are you?",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.saludos.fine_thank_you": {
+   "en": "I'm fine, thank you.",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.saludos.my_name_is": {
+   "en": "My name is…",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.saludos.nice_to_meet_you": {
+   "en": "Nice to meet you!",
+   "lecciones": [
+    "a1-saludos-presentaciones"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "palabra por palabra",
+   "nota": "Expresión hecha. El MCER la pone en A1: «Se presenta y utiliza saludos y expresiones de despedida básicos» (Conversación, A1, p. 77). Starters trae «see you» y «nice»."
+  },
+  "voc.ocio.free_time": {
+   "en": "free time",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "palabra por palabra",
+   "nota": "«Tiempo libre y ocio» es un tema de comunicación del MCER (§4.2) y da nombre a la lección."
+  },
+  "voc.ocio.hobby": {
+   "en": "hobby",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ocio.play_soccer": {
+   "en": "play soccer",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.ocio.play_the_guitar": {
+   "en": "play the guitar",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.ocio.swim": {
+   "en": "swim",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ocio.dance": {
+   "en": "dance",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.ocio.sing": {
+   "en": "sing",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ocio.read": {
+   "en": "read",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ocio.cook": {
+   "en": "cook",
+   "lecciones": [
+    "a1-tiempo-libre",
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A1",
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.ocio.watch_tv": {
+   "en": "watch TV",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.ocio.listen_to_music": {
+   "en": "listen to music",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.ocio.ride_a_bike": {
+   "en": "ride a bike",
+   "lecciones": [
+    "a1-tiempo-libre"
+   ],
+   "niveles": [
+    "A1"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.sentimientos.feel": {
+   "en": "feel",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.happy": {
+   "en": "happy",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.sad": {
+   "en": "sad",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.angry": {
+   "en": "angry",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.tired": {
+   "en": "tired",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.bored": {
+   "en": "bored",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.excited": {
+   "en": "excited",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.worried": {
+   "en": "worried",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.nervous": {
+   "en": "nervous",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.surprised": {
+   "en": "surprised",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.afraid": {
+   "en": "afraid",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.sentimientos.suddenly": {
+   "en": "suddenly",
+   "lecciones": [
+    "a2-anecdotas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.excursion.storm": {
+   "en": "storm",
+   "lecciones": [
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.excursion.weather_tomorrow": {
+   "en": "What will the weather be like?",
+   "lecciones": [
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "palabra por palabra"
+  },
+  "voc.excursion.temperature": {
+   "en": "temperature",
+   "lecciones": [
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.excursion.degrees": {
+   "en": "degrees",
+   "lecciones": [
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.excursion.have_a_picnic": {
+   "en": "have a picnic",
+   "lecciones": [
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.excursion.sky": {
+   "en": "sky",
+   "lecciones": [
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.excursion.tree": {
+   "en": "tree",
+   "lecciones": [
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.excursion.flower": {
+   "en": "flower",
+   "lecciones": [
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.excursion.island": {
+   "en": "island",
+   "lecciones": [
+    "a2-clima-excursiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.lugares.countryside": {
+   "en": "countryside",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.lugares.village": {
+   "en": "village",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.lugares.mountain": {
+   "en": "mountain",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.lugares.river": {
+   "en": "river",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.lugares.lake": {
+   "en": "lake",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.lugares.forest": {
+   "en": "forest",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.lugares.building": {
+   "en": "building",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.lugares.bridge": {
+   "en": "bridge",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.lugares.quiet": {
+   "en": "quiet",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.lugares.noisy": {
+   "en": "noisy",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.lugares.safe": {
+   "en": "safe",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.lugares.dangerous": {
+   "en": "dangerous",
+   "lecciones": [
+    "a2-comparar-lugares"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.descripcion.tall": {
+   "en": "tall",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.descripcion.short": {
+   "en": "short",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.descripcion.slim": {
+   "en": "slim",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.descripcion.curly_hair": {
+   "en": "curly hair",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.descripcion.beard": {
+   "en": "beard",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.descripcion.glasses": {
+   "en": "glasses",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.descripcion.look_like": {
+   "en": "look like",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.descripcion.friendly": {
+   "en": "friendly",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.descripcion.shy": {
+   "en": "shy",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.descripcion.funny": {
+   "en": "funny",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.descripcion.useful": {
+   "en": "useful",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.descripcion.thing": {
+   "en": "thing",
+   "lecciones": [
+    "a2-describir-personas-cosas"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.ocio.yesterday": {
+   "en": "yesterday",
+   "lecciones": [
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.ocio.last_weekend": {
+   "en": "last weekend",
+   "lecciones": [
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.ocio.ago": {
+   "en": "… ago",
+   "lecciones": [
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.ocio.party": {
+   "en": "party",
+   "lecciones": [
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.ocio.visit": {
+   "en": "visit",
+   "lecciones": [
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.ocio.stay_at_home": {
+   "en": "stay at home",
+   "lecciones": [
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "palabra por palabra"
+  },
+  "voc.ocio.watch_a_movie": {
+   "en": "watch a movie",
+   "lecciones": [
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.ocio.clean_the_house": {
+   "en": "clean the house",
+   "lecciones": [
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.ocio.relax": {
+   "en": "relax",
+   "lecciones": [
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.ocio.play_video_games": {
+   "en": "play video games",
+   "lecciones": [
+    "a2-fin-de-semana"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.comunicacion.cell_phone": {
+   "en": "cell phone",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.comunicacion.call": {
+   "en": "call",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.comunicacion.answer_the_phone": {
+   "en": "answer the phone",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.comunicacion.leave_a_message": {
+   "en": "leave a message",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "palabra por palabra"
+  },
+  "voc.comunicacion.video_call": {
+   "en": "video call",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.comunicacion.message": {
+   "en": "message",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.comunicacion.send": {
+   "en": "send",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.comunicacion.receive": {
+   "en": "receive",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.comunicacion.email": {
+   "en": "email",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.comunicacion.letter": {
+   "en": "letter",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.comunicacion.address": {
+   "en": "address",
+   "lecciones": [
+    "a2-llamadas-mensajes"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.estudios.subject": {
+   "en": "subject",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.estudios.exam": {
+   "en": "exam",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.estudios.pass_an_exam": {
+   "en": "pass an exam",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "palabra por palabra"
+  },
+  "voc.estudios.fail": {
+   "en": "fail",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.estudios.grade": {
+   "en": "grade",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.estudios.project": {
+   "en": "project",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.estudios.library": {
+   "en": "library",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.estudios.dictionary": {
+   "en": "dictionary",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.estudios.form": {
+   "en": "form",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.estudios.fill_in": {
+   "en": "fill in",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.estudios.notes": {
+   "en": "notes",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.estudios.finish": {
+   "en": "finish",
+   "lecciones": [
+    "a2-novedades"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.planes.concert": {
+   "en": "concert",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.planes.band": {
+   "en": "band",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.planes.singer": {
+   "en": "singer",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.planes.actor": {
+   "en": "actor",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.planes.famous": {
+   "en": "famous",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.planes.show": {
+   "en": "show",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.planes.news": {
+   "en": "news",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.viajes.ticket": {
+   "en": "ticket",
+   "lecciones": [
+    "a2-planes-futuro",
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.planes.tonight": {
+   "en": "tonight",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.planes.tomorrow": {
+   "en": "tomorrow",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.planes.next_week": {
+   "en": "next week",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "palabra por palabra"
+  },
+  "voc.planes.maybe": {
+   "en": "maybe",
+   "lecciones": [
+    "a2-planes-futuro"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.salud.sick": {
+   "en": "sick",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.salud.headache": {
+   "en": "headache",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.salud.stomachache": {
+   "en": "stomachache",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.salud.cough": {
+   "en": "a cough",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.salud.a_cold": {
+   "en": "a cold",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.salud.hurt": {
+   "en": "hurt",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.salud.medicine": {
+   "en": "medicine",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.salud.dentist": {
+   "en": "dentist",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.salud.exercise": {
+   "en": "exercise",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.salud.healthy": {
+   "en": "healthy",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.salud.rest": {
+   "en": "rest",
+   "lecciones": [
+    "a2-salud-ejercicio"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.servicios.post_office": {
+   "en": "post office",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.servicios.pharmacy": {
+   "en": "pharmacy",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.servicios.hairdresser": {
+   "en": "hairdresser",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "justificada",
+   "faltan": [
+    "hairdresser"
+   ],
+   "justificacion": "No está en las listas (sí «hair»). Servicio cotidiano del tema Servicios públicos (MCER §4.2), para la función A2 «Interactuar para obtener bienes y servicios» (p. 80)."
+  },
+  "voc.servicios.atm": {
+   "en": "ATM",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "justificada",
+   "faltan": [
+    "atm"
+   ],
+   "justificacion": "No está en las listas (sí «cash» y «bank»). Se conserva porque es la forma habitual de nombrar el cajero en el tema Servicios públicos (MCER §4.2) y lo exige la función A2 «Interactuar para obtener bienes y servicios» (p. 80)."
+  },
+  "voc.servicios.receipt": {
+   "en": "receipt",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.servicios.wait_in_line": {
+   "en": "wait in line",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.servicios.open": {
+   "en": "open",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.servicios.closed": {
+   "en": "closed",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.servicios.kilo": {
+   "en": "kilo",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "nota": "Apéndice 1 de A2 Key: «kilo(gram[me])/kg»."
+  },
+  "voc.servicios.liter": {
+   "en": "liter",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.servicios.bottle": {
+   "en": "bottle",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.servicios.package": {
+   "en": "package",
+   "lecciones": [
+    "a2-servicios-compras"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "justificada",
+   "faltan": [
+    "package"
+   ],
+   "justificacion": "No está en las listas. Tema Servicios públicos, correo (MCER §4.2), y A2 «Toma mensajes breves y sencillos…» (p. 82). La propia lista A2 Key aclara que no es exhaustiva."
+  },
+  "voc.trabajo.job": {
+   "en": "job",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.trabajo.work": {
+   "en": "work",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.trabajo.doctor": {
+   "en": "doctor",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.trabajo.nurse": {
+   "en": "nurse",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.trabajo.engineer": {
+   "en": "engineer",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.trabajo.waiter": {
+   "en": "waiter / waitress",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.trabajo.office": {
+   "en": "office",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.trabajo.company": {
+   "en": "company",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.trabajo.boss": {
+   "en": "boss",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.trabajo.meeting": {
+   "en": "meeting",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.trabajo.customer": {
+   "en": "customer",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Key",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.trabajo.factory": {
+   "en": "factory",
+   "lecciones": [
+    "a2-trabajo-profesiones"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.viajes.plane": {
+   "en": "plane",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.viajes.train": {
+   "en": "train",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.viajes.bus": {
+   "en": "bus",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.viajes.by_bus": {
+   "en": "by bus / by plane / by car",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "palabra por palabra"
+  },
+  "voc.viajes.airport": {
+   "en": "airport",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.viajes.trip": {
+   "en": "trip",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.viajes.travel": {
+   "en": "travel",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A1 Movers",
+   "nivel_cambridge": "A1",
+   "modo": "expresión"
+  },
+  "voc.viajes.suitcase": {
+   "en": "suitcase",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.viajes.hotel": {
+   "en": "hotel",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "A2 Flyers",
+   "nivel_cambridge": "A2",
+   "modo": "expresión"
+  },
+  "voc.viajes.beach": {
+   "en": "beach",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  },
+  "voc.viajes.take_a_photo": {
+   "en": "take a photo",
+   "lecciones": [
+    "a2-viajes-transporte"
+   ],
+   "niveles": [
+    "A2"
+   ],
+   "estado": "en_lista",
+   "lista": "Pre A1 Starters",
+   "nivel_cambridge": "Pre A1",
+   "modo": "expresión"
+  }
+ }
+}

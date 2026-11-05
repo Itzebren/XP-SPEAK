@@ -1,5 +1,5 @@
 {
- "version_contenido": "ffc5eb32a003",
+ "version_contenido": "6a7e609a4e3a",
  "niveles": {
   "A1": [
    {
@@ -126,7 +126,7 @@
    },
    {
     "id": "a2-trabajo-profesiones",
-    "version": 1,
+    "version": 2,
     "orden": 4,
     "prerequisito_id": "a2-anecdotas",
     "titulo": "Trabajo y profesiones",
@@ -134,7 +134,7 @@
    },
    {
     "id": "a2-salud-ejercicio",
-    "version": 1,
+    "version": 2,
     "orden": 5,
     "prerequisito_id": "a2-trabajo-profesiones",
     "titulo": "Salud y ejercicio",
@@ -174,7 +174,7 @@
    },
    {
     "id": "a2-clima-excursiones",
-    "version": 1,
+    "version": 2,
     "orden": 10,
     "prerequisito_id": "a2-novedades",
     "titulo": "Clima y excursiones",
@@ -182,7 +182,7 @@
    },
    {
     "id": "a2-servicios-compras",
-    "version": 1,
+    "version": 2,
     "orden": 11,
     "prerequisito_id": "a2-clima-excursiones",
     "titulo": "Servicios y compras",
@@ -4196,7 +4196,7 @@
   },
   {
    "id": "a2-trabajo-profesiones",
-   "version": 1,
+   "version": 2,
    "nivel_mcer": "A2",
    "modulo_tematico": "Trabajo y profesiones",
    "orden": 4,
@@ -4291,11 +4291,10 @@
        "audio": "tts:customer"
       },
       {
-       "concepto_id": "voc.trabajo.part_time",
-       "en": "part-time",
-       "es": "de medio tiempo",
-       "audio": "tts:a part-time job",
-       "nota": "Lo contrario es 'full-time' (de tiempo completo)."
+       "concepto_id": "voc.trabajo.factory",
+       "en": "factory",
+       "es": "fábrica",
+       "audio": "tts:factory"
       }
      ]
     },
@@ -4323,18 +4322,18 @@
     },
     {
      "tipo": "dialogo",
-     "titulo": "Trabajo de medio tiempo",
+     "titulo": "¿A qué te dedicas?",
      "audio": "tts:dialogo",
      "lineas": [
       {
        "hablante": "Laura",
-       "en": "What do you do, Luis?",
-       "es": "¿A qué te dedicas, Luis?"
+       "en": "I work in a factory. What do you do, Luis?",
+       "es": "Yo trabajo en una fábrica. ¿A qué te dedicas, Luis?"
       },
       {
        "hablante": "Luis",
-       "en": "I'm a student, but I have a part-time job. I work at a restaurant.",
-       "es": "Soy estudiante, pero tengo un trabajo de medio tiempo. Trabajo en un restaurante."
+       "en": "I'm a student, but I also have a job. I work at a restaurant.",
+       "es": "Soy estudiante, pero también tengo trabajo. Trabajo en un restaurante."
       },
       {
        "hablante": "Laura",
@@ -4437,15 +4436,15 @@
       {
        "id": "q7",
        "tipo": "opcion_multiple",
-       "concepto_id": "voc.trabajo.part_time",
-       "enunciado": "'A part-time job' es…",
+       "concepto_id": "voc.trabajo.factory",
+       "enunciado": "'A factory' es…",
        "opciones": [
-        "un trabajo de tiempo completo",
-        "un trabajo en una fiesta",
-        "un trabajo de medio tiempo"
+        "una farmacia",
+        "una fiesta",
+        "una fábrica"
        ],
        "respuesta_correcta": 2,
-       "feedback_error": "'Part-time' = de medio tiempo. 'Full-time' = de tiempo completo."
+       "feedback_error": "'Factory' = fábrica: un lugar donde se hacen productos."
       },
       {
        "id": "q8",
@@ -4481,7 +4480,7 @@
   },
   {
    "id": "a2-salud-ejercicio",
-   "version": 1,
+   "version": 2,
    "nivel_mcer": "A2",
    "modulo_tematico": "Salud y ejercicio",
    "orden": 5,
@@ -4521,10 +4520,10 @@
        "audio": "tts:stomachache"
       },
       {
-       "concepto_id": "voc.salud.sore_throat",
-       "en": "sore throat",
-       "es": "dolor de garganta",
-       "audio": "tts:a sore throat"
+       "concepto_id": "voc.salud.cough",
+       "en": "a cough",
+       "es": "tos",
+       "audio": "tts:I've got a cough."
       },
       {
        "concepto_id": "voc.salud.a_cold",
@@ -4607,8 +4606,8 @@
      "lineas": [
       {
        "hablante": "Mateo",
-       "en": "I feel sick. I've got a headache and a sore throat.",
-       "es": "Me siento mal. Me duele la cabeza y la garganta."
+       "en": "I feel sick. I've got a headache and a cough.",
+       "es": "Me siento mal. Me duele la cabeza y tengo tos."
       },
       {
        "hablante": "Sofía",
@@ -4734,9 +4733,9 @@
          "der": "dolor de cabeza"
         },
         {
-         "concepto_id": "voc.salud.sore_throat",
-         "izq": "sore throat",
-         "der": "dolor de garganta"
+         "concepto_id": "voc.salud.cough",
+         "izq": "a cough",
+         "der": "tos"
         },
         {
          "concepto_id": "voc.salud.dentist",
@@ -5861,7 +5860,7 @@
   },
   {
    "id": "a2-clima-excursiones",
-   "version": 1,
+   "version": 2,
    "nivel_mcer": "A2",
    "modulo_tematico": "Clima y excursiones",
    "orden": 10,
@@ -5907,10 +5906,11 @@
        "audio": "tts:storm"
       },
       {
-       "concepto_id": "voc.excursion.weather_forecast",
-       "en": "weather forecast",
-       "es": "pronóstico del tiempo",
-       "audio": "tts:the weather forecast"
+       "concepto_id": "voc.excursion.weather_tomorrow",
+       "en": "What will the weather be like?",
+       "es": "¿Cómo va a estar el clima?",
+       "audio": "tts:What will the weather be like tomorrow?",
+       "nota": "Para preguntar por el clima de hoy: What's the weather like?"
       },
       {
        "concepto_id": "voc.excursion.temperature",
@@ -5981,13 +5981,13 @@
      "lineas": [
       {
        "hablante": "Ana",
-       "en": "What's the weather forecast for Saturday?",
-       "es": "¿Cuál es el pronóstico del tiempo para el sábado?"
+       "en": "What will the weather be like on Saturday?",
+       "es": "¿Cómo va a estar el clima el sábado?"
       },
       {
        "hablante": "Mateo",
-       "en": "It says it will be sunny, twenty-five degrees.",
-       "es": "Dice que va a estar soleado, a veinticinco grados."
+       "en": "The radio says it will be sunny, twenty-five degrees.",
+       "es": "En el radio dicen que va a estar soleado, a veinticinco grados."
       },
       {
        "hablante": "Ana",
@@ -6086,15 +6086,15 @@
       {
        "id": "q7",
        "tipo": "opcion_multiple",
-       "concepto_id": "voc.excursion.weather_forecast",
-       "enunciado": "¿Qué es el 'weather forecast'?",
+       "concepto_id": "voc.excursion.weather_tomorrow",
+       "enunciado": "¿Qué significa 'What will the weather be like tomorrow?'?",
        "opciones": [
-        "la temperatura",
-        "el pronóstico del tiempo",
-        "una tormenta"
+        "¿Qué temperatura hace hoy?",
+        "¿Cómo va a estar el clima mañana?",
+        "¿Va a haber tormenta?"
        ],
        "respuesta_correcta": 1,
-       "feedback_error": "'Weather forecast' = pronóstico del tiempo: dice cómo estará el clima."
+       "feedback_error": "'What will the weather be like…?' pregunta cómo va a estar el clima: will = futuro."
       },
       {
        "id": "q8",
@@ -6130,7 +6130,7 @@
   },
   {
    "id": "a2-servicios-compras",
-   "version": 1,
+   "version": 2,
    "nivel_mcer": "A2",
    "modulo_tematico": "Servicios y compras",
    "orden": 11,
@@ -6263,8 +6263,8 @@
      "lineas": [
       {
        "hablante": "Laura",
-       "en": "Good morning. I need some medicine for a sore throat.",
-       "es": "Buenos días. Necesito una medicina para el dolor de garganta."
+       "en": "Good morning. I need some medicine for a cough.",
+       "es": "Buenos días. Necesito una medicina para la tos."
       },
       {
        "hablante": "Farmacéutico",

@@ -29,7 +29,9 @@
 6. **Asigna los `concepto_id`** (§5): reutiliza los que ya existen, crea
    nuevos solo para lo que se enseña por primera vez.
 7. **Llena `autoria.fuentes`** con el tema del MCER y los descriptores
-   textuales, con página (§8.3). El linter lo exige.
+   textuales, con página (§8.3). El linter lo exige. Luego **verifica el
+   vocabulario contra Cambridge** y registra cada palabra en
+   `content/verificacion-cambridge.json` (§8.4); el linter también lo exige.
 8. **Corre las validaciones:**
    ```bash
    npm run lint:content   # schema + reglas semánticas (§7)
@@ -316,7 +318,8 @@ dos, y el usuario vería el mismo punto débil repetido.
 
 **Fuente única: el MCER.** Consejo de Europa (2001), *Marco común europeo de
 referencia para las lenguas*, trad. Instituto Cervantes (2002):
-<https://cvc.cervantes.es/ensenanza/biblioteca_ele/marco/cvc_mer.pdf>. Las
+<https://cvc.cervantes.es/ensenanza/biblioteca_ele/marco/cvc_mer.pdf>
+(caído desde nov. 2026; copia archivada: <http://web.archive.org/web/20261005063356/https://cvc.cervantes.es/Ensenanza/biblioteca_ele/marco/cvc_mer.pdf>). Las
 páginas son las impresas en esa edición. La revisión completa está en
 [`revision-mcer.md`](revision-mcer.md).
 
@@ -359,6 +362,20 @@ A1" ni "gramática A2 del MCER".
   repasan en espiral y cualquier caso límite de nivel.
 - **No copies** oraciones, diálogos ni ejercicios de libros o exámenes. Los
   textos se escriben desde cero (`lecciones-diseno.md` §8.5).
+
+### 8.4 Verificación del vocabulario con Cambridge
+
+Cambridge **no es fuente**: el tema y los can-do salen del MCER. Sus listas
+alineadas al MCER sirven para comprobar el nivel de cada palabra:
+- A2 Key Vocabulary List (2025);
+- Pre A1 Starters, A1 Movers and A2 Flyers Wordlists (2025).
+Para cada palabra nueva:
+1. Búscala en las listas. Si está, registra en el JSON la lista de menor nivel.
+2. En una lección A1, si solo aparece en listas A2, cita el descriptor A1 del
+   MCER que la respalda. Las listas A1 de Cambridge son para niños.
+3. Si no aparece en ninguna lista, busca otra palabra que sí aparezca. Si es
+   necesaria para la función, escribe su `justificacion`.
+El método completo está en [`verificacion-cambridge.md`](verificacion-cambridge.md).
 
 ---
 

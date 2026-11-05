@@ -1,6 +1,6 @@
 {
   "id": "a2-clima-excursiones",
-  "version": 1,
+  "version": 2,
   "nivel_mcer": "A2",
   "modulo_tematico": "Clima y excursiones",
   "orden": 10,
@@ -16,7 +16,8 @@
       "MCER, Escuchar avisos e instrucciones, A2 (p. 70): «Capta la idea principal de mensajes y declaraciones breves, claras y sencillas.»",
       "MCER, Monólogo sostenido: descripción de experiencias, A2 (p. 62): «Describe planes y citas, costumbres, actividades habituales o pertenecientes al pasado y experiencias personales.»",
       "MCER, Conversación, A2 (p. 77): «Realiza invitaciones y sugerencias, y responde a las que le hacen; se disculpa y responde a las disculpas que le presentan.»",
-      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»"
+      "MCER, Riqueza de vocabulario, A2 (p. 109): «Tiene suficiente vocabulario para desenvolverse en actividades habituales y en transacciones cotidianas que comprenden situaciones y temas conocidos.»",
+      "Verificación del vocabulario (no es la fuente del contenido): 12 de 12 palabras están en listas de Cambridge alineadas al MCER (A2 Key Vocabulary List, 2025; Pre A1 Starters, A1 Movers and A2 Flyers Wordlists, 2025). Detalle en content/verificacion-cambridge.json."
     ],
     "notas": "Ejemplos, diálogo y ejercicios originales. Reencuadrada desde 'Naturaleza' (medio ambiente no es tema del MCER §4.2). El primer condicional se usa para planes que dependen del clima, no para hipótesis (hacer hipótesis es B2, Conversación informal, p. 77). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
   },
@@ -34,7 +35,7 @@
         { "concepto_id": "voc.clima.sunny", "en": "sunny", "es": "soleado", "audio": "tts:It's sunny." },
         { "concepto_id": "voc.clima.rain", "en": "rain", "es": "lluvia / llover", "audio": "tts:It's raining." },
         { "concepto_id": "voc.excursion.storm", "en": "storm", "es": "tormenta", "audio": "tts:storm" },
-        { "concepto_id": "voc.excursion.weather_forecast", "en": "weather forecast", "es": "pronóstico del tiempo", "audio": "tts:the weather forecast" },
+        { "concepto_id": "voc.excursion.weather_tomorrow", "en": "What will the weather be like?", "es": "¿Cómo va a estar el clima?", "audio": "tts:What will the weather be like tomorrow?", "nota": "Para preguntar por el clima de hoy: What's the weather like?" },
         { "concepto_id": "voc.excursion.temperature", "en": "temperature", "es": "temperatura", "audio": "tts:temperature" },
         { "concepto_id": "voc.excursion.degrees", "en": "degrees", "es": "grados", "audio": "tts:twenty-five degrees" }
       ]
@@ -62,8 +63,8 @@
       "titulo": "Planes para el sábado",
       "audio": "tts:dialogo",
       "lineas": [
-        { "hablante": "Ana", "en": "What's the weather forecast for Saturday?", "es": "¿Cuál es el pronóstico del tiempo para el sábado?" },
-        { "hablante": "Mateo", "en": "It says it will be sunny, twenty-five degrees.", "es": "Dice que va a estar soleado, a veinticinco grados." },
+        { "hablante": "Ana", "en": "What will the weather be like on Saturday?", "es": "¿Cómo va a estar el clima el sábado?" },
+        { "hablante": "Mateo", "en": "The radio says it will be sunny, twenty-five degrees.", "es": "En el radio dicen que va a estar soleado, a veinticinco grados." },
         { "hablante": "Ana", "en": "Great! If it's sunny, we'll have a picnic in the park.", "es": "¡Qué bien! Si hace sol, haremos un día de campo en el parque." },
         { "hablante": "Mateo", "en": "And if it rains?", "es": "¿Y si llueve?" },
         { "hablante": "Ana", "en": "If there's a storm, we'll stay at home and watch a movie.", "es": "Si hay tormenta, nos quedaremos en casa a ver una película." }
@@ -130,11 +131,11 @@
         {
           "id": "q7",
           "tipo": "opcion_multiple",
-          "concepto_id": "voc.excursion.weather_forecast",
-          "enunciado": "¿Qué es el 'weather forecast'?",
-          "opciones": ["la temperatura", "el pronóstico del tiempo", "una tormenta"],
+          "concepto_id": "voc.excursion.weather_tomorrow",
+          "enunciado": "¿Qué significa 'What will the weather be like tomorrow?'?",
+          "opciones": ["¿Qué temperatura hace hoy?", "¿Cómo va a estar el clima mañana?", "¿Va a haber tormenta?"],
           "respuesta_correcta": 1,
-          "feedback_error": "'Weather forecast' = pronóstico del tiempo: dice cómo estará el clima."
+          "feedback_error": "'What will the weather be like…?' pregunta cómo va a estar el clima: will = futuro."
         },
         {
           "id": "q8",

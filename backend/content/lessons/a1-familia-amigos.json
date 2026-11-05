@@ -15,7 +15,8 @@
       "MCER (Consejo de Europa, 2001; trad. Instituto Cervantes, 2002), §4.2 Temas de comunicación (pp. 55–56): Identificación personal; Relaciones con otras personas.",
       "MCER, Cuadro 1 (escala global), A1 (p. 26): «Puede presentarse a sí mismo y a otros, pedir y dar información personal básica sobre su domicilio, sus pertenencias y las personas que conoce.»",
       "MCER, Cuadro 2 (autoevaluación), Comprensión auditiva, A1 (p. 30): «Reconozco palabras y expresiones muy básicas que se usan habitualmente, relativas a mí mismo, a mi familia y a mi entorno inmediato cuando se habla despacio y con claridad.»",
-      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»"
+      "MCER, Riqueza de vocabulario, A1 (p. 109): «Tiene un repertorio básico de palabras y frases aisladas relativas a situaciones concretas.»",
+      "Verificación del vocabulario (no es la fuente del contenido): 10 de 10 palabras están en listas de Cambridge alineadas al MCER (A2 Key Vocabulary List, 2025; Pre A1 Starters, A1 Movers and A2 Flyers Wordlists, 2025). Detalle en content/verificacion-cambridge.json."
     ],
     "notas": "Ejemplos, diálogo y ejercicios originales. 'to be' se repasa en espiral (mismo concepto_id que la lección 1). El MCER no asigna palabras ni estructuras gramaticales a cada nivel (pp. 28 y 111): el vocabulario y la gramática son selección del equipo, acotada por los descriptores citados."
   },
