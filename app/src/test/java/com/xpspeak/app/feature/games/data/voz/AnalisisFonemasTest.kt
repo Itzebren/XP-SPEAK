@@ -131,4 +131,51 @@ class AnalisisFonemasTest {
         assertEquals(listOf("g" to 100, "ʊ" to 100, "d" to 83), evaluacion.palabras[0].fonemas.map { it.fonema to it.puntaje })
         assertTrue(Pronunciacion.esAcierto(evaluacion))
     }
+
+    @Test
+    fun `rescata silabas, prosodia, palabras de mas y el ruido del audio`() {
+        val json = """{"SNR":8.4,"NBest":[{"Confidence":0.95,
+          "PronunciationAssessment":{"AccuracyScore":85,"FluencyScore":94,"ProsodyScore":62,"CompletenessScore":90,"PronScore":87},
+          "Words":[
+            {"Word":"last","PronunciationAssessment":{"AccuracyScore":94,"ErrorType":"None",
+              "Feedback":{"Prosody":{"Break":{"ErrorTypes":["None"]},"Intonation":{"ErrorTypes":["Monotone"]}}}}},
+            {"Word":"weekend","PronunciationAssessment":{"AccuracyScore":76,"ErrorType":"None",
+              "Feedback":{"Prosody":{"Break":{"ErrorTypes":["UnexpectedBreak"]},"Intonation":{"ErrorTypes":["Monotone"]}}}},
+             "Syllables":[{"Syllable":"wi","Grapheme":"wee","PronunciationAssessment":{"AccuracyScore":100}},
+                          {"Syllable":"kɛnd","Grapheme":"kend","PronunciationAssessment":{"AccuracyScore":71}}]},
+            {"Word":"the","PronunciationAssessment":{"AccuracyScore":79,"ErrorType":"Insertion",
+              "Feedback":{"Prosody":{"Break":{"ErrorTypes":["None"]},"Intonation":{"ErrorTypes":["Monotone"]}}}}},
+            {"Word":"i","PronunciationAssessment":{"AccuracyScore":0,"ErrorType":"Omission"}},
+            {"Word":"went","PronunciationAssessment":{"AccuracyScore":90,"ErrorType":"None",
+              "Feedback":{"Prosody":{"Break":{"ErrorTypes":["None"]},"Intonation":{"ErrorTypes":["None"]}}}}}
+          ]}]}"""
+        val r = AnalisisFonemas.evaluar(json, "Last weekend the went")!!
+        assertEquals(62, r.prosodia)
+        assertEquals(8, r.ruidoDb)
+        assertTrue(r.audioDificil)
+        assertEquals(listOf("the"), r.palabrasDeMas)
+        assertTrue(r.monotono)
+        assertEquals(listOf("last", "weekend", "i", "went"), r.palabras.map { it.palabra })
+        val weekend = r.palabras[1]
+        assertEquals(listOf("wee", "kend"), weekend.silabas.map { it.grafema })
+        assertEquals(71, weekend.silabas[1].puntaje)
+        assertTrue(weekend.pausaInesperada)
+        assertEquals("the", r.palabras[2].dichaEnSuLugar)
+    }
+
+    @Test
+    fun `el fonema sustituido queda guardado para explicarlo`() {
+        val r = evaluacion(json(palabra("the", 40, "None", fonema("ð", 16, "b" to 100, "ð" to 20), fonema("ə", 90, "ə" to 90))))
+        val fonemas = r.palabras.single().fonemas
+        assertEquals("b", fonemas[0].oido)
+        assertNull(fonemas[1].oido)
+    }
+
+    @Test
+    fun `si Azure transcribe sin calificar no se inventa un cero`() {
+        val sinCalificar = """{"NBest":[{"Confidence":0.9,"Display":"Weekend.","Words":[{"Word":"weekend","Offset":1,"Duration":2}]}]}"""
+        assertFalse(AnalisisFonemas.calificado(sinCalificar))
+        assertNull(AnalisisFonemas.evaluar(sinCalificar, "Weekend."))
+        assertTrue(AnalisisFonemas.calificado(json(palabra("party", 95))))
+    }
 }

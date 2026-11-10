@@ -82,6 +82,8 @@ class EvaluadorAzure @Inject constructor() {
         // Qué sonido se oyó en lugar de cada sonido esperado (AnalisisFonemas).
         evaluacion.setPhonemeAlphabet("IPA")
         evaluacion.setNBestPhonemeCount(5)
+        // Entonación, ritmo y pausas (ProsodyScore y avisos por palabra) para la retroalimentación.
+        evaluacion.enableProsodyAssessment()
         // Lo que va entendiendo y cuándo detecta voz: la pantalla lo muestra al momento.
         reconocedor.recognizing.addEventListener { _, evento -> sesion.oyendo(evento.result.text.orEmpty()) }
         reconocedor.speechStartDetected.addEventListener { _, _ -> sesion.vozDetectada() }
@@ -110,9 +112,10 @@ class EvaluadorAzure @Inject constructor() {
                 }
                 resultado.use {
                     when (it.reason) {
-                        ResultReason.RecognizedSpeech -> ConversorAzure.convertir(it, referencia).also { _ -> medidor.registrar(it) }
+                        ResultReason.RecognizedSpeech -> ConversorAzure.convertir(it, referencia)
+                            .copy(vozBaja = microfono.vozBaja).also { _ -> medidor.registrar(it) }
                         // Silencio o ruido: "no fue legible", se pide repetir (CU-05 A1).
-                        ResultReason.NoMatch -> ConversorAzure.noLegible(referencia)
+                        ResultReason.NoMatch -> ConversorAzure.noLegible(referencia).copy(vozBaja = microfono.vozBaja)
                         else -> throw FalloAzure("Azure canceló el reconocimiento (${it.reason})")
                     }
                 }

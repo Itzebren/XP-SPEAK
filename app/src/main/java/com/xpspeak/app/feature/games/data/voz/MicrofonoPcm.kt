@@ -9,8 +9,9 @@ import java.nio.ByteOrder
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Lee el micrófono como PCM de 16 kHz / 16 bits / mono (el formato que pide Azure) y lo
- * empuja al stream del reconocedor, avisando el volumen a la [SesionEscucha] para las
+ * Lee el micrófono como PCM de 16 kHz / 16 bits / mono (el formato que pide Azure), le aplica
+ * [GananciaAutomatica] (la fuente VOICE_RECOGNITION no trae AGC y en tablets la voz llegaba casi
+ * muda) y lo empuja al stream del reconocedor, avisando el volumen a la [SesionEscucha] para las
  * barras de «te escucho». Al [cerrar] se suelta el micrófono y se cierra el stream: Azure
  * entiende que la frase terminó y califica lo que ya recibió. Nada se guarda (RN-04).
  */
@@ -18,6 +19,11 @@ internal class MicrofonoPcm(private val flujo: PushAudioInputStream, private val
     private var grabadora: AudioRecord? = null
     @Volatile private var abierto = false
     private val cerrado = AtomicBoolean(false)
+    private val ganancia = GananciaAutomatica()
+
+    /** La voz llegó muy bajita aun antes de amplificarla: se sugiere acercarse al micrófono. */
+    val vozBaja: Boolean
+        get() = ganancia.rmsVozOriginal in 0.1..GananciaAutomatica.RMS_VOZ_BAJA
 
     /**
      * Abre el micrófono. Lanza [SecurityException] sin permiso y [EvaluadorAzure.FalloAzure] si
@@ -51,6 +57,7 @@ internal class MicrofonoPcm(private val flujo: PushAudioInputStream, private val
             val leidas = lector.read(muestras, 0, muestras.size)
             if (leidas < 0) break // el micrófono se soltó
             if (leidas == 0) continue
+            ganancia.procesar(muestras, leidas)
             sesion.nivel(NivelAudio.deMuestras(muestras, leidas))
             ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().put(muestras, 0, leidas)
             if (!abierto) break

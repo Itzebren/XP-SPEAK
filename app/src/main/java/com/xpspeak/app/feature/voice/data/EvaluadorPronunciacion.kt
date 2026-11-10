@@ -10,12 +10,18 @@ import com.microsoft.cognitiveservices.speech.ResultReason
 import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechRecognizer
 import com.microsoft.cognitiveservices.speech.audio.AudioConfig
+import com.microsoft.cognitiveservices.speech.audio.AudioStreamFormat
+import com.microsoft.cognitiveservices.speech.audio.PushAudioInputStream
 import com.xpspeak.app.feature.games.data.voz.ConversorAzure
+import com.xpspeak.app.feature.games.data.voz.MicrofonoPcm
+import com.xpspeak.app.feature.games.data.voz.SesionEscucha
 import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
@@ -28,6 +34,9 @@ import kotlin.coroutines.resumeWithException
  * en vivo y la Ráfaga con voz. La evaluación de una frase de referencia (Eco Vocal,
  * Práctica, lecciones) está en EvaluadorAzure; ambos convierten con ConversorAzure
  * para que la calificación sea la misma en toda la app.
+ *
+ * El micrófono se lee con [MicrofonoPcm] (no con el del SDK) para aplicar la misma ganancia
+ * automática que en Eco Vocal: con el micrófono del SDK, en una tablet la voz llegaba casi muda.
  */
 class EvaluadorPronunciacion @Inject constructor(
     private val speechRepository: SpeechRepository
@@ -61,7 +70,10 @@ class EvaluadorPronunciacion @Inject constructor(
             // En una conversación la pausa natural entre ideas es más larga que al leer una frase.
             config.setProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, PAUSA_FIN_FRASE_MS.toString())
 
-            val audio = AudioConfig.fromDefaultMicrophoneInput()
+            val formato = AudioStreamFormat.getWaveFormatPCM(MicrofonoPcm.FRECUENCIA_HZ.toLong(), 16, 1)
+            val flujo = PushAudioInputStream.create(formato)
+            val audio = AudioConfig.fromStreamInput(flujo)
+            val microfono = MicrofonoPcm(flujo, SesionEscucha {})
             val pronConfig = PronunciationAssessmentConfig(
                 "",
                 PronunciationAssessmentGradingSystem.HundredMark,
@@ -71,6 +83,7 @@ class EvaluadorPronunciacion @Inject constructor(
             // IPA y los sonidos alternativos: lo mismo que Eco Vocal, para detectar sustituciones.
             pronConfig.setPhonemeAlphabet("IPA")
             pronConfig.setNBestPhonemeCount(5)
+            pronConfig.enableProsodyAssessment()
             val recognizer = SpeechRecognizer(config, audio)
             pronConfig.applyTo(recognizer)
             val medidor = MedidorVoz(recognizer, "voz.chat_en_vivo", PAUSA_FIN_FRASE_MS)
@@ -82,7 +95,7 @@ class EvaluadorPronunciacion @Inject constructor(
             }
 
             try {
-                coroutineScope {
+                conMicrofono(microfono) {
                     val frase = async {
                         suspendCancellableCoroutine { continuacion ->
                             recognizer.recognized.addEventListener { _, evento ->
@@ -108,13 +121,16 @@ class EvaluadorPronunciacion @Inject constructor(
                     }
                     withTimeoutOrNull(silencioInicialMs) { empezoAHablar.await() }
                         ?: run { frase.cancel(); throw SinVoz() }
-                    frase.await()
+                    frase.await().copy(vozBaja = microfono.vozBaja)
                 }
             } finally {
+                microfono.cerrar()
                 runCatching { recognizer.stopContinuousRecognitionAsync().get() }
                 pronConfig.close()
                 recognizer.close()
                 audio.close()
+                flujo.close()
+                formato.close()
                 config.close()
             }
         }
@@ -139,7 +155,10 @@ class EvaluadorPronunciacion @Inject constructor(
             // Respuestas de una palabra: cerrar la frase pronto para pasar al siguiente par.
             config.setProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, "500")
 
-            val audio = AudioConfig.fromDefaultMicrophoneInput()
+            val formato = AudioStreamFormat.getWaveFormatPCM(MicrofonoPcm.FRECUENCIA_HZ.toLong(), 16, 1)
+            val flujo = PushAudioInputStream.create(formato)
+            val audio = AudioConfig.fromStreamInput(flujo)
+            val microfono = MicrofonoPcm(flujo, SesionEscucha {})
             val recognizer = SpeechRecognizer(config, audio)
             val gramatica = PhraseListGrammar.fromRecognizer(recognizer)
             frases.forEach { gramatica.addPhrase(it) }
@@ -154,21 +173,40 @@ class EvaluadorPronunciacion @Inject constructor(
             }
 
             try {
-                suspendCancellableCoroutine<Unit> { continuacion ->
-                    recognizer.canceled.addEventListener { _, evento ->
-                        Log.e(TAG, "Canceled: ${evento.reason} – ${evento.errorDetails}")
-                        if (continuacion.isActive) {
-                            continuacion.resumeWithException(Exception("Error de voz: ${evento.errorDetails}"))
+                conMicrofono(microfono) {
+                    suspendCancellableCoroutine<Unit> { continuacion ->
+                        recognizer.canceled.addEventListener { _, evento ->
+                            Log.e(TAG, "Canceled: ${evento.reason} – ${evento.errorDetails}")
+                            if (continuacion.isActive) {
+                                continuacion.resumeWithException(Exception("Error de voz: ${evento.errorDetails}"))
+                            }
                         }
+                        recognizer.startContinuousRecognitionAsync()
                     }
-                    recognizer.startContinuousRecognitionAsync()
                 }
             } finally {
+                microfono.cerrar()
                 runCatching { recognizer.stopContinuousRecognitionAsync().get() }
                 gramatica.close()
                 recognizer.close()
                 audio.close()
+                flujo.close()
+                formato.close()
                 config.close()
+            }
+        }
+    }
+
+    /** Abre el micrófono con ganancia, lo transmite mientras corre [bloque] y lo suelta al final. */
+    private suspend fun <T> conMicrofono(microfono: MicrofonoPcm, bloque: suspend CoroutineScope.() -> T): T {
+        microfono.abrir()
+        return coroutineScope {
+            val captura = launch { microfono.transmitir() }
+            try {
+                bloque()
+            } finally {
+                microfono.cerrar()
+                captura.cancel()
             }
         }
     }

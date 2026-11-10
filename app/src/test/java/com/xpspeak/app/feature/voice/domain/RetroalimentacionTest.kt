@@ -43,7 +43,7 @@ class RetroalimentacionTest {
     @Test
     fun `sin errores se felicita`() {
         val r = evaluacion(PalabraEvaluada("hello", 90))
-        assertEquals("¡Excelente! Pronunciaste bien todas las palabras.", Retroalimentacion.resumen(r))
+        assertEquals("Pronunciaste bien todas las palabras.", Retroalimentacion.resumen(r))
     }
 
     @Test
@@ -86,5 +86,47 @@ class RetroalimentacionTest {
         assertTrue(Retroalimentacion.frasesDe("A2").isNotEmpty())
         assertTrue(Retroalimentacion.frasesDe("A1") != Retroalimentacion.frasesDe("A2"))
         assertEquals(Retroalimentacion.frasesDe("A1"), Retroalimentacion.frasesDe("desconocido"))
+    }
+
+    @Test
+    fun `los sonidos a practicar juntan los repetidos y van del peor al mejor`() {
+        val e = EvaluacionVoz(
+            60, 90,
+            listOf(
+                PalabraEvaluada("the", 40, fonemas = listOf(FonemaEvaluado("ð", 16, "b"), FonemaEvaluado("ə", 90))),
+                PalabraEvaluada("this", 50, fonemas = listOf(FonemaEvaluado("ð", 30), FonemaEvaluado("ɪ", 55), FonemaEvaluado("s", 95)))
+            ),
+            "the this", FuenteEvaluacion.AZURE
+        )
+        val sonidos = Retroalimentacion.sonidosAPracticar(e)
+        assertEquals(listOf("ð", "ɪ"), sonidos.map { it.fonema })
+        assertEquals(listOf("the", "this"), sonidos[0].palabras)
+        assertEquals("b", sonidos[0].oido)
+    }
+
+    @Test
+    fun `consejos de frase por completitud, palabras de mas, fluidez y entonacion`() {
+        val e = EvaluacionVoz(80, 90, listOf(PalabraEvaluada("hi", 80)), "hi", FuenteEvaluacion.AZURE,
+            fluidez = 50, completitud = 60, prosodia = 90, palabrasDeMas = listOf("um"), monotono = true)
+        assertEquals(4, Retroalimentacion.consejosFrase(e).size)
+    }
+
+    @Test
+    fun `con voz baja se le pide acercarse al microfono`() {
+        val e = EvaluacionVoz(40, 90, emptyList(), "hi", FuenteEvaluacion.AZURE, vozBaja = true)
+        assertTrue(Retroalimentacion.avisoAudio(e)!!.contains("bajito"))
+    }
+
+    @Test
+    fun `cada sonido del ingles tiene su consejo en espanol`() {
+        val ipaAzure = listOf("ɑ", "æ", "ʌ", "ɔ", "aʊ", "ə", "aɪ", "ɛ", "ɝ", "eɪ", "ɪ", "i", "oʊ", "ɔɪ", "ʊ", "u",
+            "b", "tʃ", "d", "ð", "f", "g", "h", "dʒ", "k", "l", "m", "n", "ŋ", "p", "ɹ", "s", "ʃ", "t", "θ", "v", "w", "j", "z", "ʒ")
+        assertTrue(ipaAzure.filter { GuiaSonidos.consejo(it) == null }.toString(), ipaAzure.all { GuiaSonidos.consejo(it) != null })
+    }
+
+    @Test
+    fun `la palabra dicha en lugar de otra se explica`() {
+        val p = PalabraEvaluada("I", 0, "Omission", dichaEnSuLugar = "the")
+        assertEquals("Dijiste «the» en lugar de «I».", Retroalimentacion.descripcion(p))
     }
 }

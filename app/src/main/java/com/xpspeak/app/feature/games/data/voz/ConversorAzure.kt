@@ -9,6 +9,7 @@ import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import com.xpspeak.app.feature.games.domain.FonemaEvaluado
 import com.xpspeak.app.feature.games.domain.FuenteEvaluacion
 import com.xpspeak.app.feature.games.domain.PalabraEvaluada
+import com.xpspeak.app.feature.games.domain.Pronunciacion
 import com.xpspeak.app.feature.games.domain.Texto
 import kotlin.math.roundToInt
 
@@ -27,7 +28,13 @@ object ConversorAzure {
      */
     fun convertir(resultado: SpeechRecognitionResult, referencia: String?): EvaluacionVoz {
         val json = resultado.properties.getProperty(PropertyId.SpeechServiceResponse_JsonResult).orEmpty()
-        AnalisisFonemas.evaluar(json, resultado.text.orEmpty())?.let { evaluacion ->
+        if (json.contains("NBest") && !AnalisisFonemas.calificado(json)) {
+            // Azure entendió pero no calificó: se compara lo oído con la frase en vez de dar 0.
+            Log.w(TAG, "Azure no devolvió evaluación de pronunciación")
+            val oido = listOf(resultado.text.orEmpty() to confianza(resultado) / 100f)
+            return if (referencia != null) Pronunciacion.evaluarTranscripcion(referencia, oido) else Pronunciacion.soloTranscripcion(oido)
+        }
+        AnalisisFonemas.evaluar(json, resultado.text.orEmpty())?.let { conFormaDe(it, referencia) }?.let { evaluacion ->
             evaluacion.palabras.filter { it.sonidos.isNotEmpty() }.forEach { Log.d(TAG, "${it.palabra} (${it.puntaje}): ${it.sonidos}") }
             return evaluacion
         }
@@ -56,6 +63,22 @@ object ConversorAzure {
             completitud = pa?.completenessScore?.roundToInt(),
             puntajeGeneral = pa?.pronunciationScore?.roundToInt()
         )
+    }
+
+    /**
+     * Azure devuelve las palabras en minúsculas («i», «monday»): se muestran como están escritas
+     * en la frase que se pidió leer («I», «Monday»).
+     */
+    fun conFormaDe(evaluacion: EvaluacionVoz, referencia: String?): EvaluacionVoz {
+        val escritas = referencia?.let { Regex("[\\p{L}\\p{N}']+").findAll(it).map { m -> m.value }.toList() } ?: return evaluacion
+        var siguiente = 0
+        val palabras = evaluacion.palabras.map { palabra ->
+            val i = (siguiente until escritas.size).firstOrNull { escritas[it].equals(palabra.palabra, ignoreCase = true) }
+                ?: return@map palabra
+            siguiente = i + 1
+            palabra.copy(palabra = escritas[i])
+        }
+        return evaluacion.copy(palabras = palabras)
     }
 
     /** Silencio o ruido: "no fue legible", se pide repetir (CU-05 A1). */

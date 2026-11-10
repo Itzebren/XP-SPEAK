@@ -5,8 +5,14 @@ import kotlin.math.roundToInt
 /** Quién evaluó: Azure da puntaje fonético; el teléfono solo compara palabras (o solo transcribe). */
 enum class FuenteEvaluacion { AZURE, DISPOSITIVO }
 
-/** Un sonido de la palabra en IPA (p. ej. "θ") con su precisión 0–100 (Azure, granularidad Phoneme). */
-data class FonemaEvaluado(val fonema: String = "", val puntaje: Int = 0)
+/**
+ * Un sonido de la palabra en IPA (p. ej. "θ") con su precisión 0–100 (Azure, granularidad
+ * Phoneme). [oido] es el sonido que Azure oyó en su lugar cuando no fue el esperado.
+ */
+data class FonemaEvaluado(val fonema: String = "", val puntaje: Int = 0, val oido: String? = null)
+
+/** Una sílaba de la palabra: cómo se escribe ([grafema], "kend"), cómo suena ([silaba], "kɛnd") y su precisión. */
+data class SilabaEvaluada(val silaba: String = "", val grafema: String = "", val puntaje: Int = 0)
 
 data class PalabraEvaluada(
     val palabra: String,
@@ -17,7 +23,15 @@ data class PalabraEvaluada(
     /** Sonidos mal dichos (IPA), p. ej. "/ɹ/ sonó como /ɾ/"; vacío si no hay detalle. */
     val sonidos: List<String> = emptyList(),
     /** Todos los sonidos de la palabra con su precisión, para el detalle al tocarla. */
-    val fonemas: List<FonemaEvaluado> = emptyList()
+    val fonemas: List<FonemaEvaluado> = emptyList(),
+    /** Sílabas con su precisión (Azure las da en inglés). */
+    val silabas: List<SilabaEvaluada> = emptyList(),
+    /** Prosodia: hiciste una pausa antes de esta palabra que no va. */
+    val pausaInesperada: Boolean = false,
+    /** Prosodia: faltó una pausa (p. ej. en una coma) antes de esta palabra. */
+    val faltaPausa: Boolean = false,
+    /** Palabra omitida que en su lugar se dijo otra: «the» en vez de «I». */
+    val dichaEnSuLugar: String? = null
 )
 
 /**
@@ -29,7 +43,12 @@ data class PalabraEvaluada(
  *   Por debajo de [Pronunciacion.CONFIANZA_MINIMA] el audio no fue legible
  *   (CU-05 A1, Ilustración 40) y se pide repetir sin gastar el intento.
  * @param fluidez, completitud, puntajeGeneral métricas de frase de Azure (0–100); null con el
- *   reconocedor del teléfono. El general (PronScore) mezcla las tres y es solo informativo.
+ *   reconocedor del teléfono. El general (PronScore) mezcla todas y es solo informativo.
+ * @param prosodia entonación, ritmo y pausas (ProsodyScore de Azure, 0–100).
+ * @param palabrasDeMas palabras que se dijeron y no estaban en la frase (Insertion).
+ * @param monotono la entonación fue plana en la mayor parte de la frase.
+ * @param ruidoDb relación señal/ruido (SNR) que midió Azure, en dB.
+ * @param vozBaja la voz llegó muy bajita al micrófono (antes de amplificarla).
  */
 data class EvaluacionVoz(
     val puntaje: Int,
@@ -39,16 +58,26 @@ data class EvaluacionVoz(
     val fuente: FuenteEvaluacion,
     val fluidez: Int? = null,
     val completitud: Int? = null,
-    val puntajeGeneral: Int? = null
+    val puntajeGeneral: Int? = null,
+    val prosodia: Int? = null,
+    val palabrasDeMas: List<String> = emptyList(),
+    val monotono: Boolean = false,
+    val ruidoDb: Int? = null,
+    val vozBaja: Boolean = false
 ) {
     /** El teléfono solo transcribió (chat sin Azure): no hay palabras que colorear ni calificar. */
     val soloTranscrita: Boolean get() = fuente == FuenteEvaluacion.DISPOSITIVO && palabras.isEmpty()
+
+    /** Audio con mucho ruido de fondo o voz muy baja: puede bajar el puntaje sin que sea culpa del usuario. */
+    val audioDificil: Boolean get() = vozBaja || (ruidoDb != null && ruidoDb < Pronunciacion.SNR_MINIMO_DB)
 }
 
 object Pronunciacion {
     const val UMBRAL_ACIERTO = 70
     const val CONFIANZA_MINIMA = 30
     const val INTENTOS_POR_RONDA = 2
+    /** Con menos SNR que esto (dB) se avisa que hubo ruido o la voz llegó baja. */
+    const val SNR_MINIMO_DB = 10
     private const val UMBRAL_PALABRA_REGULAR = 60
 
     enum class Nivel { BUENO, REGULAR, MALO }

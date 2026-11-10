@@ -64,9 +64,15 @@ import androidx.compose.ui.text.font.FontWeight
 import com.xpspeak.app.feature.games.domain.Pronunciacion
 import com.xpspeak.app.feature.games.ui.comun.Locutor
 import com.xpspeak.app.feature.games.domain.EvaluacionVoz
-import com.xpspeak.app.feature.voice.ui.DetallePalabra
-import com.xpspeak.app.feature.voice.ui.PalabrasColoreadas
-import com.xpspeak.app.feature.voice.ui.colorPorNivel
+import com.xpspeak.app.feature.voice.ui.ResumenPronunciacion
+import com.xpspeak.app.feature.voice.ui.RetroalimentacionVoz
+import com.xpspeak.app.core.ui.componentes.TarjetaXP
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.runtime.DisposableEffect
@@ -302,12 +308,14 @@ private fun CorreccionMensaje(correccion: CorreccionDto, locutor: Locutor) {
 
 /**
  * RF-09 en el chat: cómo pronunció el usuario lo que dijo, con la misma retroalimentación
- * que Eco Vocal y las lecciones: puntaje de la frase, palabras coloreadas y, al tocar una,
- * sus sonidos. Sin Azure solo se avisa que el teléfono transcribió.
+ * que Eco Vocal y las lecciones. Bajo el mensaje va el resumen (puntaje y palabras
+ * coloreadas); al tocarlo se abre la hoja con el detalle completo. Sin Azure solo se avisa
+ * que el teléfono transcribió.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PronunciacionMensaje(evaluacion: EvaluacionVoz, locutor: Locutor) {
-    var seleccionada by remember(evaluacion) { mutableStateOf<Int?>(null) }
+    var detalle by remember(evaluacion) { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.End,
@@ -321,26 +329,24 @@ private fun PronunciacionMensaje(evaluacion: EvaluacionVoz, locutor: Locutor) {
             )
             return@Column
         }
-        Text(
-            buildString {
-                append("Pronunciación ${evaluacion.puntaje}/100")
-                evaluacion.fluidez?.let { append(" · Fluidez $it") }
-            },
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold,
-            color = colorPorNivel(Pronunciacion.nivelDe(evaluacion.puntaje))
-        )
-        PalabrasColoreadas(
-            evaluacion,
-            seleccionada,
-            onSeleccionar = { seleccionada = if (seleccionada == it) null else it },
-            modifier = Modifier.widthIn(max = 300.dp),
-            alineacion = Alignment.End,
-            compacto = true
-        )
-        seleccionada?.let { evaluacion.palabras.getOrNull(it) }?.let { palabra ->
-            Column(modifier = Modifier.widthIn(max = 300.dp)) {
-                DetallePalabra(palabra, onEscuchar = { locutor.decir(palabra.palabra, lento = true) })
+        ResumenPronunciacion(evaluacion, onVerDetalle = { detalle = true })
+    }
+    if (detalle) {
+        ModalBottomSheet(
+            onDismissRequest = { detalle = false },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            containerColor = XPFondo
+        ) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 24.dp)
+                    .navigationBarsPadding(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text("Cómo pronunciaste", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = XPMarino)
+                TarjetaXP { RetroalimentacionVoz(evaluacion, onEscuchar = { locutor.decir(it, lento = true) }) }
             }
         }
     }

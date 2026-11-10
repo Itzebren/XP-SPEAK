@@ -77,7 +77,8 @@ import com.xpspeak.app.feature.games.ui.comun.TarjetaFeedback
 import com.xpspeak.app.feature.games.ui.comun.TarjetaJuego
 import com.xpspeak.app.feature.games.ui.comun.Veredicto
 import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
-import com.xpspeak.app.feature.voice.ui.AnilloPuntaje
+import com.xpspeak.app.feature.voice.ui.RetroalimentacionVoz
+import com.xpspeak.app.feature.voice.domain.Retroalimentacion
 import com.xpspeak.app.feature.voice.ui.AvisoVoz
 import com.xpspeak.app.feature.voice.ui.DetallePalabra
 import com.xpspeak.app.feature.voice.ui.NotaFuente
@@ -303,47 +304,22 @@ private fun AudioNoLegible(evaluacion: EvaluacionVoz) {
             }
         }
         Text("Por favor, repite la frase.", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+        Text(
+            Retroalimentacion.avisoAudio(evaluacion)
+                ?: "Habla a un palmo del micrófono, con voz clara, y espera el bip antes de empezar.",
+            style = MaterialTheme.typography.bodySmall,
+            color = XPTextoSecundario
+        )
     }
 }
 
 /**
- * Puntaje en anillo, palabras coloreadas (verde/amarillo/rojo) y, al tocar una, sus sonidos:
- * la misma retroalimentación de Práctica, lecciones y chat (RF-09).
+ * La misma retroalimentación completa de Práctica, lecciones y chat (RF-09): puntaje, la frase
+ * palabra por palabra, sílabas y sonidos con cómo corregirlos, ritmo, entonación y puntajes.
  */
 @Composable
 private fun PuntajePronunciacion(evaluacion: EvaluacionVoz, locutorDetalle: com.xpspeak.app.feature.games.ui.comun.Locutor?) {
-    var seleccionada by remember(evaluacion) { mutableStateOf<Int?>(null) }
     TarjetaJuego {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            AnilloPuntaje(evaluacion.puntaje)
-            Column {
-                Text("Precisión", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = XPMarino)
-                Text("de 100 puntos", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
-                evaluacion.fluidez?.let { Text("Fluidez $it", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario) }
-                evaluacion.completitud?.let { Text("Completitud $it", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario) }
-            }
-        }
-        PalabrasColoreadas(evaluacion, seleccionada, onSeleccionar = { seleccionada = if (seleccionada == it) null else it })
-        seleccionada?.let { evaluacion.palabras.getOrNull(it) }?.let { palabra ->
-            DetallePalabra(palabra, onEscuchar = { locutorDetalle?.decir(palabra.palabra, lento = true) })
-        }
-        // Qué sonido falló en cada palabra en rojo (AnalisisFonemas): "party: /ɹ/ sonó como /d/".
-        if (seleccionada == null) {
-            evaluacion.palabras.filter { it.sonidos.isNotEmpty() }.take(3).forEach { palabra ->
-                Text(
-                    "${palabra.palabra}: ${palabra.sonidos.joinToString(" · ")}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-            if (evaluacion.palabras.isNotEmpty()) {
-                Text("Toca una palabra para ver sus sonidos.", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
-            }
-        }
-        if (evaluacion.transcripcion.isNotBlank()) {
-            Text("Oímos: “${evaluacion.transcripcion}”", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
-        }
-        NotaFuente(evaluacion)
+        RetroalimentacionVoz(evaluacion, onEscuchar = { locutorDetalle?.decir(it, lento = true) })
     }
 }
