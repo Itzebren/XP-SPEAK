@@ -53,4 +53,13 @@ class GananciaAutomaticaTest {
         repeat(30) { agc.procesar(ShortArray(800) { i -> ((i % 7) - 3).toShort() }, 800) }
         assertEquals(1.0, agc.ganancia, 0.0)
     }
+
+    @Test
+    fun `voz que apenas supera el ruido igual cuenta para el aviso de voz baja`() {
+        val agc = GananciaAutomatica()
+        // Ruido de salón (≈ 80) y voz apenas por encima (≈ 140): no se detecta como voz.
+        repeat(10) { agc.procesar(tono(115.0), 800) }
+        repeat(10) { agc.procesar(tono(200.0), 800) }
+        assertTrue(agc.rmsMaximoOriginal in 1.0..GananciaAutomatica.RMS_VOZ_BAJA)
+    }
 }

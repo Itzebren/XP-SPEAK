@@ -178,4 +178,14 @@ class AnalisisFonemasTest {
         assertNull(AnalisisFonemas.evaluar(sinCalificar, "Weekend."))
         assertTrue(AnalisisFonemas.calificado(json(palabra("party", 95))))
     }
+
+    @Test
+    fun `la entonacion plana solo se avisa si bajo el puntaje de prosodia`() {
+        fun frase(prosodia: Int) = """{"NBest":[{"Confidence":0.95,
+          "PronunciationAssessment":{"AccuracyScore":90,"FluencyScore":95,"ProsodyScore":$prosodia,"CompletenessScore":100,"PronScore":92},
+          "Words":[${listOf("i", "like", "pizza").joinToString(",") { """{"Word":"$it","PronunciationAssessment":{"AccuracyScore":90,"ErrorType":"None",
+            "Feedback":{"Prosody":{"Break":{"ErrorTypes":["None"]},"Intonation":{"ErrorTypes":["Monotone"]}}}}}""" }}]}]}"""
+        assertFalse(AnalisisFonemas.evaluar(frase(88), "I like pizza")!!.monotono)
+        assertTrue(AnalisisFonemas.evaluar(frase(60), "I like pizza")!!.monotono)
+    }
 }

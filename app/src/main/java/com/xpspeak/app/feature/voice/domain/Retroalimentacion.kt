@@ -98,7 +98,8 @@ object Retroalimentacion {
             evaluacion.fluidez?.takeIf { it < Pronunciacion.UMBRAL_ACIERTO }
                 ?.let { "Intenta decirla de corrido, sin detenerte entre palabras." },
             "Tu entonación sonó plana: sube y baja la voz y marca la sílaba fuerte de cada palabra."
-                .takeIf { evaluacion.monotono || (evaluacion.prosodia ?: 100) < Pronunciacion.UMBRAL_ACIERTO }
+                // Una o dos palabras no tienen «melodía» de frase que corregir.
+                .takeIf { evaluacion.palabras.size >= 3 && (evaluacion.monotono || (evaluacion.prosodia ?: 100) < Pronunciacion.UMBRAL_ACIERTO) }
         )
     }
 
@@ -118,7 +119,8 @@ object Retroalimentacion {
         val pendientes = palabrasAPracticar(evaluacion)
         return when {
             pendientes.isEmpty() -> "Pronunciaste bien todas las palabras."
-            pendientes.size == 1 -> "Muy bien. Practica la palabra «${pendientes[0].palabra}»."
+            pendientes.size == 1 && evaluacion.puntaje >= Pronunciacion.UMBRAL_ACIERTO -> "Muy bien. Practica la palabra «${pendientes[0].palabra}»."
+            pendientes.size == 1 -> "Practica la palabra «${pendientes[0].palabra}»."
             else -> "Practica estas palabras: " + pendientes.joinToString(", ") { "«${it.palabra}»" } + "."
         }
     }

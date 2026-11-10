@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -88,18 +89,23 @@ private fun colorPuntaje(puntaje: Int) = colorPorNivel(Pronunciacion.nivelDe(pun
 
 /**
  * La retroalimentación completa, para poner dentro de cualquier tarjeta u hoja.
- * [onEscuchar] lee despacio una palabra o un ejemplo.
+ * [onEscuchar] lee despacio una palabra o un ejemplo. Con [compacta] (Eco Vocal, donde la
+ * partida sigue) los puntajes detallados empiezan plegados en una sola línea. En pantallas
+ * anchas (tablet) va en dos columnas: la frase y la palabra a la izquierda; sonidos,
+ * consejos y puntajes a la derecha.
  */
 @Composable
-fun RetroalimentacionVoz(evaluacion: EvaluacionVoz, onEscuchar: (String) -> Unit, modifier: Modifier = Modifier) {
+fun RetroalimentacionVoz(
+    evaluacion: EvaluacionVoz,
+    onEscuchar: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    compacta: Boolean = false
+) {
     // Se abre sola la palabra con menor puntaje: siempre se ve cómo se pronunció, sin buscarlo.
     var seleccionada by remember(evaluacion) {
         mutableStateOf(evaluacion.palabras.indices.minByOrNull { evaluacion.palabras[it].puntaje })
     }
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        Encabezado(evaluacion)
-        Retroalimentacion.avisoAudio(evaluacion)?.let { AvisoAudio(it) }
-
+    val frase: @Composable () -> Unit = {
         if (evaluacion.palabras.isNotEmpty()) {
             Seccion("Tu frase, palabra por palabra") {
                 Leyenda()
@@ -116,7 +122,8 @@ fun RetroalimentacionVoz(evaluacion: EvaluacionVoz, onEscuchar: (String) -> Unit
                 }
             }
         }
-
+    }
+    val resto: @Composable () -> Unit = {
         val sonidos = Retroalimentacion.sonidosAPracticar(evaluacion)
         if (sonidos.isNotEmpty() && evaluacion.palabras.size > 1) {
             Seccion("Sonidos para practicar en esta frase") {
@@ -127,23 +134,40 @@ fun RetroalimentacionVoz(evaluacion: EvaluacionVoz, onEscuchar: (String) -> Unit
                 }
             }
         }
-
         val consejos = Retroalimentacion.consejosFrase(evaluacion)
         if (consejos.isNotEmpty()) {
             Seccion("Para la próxima") {
                 consejos.forEach { Consejo(it) }
             }
         }
-
         val metricas = Retroalimentacion.metricas(evaluacion)
-        if (metricas.size > 1) Metricas(metricas)
-
+        if (metricas.size > 1) Metricas(metricas, abiertasAlInicio = !compacta)
         if (evaluacion.transcripcion.isNotBlank()) {
             Text("Oímos: “${evaluacion.transcripcion}”", style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
         }
         NotaFuente(evaluacion)
     }
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val espacio = Arrangement.spacedBy(14.dp)
+        val dosColumnas = maxWidth >= ANCHO_DOS_COLUMNAS
+        Column(verticalArrangement = espacio) {
+            Encabezado(evaluacion)
+            Retroalimentacion.avisoAudio(evaluacion)?.let { AvisoAudio(it) }
+            if (dosColumnas) {
+                Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                    Column(modifier = Modifier.weight(1.1f), verticalArrangement = espacio) { frase() }
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = espacio) { resto() }
+                }
+            } else {
+                frase()
+                resto()
+            }
+        }
+    }
 }
+
+/** Desde este ancho (tablet, teléfono horizontal) la retroalimentación va en dos columnas. */
+private val ANCHO_DOS_COLUMNAS = 600.dp
 
 /** Puntaje, título y resumen en una línea de lectura. */
 @Composable
@@ -397,8 +421,8 @@ private fun TarjetaSonido(fonema: String, puntaje: Int, que: String?, como: Stri
 
 /** Nivel frase: cada métrica con barra y qué significa; plegable para no saturar. */
 @Composable
-private fun Metricas(metricas: List<Retroalimentacion.Metrica>) {
-    var abiertas by remember { mutableStateOf(true) }
+private fun Metricas(metricas: List<Retroalimentacion.Metrica>, abiertasAlInicio: Boolean) {
+    var abiertas by remember { mutableStateOf(abiertasAlInicio) }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -407,7 +431,16 @@ private fun Metricas(metricas: List<Retroalimentacion.Metrica>) {
             Text("Tus puntajes", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = XPMarino, modifier = Modifier.weight(1f))
             Icon(if (abiertas) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore, contentDescription = null, tint = XPMarino)
         }
-        if (abiertas) metricas.forEach { BarraMetrica(it) }
+        if (abiertas) {
+            metricas.forEach { BarraMetrica(it) }
+        } else {
+            // Plegadas: todos los números en una línea; al tocar el título se ven con su explicación.
+            Text(
+                metricas.joinToString(" · ") { "${it.nombre} ${it.valor}" },
+                style = MaterialTheme.typography.bodyMedium,
+                color = XPTextoSecundario
+            )
+        }
     }
 }
 

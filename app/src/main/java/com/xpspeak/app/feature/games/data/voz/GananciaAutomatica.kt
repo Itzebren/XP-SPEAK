@@ -25,8 +25,15 @@ class GananciaAutomatica {
     /** Ruido de fondo estimado (RMS en unidades de PCM de 16 bits). */
     private var ruido = -1.0
 
-    /** RMS más alto de la voz ANTES de la ganancia: sirve para avisar «te oímos muy bajito». */
+    /** RMS más alto de la voz ANTES de la ganancia. */
     var rmsVozOriginal = 0.0
+        private set
+
+    /**
+     * RMS más alto de cualquier bloque ANTES de la ganancia: sirve para avisar «te oímos muy
+     * bajito» aun cuando la voz apenas supera el ruido y no se reconoce como voz.
+     */
+    var rmsMaximoOriginal = 0.0
         private set
 
     /** Procesa [leidas] muestras de [muestras] en su lugar. */
@@ -40,6 +47,7 @@ class GananciaAutomatica {
             pico = maxOf(pico, abs(m))
         }
         val rms = sqrt(suma / leidas)
+        rmsMaximoOriginal = maxOf(rmsMaximoOriginal, rms)
 
         // Ruido de fondo: baja rápido hacia los bloques más callados y sube muy despacio.
         ruido = when {

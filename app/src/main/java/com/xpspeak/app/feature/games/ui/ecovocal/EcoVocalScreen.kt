@@ -320,6 +320,6 @@ private fun AudioNoLegible(evaluacion: EvaluacionVoz) {
 @Composable
 private fun PuntajePronunciacion(evaluacion: EvaluacionVoz, locutorDetalle: com.xpspeak.app.feature.games.ui.comun.Locutor?) {
     TarjetaJuego {
-        RetroalimentacionVoz(evaluacion, onEscuchar = { locutorDetalle?.decir(it, lento = true) })
+        RetroalimentacionVoz(evaluacion, onEscuchar = { locutorDetalle?.decir(it, lento = true) }, compacta = true)
     }
 }

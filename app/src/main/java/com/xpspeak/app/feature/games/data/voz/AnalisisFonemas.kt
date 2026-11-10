@@ -56,7 +56,9 @@ object AnalisisFonemas {
             puntajeGeneral = frase.numeroONulo("PronScore"),
             prosodia = frase.numeroONulo("ProsodyScore"),
             palabrasDeMas = todas.filter { evaluacion(it).texto("ErrorType") == "Insertion" }.mapNotNull { it.texto("Word") },
-            monotono = conProsodia.size >= PALABRAS_PARA_ENTONACION && planas * 2 > conProsodia.size,
+            // Azure marca «Monotone» muy seguido: solo se avisa si además bajó la entonación de la frase.
+            monotono = conProsodia.size >= PALABRAS_PARA_ENTONACION && planas * 2 > conProsodia.size &&
+                (frase.numeroONulo("ProsodyScore") ?: 0) < PROSODIA_PLANA,
             ruidoDb = raiz.numeroONulo("SNR")
         )
     }.getOrNull()
@@ -73,6 +75,7 @@ object AnalisisFonemas {
 
     /** Frases de menos palabras no tienen «melodía» que calificar. */
     private const val PALABRAS_PARA_ENTONACION = 3
+    private const val PROSODIA_PLANA = 80
 
     /** Palabras de la frase (sin las de más que dijo el usuario), o null si el JSON no trae palabras. */
     fun palabras(json: String): List<PalabraEvaluada>? = runCatching { palabrasDe(mejorAlternativa(json)) }.getOrNull()

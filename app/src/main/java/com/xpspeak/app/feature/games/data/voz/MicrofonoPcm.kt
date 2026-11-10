@@ -23,7 +23,7 @@ internal class MicrofonoPcm(private val flujo: PushAudioInputStream, private val
 
     /** La voz llegó muy bajita aun antes de amplificarla: se sugiere acercarse al micrófono. */
     val vozBaja: Boolean
-        get() = ganancia.rmsVozOriginal in 0.1..GananciaAutomatica.RMS_VOZ_BAJA
+        get() = ganancia.rmsMaximoOriginal in 1.0..GananciaAutomatica.RMS_VOZ_BAJA
 
     /**
      * Abre el micrófono. Lanza [SecurityException] sin permiso y [EvaluadorAzure.FalloAzure] si

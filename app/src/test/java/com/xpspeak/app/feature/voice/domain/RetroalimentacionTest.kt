@@ -106,7 +106,7 @@ class RetroalimentacionTest {
 
     @Test
     fun `consejos de frase por completitud, palabras de mas, fluidez y entonacion`() {
-        val e = EvaluacionVoz(80, 90, listOf(PalabraEvaluada("hi", 80)), "hi", FuenteEvaluacion.AZURE,
+        val e = EvaluacionVoz(80, 90, listOf("i", "like", "it").map { PalabraEvaluada(it, 80) }, "i like it", FuenteEvaluacion.AZURE,
             fluidez = 50, completitud = 60, prosodia = 90, palabrasDeMas = listOf("um"), monotono = true)
         assertEquals(4, Retroalimentacion.consejosFrase(e).size)
     }
@@ -128,5 +128,12 @@ class RetroalimentacionTest {
     fun `la palabra dicha en lugar de otra se explica`() {
         val p = PalabraEvaluada("I", 0, "Omission", dichaEnSuLugar = "the")
         assertEquals("Dijiste «the» en lugar de «I».", Retroalimentacion.descripcion(p))
+    }
+
+    @Test
+    fun `con puntaje bajo no se dice muy bien y una palabra sola no recibe consejo de entonacion`() {
+        val e = EvaluacionVoz(55, 90, listOf(PalabraEvaluada("Hello", 55, "Mispronunciation")), "Hello", FuenteEvaluacion.AZURE, prosodia = 65)
+        assertEquals("Practica la palabra «Hello».", Retroalimentacion.resumen(e))
+        assertTrue(Retroalimentacion.consejosFrase(e).isEmpty())
     }
 }
