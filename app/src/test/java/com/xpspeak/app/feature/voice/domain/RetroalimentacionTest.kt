@@ -41,6 +41,32 @@ class RetroalimentacionTest {
     }
 
     @Test
+    fun `en el chat se dice que paso con las dos palabras que peor salieron`() {
+        val r = evaluacion(
+            PalabraEvaluada("I", 95),
+            PalabraEvaluada("think", 55, "Mispronunciation", sonidos = listOf("/θ/ sonó como /t/", "/ŋ/ poco claro")),
+            PalabraEvaluada("three", 30, "Mispronunciation"),
+            PalabraEvaluada("birds", 65),
+            PalabraEvaluada("world", 62)
+        )
+        assertEquals(
+            listOf("«three»: no se entendió bien, dila más despacio", "«think»: /θ/ sonó como /t/"),
+            Retroalimentacion.notasBreves(r)
+        )
+        assertEquals("«world»: casi, puede sonar más clara", Retroalimentacion.notasBreves(r, maximo = 3).last())
+        assertTrue(Retroalimentacion.notasBreves(evaluacion(PalabraEvaluada("hello", 90))).isEmpty())
+    }
+
+    @Test
+    fun `si el reconocedor dudo de lo que oyo se avisa, pero no cuando solo transcribio el telefono`() {
+        val palabra = PalabraEvaluada("hello", 90)
+        assertEquals(null, Retroalimentacion.avisoReconocimiento(evaluacion(palabra, confianza = 60)))
+        assertTrue(Retroalimentacion.avisoReconocimiento(evaluacion(palabra, confianza = 45))!!.contains("repítelo más despacio"))
+        val telefono = EvaluacionVoz(0, 40, emptyList(), "hello", FuenteEvaluacion.DISPOSITIVO)
+        assertEquals(null, Retroalimentacion.avisoReconocimiento(telefono))
+    }
+
+    @Test
     fun `sin errores se felicita`() {
         val r = evaluacion(PalabraEvaluada("hello", 90))
         assertEquals("Pronunciaste bien todas las palabras.", Retroalimentacion.resumen(r))

@@ -1,10 +1,13 @@
 const { crearEndpoint } = require('../lib/endpoint');
 const { ErrorApi } = require('../lib/errores');
 const { configuracionChat, construirMensajes, pedirRespuesta, pedirRespuestaEnFlujo, noDisponible } = require('../lib/chat/azureOpenAI');
-const { pedirCorreccion } = require('../lib/chat/correccion');
+const { pedirCorreccion, TIEMPO_TOTAL_MS } = require('../lib/chat/correccion');
 
-/** Lo más que se espera la corrección después de la respuesta, para no retrasar el { fin }. */
-const ESPERA_CORRECCION_MS = 3000;
+/**
+ * Lo más que se espera la corrección después de la respuesta. Antes eran 3 s y una corrección
+ * lenta se perdía; ya no retrasa nada porque la app lee la respuesta desde { completa }.
+ */
+const ESPERA_CORRECCION_MS = TIEMPO_TOTAL_MS;
 
 const conLimite = (promesa, ms) => {
   let reloj;
@@ -16,15 +19,18 @@ const conLimite = (promesa, ms) => {
 
 /**
  * POST /api/chat — una vuelta de conversación con la IA (CU-05, RF-06).
- * Body: { mensaje, nivel: "A1" | "A2", historial: [{ role, content }], stream? }
+ * Body: { mensaje, nivel: "A1" | "A2", historial: [{ role, content }], voz?, stream? }
  * Respuesta: { respuesta, correccion? }. Nada de la conversación se guarda (RF-09).
+ * `voz: true` avisa que el mensaje se dictó: no se le marcan ortografía ni homófonos.
  *
- * `correccion` (RF-09) son los errores del mensaje del usuario:
- * { corregido, errores: [{ original, correccion, explicacion }] }. Se pide a Azure en
- * paralelo con la respuesta y solo viene si hay errores.
+ * `correccion` (RF-09) es la revisión del mensaje del usuario, pedida a Azure en paralelo
+ * con la respuesta: { corregido, errores: [{ original, correccion, explicacion, tipo? }], correcta }.
+ * Con errores, `correcta` es false; si se revisó y está bien llega { correcta: true } sin
+ * errores, para que la app lo confirme. No viene si no se pudo revisar (una palabra, español, falla).
  *
  * Con stream: true (RNF-02) responde text/event-stream, un evento por línea "data:":
- * { delta } con cada pedazo de texto, { correccion } en cuanto está lista, y al final
+ * { delta } con cada pedazo de texto, { correccion } en cuanto está lista, { completa: true }
+ * cuando la respuesta ya llegó entera (la corrección puede seguir en camino) y al final
  * { fin: true } o { error, codigo }. Los errores previos a la primera línea (token,
  * validación, Azure caído) siguen saliendo como JSON con su código HTTP.
  */
@@ -68,6 +74,7 @@ module.exports = crearEndpoint({ metodo: 'POST', nombre: 'chat' }, async ({ req,
       enviarEvento({ delta });
     }
     if (!recibido) throw noDisponible();
+    enviarEvento({ completa: true });
     enviarCorreccion(await conLimite(correccion, ESPERA_CORRECCION_MS));
     enviarEvento({ fin: true });
   } catch (error) {

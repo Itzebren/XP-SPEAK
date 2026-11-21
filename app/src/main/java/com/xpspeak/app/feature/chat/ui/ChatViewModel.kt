@@ -28,14 +28,16 @@ import javax.inject.Inject
  * [completo] es false mientras la respuesta de la IA sigue llegando (RNF-02).
  * [pronunciacion] solo en mensajes dichos con voz: cómo los pronunció el usuario, por frase,
  * palabra y sonido (RF-09); sin Azure solo queda la transcripción.
- * [correccion] solo en mensajes del usuario con errores de gramática (RF-09); no va al historial.
+ * [correccion] en mensajes del usuario ya revisados: sus errores de gramática o la confirmación
+ * de que no hubo (RF-09); no va al historial. [revisando] mientras esa revisión no llega.
  */
 data class MensajeUi(
     val texto: String,
     val esUsuario: Boolean,
     val completo: Boolean = true,
     val pronunciacion: EvaluacionVoz? = null,
-    val correccion: CorreccionDto? = null
+    val correccion: CorreccionDto? = null,
+    val revisando: Boolean = false
 )
 
 data class ChatUiState(
@@ -94,7 +96,8 @@ class ChatViewModel @Inject constructor(
         // Dónde queda el mensaje del usuario, para colgarle su corrección cuando llegue.
         val indiceUsuario = _uiState.value.mensajes.size
         _uiState.value = _uiState.value.copy(
-            mensajes = _uiState.value.mensajes + MensajeUi(texto, esUsuario = true, pronunciacion = pronunciacion),
+            mensajes = _uiState.value.mensajes +
+                MensajeUi(texto, esUsuario = true, pronunciacion = pronunciacion, revisando = seRevisa(texto)),
             entrada = "",
             cargando = true,
             error = null,
@@ -104,20 +107,35 @@ class ChatViewModel @Inject constructor(
 
         viewModelScope.launch {
             var respuesta = ""
+            // La respuesta ya se dio por completa (se lee en voz alta y se puede seguir conversando).
+            var entregada = false
             // Tabla 93: desde que se envía el mensaje (con voz, ya evaluada la pronunciación).
             val enviado = Tiempos.ahora()
+            fun entregar() {
+                if (entregada) return
+                entregada = true
+                Tiempos.desde("chat.respuesta_completa", enviado, Meta.RNF02)
+                _uiState.value = _uiState.value.copy(
+                    mensajes = _uiState.value.mensajes.dropLast(1) + MensajeUi(respuesta, esUsuario = false),
+                    cargando = false
+                )
+                viewModelScope.launch { registrarConversacion() }
+            }
+            fun conMensajeUsuario(cambio: (MensajeUi) -> MensajeUi) {
+                _uiState.value = _uiState.value.copy(
+                    mensajes = _uiState.value.mensajes.mapIndexed { i, mensaje -> if (i == indiceUsuario) cambio(mensaje) else mensaje }
+                )
+            }
             try {
                 // RF-06/RN-02: se lee en cada envío por si el usuario cambió de nivel.
-                repository.enviarMensaje(texto, repository.nivelDelUsuario(), historialParaApi).collect { evento ->
+                repository.enviarMensaje(texto, repository.nivelDelUsuario(), historialParaApi, voz = pronunciacion != null).collect { evento ->
                     when (evento) {
                         is EventoRespuesta.Correccion -> {
                             Tiempos.desde("chat.correccion", enviado, Meta.RN05)
-                            _uiState.value = _uiState.value.copy(
-                                mensajes = _uiState.value.mensajes.mapIndexed { i, mensaje ->
-                                    if (i == indiceUsuario) mensaje.copy(correccion = evento.correccion) else mensaje
-                                }
-                            )
+                            conMensajeUsuario { it.copy(correccion = evento.correccion, revisando = false) }
                         }
+                        // La corrección puede tardar más que la respuesta: la voz de la IA no la espera.
+                        EventoRespuesta.Completa -> if (respuesta.isNotEmpty()) entregar()
                         is EventoRespuesta.Pedazo -> {
                             if (respuesta.isEmpty()) Tiempos.desde("chat.primer_pedazo", enviado, Meta.RNF02)
                             // RNF-02: la burbuja aparece con el primer pedazo y crece con cada uno.
@@ -130,15 +148,15 @@ class ChatViewModel @Inject constructor(
                     }
                 }
                 if (respuesta.isEmpty()) throw IllegalStateException("Respuesta vacía del servidor")
-                Tiempos.desde("chat.respuesta_completa", enviado, Meta.RNF02)
-                _uiState.value = _uiState.value.copy(
-                    mensajes = _uiState.value.mensajes.dropLast(1) + MensajeUi(respuesta, esUsuario = false),
-                    cargando = false
-                )
-                registrarConversacion()
+                entregar()
+                // No llegó revisión (una palabra, español o el corrector falló): se deja de esperar.
+                conMensajeUsuario { it.copy(revisando = false) }
             } catch (excepcion: CancellationException) {
                 throw excepcion
             } catch (excepcion: Exception) {
+                conMensajeUsuario { it.copy(revisando = false) }
+                // Se cortó esperando la corrección, con la respuesta ya entregada: no es un envío fallido.
+                if (entregada) return@launch
                 // Una respuesta cortada no se queda en el historial: confundiría a la IA en el siguiente turno.
                 val mensajes = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
                 // Sin respuesta que leer, el modo en vivo se quedaría esperando: se pausa.
@@ -150,6 +168,9 @@ class ChatViewModel @Inject constructor(
             }
         }
     }
+
+    /** El servidor solo revisa la gramática de mensajes de dos palabras o más. */
+    private fun seRevisa(texto: String) = texto.trim().split(Regex("\\s+")).size >= 2
 
     /** Reenvía el mensaje que falló: se quita su burbuja para no duplicarla y se manda otra vez. */
     fun reintentar() {

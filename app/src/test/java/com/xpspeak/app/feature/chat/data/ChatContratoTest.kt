@@ -24,6 +24,41 @@ class ChatContratoTest {
     }
 
     @Test
+    fun `lee el tipo de cada error, y sin tipo (backend anterior) queda en null`() {
+        val linea = """{"correccion":{"corregido":"He goes.","correcta":false,"errores":[""" +
+            """{"original":"He go","correccion":"He goes","tipo":"Conjugación","explicacion":"Con he se agrega -s."},""" +
+            """{"original":"a apple","correccion":"an apple","explicacion":"Antes de vocal va an."}]}}"""
+        val correccion = gson.fromJson(linea, EventoChat::class.java).correccion!!
+
+        assertEquals(listOf("Conjugación", null), correccion.errores.map { it.tipo })
+        assertTrue(correccion.seMuestra)
+    }
+
+    @Test
+    fun `un mensaje revisado sin errores se confirma, y sin revision no se muestra nada`() {
+        val bien = gson.fromJson("""{"correccion":{"corregido":null,"errores":[],"correcta":true}}""", EventoChat::class.java).correccion!!
+        assertTrue(bien.correcta)
+        assertTrue(bien.errores.isEmpty())
+        assertTrue(bien.seMuestra)
+
+        // Un backend anterior no manda "correcta": sin errores no hay nada que mostrar.
+        val anterior = gson.fromJson("""{"corregido":"I like pizza."}""", CorreccionDto::class.java)
+        assertEquals(false, anterior.seMuestra)
+    }
+
+    @Test
+    fun `la respuesta completa llega como evento propio antes del fin`() {
+        assertEquals(true, gson.fromJson("""{"completa":true}""", EventoChat::class.java).completa)
+        assertNull(gson.fromJson("""{"fin":true}""", EventoChat::class.java).completa)
+    }
+
+    @Test
+    fun `el mensaje dicho con voz se avisa al servidor`() {
+        assertTrue(gson.toJson(ChatRequest("I go there", "A1", emptyList(), voz = true)).contains("\"voz\":true"))
+        assertTrue(gson.toJson(ChatRequest("I go there")).contains("\"voz\":false"))
+    }
+
+    @Test
     fun `un pedazo de texto no trae correccion`() {
         val evento = gson.fromJson("""{"delta":"Hi!"}""", EventoChat::class.java)
         assertEquals("Hi!", evento.delta)

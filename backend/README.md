@@ -367,10 +367,24 @@ usuario por hora.
 ## Chat con IA (CU-05)
 
 Venía del repo aparte `xp-speak-auth-backend` y ahora vive aquí, con el resto
-del backend. `POST /api/chat` recibe `{ mensaje, nivel: "A1" | "A2", historial: [{ role, content }] }`
-y responde `{ respuesta }`. El nivel va en el system prompt (RN-03); del historial
+del backend. `POST /api/chat` recibe `{ mensaje, nivel: "A1" | "A2", historial: [{ role, content }], voz?, stream? }`
+y responde `{ respuesta, correccion? }` (o, con `stream: true`, los eventos `{ delta }`, `{ correccion }`,
+`{ completa }` y `{ fin }`). El nivel va en el system prompt (RN-03); del historial
 solo se aceptan turnos `user`/`assistant` (los últimos 10), así que la app no puede
 colar otro mensaje `system`. Nada de la conversación se guarda.
+
+`correccion` (RF-09) es la revisión de gramática del mensaje, pedida aparte del tutor
+(`lib/chat/correccion.js`): `{ corregido, errores: [{ original, correccion, tipo, explicacion }], correcta }`.
+Si el mensaje está bien llega `{ correcta: true }` para que la app lo confirme; no viene con
+una sola palabra, en español o si el corrector falló dos veces. Con `voz: true` (mensaje
+dictado) no se marcan ortografía ni homófonos.
+
+Para ajustar el prompt del corrector con datos, hay una batería de oraciones A1/A2 que corre
+contra el Azure real (no es parte de `npm test`):
+
+```bash
+AZURE_OPENAI_ENDPOINT=... AZURE_OPENAI_API_KEY=... node scripts/evaluar-corrector.js --detalle
+```
 
 Variables de entorno en Vercel:
 

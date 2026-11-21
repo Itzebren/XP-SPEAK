@@ -15,16 +15,32 @@ const TIEMPO_ESPERA_MS = 25000;
 
 const SYSTEM_PROMPT_BASE =
   'Eres un tutor de inglés conversacional dentro de la app XP-SPEAK. ' +
-  'Ayudas al usuario a practicar inglés hablado y escrito de forma natural, ' +
+  'Ayudas al usuario, un hispanohablante que está aprendiendo, a practicar inglés hablado y escrito de forma natural, ' +
   'adaptando tu vocabulario al nivel indicado. ' +
+  // Las respuestas se leen en voz alta (RF-08): cortas y sin formato.
+  'Contesta en 1 a 3 oraciones cortas y termina con UNA sola pregunta sencilla para que la conversación siga. ' +
+  'Tu respuesta se lee en voz alta: no uses listas, markdown, emojis ni paréntesis. ' +
+  'El usuario comete errores y a veces su mensaje viene de un dictado por voz con palabras mal transcritas: ' +
+  'entiende lo que quiso decir y contesta a eso; solo si de verdad no se entiende, pídele con amabilidad que lo repita con otras palabras. ' +
   'No expliques los errores del usuario en tu respuesta: la app le muestra las correcciones aparte (RF-09). ' +
-  'Si cometió alguno, puedes usar la forma correcta de manera natural al contestar. ' +
+  'Pero si cometió alguno, empieza retomando su idea con la forma correcta, de manera natural y sin decirle que se equivocó ' +
+  '(si dice "Yesterday I go to the park", contesta algo como "Oh, you went to the park yesterday! ..."). ' +
   'Responde siempre en inglés, salvo que el usuario pida explícitamente una explicación en español. ' +
   // RN-03: el tutor solo practica inglés. En QA (3-nov) resolvía tareas de cálculo antes de invitar a practicar.
   'Tu único propósito es practicar inglés. Si el usuario te pide resolver una tarea, un ejercicio o una pregunta ' +
   'de otra materia (matemáticas, programación, ciencias, etc.), no la resuelvas ni des la respuesta, ni siquiera en parte: ' +
   'dile con amabilidad que solo puedes ayudarle a practicar inglés y propón una pregunta en inglés relacionada con el tema ' +
   '(por ejemplo, cómo se dicen en inglés las palabras de esa materia).';
+
+/** RN-02: qué tan sencillo debe hablar el tutor en cada nivel del MCER. */
+const GUIA_NIVEL = {
+  A1:
+    'En A1 usa oraciones de máximo 10 palabras, en presente simple o con "can", con vocabulario cotidiano ' +
+    '(familia, comida, rutina, gustos, la casa, la ciudad). Una sola idea por oración y nada de modismos.',
+  A2:
+    'En A2 usa oraciones cortas con presente, pasado simple, "going to" y "will", comparativos y vocabulario cotidiano ' +
+    '(viajes, trabajo, estudios, planes, experiencias). Evita modismos y palabras poco comunes.',
+};
 
 function configuracionChat(entorno = process.env) {
   const endpoint = entorno.AZURE_OPENAI_ENDPOINT;
@@ -36,12 +52,12 @@ function configuracionChat(entorno = process.env) {
 }
 
 /**
- * Valida el body { mensaje, nivel, historial } y arma los mensajes para el
+ * Valida el body { mensaje, nivel, historial, voz } y arma los mensajes para el
  * modelo. Del historial solo se aceptan turnos user/assistant con texto: un
  * cliente no puede colar su propio mensaje "system" para saltarse el nivel (RN-03).
  */
 function construirMensajes(body) {
-  const { mensaje, nivel = 'A1', historial = [] } = body || {};
+  const { mensaje, nivel = 'A1', historial = [], voz = false } = body || {};
   if (typeof mensaje !== 'string' || !mensaje.trim()) {
     throw new ErrorApi(400, 'ENTRADA_INVALIDA', 'Falta el mensaje');
   }
@@ -61,7 +77,12 @@ function construirMensajes(body) {
     .map((t) => ({ role: t.role, content: t.content.slice(0, MAX_CARACTERES_MENSAJE) }));
 
   return [
-    { role: 'system', content: `${SYSTEM_PROMPT_BASE} El nivel del usuario es ${nivel}.` },
+    {
+      role: 'system',
+      content:
+        `${SYSTEM_PROMPT_BASE} El nivel del usuario es ${nivel}. ${GUIA_NIVEL[nivel]}` +
+        (voz === true ? ' Este último mensaje lo dijo con voz.' : ''),
+    },
     ...turnos,
     { role: 'user', content: mensaje },
   ];

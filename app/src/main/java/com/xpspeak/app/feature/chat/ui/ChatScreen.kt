@@ -159,8 +159,10 @@ fun ChatScreen(
             items(uiState.mensajes) { mensaje ->
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     BurbujaMensaje(mensaje, onEscuchar = { locutor.decirConIdiomas(mensaje.texto) })
-                    mensaje.correccion?.let { CorreccionMensaje(it, locutor) }
+                    // Primero cómo sonó (solo con voz) y luego la gramática de lo que dijo o escribió.
                     mensaje.pronunciacion?.let { PronunciacionMensaje(it, locutor) }
+                    mensaje.correccion?.let { CorreccionMensaje(it, locutor, dicho = mensaje.pronunciacion != null) }
+                    if (mensaje.revisando) NotaGramatica("Revisando tu gramática…", XPTextoSecundario)
                 }
             }
             // Lo que el usuario va diciendo, palabra por palabra, antes de enviarse.
@@ -257,12 +259,26 @@ fun ChatScreen(
     }
 }
 
+/** Una línea bajo el mensaje del usuario: «Revisando…» o «Sin errores». */
+@Composable
+private fun NotaGramatica(texto: String, color: androidx.compose.ui.graphics.Color) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+        Text(texto, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = color)
+    }
+}
+
 /**
- * RF-09 en el chat: los errores de gramática del mensaje, aparte de la respuesta de la IA.
- * Cada uno muestra lo que se escribió tachado, la forma correcta y por qué.
+ * RF-09 en el chat: la gramática del mensaje, aparte de la respuesta de la IA. Sin errores
+ * se confirma en una línea (así se sabe que sí se revisó); con errores va la oración
+ * corregida y, por cada uno, de qué tipo es, lo que se puso tachado, la forma correcta y
+ * por qué. [dicho] cambia los textos cuando el mensaje fue con voz.
  */
 @Composable
-private fun CorreccionMensaje(correccion: CorreccionDto, locutor: Locutor) {
+private fun CorreccionMensaje(correccion: CorreccionDto, locutor: Locutor, dicho: Boolean) {
+    if (correccion.errores.isEmpty()) {
+        if (correccion.correcta) NotaGramatica("✓ Gramática correcta", XPVerdeExito)
+        return
+    }
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
         Surface(
             color = XPFondo,
@@ -275,12 +291,14 @@ private fun CorreccionMensaje(correccion: CorreccionDto, locutor: Locutor) {
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
-                    "✏️ Corrección",
+                    (if (dicho) "✏️ Gramática de lo que dijiste" else "✏️ Gramática de tu mensaje") +
+                        correccion.errores.size.let { if (it == 1) " · 1 error" else " · $it errores" },
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
                     color = XPNaranjaTexto
                 )
                 correccion.corregido?.let { corregido ->
+                    Text("Lo correcto es:", style = MaterialTheme.typography.labelMedium, color = XPTextoSecundario)
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(corregido, color = XPTexto, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f, fill = false))
                         IconButton(onClick = { locutor.decir(corregido) }, modifier = Modifier.size(32.dp)) {
@@ -290,6 +308,9 @@ private fun CorreccionMensaje(correccion: CorreccionDto, locutor: Locutor) {
                 }
                 correccion.errores.forEach { error ->
                     Column {
+                        error.tipo?.let {
+                            Text(it.uppercase(), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = XPMarino)
+                        }
                         Text(
                             buildAnnotatedString {
                                 withStyle(SpanStyle(color = XPRojoError, textDecoration = TextDecoration.LineThrough)) { append(error.original) }

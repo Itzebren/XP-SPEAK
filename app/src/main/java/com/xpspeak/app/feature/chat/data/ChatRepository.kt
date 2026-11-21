@@ -16,8 +16,11 @@ sealed interface EventoRespuesta {
     /** Un pedazo de la respuesta de la IA (RNF-02). */
     data class Pedazo(val texto: String) : EventoRespuesta
 
-    /** Los errores del mensaje del usuario (RF-09); puede llegar antes, durante o después de la respuesta. */
+    /** La revisión del mensaje del usuario (RF-09); puede llegar antes, durante o después de la respuesta. */
     data class Correccion(val correccion: CorreccionDto) : EventoRespuesta
+
+    /** La respuesta ya llegó entera: se puede leer en voz alta aunque la corrección siga en camino. */
+    data object Completa : EventoRespuesta
 }
 
 class ChatRepository @Inject constructor(
@@ -71,7 +74,8 @@ class ChatRepository @Inject constructor(
     fun enviarMensaje(
         mensaje: String,
         nivel: String,
-        historial: List<MensajeChat>
+        historial: List<MensajeChat>,
+        voz: Boolean = false
     ): Flow<EventoRespuesta> = flow {
         val usuario = firebaseAuth.currentUser
             ?: throw IllegalStateException("No hay sesión activa")
@@ -79,7 +83,7 @@ class ChatRepository @Inject constructor(
         val token = usuario.getIdToken(false).await().token
             ?: throw IllegalStateException("No se pudo obtener el token de sesión")
 
-        val respuesta = api.enviarMensaje("Bearer $token", ChatRequest(mensaje, nivel, historial))
+        val respuesta = api.enviarMensaje("Bearer $token", ChatRequest(mensaje, nivel, historial, voz))
 
         if (!respuesta.isSuccessful) {
             throw Exception(mensajeDeError(respuesta.code(), respuesta.errorBody()?.string()))
@@ -90,7 +94,8 @@ class ChatRepository @Inject constructor(
         if (cuerpo.contentType()?.subtype == "json") {
             val completa = cuerpo.use { gson.fromJson(it.string(), ChatResponse::class.java) }
             emit(EventoRespuesta.Pedazo(completa?.respuesta ?: throw IllegalStateException("Respuesta vacía del servidor")))
-            completa.correccion?.takeIf { it.errores.isNotEmpty() }?.let { emit(EventoRespuesta.Correccion(it)) }
+            emit(EventoRespuesta.Completa)
+            completa.correccion?.takeIf { it.seMuestra }?.let { emit(EventoRespuesta.Correccion(it)) }
             return@flow
         }
         cuerpo.use {
@@ -104,7 +109,8 @@ class ChatRepository @Inject constructor(
                     evento.error != null -> throw Exception(evento.error)
                     evento.fin == true -> return@flow
                     !evento.delta.isNullOrEmpty() -> emit(EventoRespuesta.Pedazo(evento.delta))
-                    !evento.correccion?.errores.isNullOrEmpty() -> emit(EventoRespuesta.Correccion(evento.correccion!!))
+                    evento.completa == true -> emit(EventoRespuesta.Completa)
+                    evento.correccion?.seMuestra == true -> emit(EventoRespuesta.Correccion(evento.correccion))
                 }
             }
         }

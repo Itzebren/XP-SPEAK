@@ -2,6 +2,7 @@ package com.xpspeak.app.feature.voice.domain
 
 import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import com.xpspeak.app.feature.games.domain.FonemaEvaluado
+import com.xpspeak.app.feature.games.domain.FuenteEvaluacion
 import com.xpspeak.app.feature.games.domain.PalabraEvaluada
 import com.xpspeak.app.feature.games.domain.Pronunciacion
 
@@ -16,6 +17,30 @@ object Retroalimentacion {
     /** CU-05 A3: con confianza menor al 30 % se pide repetir en lugar de calificar. */
     fun esLegible(evaluacion: EvaluacionVoz) =
         evaluacion.confianza >= Pronunciacion.CONFIANZA_MINIMA && evaluacion.transcripcion.isNotBlank()
+
+    /** Entre el mínimo legible y esto, el reconocedor entendió algo pero sin estar seguro. */
+    const val CONFIANZA_DUDOSA = 60
+
+    /**
+     * Chat en vivo: lo que se oyó puede no ser lo que se dijo (micrófono lejos, ruido, una
+     * palabra muy mal pronunciada). Se avisa para que el usuario no crea que la IA «no entiende».
+     */
+    fun avisoReconocimiento(evaluacion: EvaluacionVoz): String? =
+        "No estoy seguro de haberte oído bien. Si no dijiste esto, repítelo más despacio y cerca del micrófono."
+            .takeIf { evaluacion.fuente == FuenteEvaluacion.AZURE && evaluacion.confianza < CONFIANZA_DUDOSA }
+
+    /**
+     * Chat: qué pasó con las palabras que peor salieron, en una línea cada una y sin abrir el
+     * detalle: «three»: /θ/ sonó como /t/.
+     */
+    fun notasBreves(evaluacion: EvaluacionVoz, maximo: Int = 2): List<String> =
+        palabrasAPracticar(evaluacion).sortedBy { it.puntaje }.take(maximo).map { palabra ->
+            "«${palabra.palabra}»: " + when {
+                palabra.sonidos.isNotEmpty() -> palabra.sonidos.first()
+                nivelDe(palabra) == Pronunciacion.Nivel.REGULAR -> "casi, puede sonar más clara"
+                else -> "no se entendió bien, dila más despacio"
+            }
+        }
 
     fun nivelDe(palabra: PalabraEvaluada): Pronunciacion.Nivel =
         if (palabra.error == "Omission") Pronunciacion.Nivel.MALO else Pronunciacion.nivelDe(palabra.puntaje)

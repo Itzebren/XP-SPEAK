@@ -512,8 +512,8 @@ fun PanelPronunciacion(evaluacion: EvaluacionVoz, locutor: Locutor, modifier: Mo
 }
 
 /**
- * Versión corta para el chat: puntaje, métricas en una línea y la frase coloreada; el botón
- * abre la retroalimentación completa en [onVerDetalle].
+ * Versión corta para el chat: puntaje, métricas en una línea, la frase coloreada y qué pasó con
+ * las palabras que peor salieron; el botón abre la retroalimentación completa en [onVerDetalle].
  */
 @Composable
 fun ResumenPronunciacion(evaluacion: EvaluacionVoz, onVerDetalle: () -> Unit, modifier: Modifier = Modifier) {
@@ -532,6 +532,12 @@ fun ResumenPronunciacion(evaluacion: EvaluacionVoz, onVerDetalle: () -> Unit, mo
             )
         }
         PalabrasColoreadas(evaluacion, seleccionada = null, onSeleccionar = { onVerDetalle() }, alineacion = Alignment.End, compacto = true)
+        Retroalimentacion.notasBreves(evaluacion).forEach { nota ->
+            Text(nota, style = MaterialTheme.typography.bodySmall, color = XPTexto, textAlign = TextAlign.End)
+        }
+        (Retroalimentacion.avisoReconocimiento(evaluacion) ?: Retroalimentacion.avisoAudio(evaluacion))?.let { aviso ->
+            Text(aviso, style = MaterialTheme.typography.bodySmall, color = XPNaranjaTexto, textAlign = TextAlign.End)
+        }
         TextButton(onClick = onVerDetalle) {
             Text(
                 Retroalimentacion.palabrasAPracticar(evaluacion).size.let { if (it == 0) "Ver cómo pronunciaste" else "Ver cómo mejorar ($it)" },
