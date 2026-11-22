@@ -44,7 +44,8 @@ class EvaluadorVoz @Inject constructor(
      * @param medida nombre de la medición de latencia para la Tabla 93.
      */
     suspend fun evaluar(referencia: String, medida: String = "voz.eco_vocal"): EvaluacionVoz {
-        val sesion = nuevaSesion()
+        val sesiones = mutableListOf(nuevaSesion())
+        val sesion = sesiones[0]
         sesion.preparando()
         try {
             val vigente = tokenVigente() ?: return dispositivo.evaluar(referencia, sesion)
@@ -56,11 +57,10 @@ class EvaluadorVoz @Inject constructor(
                 // Token rechazado, red caída a media frase o falla del SDK: se usa el respaldo,
                 // con una sesión nueva porque el micrófono se vuelve a abrir desde cero.
                 Log.w(TAG, "Azure falló, se usa el reconocedor del teléfono: ${error.message}")
-                dispositivo.evaluar(referencia, nuevaSesion())
+                dispositivo.evaluar(referencia, nuevaSesion().also { sesiones += it })
             }
         } finally {
-            sesionActual = null
-            _escucha.value = EstadoEscucha.Inactivo
+            soltar(sesiones)
         }
     }
 
@@ -69,7 +69,24 @@ class EvaluadorVoz @Inject constructor(
         sesionActual?.terminar()
     }
 
-    private fun nuevaSesion() = SesionEscucha { _escucha.value = it }.also { sesionActual = it }
+    /** Solo la sesión vigente publica: una que se canceló ya no pisa el estado de la siguiente. */
+    private fun nuevaSesion(): SesionEscucha {
+        lateinit var sesion: SesionEscucha
+        sesion = SesionEscucha { if (sesionActual === sesion) _escucha.value = it }
+        sesionActual = sesion
+        return sesion
+    }
+
+    /**
+     * Fin de un intento con sus [sesiones] (la original y, si hubo, la del respaldo): el estado
+     * se apaga solo si nadie abrió otro micrófono mientras tanto.
+     */
+    private fun soltar(sesiones: List<SesionEscucha>) {
+        if (sesiones.any { it === sesionActual }) {
+            sesionActual = null
+            _escucha.value = EstadoEscucha.Inactivo
+        }
+    }
 
     /**
      * Chat en vivo: una frase libre, avisando con [onParcial] lo que se va oyendo. Con Azure
@@ -79,11 +96,19 @@ class EvaluadorVoz @Inject constructor(
      * que el chat se pause.
      */
     suspend fun escucharFrase(onParcial: (String) -> Unit): EvaluacionVoz {
-        if (tokenVigente() == null) return dispositivo.transcribir(onParcial)
-        return azureLibre.escucharFrase(onParcial = onParcial).getOrElse { error ->
-            if (error is CancellationException || error is EvaluadorPronunciacion.SinVoz) throw error
-            Log.w(TAG, "Azure falló en el chat, el teléfono solo transcribe: ${error.message}")
-            dispositivo.transcribir(onParcial)
+        val sesiones = mutableListOf(nuevaSesion())
+        val sesion = sesiones[0]
+        sesion.preparando()
+        val pausa = EvaluadorPronunciacion.PAUSA_FIN_FRASE_MS
+        try {
+            if (tokenVigente() == null) return dispositivo.transcribir(onParcial, sesion, pausa)
+            return azureLibre.escucharFrase(sesion = sesion, onParcial = onParcial).getOrElse { error ->
+                if (error is CancellationException || error is EvaluadorPronunciacion.SinVoz) throw error
+                Log.w(TAG, "Azure falló en el chat, el teléfono solo transcribe: ${error.message}")
+                dispositivo.transcribir(onParcial, nuevaSesion().also { sesiones += it }, pausa)
+            }
+        } finally {
+            soltar(sesiones)
         }
     }
 

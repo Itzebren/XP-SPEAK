@@ -11,12 +11,15 @@ import com.xpspeak.app.feature.chat.data.EventoRespuesta
 import com.xpspeak.app.feature.chat.data.MensajeChat
 import com.xpspeak.app.feature.progress.data.InsigniaDto
 import com.xpspeak.app.feature.progress.data.ProgresoRepository
+import com.xpspeak.app.feature.games.data.voz.EstadoEscucha
 import com.xpspeak.app.feature.games.data.voz.EvaluadorVoz
 import com.xpspeak.app.feature.games.domain.EvaluacionVoz
 import com.xpspeak.app.feature.voice.domain.Retroalimentacion
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,7 +40,9 @@ data class MensajeUi(
     val completo: Boolean = true,
     val pronunciacion: EvaluacionVoz? = null,
     val correccion: CorreccionDto? = null,
-    val revisando: Boolean = false
+    val revisando: Boolean = false,
+    /** Identifica la burbuja aunque la lista cambie (se quita un turno con «No dije eso»). */
+    val id: Long = 0
 )
 
 data class ChatUiState(
@@ -72,6 +77,16 @@ class ChatViewModel @Inject constructor(
     private val sesionId = UUID.randomUUID().toString()
     private var conversacionRegistrada = false
     private var escucha: Job? = null
+    /** El envío más reciente: el del último mensaje del usuario. */
+    private var envio: Job? = null
+    private var siguienteId = 1L
+
+    /** Volumen del micrófono en vivo, para las barras de «te oigo». */
+    val estadoEscucha: StateFlow<EstadoEscucha> = evaluador.escucha
+
+    /** Botón «Listo»: envía lo ya dicho sin esperar la pausa de silencio. */
+    fun terminarDeHablar() = evaluador.terminar()
+
     /** Texto y pronunciación del mensaje que falló, para reenviarlo con «Reintentar». */
     private var fallido: Pair<String, EvaluacionVoz?>? = null
 
@@ -93,11 +108,12 @@ class ChatViewModel @Inject constructor(
             MensajeChat(role = if (it.esUsuario) "user" else "assistant", content = it.texto)
         }
 
-        // Dónde queda el mensaje del usuario, para colgarle su corrección cuando llegue.
-        val indiceUsuario = _uiState.value.mensajes.size
+        // Las burbujas de este turno, para colgarles la corrección y la respuesta cuando lleguen.
+        val idUsuario = siguienteId++
+        val idRespuesta = siguienteId++
         _uiState.value = _uiState.value.copy(
             mensajes = _uiState.value.mensajes +
-                MensajeUi(texto, esUsuario = true, pronunciacion = pronunciacion, revisando = seRevisa(texto)),
+                MensajeUi(texto, esUsuario = true, pronunciacion = pronunciacion, revisando = seRevisa(texto), id = idUsuario),
             entrada = "",
             cargando = true,
             error = null,
@@ -105,26 +121,23 @@ class ChatViewModel @Inject constructor(
         )
         fallido = null
 
-        viewModelScope.launch {
+        envio = viewModelScope.launch {
             var respuesta = ""
             // La respuesta ya se dio por completa (se lee en voz alta y se puede seguir conversando).
             var entregada = false
             // Tabla 93: desde que se envía el mensaje (con voz, ya evaluada la pronunciación).
             val enviado = Tiempos.ahora()
+            fun cambiar(id: Long, cambio: (MensajeUi) -> MensajeUi) {
+                _uiState.value = _uiState.value.copy(mensajes = _uiState.value.mensajes.map { if (it.id == id) cambio(it) else it })
+            }
+            fun conMensajeUsuario(cambio: (MensajeUi) -> MensajeUi) = cambiar(idUsuario, cambio)
             fun entregar() {
                 if (entregada) return
                 entregada = true
                 Tiempos.desde("chat.respuesta_completa", enviado, Meta.RNF02)
-                _uiState.value = _uiState.value.copy(
-                    mensajes = _uiState.value.mensajes.dropLast(1) + MensajeUi(respuesta, esUsuario = false),
-                    cargando = false
-                )
+                cambiar(idRespuesta) { it.copy(texto = respuesta, completo = true) }
+                _uiState.value = _uiState.value.copy(cargando = false)
                 viewModelScope.launch { registrarConversacion() }
-            }
-            fun conMensajeUsuario(cambio: (MensajeUi) -> MensajeUi) {
-                _uiState.value = _uiState.value.copy(
-                    mensajes = _uiState.value.mensajes.mapIndexed { i, mensaje -> if (i == indiceUsuario) cambio(mensaje) else mensaje }
-                )
             }
             try {
                 // RF-06/RN-02: se lee en cada envío por si el usuario cambió de nivel.
@@ -139,11 +152,15 @@ class ChatViewModel @Inject constructor(
                         is EventoRespuesta.Pedazo -> {
                             if (respuesta.isEmpty()) Tiempos.desde("chat.primer_pedazo", enviado, Meta.RNF02)
                             // RNF-02: la burbuja aparece con el primer pedazo y crece con cada uno.
-                            val anteriores = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
+                            val primero = respuesta.isEmpty()
                             respuesta += evento.texto
-                            _uiState.value = _uiState.value.copy(
-                                mensajes = anteriores + MensajeUi(respuesta, esUsuario = false, completo = false)
-                            )
+                            if (primero) {
+                                _uiState.value = _uiState.value.copy(
+                                    mensajes = _uiState.value.mensajes + MensajeUi(respuesta, esUsuario = false, completo = false, id = idRespuesta)
+                                )
+                            } else {
+                                cambiar(idRespuesta) { it.copy(texto = respuesta) }
+                            }
                         }
                     }
                 }
@@ -158,7 +175,7 @@ class ChatViewModel @Inject constructor(
                 // Se cortó esperando la corrección, con la respuesta ya entregada: no es un envío fallido.
                 if (entregada) return@launch
                 // Una respuesta cortada no se queda en el historial: confundiría a la IA en el siguiente turno.
-                val mensajes = if (respuesta.isEmpty()) _uiState.value.mensajes else _uiState.value.mensajes.dropLast(1)
+                val mensajes = _uiState.value.mensajes.filterNot { it.id == idRespuesta }
                 // Sin respuesta que leer, el modo en vivo se quedaría esperando: se pausa.
                 fallido = texto to pronunciacion
                 _uiState.value = _uiState.value.copy(
@@ -210,9 +227,41 @@ class ChatViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(enVivo = false, escuchando = false, parcial = "")
     }
 
-    /** La IA terminó de leer su respuesta en voz alta: le toca al usuario. */
+    /**
+     * La IA terminó de leer su respuesta en voz alta: le toca al usuario. Se espera un momento
+     * a que la bocina calle del todo; si no, el micrófono alcanzaba a oír la cola de la respuesta.
+     */
     fun onRespuestaLeida() {
-        escucharTurno()
+        viewModelScope.launch {
+            delay(RESPIRO_TRAS_HABLAR_MS)
+            escucharTurno()
+        }
+    }
+
+    /**
+     * «No dije eso»: el reconocedor entendió otra cosa. Se quita ese turno (el mensaje, su
+     * respuesta y sus correcciones, que tampoco van ya al historial de la IA) y se vuelve a
+     * escuchar. Solo aplica al último mensaje dicho con voz.
+     */
+    fun descartarUltimoDicho() {
+        val mensajes = _uiState.value.mensajes
+        val indice = mensajes.indexOfLast { it.esUsuario }
+        if (indice < 0 || mensajes[indice].pronunciacion == null) return
+        envio?.cancel()
+        envio = null
+        fallido = null
+        val anterior = escucha
+        escucha = null
+        _uiState.value = _uiState.value.copy(
+            mensajes = mensajes.take(indice),
+            cargando = false, enVivo = true, escuchando = false, parcial = "",
+            error = null, reintentable = false
+        )
+        viewModelScope.launch {
+            // El micrófono anterior debe soltarse antes de abrir el nuevo.
+            anterior?.cancelAndJoin()
+            escucharTurno()
+        }
     }
 
     /** Un turno del usuario: se oye en vivo, se califica (RF-09) y se envía solo a la IA (RF-07). */
@@ -244,6 +293,10 @@ class ChatViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(enVivo = false, error = excepcion.message)
                 }
         }
+    }
+
+    private companion object {
+        const val RESPIRO_TRAS_HABLAR_MS = 400L
     }
 
     fun onPermisoMicrofonoDenegado() {

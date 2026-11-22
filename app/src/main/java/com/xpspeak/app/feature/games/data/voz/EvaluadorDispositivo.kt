@@ -40,21 +40,34 @@ class EvaluadorDispositivo @Inject constructor(@ApplicationContext private val c
      * Chat en vivo sin Azure: solo transcribe lo que se dijo, avisando con [onParcial] mientras
      * habla, para poder conversar. No califica la pronunciación.
      */
-    suspend fun transcribir(onParcial: (String) -> Unit = {}): EvaluacionVoz = withContext(Dispatchers.Main) {
-        Pronunciacion.soloTranscripcion(alternativas(onParcial))
+    suspend fun transcribir(
+        onParcial: (String) -> Unit = {},
+        sesion: SesionEscucha? = null,
+        pausaMs: Long = PAUSA_FIN_FRASE_MS
+    ): EvaluacionVoz = withContext(Dispatchers.Main) {
+        Pronunciacion.soloTranscripcion(alternativas(onParcial, sesion, pausaMs))
     }
 
-    private suspend fun alternativas(onParcial: (String) -> Unit = {}, sesion: SesionEscucha? = null): List<Pair<String, Float>> {
+    private suspend fun alternativas(
+        onParcial: (String) -> Unit = {},
+        sesion: SesionEscucha? = null,
+        pausaMs: Long = PAUSA_FIN_FRASE_MS
+    ): List<Pair<String, Float>> {
         if (!disponible()) throw SinReconocedor()
         return try {
-            escuchar(offline = true, onParcial, sesion)
+            escuchar(offline = true, onParcial, sesion, pausaMs)
         } catch (error: SinIdiomaOffline) {
-            escuchar(offline = false, onParcial, sesion)
+            escuchar(offline = false, onParcial, sesion, pausaMs)
         }
     }
 
+    private companion object {
+        /** Silencio con el que se da por terminada una frase leída (Eco Vocal, Práctica). */
+        const val PAUSA_FIN_FRASE_MS = 1500L
+    }
+
     /** [sesion]: a quién avisar el volumen y lo que se va oyendo; el botón «Listo» corta la escucha. */
-    private suspend fun escuchar(offline: Boolean, onParcial: (String) -> Unit, sesion: SesionEscucha?): List<Pair<String, Float>> {
+    private suspend fun escuchar(offline: Boolean, onParcial: (String) -> Unit, sesion: SesionEscucha?, pausaMs: Long): List<Pair<String, Float>> {
         val reconocedor = SpeechRecognizer.createSpeechRecognizer(context)
         try {
             return suspendCancellableCoroutine { continuacion ->
@@ -106,8 +119,8 @@ class EvaluadorDispositivo @Inject constructor(@ApplicationContext private val c
                         putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
                         putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
                         // Una pausa corta a media oración no da la frase por terminada.
-                        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 1500L)
-                        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 1500L)
+                        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, pausaMs)
+                        putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, pausaMs)
                     }
                 )
                 // «Listo»: stopListening entrega lo que ya oyó (o NO_MATCH si no oyó nada).

@@ -89,13 +89,22 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import com.xpspeak.app.feature.games.data.voz.EstadoEscucha
+import com.xpspeak.app.feature.voice.ui.BarrasNivel
+import com.xpspeak.app.feature.voice.ui.HojaPracticaPronunciacion
+import com.xpspeak.app.feature.voice.ui.PracticaVozViewModel
 
 @Composable
 fun ChatScreen(
     viewModel: ChatViewModel = hiltViewModel(),
+    practica: PracticaVozViewModel = hiltViewModel(),
     onNavigateToPronunciacion: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val escucha by viewModel.estadoEscucha.collectAsState()
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
@@ -146,6 +155,12 @@ fun ChatScreen(
         }
     }
 
+    // «No dije eso» solo en el último mensaje dicho con voz.
+    val idDescartable = uiState.mensajes.lastOrNull { it.esUsuario }?.takeIf { it.pronunciacion != null }?.id
+
+    // RF-09: decir en voz alta la oración ya corregida, con la misma hoja que las lecciones.
+    HojaPracticaPronunciacion(practica, locutor)
+
     Column(modifier = Modifier.fillMaxSize().imePadding()) {
         EncabezadoXP("Practica con la IA") {
             Text("Conversa en inglés con el asistente de XP-SPEAK.", style = MaterialTheme.typography.bodyMedium)
@@ -156,12 +171,30 @@ fun ChatScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(uiState.mensajes) { mensaje ->
+            items(uiState.mensajes, key = { it.id }) { mensaje ->
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     BurbujaMensaje(mensaje, onEscuchar = { locutor.decirConIdiomas(mensaje.texto) })
+                    // El reconocedor entendió otra cosa: se quita el turno y se vuelve a escuchar.
+                    if (mensaje.id == idDescartable) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                            TextButton(
+                                onClick = { locutor.callar(avisar = false); viewModel.descartarUltimoDicho() },
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                                modifier = Modifier.height(32.dp)
+                            ) {
+                                Text("✕ No dije eso, repetir", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = XPRojoError)
+                            }
+                        }
+                    }
                     // Primero cómo sonó (solo con voz) y luego la gramática de lo que dijo o escribió.
                     mensaje.pronunciacion?.let { PronunciacionMensaje(it, locutor) }
-                    mensaje.correccion?.let { CorreccionMensaje(it, locutor, dicho = mensaje.pronunciacion != null) }
+                    mensaje.correccion?.let { correccion ->
+                        CorreccionMensaje(
+                            correccion, locutor, dicho = mensaje.pronunciacion != null,
+                            // Se pausa la conversación: la hoja de práctica usa el mismo micrófono.
+                            onPracticar = { frase -> viewModel.detenerEnVivo(); locutor.callar(avisar = false); practica.abrir(frase) }
+                        )
+                    }
                     if (mensaje.revisando) NotaGramatica("Revisando tu gramática…", XPTextoSecundario)
                 }
             }
@@ -200,16 +233,35 @@ fun ChatScreen(
         }
 
         if (uiState.enVivo) {
-            Text(
-                when {
-                    uiState.escuchando -> "🎙 Te escucho… habla en inglés y haz una pausa al terminar."
-                    uiState.cargando -> "💭 La IA está pensando…"
-                    else -> "🔊 La IA está hablando…"
-                },
-                style = MaterialTheme.typography.labelLarge,
-                color = XPMarino,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                val abierto = escucha as? EstadoEscucha.Escuchando
+                // Las barras se mueven con la voz: la señal de que sí se está oyendo.
+                if (uiState.escuchando && abierto != null) BarrasNivel(abierto.nivel, XPMarino)
+                Text(
+                    when {
+                        uiState.escuchando && escucha is EstadoEscucha.Calificando -> "Enviando lo que dijiste…"
+                        uiState.escuchando && abierto == null -> "Preparando el micrófono…"
+                        uiState.escuchando -> "Te escucho. Habla en inglés con calma; al terminar toca «Listo» o haz una pausa."
+                        uiState.cargando -> "💭 La IA está pensando…"
+                        else -> "🔊 La IA está hablando…"
+                    },
+                    style = MaterialTheme.typography.labelLarge,
+                    color = XPMarino,
+                    modifier = Modifier.weight(1f)
+                )
+                // Sin esperar la pausa: se envía lo ya dicho.
+                if (uiState.escuchando && abierto != null) {
+                    Button(
+                        onClick = viewModel::terminarDeHablar,
+                        colors = ButtonDefaults.buttonColors(containerColor = XPNaranja, contentColor = XPMarino),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp)
+                    ) { Text("Listo", fontWeight = FontWeight.Bold) }
+                }
+            }
         }
 
         TextButton(
@@ -274,7 +326,7 @@ private fun NotaGramatica(texto: String, color: androidx.compose.ui.graphics.Col
  * por qué. [dicho] cambia los textos cuando el mensaje fue con voz.
  */
 @Composable
-private fun CorreccionMensaje(correccion: CorreccionDto, locutor: Locutor, dicho: Boolean) {
+private fun CorreccionMensaje(correccion: CorreccionDto, locutor: Locutor, dicho: Boolean, onPracticar: (String) -> Unit) {
     if (correccion.errores.isEmpty()) {
         if (correccion.correcta) NotaGramatica("✓ Gramática correcta", XPVerdeExito)
         return
@@ -320,6 +372,17 @@ private fun CorreccionMensaje(correccion: CorreccionDto, locutor: Locutor, dicho
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Text(error.explicacion, style = MaterialTheme.typography.bodySmall, color = XPTextoSecundario)
+                    }
+                }
+                correccion.corregido?.let { corregido ->
+                    Button(
+                        onClick = { onPracticar(corregido) },
+                        colors = ButtonDefaults.buttonColors(containerColor = XPMarino, contentColor = XPBlanco),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 0.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Filled.Mic, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Text("  Ahora dila tú", fontWeight = FontWeight.Bold)
                     }
                 }
             }

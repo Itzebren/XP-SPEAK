@@ -1,6 +1,7 @@
 package com.xpspeak.app.feature.voice.data
 
 import android.util.Log
+import com.microsoft.cognitiveservices.speech.CancellationReason
 import com.microsoft.cognitiveservices.speech.PhraseListGrammar
 import com.microsoft.cognitiveservices.speech.PronunciationAssessmentConfig
 import com.microsoft.cognitiveservices.speech.PronunciationAssessmentGradingSystem
@@ -44,8 +45,12 @@ class EvaluadorPronunciacion @Inject constructor(
     companion object {
         private const val TAG = "EvaluadorPronunciacion"
 
-        /** Silencio con el que Azure da por terminada una frase en el chat en vivo. */
-        private const val PAUSA_FIN_FRASE_MS = 1500L
+        /**
+         * Silencio con el que se da por terminada una frase en el chat en vivo. Con 1.5 s, quien
+         * se detenía a pensar la palabra siguiente quedaba cortado a media oración; para no
+         * esperar la pausa está el botón «Listo».
+         */
+        const val PAUSA_FIN_FRASE_MS = 2500L
     }
 
     /** Nadie habló en el tiempo de espera: el chat en vivo se pausa para no dejar el micrófono abierto. */
@@ -56,8 +61,11 @@ class EvaluadorPronunciacion @Inject constructor(
      * lo que va oyendo mientras el usuario habla. Termina en la primera pausa con la
      * frase calificada sonido por sonido contra la pronunciación estándar; cancelar la
      * corrutina cierra el micrófono. Si nadie habla en [silencioInicialMs] falla con [SinVoz].
+     * [sesion] recibe el volumen y lo que se va oyendo, y su «Listo» cierra el micrófono para
+     * calificar lo ya dicho sin esperar la pausa (sin nada dicho, la frase sale como no legible).
      */
     suspend fun escucharFrase(
+        sesion: SesionEscucha = SesionEscucha {},
         idioma: String = "en-US",
         silencioInicialMs: Long = 15_000,
         onParcial: (String) -> Unit
@@ -73,7 +81,7 @@ class EvaluadorPronunciacion @Inject constructor(
             val formato = AudioStreamFormat.getWaveFormatPCM(MicrofonoPcm.FRECUENCIA_HZ.toLong(), 16, 1)
             val flujo = PushAudioInputStream.create(formato)
             val audio = AudioConfig.fromStreamInput(flujo)
-            val microfono = MicrofonoPcm(flujo, SesionEscucha {})
+            val microfono = MicrofonoPcm(flujo, sesion, cancelarEco = true)
             val pronConfig = PronunciationAssessmentConfig(
                 "",
                 PronunciationAssessmentGradingSystem.HundredMark,
@@ -91,11 +99,14 @@ class EvaluadorPronunciacion @Inject constructor(
             val empezoAHablar = CompletableDeferred<Unit>()
             recognizer.recognizing.addEventListener { _, evento ->
                 empezoAHablar.complete(Unit)
+                sesion.oyendo(evento.result.text)
                 onParcial(evento.result.text)
             }
 
             try {
                 conMicrofono(microfono) {
+                    sesion.escuchando()
+                    sesion.alTerminar = { microfono.cerrar() }
                     val frase = async {
                         suspendCancellableCoroutine { continuacion ->
                             recognizer.recognized.addEventListener { _, evento ->
@@ -104,6 +115,7 @@ class EvaluadorPronunciacion @Inject constructor(
                                 if (resultado.reason == ResultReason.RecognizedSpeech &&
                                     resultado.text.isNotBlank() && continuacion.isActive
                                 ) {
+                                    empezoAHablar.complete(Unit)
                                     // Corre en un hilo del SDK: un error aquí debe llegar a la corrutina, no tumbar la app.
                                     runCatching { ConversorAzure.convertir(resultado, referencia = null).also { medidor.registrar(resultado) } }
                                         .onSuccess { continuacion.resume(it) }
@@ -111,8 +123,13 @@ class EvaluadorPronunciacion @Inject constructor(
                                 }
                             }
                             recognizer.canceled.addEventListener { _, evento ->
-                                Log.e(TAG, "Canceled: ${evento.reason} – ${evento.errorDetails}")
-                                if (continuacion.isActive) {
+                                empezoAHablar.complete(Unit)
+                                if (!continuacion.isActive) return@addEventListener
+                                if (evento.reason == CancellationReason.EndOfStream) {
+                                    // «Listo» sin haber dicho nada entendible: no es una falla, se pide repetir.
+                                    continuacion.resume(ConversorAzure.noLegible(null))
+                                } else {
+                                    Log.e(TAG, "Canceled: ${evento.reason} – ${evento.errorDetails}")
                                     continuacion.resumeWithException(Exception("Error de voz: ${evento.errorDetails}"))
                                 }
                             }

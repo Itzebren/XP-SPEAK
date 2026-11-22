@@ -3,6 +3,7 @@ package com.xpspeak.app.feature.games.data.voz
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.media.audiofx.AcousticEchoCanceler
 import com.microsoft.cognitiveservices.speech.audio.PushAudioInputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -15,8 +16,17 @@ import java.util.concurrent.atomic.AtomicBoolean
  * barras de «te escucho». Al [cerrar] se suelta el micrófono y se cierra el stream: Azure
  * entiende que la frase terminó y califica lo que ya recibió. Nada se guarda (RN-04).
  */
-internal class MicrofonoPcm(private val flujo: PushAudioInputStream, private val sesion: SesionEscucha) {
+internal class MicrofonoPcm(
+    private val flujo: PushAudioInputStream,
+    private val sesion: SesionEscucha,
+    /**
+     * Chat en vivo: la IA acaba de hablar por la bocina y el micrófono se abre enseguida. Si el
+     * teléfono trae cancelador de eco se activa, para no «oír» la cola de su propia respuesta.
+     */
+    private val cancelarEco: Boolean = false
+) {
     private var grabadora: AudioRecord? = null
+    private var canceladorEco: AcousticEchoCanceler? = null
     @Volatile private var abierto = false
     private val cerrado = AtomicBoolean(false)
     private val ganancia = GananciaAutomatica()
@@ -42,6 +52,10 @@ internal class MicrofonoPcm(private val flujo: PushAudioInputStream, private val
         if (nueva.state != AudioRecord.STATE_INITIALIZED) {
             nueva.release()
             throw EvaluadorAzure.FalloAzure("El micrófono no está disponible en 16 kHz")
+        }
+        if (cancelarEco && AcousticEchoCanceler.isAvailable()) {
+            // No todos los teléfonos lo aplican a esta fuente de audio: si falla, se sigue sin él.
+            canceladorEco = runCatching { AcousticEchoCanceler.create(nueva.audioSessionId)?.apply { enabled = true } }.getOrNull()
         }
         nueva.startRecording()
         grabadora = nueva
@@ -75,6 +89,8 @@ internal class MicrofonoPcm(private val flujo: PushAudioInputStream, private val
             runCatching { lector.release() }
         }
         grabadora = null
+        canceladorEco?.let { runCatching { it.release() } }
+        canceladorEco = null
         runCatching { flujo.close() }
     }
 
