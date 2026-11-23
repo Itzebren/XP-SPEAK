@@ -27,6 +27,17 @@ object AnalisisFonemas {
     const val UMBRAL_FONEMA = 60
     /** Ventaja que debe sacar el sonido oído sobre el esperado para contar como sustitución. */
     const val MARGEN_SUSTITUCION = 10
+    /**
+     * Sustituciones típicas de quien habla español: «tink» por think, «dis» por this, «beri» por
+     * very. Azure le da 100 al sonido esperado porque sabe qué palabra era, pero deja el sonido
+     * español como segundo candidato con puntaje alto. Medido el 23-nov-2026 con 120 evaluaciones
+     * (3 voces nativas y 3 mexicanas): en las nativas ese candidato nunca pasó de 5; en las
+     * mexicanas llegó a 70–100. No se incluye /θ/→/s/ (les pasa a las nativas) ni /ɪ/→/i/ y
+     * /z/→/s/ (marcarían casi todas las palabras de un A1/A2).
+     */
+    private val SUSTITUCIONES_TIPICAS = mapOf("θ" to listOf("t", "d"), "ð" to listOf("d"), "v" to listOf("b"))
+    /** Puntaje del sonido español a partir del cual cuenta como sustitución típica. */
+    const val UMBRAL_SUSTITUCION_TIPICA = 70
     /** Puntaje máximo de una palabra con un sonido mal dicho: por debajo del regular (60), en rojo. */
     const val TOPE_PALABRA_CON_ERROR = 55
 
@@ -131,13 +142,19 @@ object AnalisisFonemas {
             ?.mapNotNull { it.takeIf { e -> e.isJsonPrimitive }?.asString }?.filter { it != "None" }
     }.getOrNull().orEmpty()
 
-    /** El sonido que se oyó en lugar de [fonema], si fue otro con suficiente ventaja. */
+    /**
+     * El sonido que se oyó en lugar de [fonema]: otro con suficiente ventaja sobre el esperado, o
+     * una de las [SUSTITUCIONES_TIPICAS] aunque Azure haya dado por bueno el esperado.
+     */
     private fun sustituto(fonema: JsonObject): String? {
         val esperado = fonema.texto("Phoneme") ?: return null
         val candidatos = evaluacion(fonema).getAsJsonArray("NBestPhonemes")?.map { it.asJsonObject }.orEmpty()
         val oido = candidatos.maxByOrNull { it.numero("Score") } ?: return null
         val puntajeEsperado = candidatos.firstOrNull { it.texto("Phoneme") == esperado }?.numero("Score") ?: 0
-        return oido.texto("Phoneme")?.takeIf { it != esperado && oido.numero("Score") - puntajeEsperado >= MARGEN_SUSTITUCION }
+        oido.texto("Phoneme")?.takeIf { it != esperado && oido.numero("Score") - puntajeEsperado >= MARGEN_SUSTITUCION }?.let { return it }
+        val tipicos = SUSTITUCIONES_TIPICAS[esperado] ?: return null
+        return candidatos.filter { it.texto("Phoneme") in tipicos && it.numero("Score") >= UMBRAL_SUSTITUCION_TIPICA }
+            .maxByOrNull { it.numero("Score") }?.texto("Phoneme")
     }
 
     /** "/ɹ/ sonó como /d/", "/ɑ/ poco claro", o null si el sonido estuvo bien. */

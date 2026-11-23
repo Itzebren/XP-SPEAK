@@ -59,6 +59,33 @@ class AnalisisFonemasTest {
         assertTrue(Pronunciacion.esAcierto(resultado))
     }
 
+    // Valores reales de Azure (23-nov-2026): «tri» por three, «dei» por they, «beri» por very.
+    @Test
+    fun `tink, dis y beri se marcan aunque Azure le de 100 al sonido esperado`() {
+        val resultado = evaluacion(json(
+            palabra("three", 97, "None", fonema("θ", 100, "θ" to 100, "d" to 95, "ɹ" to 71), fonema("ɹ", 100, "ɹ" to 100), fonema("i", 100, "i" to 100)),
+            palabra("they", 90, "None", fonema("ð", 99, "d" to 100, "ð" to 99, "n" to 60), fonema("eɪ", 95, "eɪ" to 100)),
+            palabra("very", 98, "None", fonema("v", 100, "v" to 100, "b" to 82), fonema("ɛɹ", 97, "ɛɹ" to 100), fonema("i", 92, "i" to 100))
+        ))
+
+        assertEquals(listOf("/θ/ sonó como /d/"), resultado.palabras[0].sonidos)
+        assertEquals(listOf("/ð/ sonó como /d/"), resultado.palabras[1].sonidos)
+        assertEquals(listOf("/v/ sonó como /b/"), resultado.palabras[2].sonidos)
+        assertTrue(resultado.palabras.all { it.error == "Mispronunciation" && it.puntaje == AnalisisFonemas.TOPE_PALABRA_CON_ERROR })
+    }
+
+    // Valores reales de voces nativas: el segundo candidato es otro sonido o uno típico pero débil.
+    @Test
+    fun `una th o una v nativas no se confunden con la sustitucion tipica`() {
+        val resultado = evaluacion(json(
+            palabra("think", 100, "None", fonema("θ", 100, "θ" to 100, "s" to 91, "f" to 26), fonema("ɪ", 100, "ɪ" to 100), fonema("ŋ", 100, "ŋ" to 100), fonema("k", 100, "k" to 100)),
+            palabra("this", 99, "None", fonema("ð", 97, "ð" to 100, "ɪ" to 58, "d" to 54), fonema("ɪ", 100, "ɪ" to 100), fonema("s", 100, "s" to 100)),
+            palabra("very", 100, "None", fonema("v", 100, "v" to 100, "b" to 4, "ð" to 4), fonema("ɛɹ", 100, "ɛɹ" to 100), fonema("i", 100, "i" to 100))
+        ))
+
+        assertTrue(resultado.palabras.all { it.error == null && it.sonidos.isEmpty() })
+    }
+
     @Test
     fun `un candidato apenas mejor que el esperado no cuenta como sustitucion`() {
         val resultado = evaluacion(json(palabra("hi", 90, "None",
