@@ -1,0 +1,325 @@
+package com.xpspeak.app.feature.games.ui.ecovocal
+
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.RecordVoiceOver
+import androidx.compose.material.icons.filled.Replay
+import androidx.compose.material.icons.filled.SlowMotionVideo
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.xpspeak.app.R
+import com.xpspeak.app.core.ui.theme.FormaBoton
+import com.xpspeak.app.core.ui.theme.XPBlanco
+import com.xpspeak.app.core.ui.theme.XPMarino
+import com.xpspeak.app.core.ui.theme.XPNaranjaTexto
+import com.xpspeak.app.core.ui.theme.XPTextoSecundario
+import com.xpspeak.app.core.ui.theme.XPVerdeExito
+import com.xpspeak.app.core.ui.theme.coloresBotonPrincipal
+import com.xpspeak.app.feature.games.data.voz.EstadoEscucha
+import com.xpspeak.app.feature.games.domain.EvaluacionVoz
+import com.xpspeak.app.feature.games.domain.GeneradorRondas
+import com.xpspeak.app.feature.games.domain.Minijuego
+import com.xpspeak.app.feature.games.domain.Pronunciacion
+import com.xpspeak.app.feature.games.ui.comun.ChipDato
+import com.xpspeak.app.feature.games.ui.comun.EtiquetaJuego
+import com.xpspeak.app.feature.games.ui.comun.LocalTemaJuego
+import com.xpspeak.app.feature.games.ui.comun.PantallaPartida
+import com.xpspeak.app.feature.games.ui.comun.TarjetaFeedback
+import com.xpspeak.app.feature.games.ui.comun.TarjetaJuego
+import com.xpspeak.app.feature.games.ui.comun.Veredicto
+import com.xpspeak.app.feature.games.ui.comun.rememberLocutor
+import com.xpspeak.app.feature.voice.ui.RetroalimentacionVoz
+import com.xpspeak.app.feature.voice.domain.Retroalimentacion
+import com.xpspeak.app.feature.voice.ui.AvisoVoz
+import com.xpspeak.app.feature.voice.ui.DetallePalabra
+import com.xpspeak.app.feature.voice.ui.NotaFuente
+import com.xpspeak.app.feature.voice.ui.PalabrasColoreadas
+import com.xpspeak.app.feature.voice.ui.PanelEscucha
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+
+@Composable
+fun EcoVocalScreen(onVolver: () -> Unit, viewModel: EcoVocalViewModel = hiltViewModel()) {
+    val fase by viewModel.fase.collectAsState()
+    val escucha by viewModel.estadoEscucha.collectAsState()
+    val aviso by viewModel.aviso.collectAsState()
+    val locutor = rememberLocutor()
+    val context = LocalContext.current
+
+    // RECORD_AUDIO está en el manifiesto, pero desde Android 6 se pide al usarlo.
+    val pedirPermiso = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { concedido ->
+        if (concedido) viewModel.hablar() else viewModel.permisoDenegado()
+    }
+    val hablar = {
+        locutor.callar()
+        val tienePermiso = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (tienePermiso) viewModel.hablar() else pedirPermiso.launch(Manifest.permission.RECORD_AUDIO)
+    }
+
+    PantallaPartida(
+        juego = Minijuego.ECO_VOCAL,
+        viewModel = viewModel,
+        fase = fase,
+        onVolver = onVolver,
+        progreso = { (it.numeroRonda - 1).toFloat() / GeneradorRondas.RONDAS_ECO }
+    ) { estado ->
+        val tema = LocalTemaJuego.current
+        val ronda = estado.ronda
+        val evaluacion = estado.evaluacion
+        val revision = estado.revision
+
+        // §5.1 paso 1: la frase se escucha al aparecer.
+        LaunchedEffect(ronda) { locutor.decir(ronda.en) }
+
+        Column(
+            modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                ChipDato(Icons.Filled.RecordVoiceOver, "Frase ${estado.numeroRonda} de ${GeneradorRondas.RONDAS_ECO}", XPBlanco, tema.texto)
+                ChipDato(Icons.Filled.Replay, "Intento ${estado.intento} de ${Pronunciacion.INTENTOS_POR_RONDA}", XPBlanco, tema.texto)
+            }
+
+            if (evaluacion != null && revision == null) {
+                AudioNoLegible(evaluacion)
+            }
+
+            TarjetaJuego(borde = tema.acento) {
+                EtiquetaJuego("Repite en voz alta")
+                Text(ronda.en, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = XPMarino)
+                ronda.es?.let { Text(it, style = MaterialTheme.typography.bodyLarge, color = XPTextoSecundario) }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = { locutor.decir(ronda.en) },
+                        shape = RoundedCornerShape(50),
+                        colors = ButtonDefaults.buttonColors(containerColor = tema.acento, contentColor = tema.sobreAcento)
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null, modifier = Modifier.size(20.dp))
+                        Text("  Escuchar", fontWeight = FontWeight.Bold)
+                    }
+                    OutlinedButton(
+                        onClick = { locutor.decir(ronda.en, lento = true) },
+                        shape = RoundedCornerShape(50),
+                        border = BorderStroke(2.dp, tema.acento)
+                    ) {
+                        Icon(Icons.Filled.SlowMotionVideo, contentDescription = null, tint = tema.texto, modifier = Modifier.size(20.dp))
+                        Text("  Más lento", color = tema.texto, fontWeight = FontWeight.Bold)
+                    }
+                }
+                // Si el teléfono no tiene voz en inglés, se dice aquí en vez de que «Escuchar» quede mudo.
+                AvisoVoz(locutor)
+            }
+
+            if (evaluacion != null && revision != null) {
+                PuntajePronunciacion(evaluacion, locutor)
+                when {
+                    revision.acierto -> TarjetaFeedback(Veredicto.ACIERTO, "¡Muy bien pronunciado!")
+                    !revision.definitiva -> TarjetaFeedback(
+                        Veredicto.ERROR,
+                        "Casi. Fíjate en las palabras en rojo.",
+                        "Escucha la frase otra vez y vuelve a intentarlo."
+                    )
+                    else -> TarjetaFeedback(Veredicto.ERROR, "Sigue practicando esta frase.", "La verás de nuevo en otras partidas.")
+                }
+            }
+
+            // Un aviso del micrófono no es una respuesta equivocada: sin sonido de error.
+            aviso?.let { TarjetaFeedback(Veredicto.ERROR, "Micrófono", it, sonido = false) }
+        }
+
+        if (revision != null) {
+            Button(
+                colors = coloresBotonPrincipal(),
+                shape = FormaBoton,
+                onClick = viewModel::continuar,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 54.dp)
+            ) {
+                Text(if (revision.definitiva) "Continuar" else "Intentar de nuevo", fontWeight = FontWeight.Bold)
+            }
+        } else {
+            BotonMicrofono(escucha, onHablar = hablar, onTerminar = viewModel::terminarDeHablar)
+            // Si el micrófono no capta nada (o falla), el usuario no debe quedar atorado en la frase.
+            if (aviso != null || evaluacion != null) {
+                OutlinedButton(
+                    onClick = viewModel::saltar,
+                    shape = FormaBoton,
+                    border = BorderStroke(2.dp, XPMarino),
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("Saltar esta frase", color = XPMarino) }
+            }
+        }
+    }
+}
+
+/**
+ * Micrófono grande del color del juego. Mientras escucha, arriba van las barras de volumen y
+ * lo que se va entendiendo (PanelEscucha), y el botón se vuelve «Listo» para calificar sin
+ * esperar la pausa: antes no había señal de que ya oía y el usuario repetía la frase tres veces.
+ */
+@Composable
+private fun BotonMicrofono(estado: EstadoEscucha, onHablar: () -> Unit, onTerminar: () -> Unit) {
+    val tema = LocalTemaJuego.current
+    val escuchando = estado as? EstadoEscucha.Escuchando
+    val ocupado = estado == EstadoEscucha.Preparando || estado == EstadoEscucha.Calificando
+    val latido = rememberInfiniteTransition(label = "microfono")
+    val escala by latido.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.25f,
+        animationSpec = infiniteRepeatable(tween(700, easing = LinearEasing), RepeatMode.Reverse),
+        label = "halo"
+    )
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        PanelEscucha(estado, onTerminar = onTerminar, color = tema.texto, conBoton = false)
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.size(120.dp)) {
+            // El halo late mientras espera y crece con la voz mientras escucha.
+            val haloEscala = when {
+                escuchando != null -> 1.05f + escuchando.nivel * 0.35f
+                ocupado -> escala
+                else -> 1.1f
+            }
+            Box(
+                modifier = Modifier
+                    .size(96.dp)
+                    .scale(haloEscala)
+                    .background(tema.acento.copy(alpha = if (estado == EstadoEscucha.Inactivo) 0.18f else 0.3f), CircleShape)
+            )
+            FilledIconButton(
+                onClick = if (escuchando != null) onTerminar else onHablar,
+                enabled = !ocupado,
+                modifier = Modifier.size(88.dp),
+                shape = CircleShape,
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = if (escuchando != null) XPVerdeExito else tema.acento,
+                    contentColor = tema.sobreAcento,
+                    disabledContainerColor = tema.acento,
+                    disabledContentColor = tema.sobreAcento
+                )
+            ) {
+                if (escuchando != null) {
+                    Icon(Icons.Filled.Check, contentDescription = "Listo, calificar", modifier = Modifier.size(44.dp))
+                } else {
+                    Icon(Icons.Filled.Mic, contentDescription = "Hablar", modifier = Modifier.size(44.dp))
+                }
+            }
+        }
+        Text(
+            when (estado) {
+                EstadoEscucha.Inactivo -> "Toca y repite la frase"
+                EstadoEscucha.Preparando -> "Un momento…"
+                is EstadoEscucha.Escuchando -> "Toca ✓ cuando termines"
+                EstadoEscucha.Calificando -> "Calificando…"
+            },
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold,
+            color = tema.texto
+        )
+    }
+}
+
+/** Ilustración 40: "¡Pronunciación incorrecta!" con el índice de confianza bajo. */
+@Composable
+private fun AudioNoLegible(evaluacion: EvaluacionVoz) {
+    TarjetaJuego(borde = MaterialTheme.colorScheme.error) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Image(
+                painterResource(R.drawable.mascota_preocupada),
+                contentDescription = null,
+                modifier = Modifier.size(width = 64.dp, height = 70.dp)
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text("¡Pronunciación incorrecta!", color = XPNaranjaTexto, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    "Tu índice de confianza es del ${evaluacion.confianza}%, la respuesta no fue legible.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Surface(color = MaterialTheme.colorScheme.error, shape = RoundedCornerShape(14.dp)) {
+                Text(
+                    "${evaluacion.confianza}%",
+                    color = Color.White,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+                )
+            }
+            Column {
+                Text("Índice de confianza", style = MaterialTheme.typography.labelLarge, color = XPTextoSecundario)
+                Text("Bajo", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            }
+        }
+        Text("Por favor, repite la frase.", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+        Text(
+            Retroalimentacion.avisoAudio(evaluacion)
+                ?: "Habla a un palmo del micrófono, con voz clara, y espera el bip antes de empezar.",
+            style = MaterialTheme.typography.bodySmall,
+            color = XPTextoSecundario
+        )
+    }
+}
+
+/**
+ * La misma retroalimentación completa de Práctica, lecciones y chat (RF-09): puntaje, la frase
+ * palabra por palabra, sílabas y sonidos con cómo corregirlos, ritmo, entonación y puntajes.
+ */
+@Composable
+private fun PuntajePronunciacion(evaluacion: EvaluacionVoz, locutorDetalle: com.xpspeak.app.feature.games.ui.comun.Locutor?) {
+    TarjetaJuego {
+        RetroalimentacionVoz(evaluacion, onEscuchar = { locutorDetalle?.decir(it, lento = true) }, compacta = true)
+    }
+}

@@ -1,0 +1,206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://xp-speak/content/leccion.schema.json",
+  "title": "Lección XP-SPEAK",
+  "description": "Contrato de contenido de una lección (docs/lecciones-diseno.md §4.2).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "version", "nivel_mcer", "modulo_tematico", "orden",
+    "prerequisito_id", "xp_recompensa", "can_do", "secciones"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^(a1|a2)-[a-z0-9]+(-[a-z0-9]+)*$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "nivel_mcer": { "enum": ["A1", "A2"] },
+    "modulo_tematico": { "type": "string", "minLength": 1 },
+    "orden": { "type": "integer", "minimum": 1 },
+    "prerequisito_id": { "type": ["string", "null"] },
+    "xp_recompensa": { "type": "integer", "minimum": 1, "maximum": 500 },
+    "can_do": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "autoria": {
+      "description": "Campo interno de trazabilidad (§8.5). No se envía a la app.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fuentes"],
+      "properties": {
+        "fuentes": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "notas": { "type": "string" }
+      }
+    },
+    "secciones": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["tipo"],
+        "properties": {
+          "tipo": { "enum": ["introduccion", "vocabulario", "gramatica", "dialogo", "evaluacion"] }
+        },
+        "allOf": [
+          { "if": { "properties": { "tipo": { "const": "introduccion" } } }, "then": { "$ref": "#/definitions/introduccion" } },
+          { "if": { "properties": { "tipo": { "const": "vocabulario" } } }, "then": { "$ref": "#/definitions/vocabulario" } },
+          { "if": { "properties": { "tipo": { "const": "gramatica" } } }, "then": { "$ref": "#/definitions/gramatica" } },
+          { "if": { "properties": { "tipo": { "const": "dialogo" } } }, "then": { "$ref": "#/definitions/dialogo" } },
+          { "if": { "properties": { "tipo": { "const": "evaluacion" } } }, "then": { "$ref": "#/definitions/evaluacion" } }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "texto": { "type": "string", "minLength": 1 },
+    "conceptoId": { "type": "string", "pattern": "^(voc\\.[a-z0-9_]+\\.[a-z0-9_]+|gram\\.[a-z0-9_]+|func\\.[a-z0-9_]+)$" },
+    "audio": { "type": "string", "pattern": "^(tts:.+|https://.+)$" },
+
+    "introduccion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "titulo", "cuerpo"],
+      "properties": {
+        "tipo": { "const": "introduccion" },
+        "titulo": { "$ref": "#/definitions/texto" },
+        "cuerpo": { "$ref": "#/definitions/texto" }
+      }
+    },
+    "vocabulario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "items"],
+      "properties": {
+        "tipo": { "const": "vocabulario" },
+        "titulo": { "$ref": "#/definitions/texto" },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["concepto_id", "en", "es"],
+            "properties": {
+              "concepto_id": { "$ref": "#/definitions/conceptoId" },
+              "en": { "$ref": "#/definitions/texto" },
+              "es": { "$ref": "#/definitions/texto" },
+              "audio": { "$ref": "#/definitions/audio" },
+              "nota": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "gramatica": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "concepto_id", "titulo", "explicacion", "ejemplos"],
+      "properties": {
+        "tipo": { "const": "gramatica" },
+        "concepto_id": { "$ref": "#/definitions/conceptoId" },
+        "titulo": { "$ref": "#/definitions/texto" },
+        "explicacion": { "$ref": "#/definitions/texto" },
+        "ejemplos": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/texto" } }
+      }
+    },
+    "dialogo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "lineas"],
+      "properties": {
+        "tipo": { "const": "dialogo" },
+        "titulo": { "$ref": "#/definitions/texto" },
+        "audio": { "$ref": "#/definitions/audio" },
+        "lineas": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["hablante", "en", "es"],
+            "properties": {
+              "hablante": { "$ref": "#/definitions/texto" },
+              "en": { "$ref": "#/definitions/texto" },
+              "es": { "$ref": "#/definitions/texto" }
+            }
+          }
+        }
+      }
+    },
+    "evaluacion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "umbral_aprobacion", "items"],
+      "properties": {
+        "tipo": { "const": "evaluacion" },
+        "umbral_aprobacion": { "type": "number", "minimum": 0.5, "maximum": 1 },
+        "items": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo"],
+            "properties": {
+              "tipo": { "enum": ["opcion_multiple", "completar", "emparejar"] }
+            },
+            "allOf": [
+              { "if": { "properties": { "tipo": { "const": "opcion_multiple" } } }, "then": { "$ref": "#/definitions/opcionMultiple" } },
+              { "if": { "properties": { "tipo": { "const": "completar" } } }, "then": { "$ref": "#/definitions/completar" } },
+              { "if": { "properties": { "tipo": { "const": "emparejar" } } }, "then": { "$ref": "#/definitions/emparejar" } }
+            ]
+          }
+        }
+      }
+    },
+    "opcionMultiple": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "tipo", "concepto_id", "enunciado", "opciones", "respuesta_correcta", "feedback_error"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^q[0-9]+$" },
+        "tipo": { "const": "opcion_multiple" },
+        "concepto_id": { "$ref": "#/definitions/conceptoId" },
+        "enunciado": { "$ref": "#/definitions/texto" },
+        "opciones": { "type": "array", "minItems": 2, "maxItems": 6, "items": { "$ref": "#/definitions/texto" } },
+        "respuesta_correcta": { "type": "integer", "minimum": 0 },
+        "feedback_error": { "$ref": "#/definitions/texto" }
+      }
+    },
+    "completar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "tipo", "concepto_id", "enunciado", "respuesta_correcta", "feedback_error"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^q[0-9]+$" },
+        "tipo": { "const": "completar" },
+        "concepto_id": { "$ref": "#/definitions/conceptoId" },
+        "enunciado": { "type": "string", "pattern": "___" },
+        "respuesta_correcta": { "$ref": "#/definitions/texto" },
+        "acepta": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/texto" } },
+        "feedback_error": { "$ref": "#/definitions/texto" }
+      }
+    },
+    "emparejar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "tipo", "enunciado", "pares", "feedback_error"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^q[0-9]+$" },
+        "tipo": { "const": "emparejar" },
+        "enunciado": { "$ref": "#/definitions/texto" },
+        "pares": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["concepto_id", "izq", "der"],
+            "properties": {
+              "concepto_id": { "$ref": "#/definitions/conceptoId" },
+              "izq": { "$ref": "#/definitions/texto" },
+              "der": { "$ref": "#/definitions/texto" }
+            }
+          }
+        },
+        "feedback_error": { "$ref": "#/definitions/texto" }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+# Los JSON que se exportan al APK se comparan byte a byte en las pruebas del
+# backend; con core.autocrlf=true en Windows saldrían con \r\n y fallarían.
+*.json text eol=lf
+# Sonidos de los minijuegos (npm run generar:sonidos): nunca convertir.
+*.wav binary

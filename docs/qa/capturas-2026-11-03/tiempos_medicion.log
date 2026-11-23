@@ -1,0 +1,127 @@
+--------- beginning of main
+11-03 23:09:13.277 12652 12708 I XPS-TIEMPOS: voz.pronunciacion, tras dejar de hablar: 2336 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:09:13.277 12652 12708 I XPS-TIEMPOS: voz.pronunciacion, procesamiento de Azure: 1336 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:09:24.614 12652 12706 I XPS-TIEMPOS: voz.pronunciacion, tras dejar de hablar: 1929 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:09:24.615 12652 12706 I XPS-TIEMPOS: voz.pronunciacion, procesamiento de Azure: 929 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:09:38.541 12652 13543 I XPS-TIEMPOS: voz.pronunciacion, tras dejar de hablar: 1957 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:09:38.550 12652 13543 I XPS-TIEMPOS: voz.pronunciacion, procesamiento de Azure: 957 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:09:52.456 12652 13543 I XPS-TIEMPOS: voz.pronunciacion, tras dejar de hablar: 2033 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:09:52.456 12652 13543 I XPS-TIEMPOS: voz.pronunciacion, procesamiento de Azure: 1033 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:10:05.667 12652 12708 I XPS-TIEMPOS: voz.pronunciacion, tras dejar de hablar: 2368 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:10:05.667 12652 12708 I XPS-TIEMPOS: voz.pronunciacion, procesamiento de Azure: 1368 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:10:18.802 12652 12707 I XPS-TIEMPOS: voz.pronunciacion, tras dejar de hablar: 2066 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:10:18.802 12652 12707 I XPS-TIEMPOS: voz.pronunciacion, procesamiento de Azure: 1066 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:10:32.093 12652 12708 I XPS-TIEMPOS: voz.pronunciacion, tras dejar de hablar: 2181 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:10:32.093 12652 12708 I XPS-TIEMPOS: voz.pronunciacion, procesamiento de Azure: 1181 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:10:45.510 12652 13543 I XPS-TIEMPOS: voz.pronunciacion, tras dejar de hablar: 2031 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:10:45.510 12652 13543 I XPS-TIEMPOS: voz.pronunciacion, procesamiento de Azure: 1031 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:10:58.636 12652 12708 I XPS-TIEMPOS: voz.pronunciacion, tras dejar de hablar: 2287 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:10:58.636 12652 12708 I XPS-TIEMPOS: voz.pronunciacion, procesamiento de Azure: 1287 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:11:11.871 12652 12707 I XPS-TIEMPOS: voz.pronunciacion, tras dejar de hablar: 2050 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:11:11.871 12652 12707 I XPS-TIEMPOS: voz.pronunciacion, procesamiento de Azure: 1050 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:11:36.402 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 2424 ms · RNF-02
+11-03 23:11:39.399 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 5421 ms · RNF-02
+11-03 23:11:50.633 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 549 ms · RNF-02
+11-03 23:11:51.558 12652 12652 I XPS-TIEMPOS: chat.correccion: 1473 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:11:51.558 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1474 ms · RNF-02
+11-03 23:12:07.580 12652 12652 I XPS-TIEMPOS: chat.correccion: 1214 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:12:07.891 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 1525 ms · RNF-02
+11-03 23:12:08.030 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1664 ms · RNF-02
+11-03 23:12:24.781 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 2437 ms · RNF-02
+11-03 23:12:26.632 12652 12652 I XPS-TIEMPOS: chat.correccion: 4288 ms · RN-05 ≤ 2.5 s · NO CUMPLE
+11-03 23:12:26.633 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 4289 ms · RNF-02
+11-03 23:12:39.425 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 778 ms · RNF-02
+11-03 23:12:39.883 12652 12652 I XPS-TIEMPOS: chat.correccion: 1236 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:12:39.883 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1237 ms · RNF-02
+11-03 23:12:55.615 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 903 ms · RNF-02
+11-03 23:12:56.140 12652 12652 I XPS-TIEMPOS: chat.correccion: 1429 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:12:56.242 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1530 ms · RNF-02
+11-03 23:14:16.293 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 1413 ms · RNF-02
+11-03 23:14:16.590 12652 12652 I XPS-TIEMPOS: chat.correccion: 1709 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:14:16.590 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1710 ms · RNF-02
+11-03 23:14:37.945 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 889 ms · RNF-02
+11-03 23:14:38.798 12652 12652 I XPS-TIEMPOS: chat.correccion: 1742 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:14:38.801 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1745 ms · RNF-02
+11-03 23:14:57.862 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 1089 ms · RNF-02
+11-03 23:14:58.641 12652 12652 I XPS-TIEMPOS: chat.correccion: 1868 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:14:58.642 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1868 ms · RNF-02
+11-03 23:15:20.865 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 940 ms · RNF-02
+11-03 23:15:20.865 12652 12652 I XPS-TIEMPOS: chat.correccion: 942 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:15:20.900 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 977 ms · RNF-02
+11-03 23:15:54.316 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 867 ms · RNF-02
+11-03 23:15:56.678 12652 12652 I XPS-TIEMPOS: chat.correccion: 3229 ms · RN-05 ≤ 2.5 s · NO CUMPLE
+11-03 23:15:56.679 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 3230 ms · RNF-02
+11-03 23:16:08.698 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 1068 ms · RNF-02
+11-03 23:16:09.158 12652 12652 I XPS-TIEMPOS: chat.correccion: 1528 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:16:09.158 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1529 ms · RNF-02
+11-03 23:16:44.539 12652 25213 I XPS-TIEMPOS: voz.chat_en_vivo, tras dejar de hablar: 2920 ms · RN-05 ≤ 2.5 s · NO CUMPLE · incluye 1500 ms de pausa para cerrar la frase
+11-03 23:16:44.539 12652 25213 I XPS-TIEMPOS: voz.chat_en_vivo, procesamiento de Azure: 1420 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1500 ms
+11-03 23:16:46.056 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 1129 ms · RNF-02
+11-03 23:16:46.460 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1533 ms · RNF-02
+11-03 23:16:59.982 12652 25334 I XPS-TIEMPOS: voz.chat_en_vivo, tras dejar de hablar: 2476 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1500 ms de pausa para cerrar la frase
+11-03 23:16:59.982 12652 25334 I XPS-TIEMPOS: voz.chat_en_vivo, procesamiento de Azure: 976 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1500 ms
+11-03 23:17:01.581 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 1376 ms · RNF-02
+11-03 23:17:02.168 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1962 ms · RNF-02
+11-03 23:17:17.614 12652 25425 I XPS-TIEMPOS: voz.chat_en_vivo, tras dejar de hablar: 4313 ms · RN-05 ≤ 2.5 s · NO CUMPLE · incluye 1500 ms de pausa para cerrar la frase
+11-03 23:17:17.614 12652 25425 I XPS-TIEMPOS: voz.chat_en_vivo, procesamiento de Azure: 2813 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1500 ms
+11-03 23:17:18.809 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 916 ms · RNF-02
+11-03 23:17:19.092 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1198 ms · RNF-02
+11-03 23:17:31.239 12652 25514 I XPS-TIEMPOS: voz.chat_en_vivo, tras dejar de hablar: 2260 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1500 ms de pausa para cerrar la frase
+11-03 23:17:31.239 12652 25514 I XPS-TIEMPOS: voz.chat_en_vivo, procesamiento de Azure: 760 ms · R01 ≤ 800 ms · CUMPLE · sin la pausa de 1500 ms
+11-03 23:17:32.787 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 1152 ms · RNF-02
+11-03 23:17:33.234 12652 12652 I XPS-TIEMPOS: chat.correccion: 1599 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:17:33.234 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1599 ms · RNF-02
+11-03 23:17:46.865 12652 25615 I XPS-TIEMPOS: voz.chat_en_vivo, tras dejar de hablar: 2333 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1500 ms de pausa para cerrar la frase
+11-03 23:17:46.865 12652 25615 I XPS-TIEMPOS: voz.chat_en_vivo, procesamiento de Azure: 833 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1500 ms
+11-03 23:17:48.230 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 996 ms · RNF-02
+11-03 23:17:48.693 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1459 ms · RNF-02
+11-03 23:18:02.665 12652 25723 I XPS-TIEMPOS: voz.chat_en_vivo, tras dejar de hablar: 2501 ms · RN-05 ≤ 2.5 s · NO CUMPLE · incluye 1500 ms de pausa para cerrar la frase
+11-03 23:18:02.665 12652 25723 I XPS-TIEMPOS: voz.chat_en_vivo, procesamiento de Azure: 1001 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1500 ms
+11-03 23:18:04.074 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 1051 ms · RNF-02
+11-03 23:18:04.254 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1230 ms · RNF-02
+11-03 23:18:18.122 12652 25833 I XPS-TIEMPOS: voz.chat_en_vivo, tras dejar de hablar: 2327 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1500 ms de pausa para cerrar la frase
+11-03 23:18:18.122 12652 25833 I XPS-TIEMPOS: voz.chat_en_vivo, procesamiento de Azure: 827 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1500 ms
+11-03 23:18:20.157 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 1640 ms · RNF-02
+11-03 23:18:20.376 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1859 ms · RNF-02
+11-03 23:18:33.502 12652 25934 I XPS-TIEMPOS: voz.chat_en_vivo, tras dejar de hablar: 2301 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1500 ms de pausa para cerrar la frase
+11-03 23:18:33.502 12652 25934 I XPS-TIEMPOS: voz.chat_en_vivo, procesamiento de Azure: 801 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1500 ms
+11-03 23:18:34.725 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 850 ms · RNF-02
+11-03 23:18:35.137 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1262 ms · RNF-02
+11-03 23:18:49.805 12652 26040 I XPS-TIEMPOS: voz.chat_en_vivo, tras dejar de hablar: 2887 ms · RN-05 ≤ 2.5 s · NO CUMPLE · incluye 1500 ms de pausa para cerrar la frase
+11-03 23:18:49.805 12652 26040 I XPS-TIEMPOS: voz.chat_en_vivo, procesamiento de Azure: 1387 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1500 ms
+11-03 23:18:51.249 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 1278 ms · RNF-02
+11-03 23:18:51.251 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 1280 ms · RNF-02
+11-03 23:19:04.972 12652 26129 I XPS-TIEMPOS: voz.chat_en_vivo, tras dejar de hablar: 2548 ms · RN-05 ≤ 2.5 s · NO CUMPLE · incluye 1500 ms de pausa para cerrar la frase
+11-03 23:19:04.973 12652 26129 I XPS-TIEMPOS: voz.chat_en_vivo, procesamiento de Azure: 1048 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1500 ms
+11-03 23:19:07.142 12652 12652 I XPS-TIEMPOS: chat.primer_pedazo: 2000 ms · RNF-02
+11-03 23:19:07.157 12652 12652 I XPS-TIEMPOS: chat.respuesta_completa: 2015 ms · RNF-02
+11-03 23:19:52.873 12652 12706 I XPS-TIEMPOS: voz.eco_vocal, tras dejar de hablar: 1332 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 700 ms de pausa para cerrar la frase
+11-03 23:19:52.873 12652 12706 I XPS-TIEMPOS: voz.eco_vocal, procesamiento de Azure: 632 ms · R01 ≤ 800 ms · CUMPLE · sin la pausa de 700 ms
+11-03 23:20:15.757 12652 12707 I XPS-TIEMPOS: voz.eco_vocal, tras dejar de hablar: 1415 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 700 ms de pausa para cerrar la frase
+11-03 23:20:15.757 12652 12707 I XPS-TIEMPOS: voz.eco_vocal, procesamiento de Azure: 715 ms · R01 ≤ 800 ms · CUMPLE · sin la pausa de 700 ms
+11-03 23:20:38.319 12652 12708 I XPS-TIEMPOS: voz.eco_vocal, tras dejar de hablar: 1451 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 700 ms de pausa para cerrar la frase
+11-03 23:20:38.319 12652 12708 I XPS-TIEMPOS: voz.eco_vocal, procesamiento de Azure: 751 ms · R01 ≤ 800 ms · CUMPLE · sin la pausa de 700 ms
+11-03 23:21:01.179 12652 12706 I XPS-TIEMPOS: voz.eco_vocal, tras dejar de hablar: 1713 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:21:01.179 12652 12706 I XPS-TIEMPOS: voz.eco_vocal, procesamiento de Azure: 713 ms · R01 ≤ 800 ms · CUMPLE · sin la pausa de 1000 ms
+11-03 23:21:24.292 12652 12707 I XPS-TIEMPOS: voz.eco_vocal, tras dejar de hablar: 1715 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:21:24.293 12652 12707 I XPS-TIEMPOS: voz.eco_vocal, procesamiento de Azure: 715 ms · R01 ≤ 800 ms · CUMPLE · sin la pausa de 1000 ms
+11-03 23:21:47.879 12652 12706 I XPS-TIEMPOS: voz.eco_vocal, tras dejar de hablar: 1874 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:21:47.879 12652 12706 I XPS-TIEMPOS: voz.eco_vocal, procesamiento de Azure: 874 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:22:10.990 12652 12706 I XPS-TIEMPOS: voz.eco_vocal, tras dejar de hablar: 1715 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:22:10.990 12652 12706 I XPS-TIEMPOS: voz.eco_vocal, procesamiento de Azure: 715 ms · R01 ≤ 800 ms · CUMPLE · sin la pausa de 1000 ms
+11-03 23:22:35.217 12652 12707 I XPS-TIEMPOS: voz.eco_vocal, tras dejar de hablar: 2232 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:22:35.217 12652 12707 I XPS-TIEMPOS: voz.eco_vocal, procesamiento de Azure: 1232 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:23:00.798 12652 13543 I XPS-TIEMPOS: voz.eco_vocal, tras dejar de hablar: 2394 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 1000 ms de pausa para cerrar la frase
+11-03 23:23:00.798 12652 13543 I XPS-TIEMPOS: voz.eco_vocal, procesamiento de Azure: 1394 ms · R01 ≤ 800 ms · NO CUMPLE · sin la pausa de 1000 ms
+11-03 23:23:31.151 12652 12706 I XPS-TIEMPOS: voz.eco_vocal, tras dejar de hablar: 1315 ms · RN-05 ≤ 2.5 s · CUMPLE · incluye 700 ms de pausa para cerrar la frase
+11-03 23:23:31.151 12652 12706 I XPS-TIEMPOS: voz.eco_vocal, procesamiento de Azure: 615 ms · R01 ≤ 800 ms · CUMPLE · sin la pausa de 700 ms
+11-03 23:26:11.334 12652 12652 I XPS-TIEMPOS: leccion.calificacion: 424 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:28:53.540 12652 12652 I XPS-TIEMPOS: leccion.calificacion: 602 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:30:42.012 12652 12652 I XPS-TIEMPOS: leccion.calificacion: 92 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:32:03.472 12652 12652 I XPS-TIEMPOS: leccion.calificacion: 53 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:33:47.285 12652 12652 I XPS-TIEMPOS: leccion.calificacion: 455 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:37:18.475 12652 12652 I XPS-TIEMPOS: leccion.calificacion: 280 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:39:19.317 12652 12652 I XPS-TIEMPOS: leccion.calificacion: 463 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:41:40.422 12652 12652 I XPS-TIEMPOS: leccion.calificacion: 434 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:43:41.115 12652 12652 I XPS-TIEMPOS: leccion.calificacion: 1306 ms · RN-05 ≤ 2.5 s · CUMPLE
+11-03 23:45:56.829 12652 12652 I XPS-TIEMPOS: leccion.calificacion: 520 ms · RN-05 ≤ 2.5 s · CUMPLE

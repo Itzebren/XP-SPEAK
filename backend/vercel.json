@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/**/*.js": {
+      "includeFiles": "content/**",
+      "maxDuration": 30
+    }
+  }
+}

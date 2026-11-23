@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generado por docs/diseno-arte/a_vector.py: no editar a mano. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <path
+        android:pathData="M2 60 A58 58 0 1 0 118 60 A58 58 0 1 0 2 60 Z"
+        android:fillColor="#FF232074"/>
+    <path
+        android:pathData="M8 60 A52 52 0 1 0 112 60 A52 52 0 1 0 8 60 Z"
+        android:strokeColor="#FFFFC107"
+        android:strokeWidth="3">
+        <aapt:attr name="android:fillColor">
+          <gradient android:type="radial" android:centerX="60" android:centerY="44" android:gradientRadius="62">
+            <item android:offset="0" android:color="#FF5A86C8"/>
+            <item android:offset="1" android:color="#FF34409A"/>
+          </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:pathData="M28 29 Q28 34 33 34 Q28 34 28 39 Q28 34 23 34 Q28 34 28 29 Z"
+        android:fillColor="#FFFFFFFF"/>
+    <path
+        android:pathData="M94 84 Q94 88 98 88 Q94 88 94 92 Q94 88 90 88 Q94 88 94 84 Z"
+        android:fillColor="#FFFFFFFF"/>
+    <path
+        android:pathData="M90 27 Q90 30 93 30 Q90 30 90 33 Q90 30 87 30 Q90 30 90 27 Z"
+        android:fillColor="#FFFFC107"/>
+    <path
+        android:pathData="M50 62 L26 86 M58 70 L40 92 M44 56 L24 72"
+        android:strokeColor="#FFFF8C00"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M68 28 L73.29 42.72 L88.92 43.2 L76.56 52.78 L80.93 67.8 L68 59 L55.07 67.8 L59.44 52.78 L47.08 43.2 L62.71 42.72 Z"
+        android:fillColor="#FFFFC107"
+        android:strokeColor="#FF232074"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M88 75 Q88 80 93 80 Q88 80 88 85 Q88 80 83 80 Q88 80 88 75 Z"
+        android:fillColor="#FFFFC107"/>
+</vector>

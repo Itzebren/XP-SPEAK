@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "406887365852",
+    "project_id": "xp-speak",
+    "storage_bucket": "xp-speak.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406887365852:android:e4367108653933bb540819",
+        "android_client_info": {
+          "package_name": "com.xpspeak.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLOL2gGcKcZgfhFRXch-TpSYAZ1rYpjbA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

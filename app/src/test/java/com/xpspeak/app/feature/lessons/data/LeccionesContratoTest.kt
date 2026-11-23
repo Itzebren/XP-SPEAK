@@ -1,0 +1,127 @@
+package com.xpspeak.app.feature.lessons.data
+
+import com.google.gson.Gson
+import com.xpspeak.app.feature.lessons.domain.RespuestaUsuario
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Test
+
+/** Verifica que la app lee y escribe el mismo JSON que el backend de Lecciones. */
+class LeccionesContratoTest {
+
+    private val gson = Gson()
+
+    @Test
+    fun `lee el estado de cada leccion del catalogo como enum`() {
+        val json = """
+            {"nivel":"A1","lecciones":[
+              {"id":"a1-saludos","orden":1,"titulo":"Saludos","estado":"completada","intentos":2,"xp_recompensa":50,"mejor_puntaje":1},
+              {"id":"a1-personal","orden":2,"titulo":"Personal","estado":"en_progreso","intentos":0,"xp_recompensa":60,"mejor_puntaje":null}
+            ]}
+        """
+        val catalogo = gson.fromJson(json, CatalogoDto::class.java)
+
+        assertEquals(EstadoLeccion.COMPLETADA, catalogo.lecciones[0].estado)
+        assertEquals(EstadoLeccion.EN_PROGRESO, catalogo.lecciones[1].estado)
+        assertEquals(50, catalogo.lecciones[0].xpRecompensa)
+        assertNull(catalogo.lecciones[1].mejorPuntaje)
+    }
+
+    @Test
+    fun `un valor desconocido del backend queda en null y no rompe la app`() {
+        val json = """{"tipo":"dictado","enunciado":"Escucha y escribe"}"""
+        assertNull(gson.fromJson(json, ItemDto::class.java).tipo)
+    }
+
+    @Test
+    fun `lee los tipos de seccion y de ejercicio`() {
+        val json = """{"tipo":"evaluacion","umbral_aprobacion":0.7,"items":[{"id":"q1","tipo":"emparejar","pares":[{"izq":"Hi!","der":"¡Hola!"}]}]}"""
+        val seccion = gson.fromJson(json, SeccionDto::class.java)
+
+        assertEquals(TipoSeccion.EVALUACION, seccion.tipo)
+        assertEquals(TipoEjercicio.EMPAREJAR, seccion.items!![0].tipo)
+        assertEquals("¡Hola!", seccion.items!![0].pares!![0].der)
+    }
+
+    @Test
+    fun `la leccion guardada en cache conserva la clave de respuestas`() {
+        val json = """{"id":"q1","tipo":"completar","concepto_id":"gram.be","enunciado":"I ___ Ana.",""" +
+            """"respuesta_correcta":"am","acepta":["am"],"feedback_error":"Con 'I' va 'am'."}"""
+        // Así se guarda y se vuelve a leer en Room (LeccionCacheEntity.json).
+        val item = gson.fromJson(gson.toJson(gson.fromJson(json, ItemDto::class.java)), ItemDto::class.java)
+
+        assertEquals("am", item.respuestaCorrecta!!.asString)
+        assertEquals(listOf("am"), item.acepta)
+        assertEquals("gram.be", item.conceptoId)
+        assertEquals("Con 'I' va 'am'.", item.feedbackError)
+    }
+
+    @Test
+    fun `lee la sesion de repaso y el resultado con la reprogramacion de SM-2`() {
+        val sesion = gson.fromJson(
+            """{"total_vencidos":12,"proxima_revision":null,"items":[
+              {"id":"a1-saludos-presentaciones:q6:1","tipo":"opcion_multiple","concepto_id":"voc.saludos.goodbye",
+               "enunciado":"¿Qué significa \"Goodbye!\"?","opciones":["¡Adiós!","¡Hola!"],"respuesta_correcta":0,
+               "concepto":{"concepto_id":"voc.saludos.goodbye","en":"Goodbye!","es":"¡Adiós!","titulo":null,
+                           "fallos":1,"tasa_error":1}}]}""",
+            SesionRepasoDto::class.java
+        )
+        assertEquals(12, sesion.totalVencidos)
+        assertNull(sesion.proximaRevision)
+        assertEquals("Goodbye!", sesion.items[0].concepto!!.en)
+        assertEquals("voc.saludos.goodbye", sesion.items[0].conceptoId)
+
+        val resultado = gson.fromJson(
+            """{"puntaje":1,"correctas":1,"total":1,"feedback":[{"id":"x","correcta":true}],"repetido":false,
+               "conceptos":[{"concepto_id":"voc.saludos.goodbye","acierto":true,"intervalo":6,"proxima_revision":1790000000000}]}""",
+            RepasoResponse::class.java
+        )
+        assertEquals(6, resultado.conceptos[0].intervalo)
+        assertEquals(1790000000000L, resultado.conceptos[0].proximaRevision)
+    }
+
+    @Test
+    fun `cada tipo de respuesta se envia con el formato que espera el servidor`() {
+        val request = IntentoRequest(
+            attemptId = "b1f2c3d4-0000-4000-8000-000000000000",
+            respuestas = listOf(
+                RespuestaUsuario.Opcion(1).aDto("q1"),
+                RespuestaUsuario.Texto("is").aDto("q2"),
+                RespuestaUsuario.Pares(mapOf("Hello!" to "¡Hola!")).aDto("q3")
+            )
+        )
+
+        assertEquals(
+            """{"attempt_id":"b1f2c3d4-0000-4000-8000-000000000000","respuestas":[""" +
+                """{"id":"q1","valor":1},{"id":"q2","valor":"is"},{"id":"q3","valor":[["Hello!","¡Hola!"]]}]}""",
+            gson.toJson(request)
+        )
+    }
+
+    @Test
+    fun `lee el estado de repaso pendiente (RN-07) y cuantos conceptos faltan`() {
+        val json = """{"nivel":"A1","repaso_requerido":3,"lecciones":[""" +
+            """{"id":"a1-dos","orden":2,"titulo":"Dos","estado":"repaso_pendiente","intentos":0,"xp_recompensa":60,"mejor_puntaje":null}]}"""
+        val catalogo = gson.fromJson(json, CatalogoDto::class.java)
+
+        assertEquals(EstadoLeccion.REPASO_PENDIENTE, catalogo.lecciones[0].estado)
+        assertEquals(3, catalogo.repasoRequerido)
+    }
+
+    @Test
+    fun `el intento manda cuando se contesto para la racha (RN-08)`() {
+        val json = gson.toJson(IntentoRequest("id", emptyList(), completadoEn = 1_760_000_000_000))
+        assertEquals(true, json.contains(""""completado_en":1760000000000"""))
+    }
+
+    @Test
+    fun `el resultado trae el nombre de los conceptos debiles y, si falta, lo arma con el id`() {
+        val json = """{"puntaje":0.5,"correctas":3,"total":6,"aprobada":false,"estado":"reprobada","repetido":false,"sugerencia":"repetir_leccion",""" +
+            """"feedback":[],"xp_ganado":0,"desbloqueada_siguiente":null,"conceptos_debiles":["gram.verb_to_be_present","voc.saludos.hello"],""" +
+            """"conceptos_debiles_detalle":[{"concepto_id":"gram.verb_to_be_present","titulo":"Verbo to be (am / is / are)"},""" +
+            """{"concepto_id":"voc.saludos.hello","en":"Hello!","es":"¡Hola!"}]}"""
+        val resultado = gson.fromJson(json, IntentoResponse::class.java)
+        assertEquals(listOf("Verbo to be (am / is / are)", "Hello! (¡Hola!)"), resultado.conceptosDebilesDetalle!!.map { it.nombre })
+        assertEquals("verb to be present", nombreLegible("gram.verb_to_be_present"))
+    }
+}

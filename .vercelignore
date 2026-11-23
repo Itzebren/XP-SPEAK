@@ -1,0 +1,6 @@
+# Vercel solo necesita backend/ (Root Directory = backend). Sin esto, `vercel`
+# sube todo el repo (app/build, node_modules…) y choca con el límite de archivos.
+/*
+!/backend
+/backend/node_modules
+/backend/test

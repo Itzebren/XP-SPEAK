@@ -1,0 +1,218 @@
+package com.xpspeak.app.feature.games.data.voz
+
+import com.xpspeak.app.feature.games.domain.EvaluacionVoz
+import com.xpspeak.app.feature.games.domain.FuenteEvaluacion
+import com.xpspeak.app.feature.games.domain.Pronunciacion
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+/** Calificación sonido por sonido con el JSON detallado de Azure. */
+class AnalisisFonemasTest {
+
+    private fun fonema(esperado: String, precision: Int, vararg candidatos: Pair<String, Int>) =
+        """{"Phoneme":"$esperado","PronunciationAssessment":{"AccuracyScore":$precision,
+           "NBestPhonemes":[${candidatos.joinToString(",") { """{"Phoneme":"${it.first}","Score":${it.second}}""" }}]}}"""
+
+    private fun palabra(texto: String, precision: Int, error: String = "None", vararg fonemas: String) =
+        """{"Word":"$texto","PronunciationAssessment":{"AccuracyScore":$precision,"ErrorType":"$error"},
+           "Phonemes":[${fonemas.joinToString(",")}]}"""
+
+    private fun json(vararg palabras: String) =
+        """{"NBest":[{"Confidence":0.9,"PronunciationAssessment":{"AccuracyScore":88,"FluencyScore":91,"CompletenessScore":100,"PronScore":90},
+           "Words":[${palabras.joinToString(",")}]}]}"""
+
+    private fun evaluacion(json: String): EvaluacionVoz {
+        val palabras = AnalisisFonemas.palabras(json)!!
+        return EvaluacionVoz(AnalisisFonemas.puntaje(palabras), 90, palabras, "", FuenteEvaluacion.AZURE)
+    }
+
+    @Test
+    fun `party con la r en espanol queda en rojo aunque Azure le de 95 a la palabra`() {
+        val resultado = evaluacion(json(palabra("party", 95, "None",
+            fonema("p", 100, "p" to 100),
+            fonema("ɑ", 90, "ɑ" to 90, "a" to 70),
+            fonema("ɹ", 72, "d" to 88, "ɹ" to 72),
+            fonema("t", 85, "t" to 85),
+            fonema("i", 98, "i" to 98)
+        )))
+        val party = resultado.palabras.single()
+        assertEquals(AnalisisFonemas.TOPE_PALABRA_CON_ERROR, party.puntaje)
+        assertEquals("Mispronunciation", party.error)
+        assertEquals(listOf("/ɹ/ sonó como /d/"), party.sonidos)
+        assertFalse(Pronunciacion.esAcierto(resultado))
+    }
+
+    @Test
+    fun `bien pronunciada conserva su puntaje y acierta`() {
+        val resultado = evaluacion(json(palabra("party", 95, "None",
+            fonema("p", 100, "p" to 100),
+            fonema("ɑ", 92, "ɑ" to 92, "ʌ" to 85),
+            fonema("ɹ", 90, "ɹ" to 90),
+            fonema("t", 88, "t" to 88),
+            fonema("i", 97, "i" to 97)
+        )))
+        assertEquals(95, resultado.palabras.single().puntaje)
+        assertTrue(resultado.palabras.single().sonidos.isEmpty())
+        assertTrue(Pronunciacion.esAcierto(resultado))
+    }
+
+    // Valores reales de Azure (23-nov-2026): «tri» por three, «dei» por they, «beri» por very.
+    @Test
+    fun `tink, dis y beri se marcan aunque Azure le de 100 al sonido esperado`() {
+        val resultado = evaluacion(json(
+            palabra("three", 97, "None", fonema("θ", 100, "θ" to 100, "d" to 95, "ɹ" to 71), fonema("ɹ", 100, "ɹ" to 100), fonema("i", 100, "i" to 100)),
+            palabra("they", 90, "None", fonema("ð", 99, "d" to 100, "ð" to 99, "n" to 60), fonema("eɪ", 95, "eɪ" to 100)),
+            palabra("very", 98, "None", fonema("v", 100, "v" to 100, "b" to 82), fonema("ɛɹ", 97, "ɛɹ" to 100), fonema("i", 92, "i" to 100))
+        ))
+
+        assertEquals(listOf("/θ/ sonó como /d/"), resultado.palabras[0].sonidos)
+        assertEquals(listOf("/ð/ sonó como /d/"), resultado.palabras[1].sonidos)
+        assertEquals(listOf("/v/ sonó como /b/"), resultado.palabras[2].sonidos)
+        assertTrue(resultado.palabras.all { it.error == "Mispronunciation" && it.puntaje == AnalisisFonemas.TOPE_PALABRA_CON_ERROR })
+    }
+
+    // Valores reales de voces nativas: el segundo candidato es otro sonido o uno típico pero débil.
+    @Test
+    fun `una th o una v nativas no se confunden con la sustitucion tipica`() {
+        val resultado = evaluacion(json(
+            palabra("think", 100, "None", fonema("θ", 100, "θ" to 100, "s" to 91, "f" to 26), fonema("ɪ", 100, "ɪ" to 100), fonema("ŋ", 100, "ŋ" to 100), fonema("k", 100, "k" to 100)),
+            palabra("this", 99, "None", fonema("ð", 97, "ð" to 100, "ɪ" to 58, "d" to 54), fonema("ɪ", 100, "ɪ" to 100), fonema("s", 100, "s" to 100)),
+            palabra("very", 100, "None", fonema("v", 100, "v" to 100, "b" to 4, "ð" to 4), fonema("ɛɹ", 100, "ɛɹ" to 100), fonema("i", 100, "i" to 100))
+        ))
+
+        assertTrue(resultado.palabras.all { it.error == null && it.sonidos.isEmpty() })
+    }
+
+    @Test
+    fun `un candidato apenas mejor que el esperado no cuenta como sustitucion`() {
+        val resultado = evaluacion(json(palabra("hi", 90, "None",
+            fonema("h", 90, "h" to 90),
+            fonema("aɪ", 84, "a" to 88, "aɪ" to 84)
+        )))
+        assertTrue(resultado.palabras.single().sonidos.isEmpty())
+    }
+
+    @Test
+    fun `un sonido con precision baja se marca aunque no haya otro candidato`() {
+        val resultado = evaluacion(json(palabra("three", 80, "None",
+            fonema("θ", 40),
+            fonema("ɹ", 90),
+            fonema("i", 95)
+        )))
+        assertEquals(listOf("/θ/ poco claro"), resultado.palabras.single().sonidos)
+    }
+
+    @Test
+    fun `las palabras de mas no cuentan y las omitidas se conservan`() {
+        val resultado = evaluacion(json(
+            palabra("good", 95, "None", fonema("ɡ", 95, "ɡ" to 95)),
+            palabra("very", 90, "Insertion"),
+            palabra("morning", 0, "Omission")
+        ))
+        assertEquals(listOf("good", "morning"), resultado.palabras.map { it.palabra })
+        assertEquals("Omission", resultado.palabras[1].error)
+        assertEquals(48, resultado.puntaje)
+    }
+
+    @Test
+    fun `sin fonemas en el json se usa la calificacion del sdk`() {
+        assertNull(AnalisisFonemas.palabras("""{"NBest":[{"Words":[]}]}"""))
+        assertNull(AnalisisFonemas.palabras("no es json"))
+    }
+
+    @Test
+    fun `la evaluacion completa trae confianza, fluidez, completitud y los fonemas de cada palabra`() {
+        val evaluacion = AnalisisFonemas.evaluar(json(palabra("three", 80, "None",
+            fonema("θ", 40),
+            fonema("ɹ", 90),
+            fonema("i", 95)
+        )), transcripcion = "three")!!
+        assertEquals(90, evaluacion.confianza)
+        assertEquals(91, evaluacion.fluidez)
+        assertEquals(100, evaluacion.completitud)
+        assertEquals(90, evaluacion.puntajeGeneral)
+        assertEquals("three", evaluacion.transcripcion)
+        assertEquals(FuenteEvaluacion.AZURE, evaluacion.fuente)
+        assertEquals(listOf("θ" to 40, "ɹ" to 90, "i" to 95), evaluacion.palabras.single().fonemas.map { it.fonema to it.puntaje })
+        // La palabra queda en rojo por el sonido poco claro, y el puntaje de la frase lo refleja.
+        assertEquals(AnalisisFonemas.TOPE_PALABRA_CON_ERROR, evaluacion.puntaje)
+        assertNull(AnalisisFonemas.evaluar("""{"NBest":[{"Words":[]}]}""", ""))
+    }
+
+    /** Respuesta real de Azure Speech (recurso de producción, REST, 29-oct-2026) a "Good morning! My name is Laura." */
+    @Test
+    fun `una respuesta real de Azure se lee completa con seis palabras, fonemas, fluidez y confianza`() {
+        val json = javaClass.classLoader!!.getResource("azure-pronunciation-real.json")!!.readText()
+        val evaluacion = AnalisisFonemas.evaluar(json, "Good morning. My name is Laura.")!!
+
+        assertEquals(listOf("good", "morning", "my", "name", "is", "laura"), evaluacion.palabras.map { it.palabra })
+        assertEquals(98, evaluacion.puntaje)
+        assertEquals(99, evaluacion.confianza)
+        assertEquals(97, evaluacion.fluidez)
+        assertEquals(100, evaluacion.completitud)
+        assertEquals(98, evaluacion.puntajeGeneral)
+        assertTrue(evaluacion.palabras.all { it.sonidos.isEmpty() && it.error == null })
+        assertEquals(listOf("g" to 100, "ʊ" to 100, "d" to 83), evaluacion.palabras[0].fonemas.map { it.fonema to it.puntaje })
+        assertTrue(Pronunciacion.esAcierto(evaluacion))
+    }
+
+    @Test
+    fun `rescata silabas, prosodia, palabras de mas y el ruido del audio`() {
+        val json = """{"SNR":8.4,"NBest":[{"Confidence":0.95,
+          "PronunciationAssessment":{"AccuracyScore":85,"FluencyScore":94,"ProsodyScore":62,"CompletenessScore":90,"PronScore":87},
+          "Words":[
+            {"Word":"last","PronunciationAssessment":{"AccuracyScore":94,"ErrorType":"None",
+              "Feedback":{"Prosody":{"Break":{"ErrorTypes":["None"]},"Intonation":{"ErrorTypes":["Monotone"]}}}}},
+            {"Word":"weekend","PronunciationAssessment":{"AccuracyScore":76,"ErrorType":"None",
+              "Feedback":{"Prosody":{"Break":{"ErrorTypes":["UnexpectedBreak"]},"Intonation":{"ErrorTypes":["Monotone"]}}}},
+             "Syllables":[{"Syllable":"wi","Grapheme":"wee","PronunciationAssessment":{"AccuracyScore":100}},
+                          {"Syllable":"kɛnd","Grapheme":"kend","PronunciationAssessment":{"AccuracyScore":71}}]},
+            {"Word":"the","PronunciationAssessment":{"AccuracyScore":79,"ErrorType":"Insertion",
+              "Feedback":{"Prosody":{"Break":{"ErrorTypes":["None"]},"Intonation":{"ErrorTypes":["Monotone"]}}}}},
+            {"Word":"i","PronunciationAssessment":{"AccuracyScore":0,"ErrorType":"Omission"}},
+            {"Word":"went","PronunciationAssessment":{"AccuracyScore":90,"ErrorType":"None",
+              "Feedback":{"Prosody":{"Break":{"ErrorTypes":["None"]},"Intonation":{"ErrorTypes":["None"]}}}}}
+          ]}]}"""
+        val r = AnalisisFonemas.evaluar(json, "Last weekend the went")!!
+        assertEquals(62, r.prosodia)
+        assertEquals(8, r.ruidoDb)
+        assertTrue(r.audioDificil)
+        assertEquals(listOf("the"), r.palabrasDeMas)
+        assertTrue(r.monotono)
+        assertEquals(listOf("last", "weekend", "i", "went"), r.palabras.map { it.palabra })
+        val weekend = r.palabras[1]
+        assertEquals(listOf("wee", "kend"), weekend.silabas.map { it.grafema })
+        assertEquals(71, weekend.silabas[1].puntaje)
+        assertTrue(weekend.pausaInesperada)
+        assertEquals("the", r.palabras[2].dichaEnSuLugar)
+    }
+
+    @Test
+    fun `el fonema sustituido queda guardado para explicarlo`() {
+        val r = evaluacion(json(palabra("the", 40, "None", fonema("ð", 16, "b" to 100, "ð" to 20), fonema("ə", 90, "ə" to 90))))
+        val fonemas = r.palabras.single().fonemas
+        assertEquals("b", fonemas[0].oido)
+        assertNull(fonemas[1].oido)
+    }
+
+    @Test
+    fun `si Azure transcribe sin calificar no se inventa un cero`() {
+        val sinCalificar = """{"NBest":[{"Confidence":0.9,"Display":"Weekend.","Words":[{"Word":"weekend","Offset":1,"Duration":2}]}]}"""
+        assertFalse(AnalisisFonemas.calificado(sinCalificar))
+        assertNull(AnalisisFonemas.evaluar(sinCalificar, "Weekend."))
+        assertTrue(AnalisisFonemas.calificado(json(palabra("party", 95))))
+    }
+
+    @Test
+    fun `la entonacion plana solo se avisa si bajo el puntaje de prosodia`() {
+        fun frase(prosodia: Int) = """{"NBest":[{"Confidence":0.95,
+          "PronunciationAssessment":{"AccuracyScore":90,"FluencyScore":95,"ProsodyScore":$prosodia,"CompletenessScore":100,"PronScore":92},
+          "Words":[${listOf("i", "like", "pizza").joinToString(",") { """{"Word":"$it","PronunciationAssessment":{"AccuracyScore":90,"ErrorType":"None",
+            "Feedback":{"Prosody":{"Break":{"ErrorTypes":["None"]},"Intonation":{"ErrorTypes":["Monotone"]}}}}}""" }}]}]}"""
+        assertFalse(AnalisisFonemas.evaluar(frase(88), "I like pizza")!!.monotono)
+        assertTrue(AnalisisFonemas.evaluar(frase(60), "I like pizza")!!.monotono)
+    }
+}
